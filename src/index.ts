@@ -15,10 +15,11 @@ bot.use(async (ctx, next) => {
     console.log('Response time: %sms', ms)
 })
 
+bot.hears('hi', (ctx) => ctx.reply('我是 Matataki 机器人，请问有什么可以帮忙的'))
+
 bot.start((ctx) => ctx.reply(`欢迎使用 ${constant.BotName} `))
 
 // 去 ./commands.ts 写机器人的指令
 commands(bot)
 
-bot.hears('hi', (ctx) => ctx.reply('Hey there'))
 bot.launch()
