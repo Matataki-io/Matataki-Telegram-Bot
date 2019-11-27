@@ -8,12 +8,13 @@
   "scripts": {
     "start": "ts-node ./src/app.ts",
     "lint": "eslint",
-    "dev": "ts-node-dev --respawn --transpileOnly ./src/index.ts"
+    "dev": "ts-node-dev --respawn --transpileOnly ./src/app.ts"
   },
   "dependencies": {
     "@types/node": "^12.12.14",
     "axios": "^0.19.0",
     "dotenv": "^8.2.0",
+    "mysql2": "^2.0.1",
     "reflect-metadata": "^0.1.13",
     "telegraf": "^3.33.3",
     "typeorm": "^0.2.20",
