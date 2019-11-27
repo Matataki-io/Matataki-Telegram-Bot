@@ -1,4 +1,5 @@
 import Telegraf from 'telegraf'
+import "reflect-metadata";
 import commands from "./commands";
 import { constant } from "./constant";
 // Load env 

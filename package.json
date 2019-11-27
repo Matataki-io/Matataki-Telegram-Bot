@@ -6,7 +6,7 @@
   "author": "Frank Wei",
   "license": "MIT",
   "scripts": {
-    "start": "ts-node ./src/index.ts",
+    "start": "ts-node ./src/app.ts",
     "lint": "eslint",
     "dev": "ts-node-dev --respawn --transpileOnly ./src/index.ts"
   },
@@ -14,7 +14,9 @@
     "@types/node": "^12.12.14",
     "axios": "^0.19.0",
     "dotenv": "^8.2.0",
+    "reflect-metadata": "^0.1.13",
     "telegraf": "^3.33.3",
+    "typeorm": "^0.2.20",
     "web3": "^1.2.4"
   },
   "devDependencies": {
