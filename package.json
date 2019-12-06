@@ -1,5 +1,5 @@
 {
-  "name": "token-bot",
+  "name": "matataki-bot",
   "version": "1.0.0",
   "description": "Telegram Bot for ERC20 based token",
   "main": "index.js",
