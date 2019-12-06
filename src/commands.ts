@@ -1,4 +1,5 @@
-import Telegraf, { ContextMessageUpdate } from "telegraf";
+import Telegraf, { ContextMessageUpdate, Markup, Extra } from "telegraf";
+import { ExtraReplyMessage } from "telegraf/typings/telegram-types";
 import { createConnection } from "typeorm";
 import { UserThirdParty } from "./entity/UserThirdParty";
 
@@ -35,5 +36,14 @@ export default (bot: Telegraf<ContextMessageUpdate>) => {
     bot.command('ping', ({ message, reply }) => {
         console.info(message)
         reply(`pong`)
+    })
+
+    bot.command('test-group-join', async ({ message, chat, telegram, reply }) => {
+        const link = await telegram.exportChatInviteLink(process.env!.group_id!)
+        const keyboard = Extra.markup(Markup.inlineKeyboard([
+            Markup.urlButton('加入', link),
+        ])) as ExtraReplyMessage;
+        reply(`点击下方加入按钮以加入群组:`, keyboard).catch()
+        // telegram.sendCopy(chat!.id, message, Extra.markup(keyboard)).catch()
     })
 }
