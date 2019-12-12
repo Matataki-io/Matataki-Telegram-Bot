@@ -46,4 +46,16 @@ export default (bot: Telegraf<ContextMessageUpdate>) => {
         reply(`点击下方加入按钮以加入群组:`, keyboard).catch()
         // telegram.sendCopy(chat!.id, message, Extra.markup(keyboard)).catch()
     })
+
+    bot.command('debug_setbalance', async ({ message, reply }) => {
+        if (!message?.text) {
+            throw new Error('Argument Error: message')
+        }
+
+        const match = /^\/debug_setbalance (\d+) (\d+)$/.exec(message.text)
+        if (match?.length || 0 < 2) {
+            reply('格式不对，请输入 "/debug_setblance id balance"')
+            return;
+        }
+    })
 }
