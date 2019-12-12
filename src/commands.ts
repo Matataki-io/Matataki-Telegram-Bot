@@ -6,13 +6,16 @@ import { UserThirdParty } from "./entity/UserThirdParty";
 export default (bot: Telegraf<ContextMessageUpdate>) => {
     // 绑定用户
     bot.command('bind', async ({ message, reply }) => {
+        if (!message || !message.text) {
+            throw new Error('Argument Error: message')
+        }
+
         try {
-            const connection = createConnection()
-            const parameters: string[] = message!.text!.split(" ").slice(1)
-            const [challengeText] = parameters
-            if (!challengeText) reply('请输入 `/bind 你的绑定码` 以绑定')
-            else {
-                const conn = await connection
+            const [challengeText] = message.text.split(" ").slice(1)
+            if (!challengeText) {
+                reply('请输入 `/bind 你的绑定码` 以绑定')
+            } else {
+                const conn = await createConnection()
                 const userRepo = conn.getRepository(UserThirdParty)
                 const result = await userRepo.findOne({ platform: "telegram", challengeText })
                 if (!result) {
@@ -48,14 +51,18 @@ export default (bot: Telegraf<ContextMessageUpdate>) => {
     })
 
     bot.command('debug_setbalance', async ({ message, reply }) => {
-        if (!message?.text) {
+        if (!message || !message.text) {
             throw new Error('Argument Error: message')
         }
 
         const match = /^\/debug_setbalance (\d+) (\d+)$/.exec(message.text)
-        if (match?.length || 0 < 2) {
+        if (!match || match.length < 2) {
             reply('格式不对，请输入 "/debug_setblance id balance"')
-            return;
+            return
         }
+
+        const userId = Number(match[1])
+        const balance = Number(match[2])
+
     })
 }
