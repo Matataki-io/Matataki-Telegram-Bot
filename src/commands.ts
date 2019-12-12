@@ -38,7 +38,7 @@ export default (bot: Telegraf<ContextMessageUpdate>) => {
         reply(`pong`)
     })
 
-    bot.command('testgroupjoin', async ({ message, chat, telegram, reply }) => {
+    bot.command('join_testgroup', async ({ message, chat, telegram, reply }) => {
         const link = await telegram.exportChatInviteLink(process.env!.group_id!)
         const keyboard = Extra.markup(Markup.inlineKeyboard([
             Markup.urlButton('加入', link),
