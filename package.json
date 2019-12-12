@@ -18,6 +18,7 @@
     "node-cron": "^2.0.3",
     "reflect-metadata": "^0.1.13",
     "telegraf": "^3.33.3",
+    "tsyringe": "^4.0.1",
     "typeorm": "^0.2.20",
     "web3": "^1.2.4"
   },
