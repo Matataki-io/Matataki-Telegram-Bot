@@ -13,7 +13,8 @@ export class BotService {
     constructor(@multiInject(Injections.Controller) controllers: IGenericController[]) {
         const botToken = process.env["BOT_TOKEN"];
         if (!botToken) {
-            throw new Error("Bot token not found");
+            console.error("Bot token not found");
+            process.exit(1);
         }
 
         this.bot = new Telegraf<ContextMessageUpdate>(botToken)
