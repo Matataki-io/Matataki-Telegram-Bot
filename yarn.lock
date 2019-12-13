@@ -69,10 +69,10 @@
   resolved "https://registry.npm.taobao.org/@types/node/download/@types/node-10.17.5.tgz#c1920150f7b90708a7d0f3add12a06bc9123c055"
   integrity sha1-wZIBUPe5Bwin0POt0SoGvJEjwFU=
 
-"@types/node@^12.12.14":
-  version "12.12.14"
-  resolved "https://registry.npm.taobao.org/@types/node/download/@types/node-12.12.14.tgz#1c1d6e3c75dba466e0326948d56e8bd72a1903d2"
-  integrity sha1-HB1uPHXbpGbgMmlI1W6L1yoZA9I=
+"@types/node@^12.12.17":
+  version "12.12.17"
+  resolved "https://registry.npm.taobao.org/@types/node/download/@types/node-12.12.17.tgz?cache=0&sync_timestamp=1576005794133&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2F%40types%2Fnode%2Fdownload%2F%40types%2Fnode-12.12.17.tgz#191b71e7f4c325ee0fb23bc4a996477d92b8c39b"
+  integrity sha1-GRtx5/TDJe4PsjvEqZZHfZK4w5s=
 
 "@types/strip-bom@^3.0.0":
   version "3.0.0"
@@ -84,40 +84,40 @@
   resolved "https://registry.npm.taobao.org/@types/strip-json-comments/download/@types/strip-json-comments-0.0.30.tgz#9aa30c04db212a9a0649d6ae6fd50accc40748a1"
   integrity sha1-mqMMBNshKpoGSdaub9UKzMQHSKE=
 
-"@typescript-eslint/eslint-plugin@^2.8.0":
-  version "2.8.0"
-  resolved "https://registry.npm.taobao.org/@typescript-eslint/eslint-plugin/download/@typescript-eslint/eslint-plugin-2.8.0.tgz?cache=0&sync_timestamp=1574357895711&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2F%40typescript-eslint%2Feslint-plugin%2Fdownload%2F%40typescript-eslint%2Feslint-plugin-2.8.0.tgz#eca584d46094ebebc3cb3e9fb625bfbc904a534d"
-  integrity sha1-7KWE1GCU6+vDyz6ftiW/vJBKU00=
+"@typescript-eslint/eslint-plugin@^2.11.0":
+  version "2.11.0"
+  resolved "https://registry.npm.taobao.org/@typescript-eslint/eslint-plugin/download/@typescript-eslint/eslint-plugin-2.11.0.tgz?cache=0&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2F%40typescript-eslint%2Feslint-plugin%2Fdownload%2F%40typescript-eslint%2Feslint-plugin-2.11.0.tgz#4477c33491ccf0a9a3f4a30ef84978fa0ea0cad2"
+  integrity sha1-RHfDNJHM8Kmj9KMO+El4+g6gytI=
   dependencies:
-    "@typescript-eslint/experimental-utils" "2.8.0"
+    "@typescript-eslint/experimental-utils" "2.11.0"
     eslint-utils "^1.4.3"
     functional-red-black-tree "^1.0.1"
     regexpp "^3.0.0"
     tsutils "^3.17.1"
 
-"@typescript-eslint/experimental-utils@2.8.0":
-  version "2.8.0"
-  resolved "https://registry.npm.taobao.org/@typescript-eslint/experimental-utils/download/@typescript-eslint/experimental-utils-2.8.0.tgz?cache=0&sync_timestamp=1574357892985&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2F%40typescript-eslint%2Fexperimental-utils%2Fdownload%2F%40typescript-eslint%2Fexperimental-utils-2.8.0.tgz#208b4164d175587e9b03ce6fea97d55f19c30ca9"
-  integrity sha1-IItBZNF1WH6bA85v6pfVXxnDDKk=
+"@typescript-eslint/experimental-utils@2.11.0":
+  version "2.11.0"
+  resolved "https://registry.npm.taobao.org/@typescript-eslint/experimental-utils/download/@typescript-eslint/experimental-utils-2.11.0.tgz?cache=0&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2F%40typescript-eslint%2Fexperimental-utils%2Fdownload%2F%40typescript-eslint%2Fexperimental-utils-2.11.0.tgz#cef18e6b122706c65248a5d8984a9779ed1e52ac"
+  integrity sha1-zvGOaxInBsZSSKXYmEqXee0eUqw=
   dependencies:
     "@types/json-schema" "^7.0.3"
-    "@typescript-eslint/typescript-estree" "2.8.0"
+    "@typescript-eslint/typescript-estree" "2.11.0"
     eslint-scope "^5.0.0"
 
-"@typescript-eslint/parser@^2.8.0":
-  version "2.8.0"
-  resolved "https://registry.npm.taobao.org/@typescript-eslint/parser/download/@typescript-eslint/parser-2.8.0.tgz?cache=0&sync_timestamp=1574357893573&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2F%40typescript-eslint%2Fparser%2Fdownload%2F%40typescript-eslint%2Fparser-2.8.0.tgz#e10f7c40c8cf2fb19920c879311e6c46ad17bacb"
-  integrity sha1-4Q98QMjPL7GZIMh5MR5sRq0Xuss=
+"@typescript-eslint/parser@^2.11.0":
+  version "2.11.0"
+  resolved "https://registry.npm.taobao.org/@typescript-eslint/parser/download/@typescript-eslint/parser-2.11.0.tgz?cache=0&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2F%40typescript-eslint%2Fparser%2Fdownload%2F%40typescript-eslint%2Fparser-2.11.0.tgz#cdcc3be73ee31cbef089af5ff97ccaa380ef6e8b"
+  integrity sha1-zcw75z7jHL7wia9f+XzKo4Dvbos=
   dependencies:
     "@types/eslint-visitor-keys" "^1.0.0"
-    "@typescript-eslint/experimental-utils" "2.8.0"
-    "@typescript-eslint/typescript-estree" "2.8.0"
+    "@typescript-eslint/experimental-utils" "2.11.0"
+    "@typescript-eslint/typescript-estree" "2.11.0"
     eslint-visitor-keys "^1.1.0"
 
-"@typescript-eslint/typescript-estree@2.8.0":
-  version "2.8.0"
-  resolved "https://registry.npm.taobao.org/@typescript-eslint/typescript-estree/download/@typescript-eslint/typescript-estree-2.8.0.tgz?cache=0&sync_timestamp=1574357893170&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2F%40typescript-eslint%2Ftypescript-estree%2Fdownload%2F%40typescript-eslint%2Ftypescript-estree-2.8.0.tgz#fcc3fe6532840085d29b75432c8a59895876aeca"
-  integrity sha1-/MP+ZTKEAIXSm3VDLIpZiVh2rso=
+"@typescript-eslint/typescript-estree@2.11.0":
+  version "2.11.0"
+  resolved "https://registry.npm.taobao.org/@typescript-eslint/typescript-estree/download/@typescript-eslint/typescript-estree-2.11.0.tgz?cache=0&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2F%40typescript-eslint%2Ftypescript-estree%2Fdownload%2F%40typescript-eslint%2Ftypescript-estree-2.11.0.tgz#21ada6504274cd1644855926312c798fc697e9fb"
+  integrity sha1-Ia2mUEJ0zRZEhVkmMSx5j8aX6fs=
   dependencies:
     debug "^4.1.1"
     eslint-visitor-keys "^1.1.0"
@@ -231,10 +231,10 @@ any-promise@1.3.0, any-promise@^1.0.0:
   resolved "https://registry.npm.taobao.org/any-promise/download/any-promise-1.3.0.tgz#abc6afeedcea52e809cdc0376aed3ce39635d17f"
   integrity sha1-q8av7tzqUugJzcA3au0845Y10X8=
 
-app-root-path@^2.0.1:
-  version "2.2.1"
-  resolved "https://registry.npm.taobao.org/app-root-path/download/app-root-path-2.2.1.tgz#d0df4a682ee408273583d43f6f79e9892624bc9a"
-  integrity sha1-0N9KaC7kCCc1g9Q/b3npiSYkvJo=
+app-root-path@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.npm.taobao.org/app-root-path/download/app-root-path-3.0.0.tgz#210b6f43873227e18a4b810a032283311555d5ad"
+  integrity sha1-IQtvQ4cyJ+GKS4EKAyKDMRVV1a0=
 
 arg@^4.1.0:
   version "4.1.1"
@@ -1171,10 +1171,10 @@ eslint-visitor-keys@^1.1.0:
   resolved "https://registry.npm.taobao.org/eslint-visitor-keys/download/eslint-visitor-keys-1.1.0.tgz#e2a82cea84ff246ad6fb57f9bde5b46621459ec2"
   integrity sha1-4qgs6oT/JGrW+1f5veW0ZiFFnsI=
 
-eslint@^6.6.0:
-  version "6.6.0"
-  resolved "https://registry.npm.taobao.org/eslint/download/eslint-6.6.0.tgz#4a01a2fb48d32aacef5530ee9c5a78f11a8afd04"
-  integrity sha1-SgGi+0jTKqzvVTDunFp48RqK/QQ=
+eslint@^6.7.2:
+  version "6.7.2"
+  resolved "https://registry.npm.taobao.org/eslint/download/eslint-6.7.2.tgz#c17707ca4ad7b2d8af986a33feba71e18a9fecd1"
+  integrity sha1-wXcHykrXstivmGoz/rpx4Yqf7NE=
   dependencies:
     "@babel/code-frame" "^7.0.0"
     ajv "^6.10.0"
@@ -1191,7 +1191,7 @@ eslint@^6.6.0:
     file-entry-cache "^5.0.1"
     functional-red-black-tree "^1.0.1"
     glob-parent "^5.0.0"
-    globals "^11.7.0"
+    globals "^12.1.0"
     ignore "^4.0.6"
     import-fresh "^3.0.0"
     imurmurhash "^0.1.4"
@@ -1204,7 +1204,7 @@ eslint@^6.6.0:
     minimatch "^3.0.4"
     mkdirp "^0.5.1"
     natural-compare "^1.4.0"
-    optionator "^0.8.2"
+    optionator "^0.8.3"
     progress "^2.0.0"
     regexpp "^2.0.1"
     semver "^6.1.2"
@@ -1695,10 +1695,12 @@ global@~4.3.0:
     min-document "^2.19.0"
     process "~0.5.1"
 
-globals@^11.7.0:
-  version "11.12.0"
-  resolved "https://registry.npm.taobao.org/globals/download/globals-11.12.0.tgz#ab8795338868a0babd8525758018c2a7eb95c42e"
-  integrity sha1-q4eVM4hooLq9hSV1gBjCp+uVxC4=
+globals@^12.1.0:
+  version "12.3.0"
+  resolved "https://registry.npm.taobao.org/globals/download/globals-12.3.0.tgz#1e564ee5c4dded2ab098b0f88f24702a3c56be13"
+  integrity sha1-HlZO5cTd7SqwmLD4jyRwKjxWvhM=
+  dependencies:
+    type-fest "^0.8.1"
 
 got@9.6.0:
   version "9.6.0"
@@ -2432,7 +2434,7 @@ minimist@0.0.8:
   resolved "https://registry.npm.taobao.org/minimist/download/minimist-0.0.8.tgz#857fcabfc3397d2625b8228262e86aa7a011b05d"
   integrity sha1-hX/Kv8M5fSYluCKCYuhqp6ARsF0=
 
-minimist@^1.1.3:
+minimist@^1.1.3, minimist@^1.2.0:
   version "1.2.0"
   resolved "https://registry.npm.taobao.org/minimist/download/minimist-1.2.0.tgz#a35008b20f41383eec1fb914f4cd5df79a264284"
   integrity sha1-o1AIsg9BOD7sH7kU9M1d95omQoQ=
@@ -2471,6 +2473,11 @@ mock-fs@^4.1.0:
   resolved "https://registry.npm.taobao.org/mock-fs/download/mock-fs-4.10.3.tgz#d0550663dd2b5d33a7c1b8713c6925aab07a04ae"
   integrity sha1-0FUGY90rXTOnwbhxPGklqrB6BK4=
 
+module-alias@^2.2.2:
+  version "2.2.2"
+  resolved "https://registry.npm.taobao.org/module-alias/download/module-alias-2.2.2.tgz#151cdcecc24e25739ff0aa6e51e1c5716974c0e0"
+  integrity sha1-FRzc7MJOJXOf8KpuUeHFcWl0wOA=
+
 ms@2.0.0:
   version "2.0.0"
   resolved "https://registry.npm.taobao.org/ms/download/ms-2.0.0.tgz#5608aeadfc00be6c2901df5f9861788de0d597c8"
@@ -2491,10 +2498,10 @@ mute-stream@0.0.8:
   resolved "https://registry.npm.taobao.org/mute-stream/download/mute-stream-0.0.8.tgz#1630c42b2251ff81e2a283de96a5497ea92e5e0d"
   integrity sha1-FjDEKyJR/4HiooPelqVJfqkuXg0=
 
-mysql2@^2.0.1:
-  version "2.0.1"
-  resolved "https://registry.npm.taobao.org/mysql2/download/mysql2-2.0.1.tgz?cache=0&sync_timestamp=1574212264534&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fmysql2%2Fdownload%2Fmysql2-2.0.1.tgz#4b8e11d8a7e9d5e302b6edf2fb1ab32acf3b22d8"
-  integrity sha1-S44R2Kfp1eMCtu3y+xqzKs87Itg=
+mysql2@^2.0.2:
+  version "2.0.2"
+  resolved "https://registry.npm.taobao.org/mysql2/download/mysql2-2.0.2.tgz#178c1c018a9283751ffa8dcf67ed720bb5b1c6a6"
+  integrity sha1-F4wcAYqSg3Uf+o3PZ+1yC7WxxqY=
   dependencies:
     cardinal "^2.1.1"
     denque "^1.4.1"
@@ -2670,9 +2677,9 @@ opencollective-postinstall@^2.0.0:
   resolved "https://registry.npm.taobao.org/opencollective-postinstall/download/opencollective-postinstall-2.0.2.tgz#5657f1bede69b6e33a45939b061eb53d3c6c3a89"
   integrity sha1-Vlfxvt5ptuM6RZObBh61PTxsOok=
 
-optionator@^0.8.2:
+optionator@^0.8.3:
   version "0.8.3"
-  resolved "https://registry.npm.taobao.org/optionator/download/optionator-0.8.3.tgz?cache=0&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Foptionator%2Fdownload%2Foptionator-0.8.3.tgz#84fa1d036fe9d3c7e21d99884b601167ec8fb495"
+  resolved "https://registry.npm.taobao.org/optionator/download/optionator-0.8.3.tgz#84fa1d036fe9d3c7e21d99884b601167ec8fb495"
   integrity sha1-hPodA2/p08fiHZmIS2ARZ+yPtJU=
   dependencies:
     deep-is "~0.1.3"
@@ -3625,13 +3632,15 @@ tar@^4.0.2:
     safe-buffer "^5.1.2"
     yallist "^3.0.3"
 
-telegraf@^3.33.3:
-  version "3.33.3"
-  resolved "https://registry.npm.taobao.org/telegraf/download/telegraf-3.33.3.tgz#f7a573088f0cc9594e126b21efb0ec4a4c3499f4"
-  integrity sha1-96VzCI8MyVlOEmsh77DsSkw0mfQ=
+telegraf@^3.34.1:
+  version "3.34.1"
+  resolved "https://registry.npm.taobao.org/telegraf/download/telegraf-3.34.1.tgz#69006497f8ea4badd724164ae913cef643726719"
+  integrity sha1-aQBkl/jqS63XJBZK6RPO9kNyZxk=
   dependencies:
     "@types/node" "^12.0.4"
     debug "^4.0.1"
+    minimist "^1.2.0"
+    module-alias "^2.2.2"
     node-fetch "^2.2.0"
     sandwich-stream "^2.0.1"
     telegram-typings "^3.6.0"
@@ -3728,10 +3737,21 @@ ts-node-dev@^1.0.0-pre.44:
     ts-node "*"
     tsconfig "^7.0.0"
 
-ts-node@*, ts-node@^8.5.2:
+ts-node@*:
   version "8.5.2"
   resolved "https://registry.npm.taobao.org/ts-node/download/ts-node-8.5.2.tgz#434f6c893bafe501a30b32ac94ee36809ba2adce"
   integrity sha1-Q09siTuv5QGjCzKslO42gJuirc4=
+  dependencies:
+    arg "^4.1.0"
+    diff "^4.0.1"
+    make-error "^1.1.1"
+    source-map-support "^0.5.6"
+    yn "^3.0.0"
+
+ts-node@^8.5.4:
+  version "8.5.4"
+  resolved "https://registry.npm.taobao.org/ts-node/download/ts-node-8.5.4.tgz#a152add11fa19c221d0b48962c210cf467262ab2"
+  integrity sha1-oVKt0R+hnCIdC0iWLCEM9GcmKrI=
   dependencies:
     arg "^4.1.0"
     diff "^4.0.1"
@@ -3817,12 +3837,12 @@ typedarray-to-buffer@^3.1.5:
   dependencies:
     is-typedarray "^1.0.0"
 
-typeorm@^0.2.20:
-  version "0.2.20"
-  resolved "https://registry.npm.taobao.org/typeorm/download/typeorm-0.2.20.tgz#efb60f2e55a7d08fc365f281ec2a71c87a9ebba5"
-  integrity sha1-77YPLlWn0I/DZfKB7CpxyHqeu6U=
+typeorm@^0.2.21:
+  version "0.2.21"
+  resolved "https://registry.npm.taobao.org/typeorm/download/typeorm-0.2.21.tgz#d8d63bec783c128913b140b52f65e9fd76e44510"
+  integrity sha1-2NY77Hg8EokTsUC1L2Xp/XbkRRA=
   dependencies:
-    app-root-path "^2.0.1"
+    app-root-path "^3.0.0"
     buffer "^5.1.0"
     chalk "^2.4.2"
     cli-highlight "^2.0.0"
@@ -3837,10 +3857,10 @@ typeorm@^0.2.20:
     yargonaut "^1.1.2"
     yargs "^13.2.1"
 
-typescript@^3.7.2:
-  version "3.7.2"
-  resolved "https://registry.npm.taobao.org/typescript/download/typescript-3.7.2.tgz?cache=0&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Ftypescript%2Fdownload%2Ftypescript-3.7.2.tgz#27e489b95fa5909445e9fef5ee48d81697ad18fb"
-  integrity sha1-J+SJuV+lkJRF6f717kjYFpetGPs=
+typescript@^3.7.3:
+  version "3.7.3"
+  resolved "https://registry.npm.taobao.org/typescript/download/typescript-3.7.3.tgz#b36840668a16458a7025b9eabfad11b66ab85c69"
+  integrity sha1-s2hAZooWRYpwJbnqv60Rtmq4XGk=
 
 tz-offset@0.0.1:
   version "0.0.1"
