@@ -51,8 +51,8 @@ export class BotService {
             const commands = Reflect.getMetadata(MetadataKeys.CommandNames, constructor) as CommandDefinition[];
 
             for (const { name, methodName, ignorePrefix } of commands) {
-                const member: MessageHandler = prototype[methodName];
-                console.assert(member instanceof Function, `${constructor.name}.${methodName} must be a function of type Middleware<ContextMessageUpdate>`);
+                const handler: MessageHandler = prototype[methodName];
+                console.assert(handler instanceof Function, `${constructor.name}.${methodName} must be a function of type Middleware<ContextMessageUpdate>`);
 
                 const commandName = prefix === "/" || ignorePrefix ? name : `${prefix}_${name}`;
 
@@ -63,7 +63,7 @@ export class BotService {
                         throw new Error("What happended?");
                     }
 
-                    const result = member.call(controller, ctx as MessageHandlerContext);
+                    const result = handler.call(controller, ctx as MessageHandlerContext);
                     if (result instanceof Promise) {
                         return result;
                     }
