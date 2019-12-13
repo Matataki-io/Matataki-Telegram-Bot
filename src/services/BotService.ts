@@ -25,7 +25,8 @@ export class BotService {
             const ms = new Date().getTime() - start;
             console.log('Response time: %sms', ms);
         });
-        this.bot.start((ctx) => ctx.reply(`欢迎使用 ${Constants.BotName} `))
+        this.bot.start((ctx) => ctx.reply(`欢迎使用 ${Constants.BotName} `));
+        this.bot.hears('hi', (ctx) => ctx.reply('我是 Matataki 机器人，请问有什么可以帮忙的'));
 
         this.mapCommands(controllers);
     }
