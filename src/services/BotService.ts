@@ -52,7 +52,7 @@ export class BotService {
 
             for (const { name, methodName, ignorePrefix } of commands) {
                 const handler: MessageHandler = prototype[methodName];
-                console.assert(handler instanceof Function, `${constructor.name}.${methodName} must be a function of type Middleware<ContextMessageUpdate>`);
+                console.assert(handler instanceof Function, `${constructor.name}.${methodName} must be a function of type MessageHandlerContext`);
 
                 const commandName = prefix === "/" || ignorePrefix ? name : `${prefix}_${name}`;
 
