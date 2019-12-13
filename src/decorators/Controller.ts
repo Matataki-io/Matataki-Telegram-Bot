@@ -1,8 +1,8 @@
 import { MetadataKeys } from "./MetadataKeys";
 
-export function Controller(prefix: string): ClassDecorator {
+export function Controller(prefix?: string): ClassDecorator {
     return (target: any) => {
-        Reflect.defineMetadata(MetadataKeys.ControllerPrefix, prefix, target);
+        Reflect.defineMetadata(MetadataKeys.ControllerPrefix, prefix || "/", target);
 
         if (Reflect.hasMetadata(MetadataKeys.CommandNames, target)) {
             return;

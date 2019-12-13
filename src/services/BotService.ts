@@ -42,7 +42,9 @@ export class BotService {
                     throw new Error(`${constructor.name}.${methodName} must be a function`);
                 }
 
-                this.bot.command(`${prefix}_${name}`, prototype[methodName]);
+                const commandName = prefix === "/" ? name : `${prefix}_${name}`;
+
+                this.bot.command(commandName, prototype[methodName]);
             }
         }
     }
