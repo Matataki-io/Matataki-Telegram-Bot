@@ -1,5 +1,5 @@
 import { injectable, multiInject } from "inversify";
-import Telegraf, { ContextMessageUpdate } from "telegraf";
+import Telegraf, { Middleware, ContextMessageUpdate } from "telegraf";
 
 import { Injections, Constants } from "../constants";
 import { IGenericController } from "../controllers";
@@ -38,14 +38,13 @@ export class BotService {
             const commands = Reflect.getMetadata(MetadataKeys.CommandNames, constructor) as CommandDefinition[];
 
             for (const { name, methodName } of commands) {
-                const member = prototype[methodName];
-                if (!(member instanceof Function)) {
-                    throw new Error(`${constructor.name}.${methodName} must be a function`);
-                }
+                const member: Middleware<ContextMessageUpdate> = prototype[methodName];
+                console.assert(member instanceof Function, `${constructor.name}.${methodName} must be a function of type Middleware<ContextMessageUpdate>`);
 
                 const commandName = prefix === "/" ? name : `${prefix}_${name}`;
+                const commandHandler = member.bind(controller);
 
-                this.bot.command(commandName, prototype[methodName]);
+                this.bot.command(commandName, commandHandler);
             }
         }
     }
