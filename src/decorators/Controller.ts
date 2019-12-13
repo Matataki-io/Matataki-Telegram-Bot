@@ -1,4 +1,4 @@
-import { MetadataKeys } from "./MetadataKeys";
+import { MetadataKeys } from "../constants";
 
 export function Controller(prefix?: string): ClassDecorator {
     return (target: any) => {

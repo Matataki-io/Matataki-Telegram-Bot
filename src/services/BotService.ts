@@ -1,9 +1,8 @@
 import { injectable, multiInject } from "inversify";
 import Telegraf, { Middleware, ContextMessageUpdate } from "telegraf";
 
-import { Injections, Constants } from "../constants";
+import { Injections, Constants, MetadataKeys } from "../constants";
 import { IGenericController } from "../controllers";
-import { MetadataKeys } from "../decorators/MetadataKeys";
 import { CommandDefinition } from "../definitions";
 
 @injectable()

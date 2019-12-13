@@ -1,4 +1,4 @@
-import { MetadataKeys } from "./MetadataKeys";
+import { MetadataKeys } from "../constants";
 import { CommandDefinition } from "../definitions";
 
 type CommandBindingOptions = {
