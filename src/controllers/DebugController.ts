@@ -12,4 +12,9 @@ export class DebugController implements IController<DebugController> {
         console.info(message);
         reply(`pong`);
     }
+
+    @Command("throwerror")
+    throwError() {
+        throw new Error("An intentional error");
+    }
 }

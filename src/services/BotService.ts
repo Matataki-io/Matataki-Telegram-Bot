@@ -43,14 +43,29 @@ export class BotService {
 
                 const commandName = prefix === "/" || ignorePrefix ? name : `${prefix}_${name}`;
 
-                this.bot.command(commandName, function (ctx) {
-                    const { message } = ctx;
+                this.bot.command(commandName, async function (ctx) {
+                    const { message, reply } = ctx;
 
                     if (!message || !message.text) {
                         throw new Error("What happended?");
                     }
 
-                    member.call(controller, ctx as MessageHandlerContext);
+                    try {
+                        const result = member.call(controller, ctx as MessageHandlerContext);
+                        if (result instanceof Promise) {
+                            await result;
+                        }
+
+                        console.log("Succeeded");
+                    } catch (e) {
+                        console.error(e);
+
+                        if (e instanceof Error && e.message) {
+                            reply("Unhandled error: " + e.message);
+                        } else {
+                            reply("Unhandled error: " + e);
+                        }
+                    }
                 });
             }
         }
