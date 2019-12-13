@@ -1,7 +1,7 @@
 import { injectable } from "inversify";
-import { ContextMessageUpdate } from "telegraf";
 
 import { Controller, Command } from "../decorators";
+import { MessageHandlerContext } from "../definitions";
 import { IController } from "./IController";
 
 @injectable()

@@ -1,5 +1,5 @@
-import { Middleware, ContextMessageUpdate } from "telegraf";
+import { MessageHandler } from "../definitions";
 
 export interface IGenericController { }
 
-export interface IController<T extends { [P in keyof T]: Middleware<ContextMessageUpdate> }> extends IGenericController { }
+export interface IController<T extends { [P in keyof T]: MessageHandler }> extends IGenericController { }

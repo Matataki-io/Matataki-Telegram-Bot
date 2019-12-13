@@ -1,9 +1,9 @@
 import { injectable, multiInject } from "inversify";
-import Telegraf, { Middleware, ContextMessageUpdate } from "telegraf";
+import Telegraf, { ContextMessageUpdate } from "telegraf";
 
 import { Injections, Constants, MetadataKeys } from "../constants";
 import { IGenericController } from "../controllers";
-import { CommandDefinition } from "../definitions";
+import { CommandDefinition, MessageHandler, MessageHandlerContext } from "../definitions";
 
 @injectable()
 export class BotService {
@@ -38,13 +38,20 @@ export class BotService {
             const commands = Reflect.getMetadata(MetadataKeys.CommandNames, constructor) as CommandDefinition[];
 
             for (const { name, methodName, ignorePrefix } of commands) {
-                const member: Middleware<ContextMessageUpdate> = prototype[methodName];
+                const member: MessageHandler = prototype[methodName];
                 console.assert(member instanceof Function, `${constructor.name}.${methodName} must be a function of type Middleware<ContextMessageUpdate>`);
 
                 const commandName = prefix === "/" || ignorePrefix ? name : `${prefix}_${name}`;
-                const commandHandler = member.bind(controller);
 
-                this.bot.command(commandName, commandHandler);
+                this.bot.command(commandName, function (ctx) {
+                    const { message } = ctx;
+
+                    if (!message || !message.text) {
+                        throw new Error("What happended?");
+                    }
+
+                    member.call(controller, ctx as MessageHandlerContext);
+                });
             }
         }
     }

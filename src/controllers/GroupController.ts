@@ -1,9 +1,10 @@
 import { injectable } from "inversify";
-import { ContextMessageUpdate, Extra, Markup } from "telegraf";
+import { Extra, Markup } from "telegraf";
+import { ExtraReplyMessage } from "telegraf/typings/telegram-types";
 
 import { Controller, Command } from "../decorators";
+import { MessageHandlerContext } from "../definitions";
 import { IController } from "./IController";
-import { ExtraReplyMessage } from "telegraf/typings/telegram-types";
 
 @injectable()
 @Controller()
@@ -27,7 +28,7 @@ export class GroupController implements IController<GroupController> {
     }
 
     @Command("join_testgroup")
-    async bindUser({ telegram, message, reply }: ContextMessageUpdate) {
+    async bindUser({ telegram, message, reply }: MessageHandlerContext) {
         const link = await telegram.exportChatInviteLink(this.groupId);
         const keyboard = Extra.markup(Markup.inlineKeyboard([
             Markup.urlButton('加入', link),
