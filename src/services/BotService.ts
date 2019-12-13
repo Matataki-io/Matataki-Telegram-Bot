@@ -19,26 +19,26 @@ export class BotService {
         this.bot = new Telegraf<ContextMessageUpdate>(botToken)
 
         this.bot.use(async (ctx, next) => {
+            const start = new Date().getTime();
+            if (next) await next()
+            const ms = new Date().getTime() - start;
+
+            console.log('Response time: %sms', ms);
+        });
+        this.bot.catch((err: any, ctx: ContextMessageUpdate) => {
             const { reply } = ctx;
 
-            try {
-                const start = new Date().getTime();
-                if (next) await next()
-                const ms = new Date().getTime() - start;
+            console.error(err);
 
-                console.log('Response time: %sms', ms);
-            } catch (e) {
-                console.error(e);
-
-                if (e instanceof Error && e.message) {
-                    reply("Unhandled error: " + e.message);
-                } else {
-                    reply("Unhandled error: " + e);
-                }
+            if (err instanceof Error && err.message) {
+                reply("Unhandled error: " + err.message);
+            } else {
+                reply("Unhandled error: " + err);
             }
         });
-        this.bot.start((ctx) => ctx.reply(`欢迎使用 ${Constants.BotName} `));
+
         this.bot.hears('hi', (ctx) => ctx.reply('我是 Matataki 机器人，请问有什么可以帮忙的'));
+        this.bot.start((ctx) => ctx.reply(`欢迎使用 ${Constants.BotName} `));
 
         this.mapCommands(controllers);
     }
