@@ -6,9 +6,13 @@ import { IController } from "./IController";
 
 @injectable()
 @Controller()
-export class UserController implements IController<UserController> {
-
+export class EosController implements IController<EosController> {
     @Command("bind")
-    bindUser({ message, reply }: ContextMessageUpdate) {
+    async bindUser({ message, reply }: MessageHandlerContext) {
+    }
+
+    @Command("query")
+    async queryToken({ message, reply }: MessageHandlerContext) {
+
     }
 }
