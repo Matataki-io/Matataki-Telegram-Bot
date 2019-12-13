@@ -2,7 +2,7 @@ import { injectable } from "inversify";
 
 import { Controller, Command } from "../decorators";
 import { MessageHandlerContext } from "../definitions";
-import { IController } from "./IController";
+import { IController } from ".";
 
 @injectable()
 @Controller()

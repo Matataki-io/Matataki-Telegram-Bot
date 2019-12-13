@@ -1,15 +1,15 @@
-import { injectable, multiInject } from "inversify";
+import { injectable } from "inversify";
 import Telegraf, { ContextMessageUpdate } from "telegraf";
 
-import { Injections, Constants, MetadataKeys } from "../constants";
-import { IGenericController } from "../controllers";
+import { Constants, MetadataKeys } from "../constants";
+import { ControllerConstructor, controllers } from "../controllers";
 import { CommandDefinition, MessageHandler, MessageHandlerContext } from "../definitions";
 
 @injectable()
 export class BotService {
     private bot: Telegraf<ContextMessageUpdate>;
 
-    constructor(@multiInject(Injections.Controller) controllers: IGenericController[]) {
+    constructor() {
         const botToken = process.env["BOT_TOKEN"];
         if (!botToken) {
             console.error("Bot token not found");
@@ -43,16 +43,15 @@ export class BotService {
         this.mapCommands(controllers);
     }
 
-    private mapCommands(controllers: IGenericController[]) {
+    private mapCommands(controllers: ControllerConstructor[]) {
         for (const controller of controllers) {
-            const prototype = Object.getPrototypeOf(controller);
-            const constructor = prototype.constructor;
-            const prefix = Reflect.getMetadata(MetadataKeys.ControllerPrefix, constructor);
-            const commands = Reflect.getMetadata(MetadataKeys.CommandNames, constructor) as CommandDefinition[];
+            const prototype = controller.prototype;
+            const prefix = Reflect.getMetadata(MetadataKeys.ControllerPrefix, controller);
+            const commands = Reflect.getMetadata(MetadataKeys.CommandNames, controller) as CommandDefinition[];
 
             for (const { name, methodName, ignorePrefix } of commands) {
                 const handler: MessageHandler = prototype[methodName];
-                console.assert(handler instanceof Function, `${constructor.name}.${methodName} must be a function of type MessageHandlerContext`);
+                console.assert(handler instanceof Function, `${controller.name}.${methodName} must be a function of type MessageHandlerContext`);
 
                 const commandName = prefix === "/" || ignorePrefix ? name : `${prefix}_${name}`;
 
