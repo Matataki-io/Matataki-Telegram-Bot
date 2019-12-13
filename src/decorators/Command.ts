@@ -1,7 +1,11 @@
 import { MetadataKeys } from "./MetadataKeys";
 import { CommandDefinition } from "../definitions";
 
-export function Command(name: string): MethodDecorator {
+type CommandBindingOptions = {
+    ignorePrefix?: boolean;
+}
+
+export function Command(name: string, options?: CommandBindingOptions): MethodDecorator {
     return (target: Object, methodName: string | Symbol) => {
         if (methodName instanceof Symbol) {
             throw new Error("Impossible situation");
@@ -15,6 +19,7 @@ export function Command(name: string): MethodDecorator {
         commands.push({
             name,
             methodName,
+            ignorePrefix: options?.ignorePrefix || false,
         });
 
         Reflect.defineMetadata(MetadataKeys.CommandNames, commands, target.constructor);

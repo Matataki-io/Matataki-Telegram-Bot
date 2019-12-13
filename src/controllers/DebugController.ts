@@ -7,8 +7,9 @@ import { IController } from "./IController";
 @injectable()
 @Controller("debug")
 export class DebugController implements IController<DebugController> {
-
-    @Command("test")
-    test({ message, reply }: ContextMessageUpdate) {
+    @Command("ping", { ignorePrefix: true })
+    ping({ message, reply }: ContextMessageUpdate) {
+        console.info(message);
+        reply(`pong`);
     }
 }

@@ -38,11 +38,11 @@ export class BotService {
             const prefix = Reflect.getMetadata(MetadataKeys.ControllerPrefix, constructor);
             const commands = Reflect.getMetadata(MetadataKeys.CommandNames, constructor) as CommandDefinition[];
 
-            for (const { name, methodName } of commands) {
+            for (const { name, methodName, ignorePrefix } of commands) {
                 const member: Middleware<ContextMessageUpdate> = prototype[methodName];
                 console.assert(member instanceof Function, `${constructor.name}.${methodName} must be a function of type Middleware<ContextMessageUpdate>`);
 
-                const commandName = prefix === "/" ? name : `${prefix}_${name}`;
+                const commandName = prefix === "/" || ignorePrefix ? name : `${prefix}_${name}`;
                 const commandHandler = member.bind(controller);
 
                 this.bot.command(commandName, commandHandler);
