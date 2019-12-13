@@ -56,14 +56,17 @@ export class BotService {
 
                 const commandName = prefix === "/" || ignorePrefix ? name : `${prefix}_${name}`;
 
-                this.bot.command(commandName, async function (ctx) {
+                this.bot.command(commandName, function (ctx) {
                     const { message } = ctx;
 
                     if (!message || !message.text) {
                         throw new Error("What happended?");
                     }
 
-                    member.call(controller, ctx as MessageHandlerContext);
+                    const result = member.call(controller, ctx as MessageHandlerContext);
+                    if (result instanceof Promise) {
+                        return result;
+                    }
                 });
             }
         }

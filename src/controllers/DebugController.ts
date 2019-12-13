@@ -17,4 +17,8 @@ export class DebugController implements IController<DebugController> {
     throwError() {
         throw new Error("An intentional error");
     }
+    @Command("throwerrorasync")
+    throwErrorAsync() {
+        return Promise.reject(new Error("An intentional error"));
+    }
 }
