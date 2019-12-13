@@ -19,10 +19,23 @@ export class BotService {
         this.bot = new Telegraf<ContextMessageUpdate>(botToken)
 
         this.bot.use(async (ctx, next) => {
-            const start = new Date().getTime();
-            if (next) await next()
-            const ms = new Date().getTime() - start;
-            console.log('Response time: %sms', ms);
+            const { reply } = ctx;
+
+            try {
+                const start = new Date().getTime();
+                if (next) await next()
+                const ms = new Date().getTime() - start;
+
+                console.log('Response time: %sms', ms);
+            } catch (e) {
+                console.error(e);
+
+                if (e instanceof Error && e.message) {
+                    reply("Unhandled error: " + e.message);
+                } else {
+                    reply("Unhandled error: " + e);
+                }
+            }
         });
         this.bot.start((ctx) => ctx.reply(`欢迎使用 ${Constants.BotName} `));
         this.bot.hears('hi', (ctx) => ctx.reply('我是 Matataki 机器人，请问有什么可以帮忙的'));
@@ -44,28 +57,13 @@ export class BotService {
                 const commandName = prefix === "/" || ignorePrefix ? name : `${prefix}_${name}`;
 
                 this.bot.command(commandName, async function (ctx) {
-                    const { message, reply } = ctx;
+                    const { message } = ctx;
 
                     if (!message || !message.text) {
                         throw new Error("What happended?");
                     }
 
-                    try {
-                        const result = member.call(controller, ctx as MessageHandlerContext);
-                        if (result instanceof Promise) {
-                            await result;
-                        }
-
-                        console.log("Succeeded");
-                    } catch (e) {
-                        console.error(e);
-
-                        if (e instanceof Error && e.message) {
-                            reply("Unhandled error: " + e.message);
-                        } else {
-                            reply("Unhandled error: " + e);
-                        }
-                    }
+                    member.call(controller, ctx as MessageHandlerContext);
                 });
             }
         }
