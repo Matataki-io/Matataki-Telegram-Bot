@@ -1,4 +1,3 @@
-import { injectable } from "inversify";
 import Telegraf, { ContextMessageUpdate } from "telegraf";
 
 import { Constants, MetadataKeys } from "../constants";
@@ -6,7 +5,6 @@ import { ControllerConstructor, controllers } from "../controllers";
 import { CommandDefinition, MessageHandler, MessageHandlerContext } from "../definitions";
 import { Service } from "../decorators";
 
-@injectable()
 @Service(Injections.BotService)
 export class BotService {
     private bot: Telegraf<ContextMessageUpdate>;
