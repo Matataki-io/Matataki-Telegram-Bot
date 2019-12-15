@@ -1,15 +1,15 @@
 
 import { Controller, Command } from "../decorators";
 import { MessageHandlerContext } from "../definitions";
-import { IController } from ".";
+import { BaseController } from ".";
 
-@Controller()
-export class EthController implements IController<EthController> {
-    @Command("bind")
+@Controller("eth")
+export class EthController extends BaseController<EthController> {
+    @Command("bind", { ignorePrefix: true })
     async bindUser({ message, reply }: MessageHandlerContext) {
     }
 
-    @Command("query")
+    @Command("query", { ignorePrefix: true })
     async queryToken({ message, reply }: MessageHandlerContext) {
     }
 }

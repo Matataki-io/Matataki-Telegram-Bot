@@ -1,10 +1,8 @@
-import { MessageHandler } from "../definitions";
-
-export interface IGenericController { }
-export interface IController<T extends { [P in keyof T]: MessageHandler }> extends IGenericController { }
+import { IController, BaseController } from "./BaseController";
+export { IController, BaseController };
 
 export interface ControllerConstructor {
-    new(): IGenericController;
+    new(): IController;
 }
 
 import { DebugController } from "./DebugController";

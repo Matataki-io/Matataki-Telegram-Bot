@@ -1,15 +1,10 @@
 import "reflect-metadata";
 import { Container } from "inversify";
 
-import { Injections, MetadataKeys } from "./constants";
-import { controllers } from "./controllers";
+import { MetadataKeys } from "./constants";
 import { services } from "./services";
 
-const container = new Container();
-
-for (const controller of controllers) {
-    container.bind(Injections.Controller).to(controller).inRequestScope();
-}
+const container = new Container({ skipBaseClassChecks: true });
 
 for (const service of services) {
     const identifier = Reflect.getMetadata(MetadataKeys.Service, service);

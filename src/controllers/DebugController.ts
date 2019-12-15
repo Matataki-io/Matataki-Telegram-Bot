@@ -1,9 +1,9 @@
 import { Controller, Command } from "../decorators";
 import { MessageHandlerContext } from "../definitions";
-import { IController } from ".";
+import { BaseController } from ".";
 
 @Controller("debug")
-export class DebugController implements IController<DebugController> {
+export class DebugController extends BaseController<DebugController> {
     @Command("ping", { ignorePrefix: true })
     ping({ message, reply }: MessageHandlerContext) {
         console.info(message);

@@ -3,14 +3,16 @@ import { ExtraReplyMessage } from "telegraf/typings/telegram-types";
 
 import { Controller, Command } from "../decorators";
 import { MessageHandlerContext } from "../definitions";
-import { IController } from ".";
+import { BaseController } from ".";
 
-@Controller()
-export class GroupController implements IController<GroupController> {
+@Controller("group")
+export class GroupController extends BaseController<GroupController> {
 
     private groupId: number;
 
     constructor() {
+        super();
+
         if (!process.env.GROUP_ID) {
             console.error("Environment variable 'GROUP_ID' not found");
             process.exit(1);
@@ -25,7 +27,7 @@ export class GroupController implements IController<GroupController> {
         this.groupId = groupId;
     }
 
-    @Command("join_testgroup")
+    @Command("join_testgroup", { ignorePrefix: true })
     async bindUser({ telegram, message, reply }: MessageHandlerContext) {
         const link = await telegram.exportChatInviteLink(this.groupId);
         const keyboard = Extra.markup(Markup.inlineKeyboard([

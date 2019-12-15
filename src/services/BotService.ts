@@ -1,9 +1,11 @@
 import Telegraf, { ContextMessageUpdate } from "telegraf";
 
-import { Constants, MetadataKeys } from "../constants";
-import { ControllerConstructor, controllers } from "../controllers";
+import { Constants, MetadataKeys, Injections } from "../constants";
+import { IController, ControllerConstructor, controllers } from "../controllers";
 import { CommandDefinition, MessageHandler, MessageHandlerContext } from "../definitions";
 import { Service } from "../decorators";
+
+import { container } from "../container";
 
 @Service(Injections.BotService)
 export class BotService {
@@ -18,6 +20,12 @@ export class BotService {
 
         this.bot = new Telegraf<ContextMessageUpdate>(botToken)
 
+        this.bot.use((ctx, next) => {
+            const context = this.createContext(ctx);
+            Reflect.defineMetadata(MetadataKeys.Context, context, ctx);
+
+            if (next) return next();
+        });
         this.bot.use(async (ctx, next) => {
             const start = new Date().getTime();
             if (next) await next()
@@ -43,30 +51,65 @@ export class BotService {
         this.mapCommands(controllers);
     }
 
-    private mapCommands(controllers: ControllerConstructor[]) {
+    private createContext(ctx: ContextMessageUpdate) {
+        return {
+            ctx,
+            container: container.createChild(),
+        };
+    }
+
+    private mapCommands(constructors: ControllerConstructor[]) {
+        for (const constructor of constructors) {
+            const { name } = constructor;
+
+            if (container.isBoundNamed(Injections.Controller, name)) {
+                console.error("Duplicated controller name:", name);
+                process.exit(1);
+            }
+
+            container.bind(Injections.Controller).to(constructor).whenTargetNamed(name);
+        }
+
+        const controllers = container.getAll<IController>(Injections.Controller);
+
         for (const controller of controllers) {
-            const prototype = controller.prototype;
-            const prefix = Reflect.getMetadata(MetadataKeys.ControllerPrefix, controller);
-            const commands = Reflect.getMetadata(MetadataKeys.CommandNames, controller) as CommandDefinition[];
+            const { constructor } = controller;
+            const prototype = Object.getPrototypeOf(controller);
+            const prefix = Reflect.getMetadata(MetadataKeys.ControllerPrefix, constructor);
+            const commands = Reflect.getMetadata(MetadataKeys.CommandNames, constructor) as CommandDefinition[];
 
             for (const { name, methodName, ignorePrefix } of commands) {
                 const handler: MessageHandler = prototype[methodName];
-                console.assert(handler instanceof Function, `${controller.name}.${methodName} must be a function of type MessageHandlerContext`);
+                console.assert(handler instanceof Function, `${constructor.name}.${methodName} must be a function of type MessageHandlerContext`);
 
                 const commandName = prefix === "/" || ignorePrefix ? name : `${prefix}_${name}`;
 
-                this.bot.command(commandName, function (ctx) {
-                    const { message } = ctx;
+                this.bot.command(commandName, this.handlerFactory(constructor.name, methodName));
+            }
+        }
+    }
+    private handlerFactory(controllerName: string, methodName: string) {
+        return (ctx: ContextMessageUpdate) => {
+            const { message, from } = ctx;
 
-                    if (!message || !message.text) {
-                        throw new Error("What happended?");
-                    }
+            if (!message || !message.text) {
+                throw new Error("What happended?");
+            }
+            if (!from) {
+                throw new Error("What happended?");
+            }
 
-                    const result = handler.call(controller, ctx as MessageHandlerContext);
-                    if (result instanceof Promise) {
-                        return result;
-                    }
-                });
+            type ContextType = ReturnType<typeof BotService.prototype.createContext>;
+            const context = Reflect.getMetadata(MetadataKeys.Context, ctx) as ContextType;
+
+            context.container.bind<ContextType>(Injections.Context).toConstantValue(context);
+
+            const controller = context.container.getNamed<any>(Injections.Controller, controllerName);
+            const handler = controller[methodName] as MessageHandler;
+
+            const result = handler.call(controller, ctx as MessageHandlerContext);
+            if (result instanceof Promise) {
+                return result;
             }
         }
     }
