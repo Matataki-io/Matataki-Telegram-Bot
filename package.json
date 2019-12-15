@@ -17,6 +17,7 @@
     "inversify": "^5.0.1",
     "mysql2": "^2.0.2",
     "node-cron": "^2.0.3",
+    "pg": "^7.14.0",
     "reflect-metadata": "^0.1.13",
     "telegraf": "^3.34.1",
     "typeorm": "^0.2.21",
