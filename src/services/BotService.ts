@@ -70,11 +70,8 @@ export class BotService {
             container.bind(Injections.Controller).to(constructor).whenTargetNamed(name);
         }
 
-        const controllers = container.getAll<IController>(Injections.Controller);
-
-        for (const controller of controllers) {
-            const { constructor } = controller;
-            const prototype = Object.getPrototypeOf(controller);
+        for (const constructor of constructors) {
+            const { prototype } = constructor;
             const prefix = Reflect.getMetadata(MetadataKeys.ControllerPrefix, constructor);
             const commands = Reflect.getMetadata(MetadataKeys.CommandNames, constructor) as CommandDefinition[];
 
