@@ -9,12 +9,12 @@ export interface ControllerConstructor {
 
 import { DebugController } from "./DebugController";
 
-import { EosController } from "./EosController";
+import { EthController } from "./EthController";
 import { GroupController } from "./GroupController";
 
 export const controllers: ControllerConstructor[] = [
     DebugController,
 
-    EosController,
+    EthController,
     GroupController,
 ];
