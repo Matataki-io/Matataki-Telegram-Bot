@@ -29,12 +29,11 @@ export class GroupController extends BaseController<GroupController> {
 
     @Command("join_testgroup", { ignorePrefix: true })
     async bindUser({ telegram, message, reply }: MessageHandlerContext) {
-        const link = await telegram.exportChatInviteLink(this.groupId);
+        const inviteLink = await telegram.exportChatInviteLink(this.groupId);
         const keyboard = Extra.markup(Markup.inlineKeyboard([
-            Markup.urlButton('加入', link),
+            Markup.urlButton('加入', inviteLink),
         ])) as ExtraReplyMessage;
 
-        reply(`点击下方加入按钮以加入群组:`, keyboard).catch();
-        // telegram.sendCopy(chat!.id, message, Extra.markup(keyboard)).catch();
+        await reply("点击下方加入按钮以加入群组:", keyboard);
     }
 }
