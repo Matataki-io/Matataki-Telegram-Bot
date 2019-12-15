@@ -21,7 +21,5 @@ export function Command(name: string, options?: CommandBindingOptions): MethodDe
             methodName,
             ignorePrefix: options?.ignorePrefix || false,
         });
-
-        Reflect.defineMetadata(MetadataKeys.CommandNames, commands, target.constructor);
     };
 }
