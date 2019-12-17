@@ -2,7 +2,7 @@ import { IController, BaseController } from "./BaseController";
 export { IController, BaseController };
 
 export interface ControllerConstructor {
-    new(): IController;
+    new(...args: any[]): IController;
 }
 
 import { DebugController } from "./DebugController";
