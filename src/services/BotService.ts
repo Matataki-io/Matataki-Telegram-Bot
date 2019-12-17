@@ -1,7 +1,8 @@
 import Telegraf, { ContextMessageUpdate } from "telegraf";
+import { User } from "telegraf/typings/telegram-types";
 
 import { Constants, MetadataKeys, Injections } from "../constants";
-import { IController, ControllerConstructor, controllers } from "../controllers";
+import { ControllerConstructor, controllers } from "../controllers";
 import { CommandDefinition, MessageHandler, MessageHandlerContext } from "../definitions";
 import { Service } from "../decorators";
 
@@ -10,6 +11,8 @@ import { container } from "../container";
 @Service(Injections.BotService)
 export class BotService {
     private bot: Telegraf<ContextMessageUpdate>;
+
+    private botInfo!: User;
 
     constructor() {
         const botToken = process.env["BOT_TOKEN"];
@@ -111,8 +114,10 @@ export class BotService {
         }
     }
 
-    run() {
-        this.bot.launch();
+    async run() {
+        await this.bot.launch();
+
+        this.botInfo = await this.bot.telegram.getMe();
 
         console.log("Matataki bot is running...")
     }
