@@ -1,10 +1,9 @@
-
 import { Controller, Command } from "../decorators";
 import { MessageHandlerContext } from "../definitions";
 import { BaseController } from ".";
 
-@Controller("eth")
-export class EthController extends BaseController<EthController> {
+@Controller("wallet")
+export class WalletController extends BaseController<WalletController> {
     @Command("bind", { ignorePrefix: true })
     async bindUser({ message, reply }: MessageHandlerContext) {
     }
