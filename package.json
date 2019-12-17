@@ -8,7 +8,8 @@
   "scripts": {
     "start": "ts-node ./src/app.ts",
     "lint": "eslint",
-    "dev": "ts-node-dev --respawn --transpileOnly ./src/app.ts"
+    "dev": "ts-node-dev --respawn --transpileOnly ./src/app.ts",
+    "typeorm": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js"
   },
   "dependencies": {
     "@types/node": "^12.12.17",
@@ -20,6 +21,7 @@
     "pg": "^7.14.0",
     "reflect-metadata": "^0.1.13",
     "telegraf": "^3.34.1",
+    "tsconfig-paths": "^3.9.0",
     "typeorm": "^0.2.21",
     "web3": "^1.2.4"
   },
