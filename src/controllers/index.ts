@@ -7,12 +7,12 @@ export interface ControllerConstructor {
 
 import { DebugController } from "./DebugController";
 
-import { EthController } from "./EthController";
+import { WalletController } from "./WalletController";
 import { GroupController } from "./GroupController";
 
 export const controllers: ControllerConstructor[] = [
     DebugController,
 
-    EthController,
+    WalletController,
     GroupController,
 ];
