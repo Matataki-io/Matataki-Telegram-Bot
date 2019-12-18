@@ -12,7 +12,6 @@
     "typeorm": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js"
   },
   "dependencies": {
-    "@types/node": "^12.12.17",
     "axios": "^0.19.0",
     "dotenv": "^8.2.0",
     "inversify": "^5.0.1",
@@ -21,16 +20,17 @@
     "pg": "^7.14.0",
     "reflect-metadata": "^0.1.13",
     "telegraf": "^3.34.1",
-    "tsconfig-paths": "^3.9.0",
     "typeorm": "^0.2.21",
     "web3": "^1.2.4"
   },
   "devDependencies": {
+    "@types/node": "^12.12.17",
     "@typescript-eslint/eslint-plugin": "^2.11.0",
     "@typescript-eslint/parser": "^2.11.0",
     "eslint": "^6.7.2",
     "ts-node": "^8.5.4",
     "ts-node-dev": "^1.0.0-pre.44",
+    "tsconfig-paths": "^3.9.0",
     "typescript": "^3.7.3"
   }
 }
