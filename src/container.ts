@@ -4,6 +4,7 @@ import { Container } from "inversify";
 import { MetadataKeys, Injections } from "./constants";
 import { services } from "./services";
 import { repositories } from "./repositories";
+import { JoinGroupHandler } from "./handlers";
 
 const container = new Container({ skipBaseClassChecks: true });
 
@@ -21,5 +22,7 @@ for (const repository of repositories) {
 
     container.bind(Injections.Repository).to(repository).inRequestScope().whenTargetNamed(entityType.name);
 }
+
+container.bind(Injections.JoinGroupHandler).to(JoinGroupHandler);
 
 export { container };

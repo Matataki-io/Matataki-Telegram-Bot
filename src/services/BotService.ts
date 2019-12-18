@@ -5,6 +5,7 @@ import { Constants, MetadataKeys, Injections } from "../constants";
 import { ControllerConstructor, controllers } from "../controllers";
 import { CommandDefinition, MessageHandler, MessageHandlerContext } from "../definitions";
 import { Service } from "../decorators";
+import { JoinGroupHandler } from "../handlers";
 
 import { container } from "../container";
 
@@ -50,6 +51,23 @@ export class BotService {
 
         this.bot.hears('hi', (ctx) => ctx.reply('我是 Matataki 机器人，请问有什么可以帮忙的'));
         this.bot.start((ctx) => ctx.reply(`欢迎使用 ${Constants.BotName} `));
+
+        this.bot.on("new_chat_members", (ctx) => {
+            const { message } = ctx;
+            if (!message) {
+                throw new Error("What happened?");
+            }
+
+            for (const member of message.new_chat_members ?? []) {
+                if (member.is_bot && member.id === this.botInfo.id) {
+                    if (message.chat.type === "group") {
+                        const handler = container.get<JoinGroupHandler>(Injections.JoinGroupHandler);
+
+                        handler.process(message.chat.id, ctx);
+                    }
+                }
+            }
+        });
 
         this.mapCommands(controllers);
     }
