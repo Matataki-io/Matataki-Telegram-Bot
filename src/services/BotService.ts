@@ -1,4 +1,5 @@
-import Telegraf, { ContextMessageUpdate } from "telegraf";
+import Telegraf, { ContextMessageUpdate, Middleware, session } from "telegraf";
+
 import { User } from "telegraf/typings/telegram-types";
 
 import { Constants, MetadataKeys, Injections } from "../constants";
@@ -8,6 +9,7 @@ import { Service } from "../decorators";
 import { JoinGroupHandler } from "../handlers";
 
 import { container } from "../container";
+import { stage } from "../stages";
 
 @Service(Injections.BotService)
 export class BotService {
@@ -23,6 +25,9 @@ export class BotService {
         }
 
         this.bot = new Telegraf<ContextMessageUpdate>(botToken)
+
+        this.bot.use(session());
+        this.bot.use(stage.middleware() as Middleware<ContextMessageUpdate>);
 
         this.bot.use((ctx, next) => {
             const context = this.createContext(ctx);
