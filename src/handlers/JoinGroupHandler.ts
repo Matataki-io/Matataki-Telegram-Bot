@@ -1,5 +1,5 @@
 import { injectable } from "inversify";
-import { ContextMessageUpdate } from "telegraf";
+import { Telegram } from "telegraf";
 
 import { InjectRepository } from "../decorators";
 import { Group } from "../entities";
@@ -12,13 +12,20 @@ export class JoinGroupHandler {
 
     }
 
-    async process(groupId: number, ctx: ContextMessageUpdate) {
-        const administrators = await ctx.telegram.getChatAdministrators(groupId);
+    async process(groupId: number, inviter: number, telegram: Telegram) {
+        const administrators = await telegram.getChatAdministrators(groupId);
         const creator = administrators.find(admin => admin.status === "creator");
         if (!creator) {
             throw new Error("Impossible situation");
         }
 
-        const a = await this.repo.addGroup(groupId, creator.user.id);
+        const creatorId = creator.user.id;
+        if (inviter !== creatorId) {
+            console.info("不是群主邀请入群，立即退出");
+            await telegram.leaveChat(groupId);
+            return;
+        }
+
+        await this.repo.addGroup(groupId, creator.user.id);
     }
 }

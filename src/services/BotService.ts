@@ -54,16 +54,18 @@ export class BotService {
 
         this.bot.on("new_chat_members", (ctx) => {
             const { message } = ctx;
-            if (!message) {
+            if (!message || !message.from) {
                 throw new Error("What happened?");
             }
+
+            const inviter = message.from.id;
 
             for (const member of message.new_chat_members ?? []) {
                 if (member.is_bot && member.id === this.botInfo.id) {
                     if (message.chat.type === "group") {
                         const handler = container.get<JoinGroupHandler>(Injections.JoinGroupHandler);
 
-                        handler.process(message.chat.id, ctx);
+                        handler.process(message.chat.id, inviter, ctx.telegram);
                     }
                 }
             }
