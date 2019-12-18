@@ -6,6 +6,8 @@ import { CommandDefinition, MessageHandler, MessageHandlerContext } from "../def
 import { Service } from "../decorators";
 
 import { container } from "../container";
+// Load `.env` file
+require('dotenv').config()
 
 @Service(Injections.BotService)
 export class BotService {
