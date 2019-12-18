@@ -3,4 +3,5 @@ export const MetadataKeys = {
     CommandNames: Symbol.for("CommandNamesMetadata"),
     Service: Symbol.for("ServiceMetadata"),
     Context: Symbol.for("ContextMetadata"),
+    EntityType: Symbol.for("EntityMetadata"),
 }

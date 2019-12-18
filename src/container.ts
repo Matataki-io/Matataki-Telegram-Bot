@@ -1,8 +1,9 @@
 import "reflect-metadata";
 import { Container } from "inversify";
 
-import { MetadataKeys } from "./constants";
+import { MetadataKeys, Injections } from "./constants";
 import { services } from "./services";
+import { repositories } from "./repositories";
 
 const container = new Container({ skipBaseClassChecks: true });
 
@@ -13,6 +14,12 @@ for (const service of services) {
     }
 
     container.bind(identifier).to(service).inSingletonScope();
+}
+
+for (const repository of repositories) {
+    const entityType = Reflect.getMetadata(MetadataKeys.EntityType, repository);
+
+    container.bind(Injections.Repository).to(repository).inRequestScope().whenTargetNamed(entityType.name);
 }
 
 export { container };
