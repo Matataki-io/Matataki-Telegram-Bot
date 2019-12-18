@@ -1,4 +1,4 @@
-import { Entity, PrimaryColumn, ManyToMany } from "typeorm";
+import { Entity, PrimaryColumn, ManyToMany, Column, Index } from "typeorm";
 
 import { User } from "./User";
 
@@ -6,6 +6,10 @@ import { User } from "./User";
 export class Group {
     @PrimaryColumn()
     id!: number;
+
+    @Column()
+    @Index()
+    creatorId!: number;
 
     @ManyToMany(type => User, user => user.groups)
     members!: User[];
