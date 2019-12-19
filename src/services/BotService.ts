@@ -67,7 +67,7 @@ export class BotService {
                 return;
             }
 
-            const handler = container.get<JoinGroupHandler>(Injections.JoinGroupHandler);
+            const handler = container.get<GroupMemberEventHandler>(Injections.GroupMemberEventHandler);
 
             const group = message.chat.id;
             const inviter = message.from.id;

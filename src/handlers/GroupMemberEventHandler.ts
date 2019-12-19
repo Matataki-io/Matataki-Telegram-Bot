@@ -6,8 +6,7 @@ import { Group } from "../entities";
 import { IGroupRepository } from "../definitions";
 
 @injectable()
-export class JoinGroupHandler {
-
+export class GroupMemberEventHandler {
     constructor(@InjectRepository(Group) private repo: IGroupRepository) {
 
     }
@@ -26,10 +25,17 @@ export class JoinGroupHandler {
             return;
         }
 
-        await this.repo.addGroup(groupId, creator.user.id);
+        await this.repo.addOrSetActiveGroup(groupId, creator.user.id);
+    }
+    async onBotLeaveGroup(groupId: number) {
+        return this.repo.setActive(groupId, false);
     }
 
     onNewMembers(groupId: number, memberIds: number[]) {
         return this.repo.addMembers(groupId, memberIds);
+    }
+
+    async onMemberQuit(groupId: number, memberId: number) {
+        return this.repo.removeMember(groupId, memberId);
     }
 }

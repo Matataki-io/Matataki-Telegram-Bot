@@ -9,36 +9,48 @@ export class GroupRepository extends BaseRepository<Group> implements IGroupRepo
         super(Group);
     }
 
-    async addGroup(id: number, creatorId: number): Promise<boolean> {
+    async addOrSetActiveGroup(id: number, creatorId: number) {
         let group = await this.repository.findOne(id);
-        if (group) {
-            return false;
+        if (!group) {
+            group = this.repository.create();
+            group.id = id;
+            group.creatorId = creatorId;
         }
 
-        group = this.repository.create();
-        group.id = id;
-        group.creatorId = creatorId;
         group.active = true;
 
         await this.repository.save(group);
-        return true;
     }
 
-    getGroupsOfCreator(creatorId: number): Promise<Group[]> {
+    getGroupsOfCreator(creatorId: number) {
         return this.repository.find({ creatorId });
     }
 
-    async addMembers(id: number, memberIds: number[]): Promise<any> {
-        const group = await this.repository.findOne(id, { relations: ["members"] });
-        if (!group) {
-            throw new Error("What happended");
-        }
+    getGroup(id: number): Promise<Group> {
+        return this.repository.findOneOrFail(id, { relations: ["members"] });
+    }
+
+    async addMembers(id: number, memberIds: number[]) {
+        const group = await this.getGroup(id);
 
         for (const memberId of memberIds) {
             const user = await this.userRepo.addUser(memberId);
 
             group.members.push(user);
         }
+
+        await this.repository.save(group);
+    }
+    async removeMember(id: number, memberId: number) {
+        const group = await this.getGroup(id);
+        const index = group.members.findIndex(user => user.id === memberId);
+
+        if (index === -1) {
+            console.error(`There's no a user ${memberId} in group ${id}`);
+            return;
+        }
+
+        group.members.splice(index, 1);
 
         await this.repository.save(group);
     }

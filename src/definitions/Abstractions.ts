@@ -5,11 +5,13 @@ export interface IUserRepository {
 }
 
 export interface IGroupRepository {
-    addGroup(id: number, creatorId: number): Promise<boolean>;
+    addOrSetActiveGroup(id: number, creatorId: number): Promise<void>;
 
+    getGroup(id: number): Promise<Group>;
     getGroupsOfCreator(creatorId: number): Promise<Group[]>;
 
-    addMembers(id: number, memberIds: number[]): Promise<any>;
+    addMembers(id: number, memberIds: number[]): Promise<void>;
+    removeMember(id: number, memberId: number): Promise<void>;
 
     setActive(id: number, active: boolean): Promise<void>;
 }

@@ -1,1 +1,1 @@
-export * from "./JoinGroupHandler";
+export * from "./GroupMemberEventHandler";
