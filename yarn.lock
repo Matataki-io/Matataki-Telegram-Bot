@@ -89,6 +89,11 @@
   resolved "https://registry.npm.taobao.org/@types/strip-json-comments/download/@types/strip-json-comments-0.0.30.tgz#9aa30c04db212a9a0649d6ae6fd50accc40748a1"
   integrity sha1-mqMMBNshKpoGSdaub9UKzMQHSKE=
 
+"@types/table@^4.0.7":
+  version "4.0.7"
+  resolved "https://registry.npm.taobao.org/@types/table/download/@types/table-4.0.7.tgz#c21100d37d4924abbbde85414170260d4d7b0316"
+  integrity sha1-whEA031JJKu73oVBQXAmDU17AxY=
+
 "@typescript-eslint/eslint-plugin@^2.11.0":
   version "2.11.0"
   resolved "https://registry.npm.taobao.org/@typescript-eslint/eslint-plugin/download/@typescript-eslint/eslint-plugin-2.11.0.tgz?cache=0&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2F%40typescript-eslint%2Feslint-plugin%2Fdownload%2F%40typescript-eslint%2Feslint-plugin-2.11.0.tgz#4477c33491ccf0a9a3f4a30ef84978fa0ea0cad2"
@@ -3703,7 +3708,7 @@ swarm-js@0.1.39:
     tar "^4.0.2"
     xhr-request-promise "^0.1.2"
 
-table@^5.2.3:
+table@^5.2.3, table@^5.4.6:
   version "5.4.6"
   resolved "https://registry.npm.taobao.org/table/download/table-5.4.6.tgz#1292d19500ce3f86053b05f0e8e7e4a3bb21079e"
   integrity sha1-EpLRlQDOP4YFOwXw6Ofko7shB54=

@@ -19,12 +19,14 @@
     "node-cron": "^2.0.3",
     "pg": "^7.14.0",
     "reflect-metadata": "^0.1.13",
+    "table": "^5.4.6",
     "telegraf": "^3.34.1",
     "typeorm": "^0.2.21",
     "web3": "^1.2.4"
   },
   "devDependencies": {
     "@types/node": "^12.12.17",
+    "@types/table": "^4.0.7",
     "@typescript-eslint/eslint-plugin": "^2.11.0",
     "@typescript-eslint/parser": "^2.11.0",
     "eslint": "^6.7.2",
