@@ -1,9 +1,10 @@
+import { inject } from "inversify";
+
 import { Controller, Command } from "../decorators";
 import { MessageHandlerContext } from "../definitions";
 import { BaseController } from ".";
-import { inject } from "inversify";
 import { Injections } from "../constants";
-import { TestAccountBalanceService } from "../services/TestAccountBalanceService";
+import { TestAccountBalanceService } from "../services";
 
 @Controller("debug")
 export class DebugController extends BaseController<DebugController> {
