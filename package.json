@@ -25,6 +25,7 @@
     "web3": "^1.2.4"
   },
   "devDependencies": {
+    "@types/cron": "^1.7.1",
     "@types/node": "^12.12.17",
     "@types/table": "^4.0.7",
     "@typescript-eslint/eslint-plugin": "^2.11.0",
