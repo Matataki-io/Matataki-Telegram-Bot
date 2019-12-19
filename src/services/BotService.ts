@@ -57,23 +57,36 @@ export class BotService {
         this.bot.hears('hi', (ctx) => ctx.reply('我是 Matataki 机器人，请问有什么可以帮忙的'));
         this.bot.start((ctx) => ctx.reply(`欢迎使用 ${Constants.BotName} `));
 
-        this.bot.on("new_chat_members", (ctx) => {
+        this.bot.on("new_chat_members", async (ctx) => {
             const { message } = ctx;
             if (!message || !message.from) {
                 throw new Error("What happened?");
             }
+            if (message.chat.type !== "group" && message.chat.type !== "supergroup") {
+                console.log("Not support private and channel");
+                return;
+            }
 
+            const handler = container.get<JoinGroupHandler>(Injections.JoinGroupHandler);
+
+            const group = message.chat.id;
             const inviter = message.from.id;
+            let members = message.new_chat_members ?? [];
 
-            for (const member of message.new_chat_members ?? []) {
+            for (const member of members) {
                 if (member.is_bot && member.id === this.botInfo.id) {
-                    if (message.chat.type === "group") {
-                        const handler = container.get<JoinGroupHandler>(Injections.JoinGroupHandler);
 
-                        handler.process(message.chat.id, inviter, ctx.telegram);
-                    }
+                    await handler.onBotJoinGroup(group, inviter, ctx.telegram);
+                    break;
                 }
             }
+
+            members = members.filter(member => !member.is_bot);
+            if (members.length === 0) {
+                return;
+            }
+
+            await handler.onNewMembers(group, members.map(member => member.id));
         });
 
         this.mapCommands(controllers);

@@ -1,11 +1,11 @@
-import { Repository } from "../decorators";
-import { Group } from "../entities";
-import { IGroupRepository } from "../definitions";
+import { Repository, InjectRepository } from "../decorators";
+import { Group, User } from "../entities";
+import { IGroupRepository, IUserRepository } from "../definitions";
 import { BaseRepository } from ".";
 
 @Repository(Group)
 export class GroupRepository extends BaseRepository<Group> implements IGroupRepository {
-    constructor() {
+    constructor(@InjectRepository(User) private userRepo: IUserRepository) {
         super(Group);
     }
 
@@ -23,4 +23,22 @@ export class GroupRepository extends BaseRepository<Group> implements IGroupRepo
         return true;
     }
 
+    getGroupsOfCreator(creatorId: number): Promise<Group[]> {
+        return this.repository.find({ creatorId });
+    }
+
+    async addMembers(id: number, memberIds: number[]): Promise<any> {
+        const group = await this.repository.findOne(id, { relations: ["members"] });
+        if (!group) {
+            throw new Error("What happended");
+        }
+
+        for (const memberId of memberIds) {
+            const user = await this.userRepo.addUser(memberId);
+
+            group.members.push(user);
+        }
+
+        await this.repository.save(group);
+    }
 }

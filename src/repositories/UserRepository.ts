@@ -9,7 +9,12 @@ export class UserRepository extends BaseRepository<User> implements IUserReposit
         super(User);
     }
 
-    async addUser(id: number): Promise<void> {
-    }
+    async addUser(id: number): Promise<User> {
+        const user = this.repository.create();
+        user.id = id;
 
+        await this.repository.save(user);
+
+        return user;
+    }
 }

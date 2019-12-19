@@ -3,16 +3,16 @@ import { Telegram } from "telegraf";
 
 import { InjectRepository } from "../decorators";
 import { Group } from "../entities";
-import { GroupRepository } from "../repositories";
+import { IGroupRepository } from "../definitions";
 
 @injectable()
 export class JoinGroupHandler {
 
-    constructor(@InjectRepository(Group) private repo: GroupRepository) {
+    constructor(@InjectRepository(Group) private repo: IGroupRepository) {
 
     }
 
-    async process(groupId: number, inviter: number, telegram: Telegram) {
+    async onBotJoinGroup(groupId: number, inviter: number, telegram: Telegram) {
         const administrators = await telegram.getChatAdministrators(groupId);
         const creator = administrators.find(admin => admin.status === "creator");
         if (!creator) {
@@ -27,5 +27,9 @@ export class JoinGroupHandler {
         }
 
         await this.repo.addGroup(groupId, creator.user.id);
+    }
+
+    onNewMembers(groupId: number, memberIds: number[]) {
+        return this.repo.addMembers(groupId, memberIds);
     }
 }
