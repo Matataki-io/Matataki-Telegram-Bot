@@ -11,6 +11,9 @@ export class Group {
     @Index()
     creatorId!: number;
 
+    @Column({ type: "boolean", default: true })
+    active!: boolean;
+
     @ManyToMany(type => User, user => user.groups)
     members!: User[];
 }

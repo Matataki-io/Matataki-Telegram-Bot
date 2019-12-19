@@ -18,6 +18,7 @@ export class GroupRepository extends BaseRepository<Group> implements IGroupRepo
         group = this.repository.create();
         group.id = id;
         group.creatorId = creatorId;
+        group.active = true;
 
         await this.repository.save(group);
         return true;
@@ -38,6 +39,13 @@ export class GroupRepository extends BaseRepository<Group> implements IGroupRepo
 
             group.members.push(user);
         }
+
+        await this.repository.save(group);
+    }
+
+    async setActive(id: number, active: boolean) {
+        const group = await this.getGroup(id);
+        group.active = active;
 
         await this.repository.save(group);
     }
