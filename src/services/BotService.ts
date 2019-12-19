@@ -6,7 +6,7 @@ import { Constants, MetadataKeys, Injections } from "../constants";
 import { ControllerConstructor, controllers } from "../controllers";
 import { CommandDefinition, MessageHandler, MessageHandlerContext } from "../definitions";
 import { Service } from "../decorators";
-import { JoinGroupHandler } from "../handlers";
+import { GroupMemberEventHandler } from "../handlers";
 
 import { container } from "../container";
 import { stage } from "../stages";
@@ -87,6 +87,33 @@ export class BotService {
             }
 
             await handler.onNewMembers(group, members.map(member => member.id));
+        });
+        this.bot.on("left_chat_member", async (ctx) => {
+            const { message } = ctx;
+            if (!message || !message.from) {
+                throw new Error("What happened?");
+            }
+            if (message.chat.type !== "group" && message.chat.type !== "supergroup") {
+                console.log("Not support private and channel");
+                return;
+            }
+
+            const handler = container.get<GroupMemberEventHandler>(Injections.GroupMemberEventHandler);
+
+            const member = message.left_chat_member;
+            if (!member) {
+                throw new Error("What happened?");
+            }
+
+            const group = message.chat.id;
+
+            if (member.is_bot && member.id === this.botInfo.id) {
+
+                await handler.onBotLeaveGroup(group);
+                return;
+            }
+
+            await handler.onMemberQuit(group, member.id);
         });
 
         this.mapCommands(controllers);
