@@ -25,4 +25,12 @@ export class TestAccountBalanceService {
 
         return "```\n" + table(array) + "\n```";
     }
+
+    setBalance(userId: number, balance: number) {
+        if (!this.map.has(userId)) {
+            throw new Error("Invalid user Id");
+        }
+
+        this.map.set(userId, balance);
+    }
 }
