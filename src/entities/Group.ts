@@ -4,10 +4,10 @@ import { User } from "./User";
 
 @Entity()
 export class Group {
-    @PrimaryColumn()
+    @PrimaryColumn({ type: "bigint" })
     id!: number;
 
-    @Column()
+    @Column({ type: "bigint" })
     @Index()
     creatorId!: number;
 
