@@ -1,7 +1,7 @@
 import { Repository } from "../decorators";
 import { User } from "../entities";
 import { IUserRepository } from "../definitions";
-import { BaseRepository } from ".";
+import { BaseRepository } from "./BaseRepository";
 
 @Repository(User)
 export class UserRepository extends BaseRepository<User> implements IUserRepository {

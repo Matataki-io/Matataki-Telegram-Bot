@@ -1,6 +1,7 @@
-import { Entity, PrimaryColumn, ManyToMany, Column, Index } from "typeorm";
+import { Entity, PrimaryColumn, ManyToMany, Column, Index, OneToMany } from "typeorm";
 
 import { User } from "./User";
+import { GroupRequirement } from "./GroupRequirement";
 
 @Entity()
 export class Group {

@@ -1,7 +1,7 @@
 import { Repository, InjectRepository } from "../decorators";
 import { Group, User } from "../entities";
 import { IGroupRepository, IUserRepository } from "../definitions";
-import { BaseRepository } from ".";
+import { BaseRepository } from "./BaseRepository";
 
 @Repository(Group)
 export class GroupRepository extends BaseRepository<Group> implements IGroupRepository {
@@ -27,7 +27,7 @@ export class GroupRepository extends BaseRepository<Group> implements IGroupRepo
     }
 
     getGroup(id: number): Promise<Group> {
-        return this.repository.findOneOrFail(id, { relations: ["members"] });
+        return this.repository.findOneOrFail(id, { relations: ["members", "requirements"] });
     }
 
     async addMembers(id: number, memberIds: number[]) {

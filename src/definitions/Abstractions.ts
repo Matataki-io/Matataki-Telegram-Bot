@@ -15,3 +15,7 @@ export interface IGroupRepository {
 
     setActive(id: number, active: boolean): Promise<void>;
 }
+
+export interface IGroupRequirementRepository {
+    setRequiredAmount(groupId: number, amount: number): Promise<void>;
+}
