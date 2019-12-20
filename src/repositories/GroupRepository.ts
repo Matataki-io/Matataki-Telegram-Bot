@@ -22,12 +22,15 @@ export class GroupRepository extends BaseRepository<Group> implements IGroupRepo
         await this.repository.save(group);
     }
 
+    getGroup(id: number) {
+        return this.repository.findOneOrFail(id, { relations: ["members", "requirements"] });
+    }
     getGroupsOfCreator(creatorId: number) {
         return this.repository.find({ creatorId });
     }
 
-    getGroup(id: number): Promise<Group> {
-        return this.repository.findOneOrFail(id, { relations: ["members", "requirements"] });
+    getGroups() {
+        return this.repository.find({ relations: ["members", "requirements"] });
     }
 
     async addMembers(id: number, memberIds: number[]) {

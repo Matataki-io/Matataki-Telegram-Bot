@@ -10,6 +10,8 @@ export interface IGroupRepository {
     getGroup(id: number): Promise<Group>;
     getGroupsOfCreator(creatorId: number): Promise<Group[]>;
 
+    getGroups(): Promise<Group[]>;
+
     addMembers(id: number, memberIds: number[]): Promise<void>;
     removeMember(id: number, memberId: number): Promise<void>;
 
