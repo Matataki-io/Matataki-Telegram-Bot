@@ -52,8 +52,8 @@ export class DebugController extends BaseController<DebugController> {
             return reply("格式不对，请输入 `/debug_setblance id balance`");
         }
 
-        const userId = Number(match[1])
-        const balance = Number(match[2])
+        const userId = Number(match[1]);
+        const balance = Number(match[2]);
 
         this.tbaService.setBalance(userId, balance);
 

@@ -6,7 +6,7 @@ import { Group } from "./Group";
 @Entity()
 export class User {
     @PrimaryColumn({ type: "bigint" })
-    id!: number;
+    id!: number | string;
 
     @OneToMany(type => Wallet, wallet => wallet.user)
     wallets!: Wallet[];

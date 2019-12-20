@@ -5,11 +5,11 @@ import { User } from "./User";
 @Entity()
 export class Group {
     @PrimaryColumn({ type: "bigint" })
-    id!: number;
+    id!: number | string;
 
     @Column({ type: "bigint" })
     @Index()
-    creatorId!: number;
+    creatorId!: number | string;
 
     @Column({ type: "boolean", default: true })
     active!: boolean;
