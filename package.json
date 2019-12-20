@@ -12,9 +12,11 @@
     "typeorm": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js"
   },
   "dependencies": {
+    "@types/eth-sig-util": "^2.1.0",
     "@types/node": "^12.12.17",
     "axios": "^0.19.0",
     "dotenv": "^8.2.0",
+    "eth-sig-util": "^2.5.2",
     "inversify": "^5.0.1",
     "mysql2": "^2.0.2",
     "node-cron": "^2.0.3",
