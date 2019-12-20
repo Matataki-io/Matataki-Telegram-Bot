@@ -11,7 +11,7 @@ export class TestAccountBalanceService {
         this.map = new Map<number, number>();
 
         this.map.set(1019938473, 1000);
-        this.map.set(972107339, 1000);
+        this.map.set(972107339, 100);
     }
 
     generateMarkdown() {
@@ -26,6 +26,13 @@ export class TestAccountBalanceService {
         return "```\n" + table(array) + "\n```";
     }
 
+    getBalance(userId: number) {
+        if (!this.map.has(userId)) {
+            throw new Error("Invalid user Id");
+        }
+
+        return this.map.get(userId) ?? 0;
+    }
     setBalance(userId: number, balance: number) {
         if (!this.map.has(userId)) {
             throw new Error("Invalid user Id");

@@ -1,14 +1,20 @@
 import { table } from "table";
 
 import { Controller, Command, InjectRepository } from "../decorators";
-import { MessageHandlerContext, IGroupRepository } from "../definitions";
+import { MessageHandlerContext, IGroupRepository, IGroupRequirementRepository } from "../definitions";
 import { BaseController } from "./BaseController";
 import { Group, GroupRequirement } from "../entities";
-import { GroupRequirementRepository } from "../repositories";
+import { inject } from "inversify";
+import { Injections } from "../constants";
+import { TestAccountBalanceService } from "../services";
+import { Extra, Markup } from "telegraf";
 
 @Controller("group")
 export class GroupController extends BaseController<GroupController> {
-    constructor(@InjectRepository(Group) private groupRepo: IGroupRepository, @InjectRepository(GroupRequirement) private requirementRepo: GroupRequirementRepository) {
+    constructor(
+        @InjectRepository(Group) private groupRepo: IGroupRepository,
+        @InjectRepository(GroupRequirement) private requirementRepo: IGroupRequirementRepository,
+        @inject(Injections.TestAccountBalanceService) private tbaService: TestAccountBalanceService) {
         super();
     }
 
@@ -76,5 +82,38 @@ export class GroupController extends BaseController<GroupController> {
 
         await reply("OK");
         return true;
+    }
+
+    @Command("join_groups", { ignorePrefix: true })
+    async joinGroup({ message, reply, telegram }: MessageHandlerContext) {
+        const sender = message.from.id;
+
+        if (sender !== 1019938473 && sender !== 972107339) {
+            await reply("暂时不支持");
+            return;
+        }
+
+        const balance = this.tbaService.getBalance(sender);
+
+        const groups = await this.groupRepo.getGroups();
+        const acceptableGroups = groups.filter(group => group.requirements.length === 0 || balance >= group.requirements[0].amount);
+        if (acceptableGroups.length === 0) {
+            await reply("抱歉，你的余额不足以进群");
+            return;
+        }
+
+        const buttons = await Promise.all(acceptableGroups.map(async group => {
+            const groupId = Number(group.id);
+            const info = await telegram.getChat(groupId);
+            if (!info.title) {
+                throw new Error("What happened?");
+            }
+
+            return Markup.urlButton(info.title, await telegram.exportChatInviteLink(groupId));
+        }));
+
+        await reply("你现在可以进入以下的群：", Markup.inlineKeyboard([
+            buttons
+        ]).extra());
     }
 }
