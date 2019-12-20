@@ -16,4 +16,7 @@ export class Group {
 
     @ManyToMany(type => User, user => user.groups)
     members!: User[];
+
+    @OneToMany(type => GroupRequirement, requirement => requirement.group)
+    requirements!: GroupRequirement[];
 }
