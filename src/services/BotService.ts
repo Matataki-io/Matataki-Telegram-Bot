@@ -17,6 +17,11 @@ export class BotService {
 
     private botInfo!: User;
 
+    private _isRunning: boolean = false;
+    public get isRunning() {
+        return this._isRunning;
+    }
+
     constructor() {
         const botToken = process.env["BOT_TOKEN"];
         if (!botToken) {
@@ -53,8 +58,6 @@ export class BotService {
                 reply("Unhandled error: " + err);
             }
         });
-
-        this.bot.hears('hi', (ctx) => ctx.reply('我是 Matataki 机器人，请问有什么可以帮忙的'));
         this.bot.start((ctx) => ctx.reply(`欢迎使用 ${Constants.BotName} `));
 
         this.bot.on("new_chat_members", async (ctx) => {
@@ -117,6 +120,19 @@ export class BotService {
         });
 
         this.mapCommands(controllers);
+
+        this.bot.on("message", ctx => {
+            const { message } = ctx;
+            if (!message || !message.text) {
+                throw new Error("What happended?");
+            }
+
+            if (message.chat.type !== "private") {
+                return;
+            }
+
+            ctx.reply("我是 Matataki 机器人，请问有什么可以帮忙的");
+        });
     }
 
     private createContext(ctx: ContextMessageUpdate) {
@@ -184,6 +200,15 @@ export class BotService {
 
         this.botInfo = await this.bot.telegram.getMe();
 
-        console.log("Matataki bot is running...")
+        this._isRunning = true;
+
+        console.log("Matataki bot is running...");
+    }
+
+    getMember(groupId: number, memberId: number) {
+        return this.bot.telegram.getChatMember(groupId, memberId);
+    }
+    kickMember(groupId: number, memberId: number) {
+        return this.bot.telegram.kickChatMember(groupId, memberId);
     }
 }
