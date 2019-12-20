@@ -10,7 +10,12 @@ export class UserRepository extends BaseRepository<User> implements IUserReposit
     }
 
     async addUser(id: number): Promise<User> {
-        const user = this.repository.create();
+        let user = await this.repository.findOne(id);
+        if (user) {
+            return user;
+        }
+
+        user = this.repository.create();
         user.id = id;
 
         await this.repository.save(user);
