@@ -792,6 +792,13 @@ create-hmac@^1.1.0, create-hmac@^1.1.2, create-hmac@^1.1.4:
     safe-buffer "^5.0.1"
     sha.js "^2.4.8"
 
+cron@^1.7.2:
+  version "1.7.2"
+  resolved "https://registry.npm.taobao.org/cron/download/cron-1.7.2.tgz?cache=0&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fcron%2Fdownload%2Fcron-1.7.2.tgz#2ea1f35c138a07edac2ac5af5084ed6fee5723db"
+  integrity sha1-LqHzXBOKB+2sKsWvUITtb+5XI9s=
+  dependencies:
+    moment-timezone "^0.5.x"
+
 cross-spawn@^6.0.5:
   version "6.0.5"
   resolved "https://registry.npm.taobao.org/cross-spawn/download/cross-spawn-6.0.5.tgz#4a5ec7c64dfae22c3a14124dbacdee846d80cbc4"
@@ -2513,7 +2520,14 @@ module-alias@^2.2.2:
   resolved "https://registry.npm.taobao.org/module-alias/download/module-alias-2.2.2.tgz#151cdcecc24e25739ff0aa6e51e1c5716974c0e0"
   integrity sha1-FRzc7MJOJXOf8KpuUeHFcWl0wOA=
 
-moment@>=2.14.0:
+moment-timezone@^0.5.x:
+  version "0.5.27"
+  resolved "https://registry.npm.taobao.org/moment-timezone/download/moment-timezone-0.5.27.tgz#73adec8139b6fe30452e78f210f27b1f346b8877"
+  integrity sha1-c63sgTm2/jBFLnjyEPJ7HzRriHc=
+  dependencies:
+    moment ">= 2.9.0"
+
+"moment@>= 2.9.0", moment@>=2.14.0:
   version "2.24.0"
   resolved "https://registry.npm.taobao.org/moment/download/moment-2.24.0.tgz#0d055d53f5052aa653c9f6eb68bb5d12bf5c2b5b"
   integrity sha1-DQVdU/UFKqZTyfbraLtdEr9cK1s=
@@ -2603,14 +2617,6 @@ nice-try@^1.0.4:
   version "1.0.5"
   resolved "https://registry.npm.taobao.org/nice-try/download/nice-try-1.0.5.tgz#a3378a7696ce7d223e88fc9b764bd7ef1089e366"
   integrity sha1-ozeKdpbOfSI+iPybdkvX7xCJ42Y=
-
-node-cron@^2.0.3:
-  version "2.0.3"
-  resolved "https://registry.npm.taobao.org/node-cron/download/node-cron-2.0.3.tgz#b9649784d0d6c00758410eef22fa54a10e3f602d"
-  integrity sha1-uWSXhNDWwAdYQQ7vIvpUoQ4/YC0=
-  dependencies:
-    opencollective-postinstall "^2.0.0"
-    tz-offset "0.0.1"
 
 node-fetch@^2.2.0:
   version "2.6.0"
@@ -2711,11 +2717,6 @@ onetime@^5.1.0:
   integrity sha1-//DzyRYX/mK7UBiWNumayKbfe+U=
   dependencies:
     mimic-fn "^2.1.0"
-
-opencollective-postinstall@^2.0.0:
-  version "2.0.2"
-  resolved "https://registry.npm.taobao.org/opencollective-postinstall/download/opencollective-postinstall-2.0.2.tgz#5657f1bede69b6e33a45939b061eb53d3c6c3a89"
-  integrity sha1-Vlfxvt5ptuM6RZObBh61PTxsOok=
 
 optionator@^0.8.3:
   version "0.8.3"
@@ -3989,11 +3990,6 @@ typescript@^3.7.3:
   version "3.7.3"
   resolved "https://registry.npm.taobao.org/typescript/download/typescript-3.7.3.tgz#b36840668a16458a7025b9eabfad11b66ab85c69"
   integrity sha1-s2hAZooWRYpwJbnqv60Rtmq4XGk=
-
-tz-offset@0.0.1:
-  version "0.0.1"
-  resolved "https://registry.npm.taobao.org/tz-offset/download/tz-offset-0.0.1.tgz#fef920257024d3583ed9072a767721a18bdb8a76"
-  integrity sha1-/vkgJXAk01g+2QcqdnchoYvbinY=
 
 ultron@~1.1.0:
   version "1.1.1"
