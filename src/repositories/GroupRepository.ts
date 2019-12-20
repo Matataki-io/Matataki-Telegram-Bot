@@ -34,6 +34,10 @@ export class GroupRepository extends BaseRepository<Group> implements IGroupRepo
         const group = await this.getGroup(id);
 
         for (const memberId of memberIds) {
+            if (!group.members.find(user => Number(user.id) === memberId)) {
+                continue;
+            }
+
             const user = await this.userRepo.addUser(memberId);
 
             group.members.push(user);
