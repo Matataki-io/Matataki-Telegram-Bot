@@ -61,6 +61,11 @@ export class GroupRepository extends BaseRepository<Group> implements IGroupRepo
 
         await this.repository.save(group);
     }
+    async removeMembers(group: Group, members: User[]) {
+        group.members = group.members.filter(user => !members.includes(user));
+
+        await this.repository.save(group);
+    }
 
     async setActive(id: number, active: boolean) {
         const group = await this.getGroup(id);
