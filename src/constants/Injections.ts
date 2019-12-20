@@ -5,4 +5,5 @@ export const Injections = {
     Repository: Symbol.for("Repository"),
     GroupMemberEventHandler: Symbol.for("GroupMemberEventHandler"),
     TestAccountBalanceService: Symbol.for("TestAccountBalanceService"),
+    Scheduler: Symbol.for("Scheduler"),
 };

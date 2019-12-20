@@ -4,4 +4,5 @@ export const MetadataKeys = {
     Service: Symbol.for("ServiceMetadata"),
     Context: Symbol.for("ContextMetadata"),
     EntityType: Symbol.for("EntityMetadata"),
+    Scheduler: Symbol.for("SchedulerMetadata"),
 }

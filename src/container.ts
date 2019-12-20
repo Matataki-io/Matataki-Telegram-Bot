@@ -5,6 +5,7 @@ import { MetadataKeys, Injections } from "./constants";
 import { services } from "./services";
 import { repositories } from "./repositories";
 import { GroupMemberEventHandler } from "./handlers";
+import { schedulers } from "./schedulers";
 
 const container = new Container({ skipBaseClassChecks: true });
 
@@ -21,6 +22,10 @@ for (const repository of repositories) {
     const entityType = Reflect.getMetadata(MetadataKeys.EntityType, repository);
 
     container.bind(Injections.Repository).to(repository).inRequestScope().whenTargetNamed(entityType.name);
+}
+
+for (const scheduler of schedulers) {
+    container.bind(Injections.Scheduler).to(scheduler).inRequestScope().whenTargetNamed(scheduler.name);
 }
 
 container.bind(Injections.GroupMemberEventHandler).to(GroupMemberEventHandler);
