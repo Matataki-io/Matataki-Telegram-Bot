@@ -5,6 +5,8 @@ import { BaseRepository } from "./BaseRepository";
 
 @Repository(Group)
 export class GroupRepository extends BaseRepository<Group> implements IGroupRepository {
+    static relationsOption = { relations: ["members", "requirements", "requirements.group"] };
+
     constructor(@InjectRepository(User) private userRepo: IUserRepository) {
         super(Group);
     }
@@ -23,37 +25,38 @@ export class GroupRepository extends BaseRepository<Group> implements IGroupRepo
     }
 
     getGroup(id: number) {
-        return this.repository.findOneOrFail(id, { relations: ["members", "requirements"] });
+        return this.repository.findOneOrFail(id, GroupRepository.relationsOption);
     }
     getGroupsOfCreator(creatorId: number) {
-        return this.repository.find({ creatorId });
+        return this.repository.find({ where: { creatorId }, ...GroupRepository.relationsOption });
     }
 
     getGroups() {
-        return this.repository.find({ relations: ["members", "requirements"] });
+        return this.repository.find(GroupRepository.relationsOption);
     }
 
-    async addMembers(id: number, memberIds: number[]) {
-        const group = await this.getGroup(id);
+    async addMembers(group: Group, members: User[]) {
+        const maps = new Map<number, User>(members.map(user => [Number(user.id), user]));
 
-        for (const memberId of memberIds) {
-            if (!group.members.find(user => Number(user.id) === memberId)) {
+        for (const member of members) {
+            const id = Number(member.id);
+
+            if (maps.has(id)) {
                 continue;
             }
 
-            const user = await this.userRepo.addUser(memberId);
-
-            group.members.push(user);
+            maps.set(id, member);
         }
+
+        group.members = Array.from(maps.values());
 
         await this.repository.save(group);
     }
-    async removeMember(id: number, memberId: number) {
-        const group = await this.getGroup(id);
-        const index = group.members.findIndex(user => user.id === memberId);
+    async removeMember(group: Group, member: User) {
+        const index = group.members.findIndex(user => user === member);
 
         if (index === -1) {
-            console.error(`There's no a user ${memberId} in group ${id}`);
+            console.error(`There's no a user ${member.id} in group ${group.id}`);
             return;
         }
 
@@ -67,8 +70,7 @@ export class GroupRepository extends BaseRepository<Group> implements IGroupRepo
         await this.repository.save(group);
     }
 
-    async setActive(id: number, active: boolean) {
-        const group = await this.getGroup(id);
+    async setActive(group: Group, active: boolean) {
         group.active = active;
 
         await this.repository.save(group);

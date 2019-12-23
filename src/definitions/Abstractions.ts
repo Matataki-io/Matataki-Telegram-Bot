@@ -12,12 +12,12 @@ export interface IGroupRepository {
 
     getGroups(): Promise<Group[]>;
 
-    addMembers(id: number, memberIds: number[]): Promise<void>;
-    removeMember(id: number, memberId: number): Promise<void>;
+    addMembers(group: Group, members: User[]): Promise<void>;
+    removeMember(group: Group, member: User): Promise<void>;
 
-    setActive(id: number, active: boolean): Promise<void>;
+    setActive(group: Group, active: boolean): Promise<void>;
 }
 
 export interface IGroupRequirementRepository {
-    setRequiredAmount(groupId: number, amount: number): Promise<void>;
+    setRequiredAmount(group: Group, amount: number): Promise<void>;
 }

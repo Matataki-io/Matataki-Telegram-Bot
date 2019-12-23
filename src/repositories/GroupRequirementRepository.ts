@@ -10,11 +10,9 @@ export class GroupRequirementRepository extends BaseRepository<GroupRequirement>
         super(GroupRequirement);
     }
 
-    async setRequiredAmount(groupId: number, amount: number) {
-        let requirement = await this.repository.findOne({ where: { groupId }, relations: ["group"] });
+    async setRequiredAmount(group: Group, amount: number) {
+        let requirement = group.requirements.find(req => req.token === Tokens.Eth);
         if (!requirement) {
-            const group = await this.groupRepo.getGroup(groupId);
-
             requirement = new GroupRequirement();
             requirement.group = group;
             requirement.token = Tokens.Eth;

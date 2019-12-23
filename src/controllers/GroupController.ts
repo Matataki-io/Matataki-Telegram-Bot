@@ -71,14 +71,15 @@ export class GroupController extends BaseController<GroupController> {
         const groupId = Number(match[1]);
         const amount = Number(match[2]);
 
-        if (!groups.find(group => Number(group.id) === groupId)) {
+        const group = groups.find(group => Number(group.id) === groupId);
+        if (!group) {
             await reply(`没有找到符合以下所有条件的群：
             - 群主是你
             - 机器人是群成员`);
             return;
         }
 
-        await this.requirementRepo.setRequiredAmount(groupId, amount);
+        await this.requirementRepo.setRequiredAmount(group, amount);
 
         await reply("OK");
         return true;
