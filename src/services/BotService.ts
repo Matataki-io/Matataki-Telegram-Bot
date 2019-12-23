@@ -11,6 +11,8 @@ import { GroupMemberEventHandler } from "../handlers";
 import { container } from "../container";
 import { inject } from "inversify";
 import { DatabaseService } from "./DatabaseService";
+// Load `.env` file
+require('dotenv').config()
 
 @Service(Injections.BotService)
 export class BotService {

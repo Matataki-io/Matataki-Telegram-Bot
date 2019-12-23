@@ -5,4 +5,4 @@ import networks from "./network";
  * Use .env for secret variable that not being track by any VCS
  */
 
-export const network = networks["KOVAN"]
+export const network = networks["RINKEBY"]

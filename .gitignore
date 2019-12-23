@@ -1,8 +1,9 @@
 /node_modules
-ormconfig.json
+ormconfig.*
 
 # Editor directories and files
 .idea
+*.env
 .vscode/
 *.suo
 *.ntvs*
