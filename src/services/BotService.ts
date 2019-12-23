@@ -9,6 +9,8 @@ import { Service } from "../decorators";
 import { GroupMemberEventHandler } from "../handlers";
 
 import { container } from "../container";
+import { inject } from "inversify";
+import { DatabaseService } from "./DatabaseService";
 
 @Service(Injections.BotService)
 export class BotService {
@@ -21,7 +23,7 @@ export class BotService {
         return this._isRunning;
     }
 
-    constructor() {
+    constructor(@inject(Injections.DatabaseService) private databaseService: DatabaseService) {
         const botToken = process.env["BOT_TOKEN"];
         if (!botToken) {
             console.error("Bot token not found");
@@ -194,6 +196,7 @@ export class BotService {
     }
 
     async run() {
+        await this.databaseService.waitForConnectionCreated();
         await this.bot.launch();
 
         this.botInfo = await this.bot.telegram.getMe();
