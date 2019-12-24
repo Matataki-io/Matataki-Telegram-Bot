@@ -1,4 +1,4 @@
-import axios, { AxiosInstance } from "axios";
+import axios, { AxiosInstance, AxiosError } from "axios";
 import { Service } from "../decorators";
 import { Injections } from "../constants";
 
@@ -28,18 +28,24 @@ export class MatatakiService {
         });
     }
 
-    async getEthWallet(userId: number) {
-        const response = await this.axios.get(`/_internal_bot/getEthWalletByTelegramId/${userId}`);
-        if (response.status === 401) {
-            throw new Error("Invalid Access Token");
-        }
-        if (response.status === 404) {
-            throw new Error("Associated Matataki account not found");
-        }
-        if (response.data.code !== 0) {
-            throw new Error("Failed to request the ETH wallet binded with Matataki");
+    async getEthWallet(userId: number): Promise<string> {
+        try {
+            const response = await this.axios.get(`/_internal_bot/getEthWalletByTelegramId/${userId}`);
+
+            return response.data.data.public_key as string;
+        } catch (e) {
+            const { response } = e as AxiosError;
+
+            if (response) {
+                if (response.status === 401) {
+                    throw new Error("Invalid Access Token");
+                }
+                if (response.status === 404) {
+                    throw new Error("Associated Matataki account not found");
+                }
+            }
         }
 
-        return response.data.data.public_key;
+        throw new Error("Failed to request the ETH wallet binded with Matataki");
     }
 }
