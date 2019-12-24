@@ -4,7 +4,7 @@ import { User } from "telegraf/typings/telegram-types";
 
 import { Constants, MetadataKeys, Injections } from "../constants";
 import { ControllerConstructor, controllers } from "../controllers";
-import { CommandDefinition, MessageHandler, MessageHandlerContext } from "../definitions";
+import { CommandHandlerInfo, EventHandlerInfo, MessageHandler, MessageHandlerContext } from "../definitions";
 import { Service } from "../decorators";
 import { GroupMemberEventHandler } from "../handlers";
 
@@ -121,7 +121,7 @@ export class BotService {
             await handler.onMemberQuit(group, member.id);
         });
 
-        this.mapCommands(controllers);
+        this.processControllers(controllers);
 
         this.bot.on("message", ctx => {
             const { message } = ctx;
@@ -144,7 +144,7 @@ export class BotService {
         };
     }
 
-    private mapCommands(constructors: ControllerConstructor[]) {
+    private processControllers(constructors: ControllerConstructor[]) {
         for (const constructor of constructors) {
             const { name } = constructor;
 
@@ -159,7 +159,8 @@ export class BotService {
         for (const constructor of constructors) {
             const { prototype } = constructor;
             const prefix = Reflect.getMetadata(MetadataKeys.ControllerPrefix, constructor);
-            const commands = Reflect.getMetadata(MetadataKeys.CommandNames, constructor) as CommandDefinition[];
+            const commands = Reflect.getMetadata(MetadataKeys.CommandNames, constructor) as CommandHandlerInfo[] ?? [];
+            const events = Reflect.getMetadata(MetadataKeys.Event, constructor) as EventHandlerInfo[] ?? [];
 
             for (const { name, methodName, ignorePrefix } of commands) {
                 const handler: MessageHandler = prototype[methodName];
@@ -168,6 +169,13 @@ export class BotService {
                 const commandName = prefix === "/" || ignorePrefix ? name : `${prefix}_${name}`;
 
                 this.bot.command(commandName, this.handlerFactory(constructor.name, methodName));
+            }
+
+            for (const { name, methodName } of events) {
+                const handler: MessageHandler = prototype[methodName];
+                console.assert(handler instanceof Function, `${constructor.name}.${methodName} must be a function of type MessageHandlerContext`);
+
+                this.bot.on(name, this.handlerFactory(constructor.name, methodName));
             }
         }
     }
