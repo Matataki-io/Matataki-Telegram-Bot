@@ -9,21 +9,25 @@
     "start": "ts-node ./src/app.ts",
     "lint": "eslint",
     "dev": "ts-node-dev --respawn --transpileOnly ./src/app.ts",
-    "typeorm": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js"
+    "typeorm": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js",
+    "test": "jest"
   },
   "dependencies": {
     "@types/eth-sig-util": "^2.1.0",
+    "@types/jest": "^24.0.24",
     "@types/node": "^12.12.21",
     "axios": "^0.19.0",
     "cron": "^1.7.2",
     "dotenv": "^8.2.0",
     "eth-sig-util": "^2.5.2",
     "inversify": "^5.0.1",
+    "jest": "^24.9.0",
     "mysql2": "^2.0.2",
     "pg": "^7.15.1",
     "reflect-metadata": "^0.1.13",
     "table": "^5.4.6",
     "telegraf": "^3.34.1",
+    "ts-jest": "^24.2.0",
     "typeorm": "^0.2.21",
     "web3": "^1.2.4"
   },
@@ -38,5 +42,25 @@
     "ts-node-dev": "^1.0.0-pre.44",
     "tsconfig-paths": "^3.9.0",
     "typescript": "^3.7.4"
+  },
+  "jest": {
+    "moduleFileExtensions": [
+      "js",
+      "ts"
+    ],
+    "transform": {
+      "^.+\\.ts$": "ts-jest"
+    },
+    "globals": {
+      "ts-jest": {
+        "tsConfig": "tsconfig.json"
+      }
+    },
+    "moduleNameMapper": {
+      "^#/(.+)": "<rootDir>/src/$1"
+    },
+    "testMatch": [
+      "**/tests/**/*.test.ts"
+    ]
   }
 }
