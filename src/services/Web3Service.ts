@@ -2,7 +2,7 @@ import Web3 from "web3";
 
 import { Service } from "../decorators";
 import { Injections } from "../constants";
-import { network } from "../config";
+import { network } from "../constants";
 
 @Service(Injections.Web3Service)
 export class Web3Service {

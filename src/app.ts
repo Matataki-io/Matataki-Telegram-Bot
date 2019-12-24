@@ -1,9 +1,13 @@
+import { config } from "dotenv";
+
 import { CronJob } from "cron";
 
 import { container } from "./container";
 import { Injections, MetadataKeys } from "./constants";
 import { BotService } from "./services";
 import { IScheduler, schedulers } from "./schedulers";
+
+config();
 
 for (const scheduler of schedulers) {
     const setting = Reflect.getMetadata(MetadataKeys.Scheduler, scheduler) as string;

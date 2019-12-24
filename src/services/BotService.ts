@@ -9,8 +9,6 @@ import { Service } from "../decorators";
 
 import { inject, Container } from "inversify";
 import { DatabaseService } from "./DatabaseService";
-// Load `.env` file
-require('dotenv').config()
 
 @Service(Injections.BotService)
 export class BotService {
