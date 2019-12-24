@@ -8,4 +8,5 @@ export const Injections = {
     BotService: Symbol.for("BotService"),
     TestAccountBalanceService: Symbol.for("TestAccountBalanceService"),
     DatabaseService: Symbol.for("DatabaseService"),
+    MatatakiService: Symbol.for("MatatakiService"),
 };
