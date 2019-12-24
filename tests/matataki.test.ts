@@ -1,6 +1,6 @@
 jest.mock("axios");
 
-import axios, { AxiosStatic } from "axios";
+import axios, { AxiosStatic, AxiosError } from "axios";
 const mockedAxios = axios as any as jest.Mocked<AxiosStatic>;
 mockedAxios.create = jest.fn(() => mockedAxios);
 
@@ -25,23 +25,29 @@ describe("Matataki Service", () => {
         await expect(service.getEthWallet(114514)).resolves.toBe("0x1145141919810");
     });
     test("Failed to receive an eth wallet address", async () => {
-        mockedAxios.get.mockResolvedValueOnce({
+         const error: any = new Error();
+         error.response = {
             status: 404,
             data: {
                 code: 1,
             },
-         });
+         };
 
-        await expect(service.getEthWallet(0)).rejects.toEqual(new Error("Associated Matataki account not found"));
+         mockedAxios.get.mockRejectedValueOnce(error);
+
+        await expect(service.getEthWallet(0)).rejects.toThrowError("Associated Matataki account not found");
     });
     test("Request with invalid access token", async () => {
-        mockedAxios.get.mockResolvedValueOnce({
+        const error: any = new Error();
+        error.response = {
             status: 401,
             data: {
                 code: 401,
-            },
-         });
+            }
+        };
 
-        await expect(service.getEthWallet(0)).rejects.toEqual(new Error("Invalid Access Token"));
+        mockedAxios.get.mockRejectedValueOnce(error);
+
+        await expect(service.getEthWallet(0)).rejects.toThrowError("Invalid Access Token");
     });
 });
