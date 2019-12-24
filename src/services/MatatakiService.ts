@@ -30,7 +30,13 @@ export class MatatakiService {
 
     async getEthWallet(userId: number) {
         const response = await this.axios.get(`/_internal_bot/getEthWalletByTelegramId/${userId}`);
-        if (response.status !== 200 || response.data.code !== 0) {
+        if (response.status === 401) {
+            throw new Error("Invalid Access Token");
+        }
+        if (response.status === 404) {
+            throw new Error("Associated Matataki account not found");
+        }
+        if (response.data.code !== 0) {
             throw new Error("Failed to request the ETH wallet binded with Matataki");
         }
 

@@ -8,6 +8,8 @@ import { container } from "../src/container";
 import { MatatakiService } from "../src/services";
 import { Injections } from "../src/constants";
 
+const service = container.get<MatatakiService>(Injections.MatatakiService);
+
 describe("Matataki Service", () => {
     test("Responded an eth wallet address", async () => {
         mockedAxios.get.mockResolvedValueOnce({
@@ -20,8 +22,6 @@ describe("Matataki Service", () => {
             },
          });
 
-        const service = container.get<MatatakiService>(Injections.MatatakiService);
-
         await expect(service.getEthWallet(114514)).resolves.toBe("0x1145141919810");
     });
     test("Failed to receive an eth wallet address", async () => {
@@ -32,8 +32,16 @@ describe("Matataki Service", () => {
             },
          });
 
-        const service = container.get<MatatakiService>(Injections.MatatakiService);
+        await expect(service.getEthWallet(0)).rejects.toEqual(new Error("Associated Matataki account not found"));
+    });
+    test("Request with invalid access token", async () => {
+        mockedAxios.get.mockResolvedValueOnce({
+            status: 401,
+            data: {
+                code: 401,
+            },
+         });
 
-        await expect(service.getEthWallet(0)).rejects.toEqual(new Error("Failed to request the ETH wallet binded with Matataki"));
+        await expect(service.getEthWallet(0)).rejects.toEqual(new Error("Invalid Access Token"));
     });
 });
