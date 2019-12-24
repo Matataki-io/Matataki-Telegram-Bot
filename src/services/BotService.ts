@@ -6,10 +6,8 @@ import { Constants, MetadataKeys, Injections } from "../constants";
 import { ControllerConstructor, controllers } from "../controllers";
 import { CommandHandlerInfo, EventHandlerInfo, MessageHandler, MessageHandlerContext } from "../definitions";
 import { Service } from "../decorators";
-import { GroupMemberEventHandler } from "../handlers";
 
-import { container } from "../container";
-import { inject } from "inversify";
+import { inject, Container } from "inversify";
 import { DatabaseService } from "./DatabaseService";
 // Load `.env` file
 require('dotenv').config()
@@ -18,14 +16,22 @@ require('dotenv').config()
 export class BotService {
     private bot: Telegraf<ContextMessageUpdate>;
 
-    private botInfo!: User;
+    private _botInfo?: User;
+    get botInfo() {
+        if (!this._botInfo) {
+            throw new Error("The bot is not running");
+        }
+
+        return this._botInfo;
+    }
 
     private _isRunning: boolean = false;
     public get isRunning() {
         return this._isRunning;
     }
 
-    constructor(@inject(Injections.DatabaseService) private databaseService: DatabaseService) {
+    constructor(@inject(Injections.DatabaseService) private databaseService: DatabaseService,
+        @inject(Injections.Container) private container: Container) {
         const botToken = process.env["BOT_TOKEN"];
         if (!botToken) {
             console.error("Bot token not found");
@@ -62,65 +68,6 @@ export class BotService {
         });
         this.bot.start((ctx) => ctx.reply(`欢迎使用 ${Constants.BotName} `));
 
-        this.bot.on("new_chat_members", async (ctx) => {
-            const { message } = ctx;
-            if (!message || !message.from) {
-                throw new Error("What happened?");
-            }
-            if (message.chat.type !== "group" && message.chat.type !== "supergroup") {
-                console.log("Not support private and channel");
-                return;
-            }
-
-            const handler = container.get<GroupMemberEventHandler>(Injections.GroupMemberEventHandler);
-
-            const group = message.chat.id;
-            const inviter = message.from.id;
-            let members = message.new_chat_members ?? [];
-
-            for (const member of members) {
-                if (member.is_bot && member.id === this.botInfo.id) {
-
-                    await handler.onBotJoinGroup(group, inviter, ctx.telegram);
-                    break;
-                }
-            }
-
-            members = members.filter(member => !member.is_bot);
-            if (members.length === 0) {
-                return;
-            }
-
-            await handler.onNewMembers(group, members.map(member => member.id));
-        });
-        this.bot.on("left_chat_member", async (ctx) => {
-            const { message } = ctx;
-            if (!message || !message.from) {
-                throw new Error("What happened?");
-            }
-            if (message.chat.type !== "group" && message.chat.type !== "supergroup") {
-                console.log("Not support private and channel");
-                return;
-            }
-
-            const handler = container.get<GroupMemberEventHandler>(Injections.GroupMemberEventHandler);
-
-            const member = message.left_chat_member;
-            if (!member) {
-                throw new Error("What happened?");
-            }
-
-            const group = message.chat.id;
-
-            if (member.is_bot && member.id === this.botInfo.id) {
-
-                await handler.onBotLeaveGroup(group);
-                return;
-            }
-
-            await handler.onMemberQuit(group, member.id);
-        });
-
         this.processControllers(controllers);
 
         this.bot.on("message", ctx => {
@@ -140,7 +87,7 @@ export class BotService {
     private createContext(ctx: ContextMessageUpdate) {
         return {
             ctx,
-            container: container.createChild(),
+            container: this.container.createChild(),
         };
     }
 
@@ -148,12 +95,12 @@ export class BotService {
         for (const constructor of constructors) {
             const { name } = constructor;
 
-            if (container.isBoundNamed(Injections.Controller, name)) {
+            if (this.container.isBoundNamed(Injections.Controller, name)) {
                 console.error("Duplicated controller name:", name);
                 process.exit(1);
             }
 
-            container.bind(Injections.Controller).to(constructor).whenTargetNamed(name);
+            this.container.bind(Injections.Controller).to(constructor).whenTargetNamed(name);
         }
 
         for (const constructor of constructors) {
@@ -209,7 +156,7 @@ export class BotService {
         await this.databaseService.waitForConnectionCreated();
         await this.bot.launch();
 
-        this.botInfo = await this.bot.telegram.getMe();
+        this._botInfo = await this.bot.telegram.getMe();
 
         this._isRunning = true;
 

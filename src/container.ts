@@ -4,10 +4,11 @@ import { Container } from "inversify";
 import { MetadataKeys, Injections } from "./constants";
 import { services } from "./services";
 import { repositories } from "./repositories";
-import { GroupMemberEventHandler } from "./handlers";
 import { schedulers } from "./schedulers";
 
 const container = new Container({ skipBaseClassChecks: true });
+
+container.bind<Container>(Injections.Container).toConstantValue(container);
 
 for (const service of services) {
     const identifier = Reflect.getMetadata(MetadataKeys.Service, service);
@@ -27,7 +28,5 @@ for (const repository of repositories) {
 for (const scheduler of schedulers) {
     container.bind(Injections.Scheduler).to(scheduler).inRequestScope().whenTargetNamed(scheduler.name);
 }
-
-container.bind(Injections.GroupMemberEventHandler).to(GroupMemberEventHandler);
 
 export { container };

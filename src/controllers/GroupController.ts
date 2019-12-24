@@ -1,20 +1,23 @@
 import { table } from "table";
 
-import { Controller, Command, InjectRepository } from "../decorators";
-import { MessageHandlerContext, IGroupRepository, IGroupRequirementRepository } from "../definitions";
+import { Controller, Command, InjectRepository, Event } from "../decorators";
+import { MessageHandlerContext, IGroupRepository, IGroupRequirementRepository, IUserRepository } from "../definitions";
 import { BaseController } from "./BaseController";
-import { Group, GroupRequirement } from "../entities";
-import { inject } from "inversify";
+import { Group, GroupRequirement, User } from "../entities";
+import { inject, Container } from "inversify";
 import { Injections } from "../constants";
-import { TestAccountBalanceService } from "../services";
+import { TestAccountBalanceService, BotService } from "../services";
 import { Extra, Markup } from "telegraf";
 
 @Controller("group")
 export class GroupController extends BaseController<GroupController> {
     constructor(
+        @InjectRepository(User) private userRepo: IUserRepository,
         @InjectRepository(Group) private groupRepo: IGroupRepository,
         @InjectRepository(GroupRequirement) private requirementRepo: IGroupRequirementRepository,
-        @inject(Injections.TestAccountBalanceService) private tbaService: TestAccountBalanceService) {
+        @inject(Injections.TestAccountBalanceService) private tbaService: TestAccountBalanceService,
+        @inject(Injections.Container) private container: Container,
+        @inject(Injections.BotService) private botService: BotService) {
         super();
     }
 
@@ -116,5 +119,77 @@ export class GroupController extends BaseController<GroupController> {
         await reply("你现在可以进入以下的群：", Markup.inlineKeyboard([
             buttons
         ]).extra());
+    }
+
+    @Event("new_chat_members")
+    async onNewMemberEnter({ message, telegram }: MessageHandlerContext) {
+        if (message.chat.type !== "group" && message.chat.type !== "supergroup") {
+            console.log("Not support private and channel");
+            return;
+        }
+
+        const groupId = message.chat.id;
+        const inviterId = message.from.id;
+        let newMembers = message.new_chat_members ?? [];
+
+        for (const member of newMembers) {
+            if (member.is_bot && member.id === this.botService.botInfo.id) {
+                const administrators = await telegram.getChatAdministrators(groupId);
+                const creator = administrators.find(admin => admin.status === "creator");
+                if (!creator) {
+                    throw new Error("Impossible situation");
+                }
+
+                const creatorId = creator.user.id;
+                if (inviterId !== creatorId) {
+                    console.info("不是群主邀请入群，立即退出");
+                    await telegram.leaveChat(groupId);
+                    return;
+                }
+
+                await this.groupRepo.addOrSetActiveGroup(groupId, creator.user.id);
+                break;
+            }
+        }
+
+        newMembers = newMembers.filter(member => !member.is_bot);
+        if (newMembers.length === 0) {
+            return;
+        }
+
+        const group = await this.groupRepo.getGroup(groupId);
+        const members = await Promise.all(newMembers.map(member => this.userRepo.addUser(member.id)));
+
+        await this.groupRepo.addMembers(group, members);
+    }
+
+    @Event("left_chat_member")
+    async onMemberLeft({ message, telegram }: MessageHandlerContext) {
+        if (message.chat.type !== "group" && message.chat.type !== "supergroup") {
+            console.log("Not support private and channel");
+            return;
+        }
+
+        const member = message.left_chat_member;
+        if (!member) {
+            throw new Error("What happened?");
+        }
+
+        const groupId = message.chat.id;
+        const group = await this.groupRepo.getGroup(groupId);
+
+        if (member.is_bot && member.id === this.botService.botInfo.id) {
+
+            await this.groupRepo.setActive(group, false);
+            return;
+        }
+
+        const user = group.members.find(user => Number(user.id) === member.id);
+        if (!user) {
+            console.log(`The user ${member.id} (${member.username}) is not in group ${groupId} (${message.chat.title})`);
+            return;
+        }
+
+        await this.groupRepo.removeMember(group, user);
     }
 }
