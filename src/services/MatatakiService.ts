@@ -31,7 +31,7 @@ export class MatatakiService {
     async getEthWallet(userId: number) {
         const response = await this.axios.get(`/_internal_bot/getEthWalletByTelegramId/${userId}`);
         if (response.status !== 200 || response.data.code !== 0) {
-            throw new Error("Failed to request ETH wallet binded with Matataki");
+            throw new Error("Failed to request the ETH wallet binded with Matataki");
         }
 
         return response.data.data.public_key;
