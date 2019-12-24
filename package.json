@@ -42,25 +42,5 @@
     "ts-node-dev": "^1.0.0-pre.44",
     "tsconfig-paths": "^3.9.0",
     "typescript": "^3.7.4"
-  },
-  "jest": {
-    "moduleFileExtensions": [
-      "js",
-      "ts"
-    ],
-    "transform": {
-      "^.+\\.ts$": "ts-jest"
-    },
-    "globals": {
-      "ts-jest": {
-        "tsConfig": "tsconfig.json"
-      }
-    },
-    "moduleNameMapper": {
-      "^#/(.+)": "<rootDir>/src/$1"
-    },
-    "testMatch": [
-      "**/tests/**/*.test.ts"
-    ]
   }
 }
