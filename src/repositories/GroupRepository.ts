@@ -73,4 +73,15 @@ export class GroupRepository extends BaseRepository<Group> implements IGroupRepo
 
         await this.repository.save(group);
     }
+
+    async setRequirement(group: Group, tokenAmount: number) {
+        group.requirement = {
+            minetoken: {
+                amount: tokenAmount,
+                canEqual: true,
+            },
+        }
+
+        await this.repository.save(group);
+    }
 }

@@ -62,25 +62,25 @@ export class GroupController extends BaseController<GroupController> {
             return reply("格式不对，请输入 `/set_requirement group_id amount`");
         }
 
+        let group: Group | undefined = undefined;
+
         const sender = message.from.id;
         const groups = await this.groupRepo.getGroupsOfCreator(sender);
-        if (groups.length === 0) {
-            await reply(`没有找到符合以下所有条件的群：
-            - 群主是你
-            - 机器人是群成员`);
-            return;
+        if (groups.length > 0) {
+            const groupId = Number(match[1]);
+
+            group = groups.find(group => Number(group.id) === groupId);
         }
 
-        const groupId = Number(match[1]);
-        const amount = Number(match[2]);
-
-        const group = groups.find(group => Number(group.id) === groupId);
         if (!group) {
             await reply(`没有找到符合以下所有条件的群：
             - 群主是你
             - 机器人是群成员`);
             return;
         }
+
+        const amount = Number(match[2]);
+        await this.groupRepo.setRequirement(group, amount);
 
         await reply("OK");
         return true;

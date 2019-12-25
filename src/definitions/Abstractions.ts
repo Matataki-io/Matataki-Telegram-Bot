@@ -17,4 +17,6 @@ export interface IGroupRepository {
     removeMember(group: Group, member: User): Promise<void>;
 
     setActive(group: Group, active: boolean): Promise<void>;
+
+    setRequirement(group: Group, tokenAmount: number): Promise<void>;
 }
