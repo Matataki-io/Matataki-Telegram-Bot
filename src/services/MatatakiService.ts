@@ -56,7 +56,7 @@ export class MatatakiService {
 
     async getEthWallet(userId: number): Promise<string> {
         try {
-            const response = await this.axios.get(`/_internal_bot/getEthWalletByTelegramId/${userId}`);
+            const response = await this.axios.get(`/_internal_bot/account/${userId}/ethWallet`);
 
             return response.data.data.public_key as string;
         } catch (e) {
@@ -77,7 +77,7 @@ export class MatatakiService {
 
     async getAssociatedInfo(userId: number): Promise<AssociatedInfo> {
         try {
-            const response = await this.axios.get<ApiResponse<AssociatedInfo>>(`/_internal_bot/${userId}/info`);
+            const response = await this.axios.get<ApiResponse<AssociatedInfo>>(`/_internal_bot/account/${userId}/info`);
 
             return response.data.data;
         } catch (e) {
