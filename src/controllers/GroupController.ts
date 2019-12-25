@@ -6,7 +6,7 @@ import { BaseController } from "./BaseController";
 import { Group, GroupRequirement, User } from "../entities";
 import { inject, Container } from "inversify";
 import { Injections } from "../constants";
-import { TestAccountBalanceService, BotService } from "../services";
+import { TestAccountBalanceService, BotService, MatatakiService } from "../services";
 import { Extra, Markup } from "telegraf";
 
 @Controller("group")
@@ -17,7 +17,8 @@ export class GroupController extends BaseController<GroupController> {
         @InjectRepository(GroupRequirement) private requirementRepo: IGroupRequirementRepository,
         @inject(Injections.TestAccountBalanceService) private tbaService: TestAccountBalanceService,
         @inject(Injections.Container) private container: Container,
-        @inject(Injections.BotService) private botService: BotService) {
+        @inject(Injections.BotService) private botService: BotService,
+        @inject(Injections.MatatakiService) private matatakiService: MatatakiService) {
         super();
     }
 
@@ -122,7 +123,7 @@ export class GroupController extends BaseController<GroupController> {
     }
 
     @Event("new_chat_members")
-    async onNewMemberEnter({ message, telegram }: MessageHandlerContext) {
+    async onNewMemberEnter({ message, reply, telegram }: MessageHandlerContext) {
         if (message.chat.type !== "group" && message.chat.type !== "supergroup") {
             console.log("Not support private and channel");
             return;
@@ -142,7 +143,14 @@ export class GroupController extends BaseController<GroupController> {
 
                 const creatorId = creator.user.id;
                 if (inviterId !== creatorId) {
-                    console.info("不是群主邀请入群，立即退出");
+                    await reply("邀请者不是群主，立即退出");
+                    await telegram.leaveChat(groupId);
+                    return;
+                }
+
+                const info = await this.matatakiService.getAssociatedInfo(inviterId);
+                if (!info.user || !info.minetoken) {
+                    await reply("群主没有在 瞬Matataki 绑定该 Telegram 帐号或者尚未发行 Fan 票，立即退出");
                     await telegram.leaveChat(groupId);
                     return;
                 }
