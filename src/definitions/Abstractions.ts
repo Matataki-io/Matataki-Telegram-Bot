@@ -1,12 +1,12 @@
 import { Group, User } from "../entities";
 
 export interface IUserRepository {
-    addUser(id: number): Promise<User>;
+    ensureUser(id: number): Promise<User>;
     getUser(id: number): Promise<User | undefined>;
 }
 
 export interface IGroupRepository {
-    addOrSetActiveGroup(id: number, creatorId: number): Promise<void>;
+    ensureGroup(id: number, creatorId: number, tokenId: number): Promise<void>;
 
     getGroup(id: number): Promise<Group>;
     getGroupsOfCreator(creatorId: number): Promise<Group[]>;

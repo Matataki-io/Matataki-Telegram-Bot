@@ -1,22 +1,20 @@
-import { Repository, InjectRepository } from "../decorators";
+import { Repository } from "../decorators";
 import { Group, User } from "../entities";
-import { IGroupRepository, IUserRepository } from "../definitions";
+import { IGroupRepository } from "../definitions";
 import { BaseRepository } from "./BaseRepository";
 
 @Repository(Group)
 export class GroupRepository extends BaseRepository<Group> implements IGroupRepository {
-    static relationsOption = { relations: ["members", "requirements", "requirements.group"] };
+    static relationsOption = { relations: ["members"] };
 
-    constructor(@InjectRepository(User) private userRepo: IUserRepository) {
-        super(Group);
-    }
-
-    async addOrSetActiveGroup(id: number, creatorId: number) {
+    async ensureGroup(id: number, creatorId: number, tokenId: number) {
         let group = await this.repository.findOne(id);
         if (!group) {
             group = this.repository.create();
             group.id = id;
             group.creatorId = creatorId;
+            group.tokenId = tokenId;
+            group.requirement = {};
         }
 
         group.active = true;
@@ -64,10 +62,10 @@ export class GroupRepository extends BaseRepository<Group> implements IGroupRepo
 
         await this.repository.save(group);
     }
-    async removeMembers(group: Group, members: User[]) {
+    removeMembers(group: Group, members: User[]) {
         group.members = group.members.filter(user => !members.includes(user));
 
-        await this.repository.save(group);
+        return this.repository.save(group);
     }
 
     async setActive(group: Group, active: boolean) {

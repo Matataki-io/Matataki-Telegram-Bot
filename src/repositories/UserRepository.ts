@@ -9,7 +9,7 @@ export class UserRepository extends BaseRepository<User> implements IUserReposit
         super(User);
     }
 
-    async addUser(id: number) {
+    async ensureUser(id: number) {
         let user = await this.repository.findOne(id);
         if (user) {
             return user;

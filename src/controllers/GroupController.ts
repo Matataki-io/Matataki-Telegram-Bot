@@ -152,7 +152,7 @@ export class GroupController extends BaseController<GroupController> {
                     return;
                 }
 
-                await this.groupRepo.addOrSetActiveGroup(groupId, creator.user.id);
+                await this.groupRepo.ensureGroup(groupId, creator.user.id);
                 break;
             }
         }
@@ -163,7 +163,7 @@ export class GroupController extends BaseController<GroupController> {
         }
 
         const group = await this.groupRepo.getGroup(groupId);
-        const members = await Promise.all(newMembers.map(member => this.userRepo.addUser(member.id)));
+        const members = await Promise.all(newMembers.map(member => this.userRepo.ensureUser(member.id)));
 
         await this.groupRepo.addMembers(group, members);
     }
