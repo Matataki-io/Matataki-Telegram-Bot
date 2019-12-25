@@ -152,7 +152,7 @@ export class GroupController extends BaseController<GroupController> {
                     return;
                 }
 
-                await this.groupRepo.ensureGroup(groupId, creator.user.id);
+                await this.groupRepo.ensureGroup(groupId, creator.user.id, info.minetoken.id);
                 break;
             }
         }
