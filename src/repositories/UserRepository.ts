@@ -9,7 +9,7 @@ export class UserRepository extends BaseRepository<User> implements IUserReposit
         super(User);
     }
 
-    async addUser(id: number): Promise<User> {
+    async addUser(id: number) {
         let user = await this.repository.findOne(id);
         if (user) {
             return user;
@@ -21,5 +21,9 @@ export class UserRepository extends BaseRepository<User> implements IUserReposit
         await this.repository.save(user);
 
         return user;
+    }
+
+    getUser(id: number) {
+        return this.repository.findOne(id, { relations: ["groups"] });
     }
 }

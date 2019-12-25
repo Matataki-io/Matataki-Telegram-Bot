@@ -9,6 +9,7 @@ import { Service } from "../decorators";
 
 import { inject, Container } from "inversify";
 import { DatabaseService } from "./DatabaseService";
+import { Group } from "../entities";
 
 @Service(Injections.BotService)
 export class BotService {
@@ -166,5 +167,17 @@ export class BotService {
     }
     kickMember(groupId: number, memberId: number) {
         return this.bot.telegram.kickChatMember(groupId, memberId);
+    }
+
+    getGroupInfos(groups: Group[]) {
+        return Promise.all(groups.map(async group => {
+            const groupId = Number(group.id);
+            const info = await this.bot.telegram.getChat(groupId);
+            if (!info.title) {
+                throw new Error("What happened?");
+            }
+
+            return info;
+        }));
     }
 }

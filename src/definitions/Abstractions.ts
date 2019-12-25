@@ -2,6 +2,7 @@ import { Group, User } from "../entities";
 
 export interface IUserRepository {
     addUser(id: number): Promise<User>;
+    getUser(id: number): Promise<User | undefined>;
 }
 
 export interface IGroupRepository {
