@@ -1,7 +1,7 @@
 import { Entity, PrimaryColumn, ManyToMany, Column, Index, OneToMany } from "typeorm";
 
 import { User } from "./User";
-import { GroupRequirement } from "./GroupRequirement";
+import { GroupRequirement } from "definitions/GroupRequirement";
 
 @Entity()
 export class Group {
@@ -15,9 +15,12 @@ export class Group {
     @Column({ type: "boolean", default: true })
     active!: boolean;
 
+    @Column({ type: "int" })
+    tokenId!: number;
+
+    @Column({ type: "jsonb" })
+    requirement!: GroupRequirement;
+
     @ManyToMany(type => User, user => user.groups)
     members!: User[];
-
-    @OneToMany(type => GroupRequirement, requirement => requirement.group)
-    requirements!: GroupRequirement[];
 }
