@@ -19,6 +19,10 @@ type AssociatedInfo = {
     }
 }
 
+type ContractAddressInfo = {
+    contractAddress: string
+}
+
 @Service(Injections.MatatakiService)
 export class MatatakiService {
     private axios: AxiosInstance;
@@ -87,7 +91,28 @@ export class MatatakiService {
                 throw new Error("Invalid Access Token");
             }
 
-            throw new Error("Failed to request the ETH wallet binded with Matataki");
+            throw new Error("Failed to request associated info");
+        }
+    }
+
+    async getContractAddressOfMinetoken(minetokenId: number): Promise<string> {
+        try {
+            const response = await this.axios.get<ApiResponse<ContractAddressInfo>>(`/_internal_bot/minetoken/${minetokenId}/contractAddress`);
+
+            return response.data.data.contractAddress;
+        } catch (e) {
+            const { response } = e as AxiosError;
+
+            if (response) {
+                if (response.status === 401) {
+                    throw new Error("Invalid Access Token");
+                }
+                if (response.status === 404) {
+                    throw new Error("Associated contract address not found");
+                }
+            }
+
+            throw new Error("Failed to request the contract address");
         }
     }
 }
