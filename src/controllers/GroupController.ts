@@ -1,9 +1,9 @@
 import { table } from "table";
 
 import { Controller, Command, InjectRepository, Event } from "../decorators";
-import { MessageHandlerContext, IGroupRepository, IGroupRequirementRepository, IUserRepository } from "../definitions";
+import { MessageHandlerContext, IGroupRepository, IUserRepository } from "../definitions";
 import { BaseController } from "./BaseController";
-import { Group, GroupRequirement, User } from "../entities";
+import { Group, User } from "../entities";
 import { inject, Container } from "inversify";
 import { Injections } from "../constants";
 import { TestAccountBalanceService, BotService, MatatakiService } from "../services";
@@ -14,7 +14,6 @@ export class GroupController extends BaseController<GroupController> {
     constructor(
         @InjectRepository(User) private userRepo: IUserRepository,
         @InjectRepository(Group) private groupRepo: IGroupRepository,
-        @InjectRepository(GroupRequirement) private requirementRepo: IGroupRequirementRepository,
         @inject(Injections.TestAccountBalanceService) private tbaService: TestAccountBalanceService,
         @inject(Injections.Container) private container: Container,
         @inject(Injections.BotService) private botService: BotService,
@@ -83,8 +82,6 @@ export class GroupController extends BaseController<GroupController> {
             return;
         }
 
-        await this.requirementRepo.setRequiredAmount(group, amount);
-
         await reply("OK");
         return true;
     }
@@ -101,7 +98,7 @@ export class GroupController extends BaseController<GroupController> {
         const balance = this.tbaService.getBalance(sender);
 
         const groups = await this.groupRepo.getGroups();
-        const acceptableGroups = groups.filter(group => group.requirements.length === 0 || balance >= group.requirements[0].amount);
+        const acceptableGroups = groups;//groups.filter(group => group.requirements.length === 0 || balance >= group.requirements[0].amount);
         if (acceptableGroups.length === 0) {
             await reply("抱歉，你的余额不足以进群");
             return;

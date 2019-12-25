@@ -1,7 +1,7 @@
 import { Scheduler, InjectRepository } from "../decorators";
 import { IScheduler } from "./IScheduler";
 import { inject } from "inversify";
-import { Injections, Tokens } from "../constants";
+import { Injections } from "../constants";
 import { BotService, TestAccountBalanceService } from "../services";
 import { Group, User } from "../entities";
 import { GroupRepository } from "../repositories";
@@ -23,7 +23,7 @@ export class GroupMemberChecker implements IScheduler {
         const groups = await this.groupRepo.getGroups();
         for (const group of groups) {
             const groupId = Number(group.id);
-            const ethRequirement = group.requirements.find(requirement => requirement.token === Tokens.Eth)?.amount ?? 0;
+            const ethRequirement = 0;
 
             const kickedUser = new Array<User>();
 
