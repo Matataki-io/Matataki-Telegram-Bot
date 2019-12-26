@@ -24,6 +24,8 @@ export class GroupRepository extends BaseRepository<Group> implements IGroupRepo
         group.active = true;
 
         await this.repository.save(group);
+
+        return group;
     }
 
     getGroup(id: number) {

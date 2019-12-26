@@ -6,7 +6,7 @@ export interface IUserRepository {
 }
 
 export interface IGroupRepository {
-    ensureGroup(id: number, creatorId: number, tokenId: number): Promise<void>;
+    ensureGroup(id: number, creatorId: number, tokenId: number): Promise<Group>;
 
     getGroup(id: number): Promise<Group>;
     getGroupsOfCreator(creatorId: number): Promise<Group[]>;
