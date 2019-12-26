@@ -6,7 +6,6 @@ export const Injections = {
     Scheduler: Symbol.for("Scheduler"),
 
     BotService: Symbol.for("BotService"),
-    TestAccountBalanceService: Symbol.for("TestAccountBalanceService"),
     DatabaseService: Symbol.for("DatabaseService"),
     MatatakiService: Symbol.for("MatatakiService"),
     Web3Service: Symbol.for("Web3Service"),
