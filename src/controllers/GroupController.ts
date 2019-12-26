@@ -1,21 +1,19 @@
 import { table } from "table";
+import { Extra, Markup } from "telegraf";
 
 import { Controller, Command, InjectRepository, Event } from "../decorators";
 import { MessageHandlerContext, IGroupRepository, IUserRepository } from "../definitions";
 import { BaseController } from "./BaseController";
 import { Group, User } from "../entities";
-import { inject, Container } from "inversify";
+import { inject } from "inversify";
 import { Injections } from "../constants";
-import { TestAccountBalanceService, BotService, MatatakiService } from "../services";
-import { Extra, Markup } from "telegraf";
+import { BotService, MatatakiService, Web3Service } from "../services";
 
 @Controller("group")
 export class GroupController extends BaseController<GroupController> {
     constructor(
         @InjectRepository(User) private userRepo: IUserRepository,
         @InjectRepository(Group) private groupRepo: IGroupRepository,
-        @inject(Injections.TestAccountBalanceService) private tbaService: TestAccountBalanceService,
-        @inject(Injections.Container) private container: Container,
         @inject(Injections.BotService) private botService: BotService,
         @inject(Injections.MatatakiService) private matatakiService: MatatakiService) {
         super();
@@ -24,16 +22,21 @@ export class GroupController extends BaseController<GroupController> {
     @Command("list_mygroups", { ignorePrefix: true })
     async listMyGroups({ message, reply, telegram }: MessageHandlerContext) {
         const sender = message.from.id;
-        const groups = await this.groupRepo.getGroupsOfCreator(sender);
 
-        if (groups.length === 0) {
-            await reply(`没有找到符合以下所有条件的群：
-            - 群主是你
-            - 机器人是群成员`);
+        const info = await this.matatakiService.getAssociatedInfo(sender);
+        if (!info.user || !info.minetoken) {
+            await reply("抱歉，你没有在 瞬Matataki 绑定该 Telegram 帐号或者尚未发行 Fan 票");
             return;
         }
 
-        const names = new Map<Group, string>();
+        const groups = await this.groupRepo.getGroupsOfCreator(sender);
+
+        if (groups.length === 0) {
+            await reply(`抱歉，你还没有创建 Fan票 群`);
+            return;
+        }
+
+        const groupNames = new Map<Group, string>();
 
         await Promise.all(groups.map(async group => {
             const info = await telegram.getChat(group.id);
@@ -41,15 +44,15 @@ export class GroupController extends BaseController<GroupController> {
                 throw new Error("What happened?");
             }
 
-            names.set(group, info.title);
+            groupNames.set(group, info.title);
         }));
 
         const array = [
-            ["群组 ID", "名字"]
+            ["群组 ID", "名字", "Fan 票", "最低要求"]
         ];
 
         for (const group of groups) {
-            array.push([group.id.toString(), names.get(group) ?? ""]);
+            array.push([group.id.toString(), groupNames.get(group) ?? "", info.minetoken?.symbol ?? "", (group.requirement.minetoken?.amount ?? 0).toString()]);
         }
 
         await reply(table(array));
