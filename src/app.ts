@@ -9,16 +9,18 @@ import { IScheduler, schedulers } from "./schedulers";
 
 config();
 
-for (const scheduler of schedulers) {
-    const setting = Reflect.getMetadata(MetadataKeys.Scheduler, scheduler) as string;
+(async function () {
+    const botService = container.get<BotService>(Injections.BotService);
 
-    new CronJob(setting, function() {
-        const instance = container.getNamed<IScheduler>(Injections.Scheduler, scheduler.name);
+    await botService.run();
 
-        instance.onTick();
-    }, undefined, true);
-}
+    for (const scheduler of schedulers) {
+        const setting = Reflect.getMetadata(MetadataKeys.Scheduler, scheduler) as string;
 
-const botService = container.get<BotService>(Injections.BotService);
+        new CronJob(setting, function() {
+            const instance = container.getNamed<IScheduler>(Injections.Scheduler, scheduler.name);
 
-botService.run();
+            instance.onTick();
+        }, undefined, true);
+    }
+})();
