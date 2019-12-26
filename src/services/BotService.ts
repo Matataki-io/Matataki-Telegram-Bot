@@ -166,6 +166,9 @@ export class BotService {
         console.log("Matataki bot is running...");
     }
 
+    getMeInGroup(group: Group) {
+        return this.bot.telegram.getChatMember(group.id, this.botInfo.id);
+    }
     getMember(groupId: number, memberId: number) {
         return this.bot.telegram.getChatMember(groupId, memberId);
     }
@@ -173,6 +176,9 @@ export class BotService {
         return this.bot.telegram.kickChatMember(groupId, memberId);
     }
 
+    getGroupInfo(group: Group) {
+        return this.bot.telegram.getChat(group.id);
+    }
     getGroupInfos(groups: Group[]) {
         return Promise.all(groups.map(async group => {
             const groupId = Number(group.id);
@@ -183,5 +189,9 @@ export class BotService {
 
             return info;
         }));
+    }
+
+    sendMessage(memberId: number, message: string) {
+        return this.bot.telegram.sendMessage(memberId, message, { parse_mode: "Markdown" });
     }
 }

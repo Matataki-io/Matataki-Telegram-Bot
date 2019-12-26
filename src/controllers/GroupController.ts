@@ -1,5 +1,6 @@
 import { table } from "table";
 import { Extra, Markup } from "telegraf";
+import { User as TelegramUser } from "telegraf/typings/telegram-types";
 
 import { Controller, Command, InjectRepository, Event } from "../decorators";
 import { MessageHandlerContext, IGroupRepository, IUserRepository } from "../definitions";
@@ -160,44 +161,82 @@ export class GroupController extends BaseController<GroupController> {
             return;
         }
 
+        let group: Group;
+
         const groupId = message.chat.id;
+        const groupInfo = await telegram.getChat(groupId);
+        const groupName = groupInfo.title;
+
         const inviterId = message.from.id;
+
         let newMembers = message.new_chat_members ?? [];
+        const me = newMembers.find(member => member.id === this.botService.botInfo.id);
+        if (!me) {
+            group = await this.groupRepo.getGroup(groupId);
+        } else {
+            const administrators = await telegram.getChatAdministrators(groupId);
+            const creator = administrators.find(admin => admin.status === "creator");
+            if (!creator) {
+                throw new Error("Impossible situation");
+            }
 
-        for (const member of newMembers) {
-            if (member.is_bot && member.id === this.botService.botInfo.id) {
-                const administrators = await telegram.getChatAdministrators(groupId);
-                const creator = administrators.find(admin => admin.status === "creator");
-                if (!creator) {
-                    throw new Error("Impossible situation");
-                }
+            const creatorId = creator.user.id;
+            if (inviterId !== creatorId) {
+                await reply("邀请者不是群主，立即退出");
+                await telegram.leaveChat(groupId);
+                return;
+            }
 
-                const creatorId = creator.user.id;
-                if (inviterId !== creatorId) {
-                    await reply("邀请者不是群主，立即退出");
-                    await telegram.leaveChat(groupId);
-                    return;
-                }
+            const info = await this.matatakiService.getAssociatedInfo(inviterId);
+            if (!info.user || !info.minetoken) {
+                await reply("群主没有在 瞬Matataki 绑定该 Telegram 帐号或者尚未发行 Fan 票，立即退出");
+                await telegram.leaveChat(groupId);
+                return;
+            }
 
-                const info = await this.matatakiService.getAssociatedInfo(inviterId);
-                if (!info.user || !info.minetoken) {
-                    await reply("群主没有在 瞬Matataki 绑定该 Telegram 帐号或者尚未发行 Fan 票，立即退出");
-                    await telegram.leaveChat(groupId);
-                    return;
-                }
+            group = await this.groupRepo.ensureGroup(groupId, creator.user.id, info.minetoken.id);
 
-                await this.groupRepo.ensureGroup(groupId, creator.user.id, info.minetoken.id);
-                break;
+            await this.botService.sendMessage(creatorId, `你已把机器人拉进群 **${groupName}**。为了机器人的正常工作，请把机器人设置为管理员并取消群员拉人权限`);
+
+            if (groupInfo.type === "group") {
+                await this.botService.sendMessage(creatorId, `**${groupName}** 现在是一个小群，对于机器人的正常工作存在一定影响，建议采取一些操作升级到大群。包括但不限于以下操作：
+- 临时转公开并设置群链接
+- 修改任意管理员操作权限`);
             }
         }
 
-        newMembers = newMembers.filter(member => !member.is_bot);
-        if (newMembers.length === 0) {
+        const acceptedUsers = new Set<TelegramUser>();
+
+        for (const member of newMembers) {
+            if (member.is_bot) {
+                continue;
+            }
+
+            const contractAddress = await this.matatakiService.getContractAddressOfMinetoken(group.tokenId);
+            const requirement = group.requirement.minetoken?.amount ?? 0;
+
+            const walletAddress = await this.matatakiService.getEthWallet(member.id);;
+            const balance = await this.web3Service.getBalance(contractAddress, walletAddress);
+
+            if (balance >= requirement) {
+                acceptedUsers.add(member);
+                continue;
+            }
+
+            try {
+                await this.botService.kickMember(groupId, member.id);
+
+                await this.botService.sendMessage(member.id, `你现在的 Fan 票不满足群 ${groupName} 的条件，现已被移出`);
+            } catch {
+                console.warn("机器人没有权限");
+            }
+        }
+
+        if (acceptedUsers.size === 0) {
             return;
         }
 
-        const group = await this.groupRepo.getGroup(groupId);
-        const members = await Promise.all(newMembers.map(member => this.userRepo.ensureUser(member.id)));
+        const members = await Promise.all(Array.from(acceptedUsers).map(member => this.userRepo.ensureUser(member.id)));
 
         await this.groupRepo.addMembers(group, members);
     }
