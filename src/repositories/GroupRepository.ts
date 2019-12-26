@@ -27,14 +27,14 @@ export class GroupRepository extends BaseRepository<Group> implements IGroupRepo
     }
 
     getGroup(id: number) {
-        return this.repository.findOneOrFail(id, GroupRepository.relationsOption);
+        return this.repository.findOneOrFail(id, { where: { active: true }, ...GroupRepository.relationsOption });
     }
     getGroupsOfCreator(creatorId: number) {
-        return this.repository.find({ where: { creatorId }, ...GroupRepository.relationsOption });
+        return this.repository.find({ where: { creatorId, active: true }, ...GroupRepository.relationsOption });
     }
 
     getGroups() {
-        return this.repository.find(GroupRepository.relationsOption);
+        return this.repository.find({ where: { active: true }, ...GroupRepository.relationsOption });
     }
 
     async addMembers(group: Group, members: User[]) {
