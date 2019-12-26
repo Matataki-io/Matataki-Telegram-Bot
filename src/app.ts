@@ -1,13 +1,13 @@
 import { config } from "dotenv";
 
+config();
+
 import { CronJob } from "cron";
 
 import { container } from "./container";
 import { Injections, MetadataKeys } from "./constants";
 import { BotService } from "./services";
 import { IScheduler, schedulers } from "./schedulers";
-
-config();
 
 (async function () {
     const botService = container.get<BotService>(Injections.BotService);
