@@ -15,6 +15,7 @@ export class GroupController extends BaseController<GroupController> {
         @InjectRepository(User) private userRepo: IUserRepository,
         @InjectRepository(Group) private groupRepo: IGroupRepository,
         @inject(Injections.BotService) private botService: BotService,
+        @inject(Injections.Web3Service) private web3Service: Web3Service,
         @inject(Injections.MatatakiService) private matatakiService: MatatakiService) {
         super();
     }
@@ -98,18 +99,36 @@ export class GroupController extends BaseController<GroupController> {
     @Command("join_groups", { ignorePrefix: true })
     async joinGroup({ message, reply, telegram }: MessageHandlerContext) {
         const sender = message.from.id;
-
-        if (sender !== 1019938473 && sender !== 972107339) {
-            await reply("暂时不支持");
+        const info = await this.matatakiService.getAssociatedInfo(sender);
+        if (!info.user) {
+            await reply("抱歉，你没有在 瞬Matataki 绑定该 Telegram 帐号或者尚未发行 Fan 票");
             return;
         }
 
-        const balance = this.tbaService.getBalance(sender);
+        const walletAddress = await this.matatakiService.getEthWallet(sender);;
 
-        const groups = await this.groupRepo.getGroups();
-        const acceptableGroups = groups;//groups.filter(group => group.requirements.length === 0 || balance >= group.requirements[0].amount);
+        const balanceCache = new Map<number, number>();
+        const contractAddressCache = new Map<number, string>();
+
+        const groups = await this.groupRepo.getGroupsExceptMyToken(info.minetoken?.id);
+        await Promise.all(groups.map(async group => {
+            let balance = balanceCache.get(group.tokenId);
+            if (typeof balance === "number") {
+                return;
+            }
+
+            let contractAddress = contractAddressCache.get(group.tokenId);
+            if (!contractAddress) {
+                contractAddress = await this.matatakiService.getContractAddressOfMinetoken(group.tokenId);
+                contractAddressCache.set(group.tokenId, contractAddress);
+            }
+
+            balance = Number(await this.web3Service.getBalance(contractAddress, walletAddress));
+            balanceCache.set(group.tokenId, balance!);
+        }));
+        const acceptableGroups = groups.filter(group => (balanceCache.get(group.tokenId) ?? -1) >= (group.requirement.minetoken?.amount ?? 0));
         if (acceptableGroups.length === 0) {
-            await reply("抱歉，你的余额不足以进群");
+            await reply("抱歉，你持有的 Fan票 不满足任何一个群的条件");
             return;
         }
 
@@ -118,6 +137,12 @@ export class GroupController extends BaseController<GroupController> {
             const info = await telegram.getChat(groupId);
             if (!info.title) {
                 throw new Error("What happened?");
+            }
+
+            const cm = await telegram.getChatMember(groupId, sender);
+            if (cm.status === "kicked") {
+                // @ts-ignore
+                await telegram.unbanChatMember(groupId, sender);
             }
 
             return Markup.urlButton(info.title, await telegram.exportChatInviteLink(groupId));

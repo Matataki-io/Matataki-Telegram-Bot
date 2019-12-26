@@ -12,6 +12,7 @@ export interface IGroupRepository {
     getGroupsOfCreator(creatorId: number): Promise<Group[]>;
 
     getGroups(): Promise<Group[]>;
+    getGroupsExceptMyToken(tokenId?: number): Promise<Group[]>;
 
     addMembers(group: Group, members: User[]): Promise<void>;
     removeMember(group: Group, member: User): Promise<void>;

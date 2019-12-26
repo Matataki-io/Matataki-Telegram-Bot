@@ -1,3 +1,5 @@
+import { Not } from "typeorm";
+
 import { Repository } from "../decorators";
 import { Group, User } from "../entities";
 import { IGroupRepository } from "../definitions";
@@ -37,6 +39,13 @@ export class GroupRepository extends BaseRepository<Group> implements IGroupRepo
 
     getGroups() {
         return this.repository.find({ where: { active: true }, ...GroupRepository.relationsOption });
+    }
+    getGroupsExceptMyToken(tokenId?: number) {
+        if (!tokenId) {
+            return this.getGroups();
+        }
+
+        return this.repository.find({ where: { active: true, tokenId: Not(tokenId) }, ...GroupRepository.relationsOption });
     }
 
     async addMembers(group: Group, members: User[]) {
