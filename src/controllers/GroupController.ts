@@ -102,7 +102,7 @@ export class GroupController extends BaseController<GroupController> {
         const sender = message.from.id;
         const info = await this.matatakiService.getAssociatedInfo(sender);
         if (!info.user) {
-            await reply("抱歉，你没有在 瞬Matataki 绑定该 Telegram 帐号或者尚未发行 Fan 票");
+            await reply("抱歉，你没有在 瞬Matataki 绑定该 Telegram 帐号");
             return;
         }
 
