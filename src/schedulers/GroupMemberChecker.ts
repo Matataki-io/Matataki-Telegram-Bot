@@ -1,8 +1,10 @@
+import { inject } from "inversify";
+import { Chat } from "telegraf/typings/telegram-types";
+
 import { Scheduler, InjectRepository } from "../decorators";
 import { IScheduler } from "./IScheduler";
-import { inject } from "inversify";
 import { Injections } from "../constants";
-import { BotService, TestAccountBalanceService } from "../services";
+import { BotService, MatatakiService, Web3Service } from "../services";
 import { Group, User } from "../entities";
 import { GroupRepository } from "../repositories";
 
@@ -10,9 +12,9 @@ import { GroupRepository } from "../repositories";
 export class GroupMemberChecker implements IScheduler {
     constructor(
         @inject(Injections.BotService) private botService: BotService,
-        @inject(Injections.TestAccountBalanceService) private tbaService: TestAccountBalanceService,
+        @inject(Injections.Web3Service) private web3Service: Web3Service,
+        @inject(Injections.MatatakiService) private matatakiService: MatatakiService,
         @InjectRepository(Group) private groupRepo: GroupRepository) {
-
     }
 
     async onTick() {
@@ -23,39 +25,52 @@ export class GroupMemberChecker implements IScheduler {
         const groups = await this.groupRepo.getGroups();
         for (const group of groups) {
             const groupId = Number(group.id);
-            const ethRequirement = 0;
+            const balanceRequirement = group.requirement.minetoken?.amount ?? 0;
 
-            const kickedUser = new Array<User>();
+            let groupInfo: Chat;
+            try {
+                groupInfo = await this.botService.getGroupInfo(group);
+            } catch {
+                console.warn("The bot was kicked");
+                await this.groupRepo.setActive(group, false);
+                continue;
+            }
+
+            const contractAddress = await this.matatakiService.getContractAddressOfMinetoken(group.tokenId);
+
+            const kickedUsers = new Array<User>();
 
             for (const user of group.members) {
                 const userId = Number(user.id);
 
-                if (userId !== 1019938473 && userId !== 972107339) {
-                    console.log("Not implemented now");
-                    continue;
-                }
-
                 const userInfo = await this.botService.getMember(groupId, userId);
                 if (userInfo.status !== "member") {
+                    kickedUsers.push(user);
                     continue;
                 }
 
-                const balance = this.tbaService.getBalance(userId);
+                const walletAddress = await this.matatakiService.getEthWallet(userId);;
+                const balance = await this.web3Service.getBalance(contractAddress, walletAddress);
 
-                if (balance >= ethRequirement) {
+                if (balance >= balanceRequirement) {
                     continue;
                 }
 
                 try {
                     await this.botService.kickMember(groupId, userId);
+                    await this.botService.sendMessage(userId, `你现在的 Fan 票不满足群 ${groupInfo.title} 的条件，现已被移出`);
 
-                    kickedUser.push(user);
+                    kickedUsers.push(user);
                 } catch {
                     console.warn("机器人没有权限");
                 }
             }
 
-            await this.groupRepo.removeMembers(group, kickedUser);
+            if (kickedUsers.length === 0) {
+                return;
+            }
+
+            await this.groupRepo.removeMembers(group, kickedUsers);
         }
     }
 }
