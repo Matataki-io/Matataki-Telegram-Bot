@@ -21,7 +21,7 @@ export class GroupController extends BaseController<GroupController> {
         super();
     }
 
-    @Command("list_mygroups", { ignorePrefix: true })
+    @Command("mygroups", { ignorePrefix: true })
     async listMyGroups({ message, reply, telegram }: MessageHandlerContext) {
         const sender = message.from.id;
 
@@ -60,7 +60,7 @@ export class GroupController extends BaseController<GroupController> {
         await reply(table(array));
     }
 
-    @Command("set_requirement", { ignorePrefix: true })
+    @Command("set", { ignorePrefix: true })
     async setGroupRequirement({ message, reply, telegram }: MessageHandlerContext) {
         const sender = message.from.id;
         const info = await this.matatakiService.getAssociatedInfo(sender);
@@ -69,9 +69,9 @@ export class GroupController extends BaseController<GroupController> {
             return;
         }
 
-        const match = /^\/set_requirement (-?\d+) (\d+)$/.exec(message.text);
+        const match = /^\/set (-?\d+) (\d+)$/.exec(message.text);
         if (!match || match.length < 2) {
-            return reply("格式不对，请输入 `/set_requirement group_id amount`");
+            return reply("格式不对，请输入 `/set group_id amount`");
         }
 
         const groupId = Number(match[1]);
@@ -97,7 +97,7 @@ export class GroupController extends BaseController<GroupController> {
         return true;
     }
 
-    @Command("join_groups", { ignorePrefix: true })
+    @Command("join", { ignorePrefix: true })
     async joinGroup({ message, reply, telegram }: MessageHandlerContext) {
         const sender = message.from.id;
         const info = await this.matatakiService.getAssociatedInfo(sender);
