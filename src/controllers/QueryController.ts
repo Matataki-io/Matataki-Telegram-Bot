@@ -43,7 +43,7 @@ export class QueryController extends BaseController<QueryController> {
                 array.push(`你已加入 ${user.groups.length} 个 Fan票 群`);
                 const groups = await this.botService.getGroupInfos(user.groups);
                 for (const group of groups) {
-                    array.push(`/ ${group.title ?? group.id}`);
+                    array.push(`/ [${group.title ?? group.id}](${group.invite_link})`);
                 }
                 array.push("");
             }
@@ -57,8 +57,9 @@ export class QueryController extends BaseController<QueryController> {
                 for (let i = 0; i < myGroups.length; i++) {
                     const group = myGroups[i];
                     const groupInfo = groupInfos[i];
+                    const noRequirement = (group.requirement.minetoken?.amount ?? 0) === 0;
 
-                    array.push(`/ ${groupInfo.title ?? groupInfo.id} （${group.requirements.length > 0 ? "已有规则" : "暂无规则"}）`);
+                    array.push(`/ [${groupInfo.title ?? groupInfo.id}](${groupInfo.invite_link}) （${!noRequirement ? "已有规则" : "暂无规则"}）`);
                 }
             }
         }
