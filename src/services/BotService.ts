@@ -10,6 +10,7 @@ import { Service } from "../decorators";
 import { inject, Container } from "inversify";
 import { DatabaseService } from "./DatabaseService";
 import { Group } from "../entities";
+import { delay } from "../utils";
 
 @Service(Injections.BotService)
 export class BotService {
@@ -153,6 +154,9 @@ export class BotService {
 
     async run() {
         await this.databaseService.waitForConnectionCreated();
+
+        await delay(2000);
+
         await this.bot.launch();
 
         this._botInfo = await this.bot.telegram.getMe();
