@@ -197,6 +197,21 @@ export class GroupController extends BaseController<GroupController> {
 
         await this.groupRepo.removeMember(group, user);
     }
+
+    @Event(["group_chat_created", "supergroup_chat_created"])
+    async onGroupCreated({ message, reply, telegram }: MessageHandlerContext) {
+        const groupId = message.chat.id;
+        const inviterId = message.from.id;
+
+        const info = await this.matatakiService.getAssociatedInfo(inviterId);
+        if (!info.user || !info.minetoken) {
+            await reply("群主没有在 瞬Matataki 绑定该 Telegram 帐号或者尚未发行 Fan 票，立即退出");
+            await telegram.leaveChat(groupId);
+            return;
+        }
+
+        await this.groupRepo.ensureGroup(groupId, inviterId, info.minetoken.id);
+    }
     @Event("migrate_to_chat_id")
     async onGroupMigration({ message }: MessageHandlerContext) {
         if (!message.migrate_to_chat_id) {
