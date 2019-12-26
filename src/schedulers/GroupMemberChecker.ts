@@ -67,7 +67,7 @@ export class GroupMemberChecker implements IScheduler {
             }
 
             if (kickedUsers.length === 0) {
-                return;
+                continue;
             }
 
             await this.groupRepo.removeMembers(group, kickedUsers);
