@@ -19,4 +19,6 @@ export interface IGroupRepository {
     setActive(group: Group, active: boolean): Promise<void>;
 
     setRequirement(group: Group, tokenAmount: number): Promise<void>;
+
+    changeGroupId(group: Group, newId: number): Promise<void>;
 }

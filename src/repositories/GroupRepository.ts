@@ -7,6 +7,10 @@ import { BaseRepository } from "./BaseRepository";
 export class GroupRepository extends BaseRepository<Group> implements IGroupRepository {
     static relationsOption = { relations: ["members"] };
 
+    constructor() {
+        super(Group);
+    }
+
     async ensureGroup(id: number, creatorId: number, tokenId: number) {
         let group = await this.repository.findOne(id);
         if (!group) {
@@ -83,5 +87,13 @@ export class GroupRepository extends BaseRepository<Group> implements IGroupRepo
         }
 
         await this.repository.save(group);
+    }
+
+    async changeGroupId(group: Group, newId: number) {
+        const oldId = Number(group.id);
+        group.id = newId;
+
+        await this.repository.save(group);
+        await this.repository.delete(oldId);
     }
 }

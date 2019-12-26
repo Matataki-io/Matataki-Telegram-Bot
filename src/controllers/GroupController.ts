@@ -197,4 +197,14 @@ export class GroupController extends BaseController<GroupController> {
 
         await this.groupRepo.removeMember(group, user);
     }
+    @Event("migrate_to_chat_id")
+    async onGroupMigration({ message }: MessageHandlerContext) {
+        if (!message.migrate_to_chat_id) {
+            throw new Error("Impossible situation");
+        }
+
+        const group = await this.groupRepo.getGroup(message.chat.id);
+
+        await this.groupRepo.changeGroupId(group, message.migrate_to_chat_id);
+    }
 }

@@ -71,7 +71,7 @@ export class BotService {
 
         this.bot.on("message", ctx => {
             const { message } = ctx;
-            if (!message || !message.text) {
+            if (!message) {
                 throw new Error("What happended?");
             }
 
@@ -129,7 +129,7 @@ export class BotService {
         return (ctx: ContextMessageUpdate) => {
             const { message, from } = ctx;
 
-            if (!message || !message.text) {
+            if (!message) {
                 throw new Error("What happended?");
             }
             if (!from) {
