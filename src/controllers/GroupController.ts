@@ -59,26 +59,32 @@ export class GroupController extends BaseController<GroupController> {
     }
 
     @Command("set_requirement", { ignorePrefix: true })
-    async setGroupRequirement({ message, reply }: MessageHandlerContext) {
+    async setGroupRequirement({ message, reply, telegram }: MessageHandlerContext) {
+        const sender = message.from.id;
+        const info = await this.matatakiService.getAssociatedInfo(sender);
+        if (!info.user || !info.minetoken) {
+            await reply("抱歉，你没有在 瞬Matataki 绑定该 Telegram 帐号或者尚未发行 Fan 票");
+            return;
+        }
+
         const match = /^\/set_requirement (-?\d+) (\d+)$/.exec(message.text);
         if (!match || match.length < 2) {
             return reply("格式不对，请输入 `/set_requirement group_id amount`");
         }
 
-        let group: Group | undefined = undefined;
-
-        const sender = message.from.id;
+        const groupId = Number(match[1]);
         const groups = await this.groupRepo.getGroupsOfCreator(sender);
-        if (groups.length > 0) {
-            const groupId = Number(match[1]);
-
-            group = groups.find(group => Number(group.id) === groupId);
-        }
+        const group = groups.find(group => Number(group.id) === groupId);
 
         if (!group) {
-            await reply(`没有找到符合以下所有条件的群：
-            - 群主是你
-            - 机器人是群成员`);
+            await reply(`没有找到该群`);
+            return;
+        }
+
+        const administrators = await telegram.getChatAdministrators(groupId);
+        const me = administrators.find(admin => admin.user.id === this.botService.botInfo.id);
+        if (!me || !me.can_invite_users) {
+            await reply("请把机器人设置为管理员并设置邀请用户权限");
             return;
         }
 
