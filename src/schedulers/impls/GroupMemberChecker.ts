@@ -1,20 +1,21 @@
 import { inject } from "inversify";
 import { Chat } from "telegraf/typings/telegram-types";
 
-import { Scheduler, InjectRepository } from "../decorators";
-import { IScheduler } from "./IScheduler";
-import { Injections } from "../constants";
-import { BotService, MatatakiService, Web3Service } from "../services";
-import { Group, User } from "../entities";
-import { GroupRepository } from "../repositories";
+import { Scheduler, InjectRepository } from "#/decorators";
+import { Injections } from "#/constants";
+import { IWeb3Service, IBotService } from "#/services";
+import { Group, User } from "#/entities";
+import { IGroupRepository } from "#/repositories";
+import { IMatatakiService } from "#/services";
+import { IScheduler } from "#/schedulers";
 
 @Scheduler("0 */1 * * * *")
 export class GroupMemberChecker implements IScheduler {
     constructor(
-        @inject(Injections.BotService) private botService: BotService,
-        @inject(Injections.Web3Service) private web3Service: Web3Service,
-        @inject(Injections.MatatakiService) private matatakiService: MatatakiService,
-        @InjectRepository(Group) private groupRepo: GroupRepository) {
+        @inject(Injections.BotService) private botService: IBotService,
+        @inject(Injections.Web3Service) private web3Service: IWeb3Service,
+        @inject(Injections.MatatakiService) private matatakiService: IMatatakiService,
+        @InjectRepository(Group) private groupRepo: IGroupRepository) {
     }
 
     async onTick() {

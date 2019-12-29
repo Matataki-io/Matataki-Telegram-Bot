@@ -1,13 +1,13 @@
 import { Not } from "typeorm";
 
-import { Repository } from "../decorators";
-import { Group, User } from "../entities";
-import { IGroupRepository } from "../definitions";
-import { BaseRepository } from "./BaseRepository";
+import { Repository } from "#/decorators";
+import { Group, User } from "#/entities";
+import { BaseRepository, IGroupRepository } from "#/repositories";
+
+const relationsOption = { relations: ["members"] };
 
 @Repository(Group)
-export class GroupRepository extends BaseRepository<Group> implements IGroupRepository {
-    static relationsOption = { relations: ["members"] };
+export class GroupRepositoryImpl extends BaseRepository<Group> implements IGroupRepository {
 
     constructor() {
         super(Group);
@@ -31,21 +31,21 @@ export class GroupRepository extends BaseRepository<Group> implements IGroupRepo
     }
 
     getGroup(id: number) {
-        return this.repository.findOneOrFail(id, { where: { active: true }, ...GroupRepository.relationsOption });
+        return this.repository.findOneOrFail(id, { where: { active: true }, ...relationsOption });
     }
     getGroupsOfCreator(creatorId: number) {
-        return this.repository.find({ where: { creatorId, active: true }, ...GroupRepository.relationsOption });
+        return this.repository.find({ where: { creatorId, active: true }, ...relationsOption });
     }
 
     getGroups() {
-        return this.repository.find({ where: { active: true }, ...GroupRepository.relationsOption });
+        return this.repository.find({ where: { active: true }, ...relationsOption });
     }
     getGroupsExceptMyToken(tokenId?: number) {
         if (!tokenId) {
             return this.getGroups();
         }
 
-        return this.repository.find({ where: { active: true, tokenId: Not(tokenId) }, ...GroupRepository.relationsOption });
+        return this.repository.find({ where: { active: true, tokenId: Not(tokenId) }, ...relationsOption });
     }
 
     async addMembers(group: Group, members: User[]) {
@@ -77,10 +77,10 @@ export class GroupRepository extends BaseRepository<Group> implements IGroupRepo
 
         await this.repository.save(group);
     }
-    removeMembers(group: Group, members: User[]) {
+    async removeMembers(group: Group, members: User[]) {
         group.members = group.members.filter(user => !members.includes(user));
 
-        return this.repository.save(group);
+        await this.repository.save(group);
     }
 
     async setActive(group: Group, active: boolean) {

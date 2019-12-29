@@ -1,4 +1,4 @@
-import { Entity, PrimaryColumn, ManyToMany, Column, Index, OneToMany } from "typeorm";
+import { Entity, PrimaryColumn, ManyToMany, Column, Index } from "typeorm";
 
 import { User } from "./User";
 import { GroupRequirement } from "definitions/GroupRequirement";

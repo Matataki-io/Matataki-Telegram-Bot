@@ -1,12 +1,7 @@
-import { IScheduler } from "./IScheduler";
-export { IScheduler };
-
-import { GroupMemberChecker } from "./GroupMemberChecker";
-
-interface SchedulerConstructor {
-    new(...args: any[]): IScheduler;
+export interface IScheduler {
+    onTick(): void | Promise<void>;
 }
 
-export const schedulers: SchedulerConstructor[] = [
-    GroupMemberChecker,
-];
+export interface SchedulerConstructor {
+    new(...args: any[]): IScheduler;
+}

@@ -1,10 +1,9 @@
-import { Repository } from "../decorators";
-import { User } from "../entities";
-import { IUserRepository } from "../definitions";
-import { BaseRepository } from "./BaseRepository";
+import { Repository } from "#/decorators";
+import { User } from "#/entities";
+import { BaseRepository, IUserRepository } from "#/repositories";
 
 @Repository(User)
-export class UserRepository extends BaseRepository<User> implements IUserRepository {
+export class UserRepositoryImpl extends BaseRepository<User> implements IUserRepository {
     constructor() {
         super(User);
     }

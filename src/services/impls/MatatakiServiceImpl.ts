@@ -1,22 +1,13 @@
 import axios, { AxiosInstance, AxiosError } from "axios";
-import { Service } from "../decorators";
-import { Injections } from "../constants";
+
+import { Injections } from "#/constants";
+import { Service } from "#/decorators";
+import { AssociatedInfo } from "#/definitions";
+import { IMatatakiService } from "#/services";
 
 type ApiResponse<T> = {
     code: number,
     data: T,
-}
-
-type AssociatedInfo = {
-    user?: {
-        id: number,
-        name: string,
-    },
-    minetoken?: {
-        id: number,
-        name: string,
-        symbol: string,
-    }
 }
 
 type ContractAddressInfo = {
@@ -24,7 +15,7 @@ type ContractAddressInfo = {
 }
 
 @Service(Injections.MatatakiService)
-export class MatatakiService {
+export class MatatakiServiceImpl implements IMatatakiService {
     private axios: AxiosInstance;
 
     public get urlPrefix() {

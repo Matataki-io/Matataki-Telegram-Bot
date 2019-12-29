@@ -4,17 +4,18 @@ config();
 
 import { CronJob } from "cron";
 
-import { container } from "./container";
-import { Injections, MetadataKeys } from "./constants";
-import { BotService } from "./services";
-import { IScheduler, schedulers } from "./schedulers";
+import { Injections, MetadataKeys } from "#/constants";
+import { container } from "#/container";
+import { IScheduler } from "#/schedulers";
+import { schedulerImplementations } from "#/schedulers/impls";
+import { IBotService } from "#/services";
 
 (async function () {
-    const botService = container.get<BotService>(Injections.BotService);
+    const botService = container.get<IBotService>(Injections.BotService);
 
     await botService.run();
 
-    for (const scheduler of schedulers) {
+    for (const scheduler of schedulerImplementations) {
         const setting = Reflect.getMetadata(MetadataKeys.Scheduler, scheduler) as string;
 
         new CronJob(setting, function() {

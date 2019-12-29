@@ -1,4 +1,4 @@
-import { Entity, PrimaryColumn, OneToMany, ManyToMany, JoinTable } from "typeorm";
+import { Entity, PrimaryColumn, ManyToMany, JoinTable } from "typeorm";
 
 import { Group } from "./Group";
 

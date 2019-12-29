@@ -1,19 +1,18 @@
+import { inject, Container } from "inversify";
 import Telegraf, { ContextMessageUpdate, Middleware, session } from "telegraf";
-
 import { User } from "telegraf/typings/telegram-types";
 
-import { Constants, MetadataKeys, Injections } from "../constants";
-import { ControllerConstructor, controllers } from "../controllers";
-import { CommandHandlerInfo, EventHandlerInfo, MessageHandler, MessageHandlerContext } from "../definitions";
-import { Service } from "../decorators";
+import { Constants, MetadataKeys, Injections } from "#/constants";
+import { ControllerConstructor, controllers } from "#/controllers";
+import { CommandHandlerInfo, EventHandlerInfo, MessageHandler, MessageHandlerContext } from "#/definitions";
+import { Service } from "#/decorators";
+import { Group } from "#/entities";
+import { delay } from "#/utils";
 
-import { inject, Container } from "inversify";
-import { DatabaseService } from "./DatabaseService";
-import { Group } from "../entities";
-import { delay } from "../utils";
+import { IBotService, IDatabaseService } from "#/services";
 
 @Service(Injections.BotService)
-export class BotService {
+export class BotServiceImpl implements IBotService {
     private bot: Telegraf<ContextMessageUpdate>;
 
     private _botInfo?: User;
@@ -30,7 +29,7 @@ export class BotService {
         return this._isRunning;
     }
 
-    constructor(@inject(Injections.DatabaseService) private databaseService: DatabaseService,
+    constructor(@inject(Injections.DatabaseService) private databaseService: IDatabaseService,
         @inject(Injections.Container) private container: Container) {
         const botToken = process.env["BOT_TOKEN"];
         if (!botToken) {
@@ -137,7 +136,7 @@ export class BotService {
                 throw new Error("What happended?");
             }
 
-            type ContextType = ReturnType<typeof BotService.prototype.createContext>;
+            type ContextType = ReturnType<typeof BotServiceImpl.prototype.createContext>;
             const context = Reflect.getMetadata(MetadataKeys.Context, ctx) as ContextType;
 
             context.container.bind<ContextType>(Injections.Context).toConstantValue(context);
@@ -149,6 +148,8 @@ export class BotService {
             if (result instanceof Promise) {
                 return result;
             }
+
+            return undefined;
         }
     }
 

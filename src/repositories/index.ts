@@ -1,14 +1,12 @@
-export * from "./BaseRepository";
+import { Repository, getRepository } from "typeorm";
 
-import { UserRepository } from "./UserRepository";
-import { GroupRepository } from "./GroupRepository";
+export abstract class BaseRepository<T> {
+    protected repository: Repository<T>;
 
-export {
-    UserRepository,
-    GroupRepository,
+    constructor(entityType: Function) {
+        this.repository = getRepository(entityType);
+    }
 }
 
-export const repositories = [
-    UserRepository,
-    GroupRepository,
-];
+export * from "./IUserRepository";
+export * from "./IGroupRepository";

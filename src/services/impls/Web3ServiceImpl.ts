@@ -1,13 +1,13 @@
 import Web3 from "web3";
 import { Contract } from 'web3-eth-contract';
 
-import { Service } from "../decorators";
-import { Injections } from "../constants";
-import { network } from "../constants";
-import { ABI } from "../abi/FanPiao";
+import { ABI } from "#/abi/FanPiao";
+import { Injections, network } from "#/constants";
+import { Service } from "#/decorators";
+import { IWeb3Service } from "#/services";
 
 @Service(Injections.Web3Service)
-export class Web3Service {
+export class Web3ServiceImpl implements IWeb3Service {
     private web3: Web3;
     private contracts: Map<string, Contract>;
 
