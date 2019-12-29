@@ -19,7 +19,7 @@ export class QueryController extends BaseController<QueryController> {
     }
 
     @Command("stat", { ignorePrefix: true })
-    async queryToken({ message, replyWithMarkdown }: MessageHandlerContext) {
+    async queryStat({ message, replyWithMarkdown }: MessageHandlerContext) {
         const id = message.from.id;
         const info = await this.matatakiService.getAssociatedInfo(id);
 

@@ -8,7 +8,7 @@ import { createMockedContext } from "./Utils";
 const controller = new DebugController();
 
 describe("DebugController", () => {
-    it("Ping", async () => {
+    it("/ping", async () => {
         const ctx = createMockedContext()
 
         await controller.ping(ctx);

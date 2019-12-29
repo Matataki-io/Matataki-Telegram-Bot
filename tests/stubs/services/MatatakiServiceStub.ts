@@ -15,7 +15,7 @@ export class MatatakiServiceStub implements IMatatakiService {
     }
     getAssociatedInfo(userId: number): Promise<AssociatedInfo> {
         switch (userId) {
-            case 114514:
+            case 1:
                 return Promise.resolve<AssociatedInfo>({
                     user: {
                         id: 114514,
@@ -28,13 +28,16 @@ export class MatatakiServiceStub implements IMatatakiService {
                     },
                 });
 
-            case 1919:
+            case 2:
                 return Promise.resolve<AssociatedInfo>({
                     user: {
                         id: 1919,
                         name: "野獣先輩",
                     }
                 });
+
+            case 3:
+                return Promise.resolve<AssociatedInfo>({});
 
             default:
                 return Promise.reject(new Error("Associated Matataki account not found"));
