@@ -1,5 +1,5 @@
 import { MetadataKeys } from "../constants";
-import { EventHandlerInfo } from "../definitions";
+import { EventHandlerInfo } from "#/definitions";
 import { UpdateType, MessageSubTypes } from "telegraf/typings/telegram-types";
 
 export function Event(name: UpdateType | UpdateType[] | MessageSubTypes | MessageSubTypes[]): MethodDecorator {

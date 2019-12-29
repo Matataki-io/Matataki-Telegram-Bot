@@ -1,9 +1,8 @@
 import { inject } from "inversify";
 
-import { Controller, Command } from "../decorators";
-import { MessageHandlerContext } from "../definitions";
+import { Controller, Command } from "#/decorators";
+import { MessageHandlerContext } from "#/definitions";
 import { BaseController } from ".";
-import { Injections } from "../constants";
 
 @Controller("debug")
 export class DebugController extends BaseController<DebugController> {

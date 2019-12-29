@@ -1,5 +1,5 @@
 import { MetadataKeys } from "../constants";
-import { CommandHandlerInfo } from "../definitions";
+import { CommandHandlerInfo } from "#/definitions";
 
 type CommandBindingOptions = {
     ignorePrefix?: boolean;

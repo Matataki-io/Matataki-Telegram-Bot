@@ -5,7 +5,7 @@ import { Service } from "#/decorators";
 import { IDatabaseService } from "#/services";
 
 @Service(Injections.DatabaseService)
-export class DatabaseService implements IDatabaseService {
+export class DatabaseServiceImpl implements IDatabaseService {
     private connection: Promise<Connection>;
 
     constructor() {

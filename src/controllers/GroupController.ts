@@ -1,23 +1,25 @@
+import { inject } from "inversify";
 import { table } from "table";
 import { Extra, Markup } from "telegraf";
 import { User as TelegramUser } from "telegraf/typings/telegram-types";
 
-import { Controller, Command, InjectRepository, Event } from "../decorators";
-import { MessageHandlerContext, IGroupRepository, IUserRepository } from "../definitions";
-import { BaseController } from "./BaseController";
-import { Group, User } from "../entities";
-import { inject } from "inversify";
-import { Injections } from "../constants";
-import { BotService, MatatakiService, Web3Service } from "../services";
+import { Controller, Command, InjectRepository, Event } from "#/decorators";
+import { MessageHandlerContext } from "#/definitions";
+import { Group, User } from "#/entities";
+import { Injections } from "#/constants";
+import { IUserRepository, IGroupRepository } from "#/repositories";
+import { IBotService, IMatatakiService, IWeb3Service } from "#/services";
+
+import { BaseController } from ".";
 
 @Controller("group")
 export class GroupController extends BaseController<GroupController> {
     constructor(
         @InjectRepository(User) private userRepo: IUserRepository,
         @InjectRepository(Group) private groupRepo: IGroupRepository,
-        @inject(Injections.BotService) private botService: BotService,
-        @inject(Injections.Web3Service) private web3Service: Web3Service,
-        @inject(Injections.MatatakiService) private matatakiService: MatatakiService) {
+        @inject(Injections.BotService) private botService: IBotService,
+        @inject(Injections.Web3Service) private web3Service: IWeb3Service,
+        @inject(Injections.MatatakiService) private matatakiService: IMatatakiService) {
         super();
     }
 
@@ -84,7 +86,7 @@ export class GroupController extends BaseController<GroupController> {
         }
 
         const administrators = await telegram.getChatAdministrators(groupId);
-        const me = administrators.find(admin => admin.user.id === this.botService.botInfo.id);
+        const me = administrators.find(admin => admin.user.id === this.botService.info.id);
         if (!me || !me.can_invite_users) {
             await reply("请把机器人设置为管理员并设置邀请用户权限");
             return;
@@ -170,7 +172,7 @@ export class GroupController extends BaseController<GroupController> {
         const inviterId = message.from.id;
 
         let newMembers = message.new_chat_members ?? [];
-        const me = newMembers.find(member => member.id === this.botService.botInfo.id);
+        const me = newMembers.find(member => member.id === this.botService.info.id);
         if (!me) {
             group = await this.groupRepo.getGroup(groupId);
         } else {
@@ -256,7 +258,7 @@ export class GroupController extends BaseController<GroupController> {
         const groupId = message.chat.id;
         const group = await this.groupRepo.getGroup(groupId);
 
-        if (member.is_bot && member.id === this.botService.botInfo.id) {
+        if (member.is_bot && member.id === this.botService.info.id) {
 
             await this.groupRepo.setActive(group, false);
             return;

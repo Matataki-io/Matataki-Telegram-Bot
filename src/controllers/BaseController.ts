@@ -1,4 +1,4 @@
-import { MessageHandler } from "../definitions";
+import { MessageHandler } from "#/definitions";
 
 export interface IController { }
 

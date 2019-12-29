@@ -1,17 +1,20 @@
-import { Controller, Command, InjectRepository } from "../decorators";
-import { MessageHandlerContext, IUserRepository, IGroupRepository } from "../definitions";
-import { BaseController } from ".";
 import { inject } from "inversify";
-import { Injections } from "../constants";
-import { MatatakiService, BotService } from "../services";
-import { User, Group } from "../entities";
+
+import { Controller, Command, InjectRepository } from "#/decorators";
+import { MessageHandlerContext } from "#/definitions";
+import { Injections } from "#/constants";
+import { User, Group } from "#/entities";
+import { IUserRepository, IGroupRepository } from "#/repositories";
+import { IMatatakiService, IBotService } from "#/services";
+
+import { BaseController } from ".";
 
 @Controller("query")
 export class QueryController extends BaseController<QueryController> {
-    constructor(@inject(Injections.MatatakiService) private matatakiService: MatatakiService,
+    constructor(@inject(Injections.MatatakiService) private matatakiService: IMatatakiService,
         @InjectRepository(User) private userRepo: IUserRepository,
         @InjectRepository(Group) private groupRepo: IGroupRepository,
-        @inject(Injections.BotService) private botService: BotService) {
+        @inject(Injections.BotService) private botService: IBotService) {
         super();
     }
 

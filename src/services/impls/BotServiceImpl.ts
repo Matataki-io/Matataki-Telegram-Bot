@@ -3,25 +3,26 @@ import Telegraf, { ContextMessageUpdate, Middleware, session } from "telegraf";
 import { User } from "telegraf/typings/telegram-types";
 
 import { Constants, MetadataKeys, Injections } from "#/constants";
-import { ControllerConstructor, controllers } from "#/controllers";
+import { ControllerConstructor } from "#/controllers";
+import { controllers } from "#/controllers/export";
 import { CommandHandlerInfo, EventHandlerInfo, MessageHandler, MessageHandlerContext } from "#/definitions";
 import { Service } from "#/decorators";
 import { Group } from "#/entities";
+import { IBotService, IDatabaseService } from "#/services";
 import { delay } from "#/utils";
 
-import { IBotService, IDatabaseService } from "#/services";
 
 @Service(Injections.BotService)
 export class BotServiceImpl implements IBotService {
     private bot: Telegraf<ContextMessageUpdate>;
 
-    private _botInfo?: User;
-    get botInfo() {
-        if (!this._botInfo) {
+    private botInfo?: User;
+    get info() {
+        if (!this.botInfo) {
             throw new Error("The bot is not running");
         }
 
-        return this._botInfo;
+        return this.botInfo;
     }
 
     private _isRunning: boolean = false;
@@ -156,7 +157,7 @@ export class BotServiceImpl implements IBotService {
 
         await this.bot.launch();
 
-        this._botInfo = await this.bot.telegram.getMe();
+        this.botInfo = await this.bot.telegram.getMe();
 
         this._isRunning = true;
 
@@ -164,7 +165,7 @@ export class BotServiceImpl implements IBotService {
     }
 
     getMeInGroup(group: Group) {
-        return this.bot.telegram.getChatMember(group.id, this.botInfo.id);
+        return this.bot.telegram.getChatMember(group.id, this.info.id);
     }
     getMember(groupId: number, memberId: number) {
         return this.bot.telegram.getChatMember(groupId, memberId);
