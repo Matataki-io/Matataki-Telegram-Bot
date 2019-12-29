@@ -3,7 +3,7 @@ import { IMatatakiService } from "#/services";
 
 export class MatatakiServiceStub implements IMatatakiService {
     get urlPrefix() {
-        return "";
+        return "http://MATATAKI";
     }
 
     getEthWallet(userId: number): Promise<string> {
@@ -31,7 +31,7 @@ export class MatatakiServiceStub implements IMatatakiService {
             case 2:
                 return Promise.resolve<AssociatedInfo>({
                     user: {
-                        id: 1919,
+                        id: 810,
                         name: "野獣先輩",
                     }
                 });
@@ -54,7 +54,7 @@ export class MatatakiServiceStub implements IMatatakiService {
 
 export class MatatakiServiceNotAuthorizedStub implements IMatatakiService {
     get urlPrefix() {
-        return "";
+        return "http://MATATAKI";
     }
 
     getEthWallet(userId: number): Promise<string> {
