@@ -3,22 +3,17 @@ import "reflect-metadata";
 import { Message } from "telegraf/typings/telegram-types";
 
 import { DebugController } from "#/controllers/DebugController";
-import { MessageHandlerContext } from "#/definitions";
+import { createMockedContext } from "./Utils";
 
 const controller = new DebugController();
 
 describe("DebugController", () => {
-    it("Ping", () => {
-        const replyFunc = jest.fn(message => {
-            return Promise.resolve<Message>({} as Message);
-        });
+    it("Ping", async () => {
+        const ctx = createMockedContext()
 
-        //@ts-ignore
-        controller.ping({
-            reply: replyFunc,
-        } as jest.Mocked<MessageHandlerContext>);
+        await controller.ping(ctx);
 
-        expect(replyFunc).toBeCalledTimes(1);
-        expect(replyFunc).toBeCalledWith("pong");
+        expect(ctx.reply).toBeCalledTimes(1);
+        expect(ctx.reply).toBeCalledWith("pong");
     });
 });
