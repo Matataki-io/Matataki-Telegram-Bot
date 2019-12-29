@@ -6,9 +6,9 @@
   "author": "Frank Wei",
   "license": "MIT",
   "scripts": {
-    "start": "ts-node ./src/app.ts",
+    "start": "ts-node -r tsconfig-paths/register ./src/app.ts",
     "lint": "eslint",
-    "dev": "ts-node-dev --respawn --transpileOnly ./src/app.ts",
+    "dev": "ts-node-dev --respawn --transpileOnly -r tsconfig-paths/register ./src/app.ts",
     "typeorm": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js",
     "test": "jest"
   },
