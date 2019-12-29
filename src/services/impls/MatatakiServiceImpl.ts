@@ -23,27 +23,15 @@ export class MatatakiServiceImpl implements IMatatakiService {
     }
 
     constructor() {
-        const matatakiUrlPrefix = process.env.MATATAKI_URLPREFIX;
-        if (!matatakiUrlPrefix) {
-            console.error("Matataki url prefix not found");
-            process.exit(1);
-        }
-        const matatakiApiUrlPrefix = process.env.MATATAKI_APIURLPREFIX;
-        if (!matatakiApiUrlPrefix) {
-            console.error("Matataki api url prefix not found");
-            process.exit(1);
-        }
-        const matatakiAccessToken = process.env.MATATAKI_ACCESS_TOKEN;
-        if (!matatakiAccessToken) {
-            console.error("Matataki access token not found");
-            process.exit(1);
-        }
+        console.assert(process.env.MATATAKI_URLPREFIX);
+        console.assert(process.env.MATATAKI_APIURLPREFIX);
+        console.assert(process.env.MATATAKI_ACCESS_TOKEN);
 
         this.axios = axios.create({
-            baseURL: matatakiApiUrlPrefix,
+            baseURL: process.env.MATATAKI_APIURLPREFIX,
             headers: {
                 common: {
-                    "X-Access-Token": matatakiAccessToken,
+                    "X-Access-Token": process.env.MATATAKI_ACCESS_TOKEN,
                 },
             },
         });

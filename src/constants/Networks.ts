@@ -1,8 +1,6 @@
-const INFURA_ID = process.env["infura_id"]
-if (!INFURA_ID) {
-    console.error("Infura ID not found");
-    process.exit(1);
-}
+const { INFURA_ID } = process.env;
+
+console.assert(INFURA_ID);
 
 // Infura API Endpoints for different networks
 const networks = {

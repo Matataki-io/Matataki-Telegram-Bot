@@ -31,13 +31,9 @@ export class BotServiceImpl implements IBotService {
 
     constructor(@inject(Injections.DatabaseService) private databaseService: IDatabaseService,
         @inject(Injections.Container) private container: Container) {
-        const botToken = process.env["BOT_TOKEN"];
-        if (!botToken) {
-            console.error("Bot token not found");
-            process.exit(1);
-        }
+        console.assert(process.env.BOT_TOKEN);
 
-        this.bot = new Telegraf<ContextMessageUpdate>(botToken)
+        this.bot = new Telegraf<ContextMessageUpdate>(process.env.BOT_TOKEN!)
 
         this.bot.use(session());
 

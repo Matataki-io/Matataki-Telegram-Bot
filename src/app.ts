@@ -2,6 +2,27 @@ import { config } from "dotenv";
 
 config();
 
+(function checkRequirement() {
+    const requiredEnvironmentVariables = [
+        "BOT_TOKEN",
+        "INFURA_ID",
+        "MATATAKI_URLPREFIX",
+        "MATATAKI_APIURLPREFIX",
+        "MATATAKI_ACCESS_TOKEN",
+    ];
+
+    const missedEnvironmentVariables = requiredEnvironmentVariables.filter(envVar => typeof process.env[envVar] !== "string");
+    if (missedEnvironmentVariables.length === 0) {
+        return;
+    }
+
+    console.error("Missed the following environment variable(s):");
+    for (const envVar of missedEnvironmentVariables) {
+        console.error("-", envVar);
+    }
+    process.exit(1);
+})();
+
 import { CronJob } from "cron";
 
 import { Injections, MetadataKeys } from "#/constants";
@@ -10,7 +31,7 @@ import { IScheduler } from "#/schedulers";
 import { schedulerImplementations } from "#/schedulers/impls";
 import { IBotService } from "#/services";
 
-(async function () {
+(async function initialize() {
     const botService = container.get<IBotService>(Injections.BotService);
 
     await botService.run();
