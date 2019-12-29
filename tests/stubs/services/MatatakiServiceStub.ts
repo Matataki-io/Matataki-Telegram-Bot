@@ -2,6 +2,10 @@ import { AssociatedInfo } from "#/definitions";
 import { IMatatakiService } from "#/services";
 
 export class MatatakiServiceStub implements IMatatakiService {
+    get urlPrefix() {
+        return "";
+    }
+
     getEthWallet(userId: number): Promise<string> {
         if (userId === 114514) {
             return Promise.resolve("0x1145141919810");
@@ -46,6 +50,10 @@ export class MatatakiServiceStub implements IMatatakiService {
 }
 
 export class MatatakiServiceNotAuthorizedStub implements IMatatakiService {
+    get urlPrefix() {
+        return "";
+    }
+
     getEthWallet(userId: number): Promise<string> {
         return Promise.reject(new Error("Invalid Access Token"));
     }
