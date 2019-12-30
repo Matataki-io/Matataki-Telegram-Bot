@@ -7,6 +7,7 @@ export const Injections = {
 
     BotService: Symbol.for("BotService"),
     DatabaseService: Symbol.for("DatabaseService"),
+    LoggerService: Symbol.for("LoggerService"),
     MatatakiService: Symbol.for("MatatakiService"),
     Web3Service: Symbol.for("Web3Service"),
 };

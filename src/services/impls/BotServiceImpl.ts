@@ -2,15 +2,14 @@ import { inject, Container } from "inversify";
 import Telegraf, { ContextMessageUpdate, Middleware, session } from "telegraf";
 import { User } from "telegraf/typings/telegram-types";
 
-import { Constants, MetadataKeys, Injections } from "#/constants";
+import { Constants, MetadataKeys, Injections, LogCategories } from "#/constants";
 import { ControllerConstructor } from "#/controllers";
 import { controllers } from "#/controllers/export";
 import { CommandHandlerInfo, EventHandlerInfo, MessageHandler, MessageHandlerContext } from "#/definitions";
 import { Service } from "#/decorators";
 import { Group } from "#/entities";
-import { IBotService, IDatabaseService } from "#/services";
+import { IBotService, IDatabaseService, ILoggerService } from "#/services";
 import { delay } from "#/utils";
-
 
 @Service(Injections.BotService)
 export class BotServiceImpl implements IBotService {
@@ -31,6 +30,7 @@ export class BotServiceImpl implements IBotService {
     }
 
     constructor(@inject(Injections.DatabaseService) private databaseService: IDatabaseService,
+        @inject(Injections.LoggerService) private logger: ILoggerService,
         @inject(Injections.Container) private container: Container) {
         console.assert(process.env.BOT_TOKEN);
 
@@ -41,6 +41,9 @@ export class BotServiceImpl implements IBotService {
         this.bot.use((ctx, next) => {
             const context = this.createContext(ctx);
             Reflect.defineMetadata(MetadataKeys.Context, context, ctx);
+
+            this.logger.trace(LogCategories.TelegramUpdate, JSON.stringify(ctx.update));
+            console.log("Update", ctx.update);
 
             if (next) return next();
         });
@@ -54,7 +57,7 @@ export class BotServiceImpl implements IBotService {
         this.bot.catch((err: any, ctx: ContextMessageUpdate) => {
             const { reply } = ctx;
 
-            console.error(err);
+            this.logger.error(LogCategories.TelegramUpdate, err);
 
             if (err instanceof Error && err.message) {
                 reply("Unhandled error: " + err.message);

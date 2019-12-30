@@ -12,3 +12,6 @@ ormconfig.*
 
 .vscode/launch.json
 .vscode/settings.json
+
+# Logs
+/logs
