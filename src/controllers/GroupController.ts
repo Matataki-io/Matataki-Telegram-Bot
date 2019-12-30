@@ -126,7 +126,7 @@ export class GroupController extends BaseController<GroupController> {
                 contractAddressCache.set(group.tokenId, contractAddress);
             }
 
-            balance = Number(await this.web3Service.getBalance(contractAddress, walletAddress));
+            balance = await this.web3Service.getBalance(contractAddress, walletAddress);
             balanceCache.set(group.tokenId, balance!);
         }));
         const acceptableGroups = groups.filter(group => (balanceCache.get(group.tokenId) ?? -1) >= (group.requirement.minetoken?.amount ?? 0));

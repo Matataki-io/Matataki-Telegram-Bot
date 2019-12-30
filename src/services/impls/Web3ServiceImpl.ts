@@ -23,13 +23,15 @@ export class Web3ServiceImpl implements IWeb3Service {
         return this.web3.utils.fromWei(number, "ether");
     }
 
-    getBalance(contractAddress: string, walletAddress: string) {
+    async getBalance(contractAddress: string, walletAddress: string) {
         let contract = this.contracts.get(contractAddress);
         if (!contract) {
             contract = new this.web3.eth.Contract(ABI, contractAddress);
             this.contracts.set(contractAddress, contract);
         }
 
-        return contract.methods.balanceOf(walletAddress).call();
+        const result = await contract.methods.balanceOf(walletAddress).call();
+
+        return Number.parseInt(result);
     }
 }
