@@ -4,9 +4,14 @@ ormconfig.*
 # Editor directories and files
 .idea
 *.env
-.vscode/
 *.suo
 *.ntvs*
 *.njsproj
 *.sln
 *.sw*
+
+.vscode/launch.json
+.vscode/settings.json
+
+# Logs
+/logs

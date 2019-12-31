@@ -1,5 +1,6 @@
-import { Controller, Command } from "../decorators";
-import { MessageHandlerContext } from "../definitions";
+import { Controller, Command } from "#/decorators";
+import { MessageHandlerContext } from "#/definitions";
+
 import { BaseController } from ".";
 
 @Controller("wallet")

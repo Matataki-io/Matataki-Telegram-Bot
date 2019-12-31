@@ -1,5 +1,5 @@
 import { MetadataKeys } from "../constants";
-import { CommandDefinition } from "../definitions";
+import { CommandHandlerInfo } from "#/definitions";
 
 type CommandBindingOptions = {
     ignorePrefix?: boolean;
@@ -15,7 +15,7 @@ export function Command(name: string, options?: CommandBindingOptions): MethodDe
             Reflect.defineMetadata(MetadataKeys.CommandNames, [], target.constructor);
         }
 
-        const commands = Reflect.getMetadata(MetadataKeys.CommandNames, target.constructor) as CommandDefinition[];
+        const commands = Reflect.getMetadata(MetadataKeys.CommandNames, target.constructor) as CommandHandlerInfo[];
         commands.push({
             name,
             methodName,

@@ -2,10 +2,13 @@
 
 Matataki 配套的机器人
 
+- [Document](https://hackmd.io/t3eK4CRySyu9mkB-uBgJYA)
 
 ## Setup
 ```bash
 yarn
+
+
 yarn start
 ```
 
