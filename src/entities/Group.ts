@@ -12,13 +12,14 @@ export class Group {
     title!: string;
 
     @Column({ type: "bigint" })
-    @Index()
+    @Index({ where: "active" })
     creatorId!: number | string;
 
     @Column({ type: "boolean", default: true })
     active!: boolean;
 
     @Column({ type: "int" })
+    @Index({ where: "active" })
     tokenId!: number;
 
     @Column({ type: "jsonb" })
