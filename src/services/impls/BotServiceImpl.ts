@@ -7,9 +7,10 @@ import { ControllerConstructor } from "#/controllers";
 import { controllers } from "#/controllers/export";
 import { CommandHandlerInfo, EventHandlerInfo, MessageHandler, MessageHandlerContext } from "#/definitions";
 import { Service } from "#/decorators";
-import { Group } from "#/entities";
+import { Group, Metadata } from "#/entities";
 import { IBotService, IDatabaseService, ILoggerService } from "#/services";
 import { delay } from "#/utils";
+import { getRepository } from "typeorm";
 
 @Service(Injections.BotService)
 export class BotServiceImpl implements IBotService {
@@ -156,15 +157,41 @@ export class BotServiceImpl implements IBotService {
     async run() {
         await this.databaseService.waitForConnectionCreated();
 
+        await this.checkBotOwner();
+
         await delay(2000);
 
         await this.bot.launch();
 
-        this.botInfo = await this.bot.telegram.getMe();
-
         this._isRunning = true;
 
         console.log("Matataki bot is running...");
+    }
+
+    async checkBotOwner() {
+        this.botInfo = await this.bot.telegram.getMe();
+
+        const metadataRepo = getRepository(Metadata);
+
+        let botInfo = await metadataRepo.findOne("bot_info");
+        if (!botInfo) {
+            botInfo = new Metadata();
+            botInfo.name = "bot_info";
+            botInfo.value = {
+                id: this.botInfo.id,
+            };
+
+            await metadataRepo.save(botInfo);
+            return;
+        }
+
+        if (botInfo.value.id === this.botInfo.id) {
+            return;
+        }
+
+        console.error("你的机器人信息对不上当前的数据库 schema，请把 ormconfig.js 的 schema 改成别的然后做 migrations 再运行机器人");
+
+        process.exit();
     }
 
     getMeInGroup(group: Group) {

@@ -6,5 +6,5 @@ export class Metadata {
     name!: string;
 
     @Column({ type: "jsonb" })
-    value!: object;
+    value!: any;
 }
