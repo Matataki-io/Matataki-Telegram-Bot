@@ -10,7 +10,8 @@
     "lint": "eslint",
     "dev": "ts-node-dev --respawn --transpileOnly -r tsconfig-paths/register ./src/app.ts",
     "typeorm": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js",
-    "test": "jest"
+    "test": "jest",
+    "migrations": "ts-node -r tsconfig-paths/register ./scripts/Migrations.ts"
   },
   "dependencies": {
     "axios": "^0.19.0",

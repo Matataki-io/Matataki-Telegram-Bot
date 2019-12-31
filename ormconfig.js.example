@@ -1,0 +1,26 @@
+const fs = require("fs");
+const path = require("path");
+
+module.exports = {
+    type: "postgres",
+    host: "YOUR_HOST",
+    username: "YOUR_USERNAME",
+    password: "YOUR_PASSWORD",
+    database: "YOUR_DATABASE",
+    // 自己的 Bot 请使用自己专用的 schema，以免冲突
+    schema: "YOUR_SCHEMA",
+    // 这里是开发/测试环境所用的，自己的数据库请使用自己的 SSL 设置
+    ssl: {
+        ca: fs.readFileSync(path.resolve(__dirname) + '/rds-ca-2019-root.pem').toString(),
+    },
+    logging: true,
+    entities: [
+        "src/entities/**/*.ts",
+    ],
+    migrations: [
+        "migrations/*.ts"
+    ],
+    cli: {
+        "migrationsDir": "migrations",
+    }
+};

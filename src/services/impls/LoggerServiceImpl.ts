@@ -9,7 +9,7 @@ export class LoggerServiceImpl implements ILoggerService {
     private loggers: Map<string, Logger>;
 
     constructor() {
-        const baseDir = process.cwd() + "/logs/";
+        const baseDir = process.env.LOGS_DIR ?? (process.cwd() + "/logs/");
 
         configure({
             appenders: {
