@@ -114,4 +114,8 @@ export class GroupRepositoryImpl extends BaseRepository<Group> implements IGroup
 
         await this.repository.save(group);
     }
+
+    async removeGroup(group: Group) {
+        await this.repository.delete(group);
+    }
 }

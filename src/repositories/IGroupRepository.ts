@@ -13,4 +13,5 @@ export interface IGroupRepository {
     setRequirement(group: Group, tokenAmount: number): Promise<void>;
     changeGroupId(group: Group, newId: number): Promise<void>;
     changeGroupTitle(group: Group, newTitle: string): Promise<void>;
+    removeGroup(group: Group): Promise<void>;
 }

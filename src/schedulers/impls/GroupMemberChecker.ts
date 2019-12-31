@@ -2,8 +2,8 @@ import { inject } from "inversify";
 import { Chat } from "telegraf/typings/telegram-types";
 
 import { Scheduler, InjectRepository } from "#/decorators";
-import { Injections } from "#/constants";
-import { IWeb3Service, IBotService } from "#/services";
+import { Injections, LogCategories } from "#/constants";
+import { IWeb3Service, IBotService, ILoggerService } from "#/services";
 import { Group, User } from "#/entities";
 import { IGroupRepository } from "#/repositories";
 import { IMatatakiService } from "#/services";
@@ -15,6 +15,7 @@ export class GroupMemberChecker implements IScheduler {
         @inject(Injections.BotService) private botService: IBotService,
         @inject(Injections.Web3Service) private web3Service: IWeb3Service,
         @inject(Injections.MatatakiService) private matatakiService: IMatatakiService,
+        @inject(Injections.LoggerService) private loggerService: ILoggerService,
         @InjectRepository(Group) private groupRepo: IGroupRepository) {
     }
 
@@ -31,9 +32,12 @@ export class GroupMemberChecker implements IScheduler {
             let groupInfo: Chat;
             try {
                 groupInfo = await this.botService.getGroupInfo(group);
-            } catch {
-                console.warn("The bot was kicked");
-                await this.groupRepo.setActive(group, false);
+            } catch (e) {
+                if (e.code === 400 && e.description === "Bad Request: chat not found") {
+                    await this.groupRepo.removeGroup(group);
+                } else {
+                    this.loggerService.error(LogCategories.Cron, e);
+                }
                 continue;
             }
 
