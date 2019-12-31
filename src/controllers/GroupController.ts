@@ -196,7 +196,7 @@ export class GroupController extends BaseController<GroupController> {
                 return;
             }
 
-            group = await this.groupRepo.ensureGroup(groupId, creator.user.id, info.minetoken.id);
+            group = await this.groupRepo.ensureGroup(groupId, groupName ?? "", creator.user.id, info.minetoken.id);
 
             await this.botService.sendMessage(creatorId, `你已把机器人拉进群 **${groupName}**。为了机器人的正常工作，请把机器人设置为管理员并取消群员拉人权限`);
 
@@ -275,7 +275,7 @@ export class GroupController extends BaseController<GroupController> {
 
     @Event(["group_chat_created", "supergroup_chat_created"])
     async onGroupCreated({ message, reply, telegram }: MessageHandlerContext) {
-        const groupId = message.chat.id;
+        const { id: groupId, title } = message.chat;
         const inviterId = message.from.id;
 
         const info = await this.matatakiService.getAssociatedInfo(inviterId);
@@ -285,7 +285,7 @@ export class GroupController extends BaseController<GroupController> {
             return;
         }
 
-        await this.groupRepo.ensureGroup(groupId, inviterId, info.minetoken.id);
+        await this.groupRepo.ensureGroup(groupId, title ?? "", inviterId, info.minetoken.id);
     }
     @Event("migrate_to_chat_id")
     async onGroupMigration({ message }: MessageHandlerContext) {
@@ -296,5 +296,16 @@ export class GroupController extends BaseController<GroupController> {
         const group = await this.groupRepo.getGroup(message.chat.id);
 
         await this.groupRepo.changeGroupId(group, message.migrate_to_chat_id);
+    }
+
+    @Event("new_chat_title")
+    async onGroupTitleChanged({ message }: MessageHandlerContext) {
+        if (!message.new_chat_title) {
+            throw new Error("Impossible situation");
+        }
+
+        const group = await this.groupRepo.getGroup(message.chat.id);
+
+        await this.groupRepo.changeGroupTitle(group, message.new_chat_title);
     }
 }

@@ -8,6 +8,9 @@ export class Group {
     @PrimaryColumn({ type: "bigint" })
     id!: number | string;
 
+    @Column({ type: "text" })
+    title!: string;
+
     @Column({ type: "bigint" })
     @Index()
     creatorId!: number | string;

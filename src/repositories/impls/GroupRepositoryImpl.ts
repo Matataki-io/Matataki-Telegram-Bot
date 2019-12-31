@@ -13,11 +13,12 @@ export class GroupRepositoryImpl extends BaseRepository<Group> implements IGroup
         super(Group);
     }
 
-    async ensureGroup(id: number, creatorId: number, tokenId: number) {
+    async ensureGroup(id: number, title: string, creatorId: number, tokenId: number) {
         let group = await this.repository.findOne(id);
         if (!group) {
             group = this.repository.create();
             group.id = id;
+            group.title = title;
             group.creatorId = creatorId;
             group.tokenId = tokenId;
             group.requirement = {};
@@ -106,5 +107,11 @@ export class GroupRepositoryImpl extends BaseRepository<Group> implements IGroup
 
         await this.repository.save(group);
         await this.repository.delete(oldId);
+    }
+
+    async changeGroupTitle(group: Group, newTitle: string) {
+        group.title = newTitle;
+
+        await this.repository.save(group);
     }
 }

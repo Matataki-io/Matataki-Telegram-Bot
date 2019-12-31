@@ -1,7 +1,7 @@
 import { Group, User } from "#/entities";
 
 export interface IGroupRepository {
-    ensureGroup(id: number, creatorId: number, tokenId: number): Promise<Group>;
+    ensureGroup(id: number, title: string, creatorId: number, tokenId: number): Promise<Group>;
     getGroup(id: number): Promise<Group>;
     getGroupsOfCreator(creatorId: number): Promise<Group[]>;
     getGroups(): Promise<Group[]>;
@@ -12,4 +12,5 @@ export interface IGroupRepository {
     setActive(group: Group, active: boolean): Promise<void>;
     setRequirement(group: Group, tokenAmount: number): Promise<void>;
     changeGroupId(group: Group, newId: number): Promise<void>;
+    changeGroupTitle(group: Group, newTitle: string): Promise<void>;
 }
