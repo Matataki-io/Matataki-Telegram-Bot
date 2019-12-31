@@ -6,5 +6,5 @@ export type MessageHandlerContext = Omit<ContextMessageUpdate, "message"> & {
 }
 
 export interface MessageHandler {
-    (ctx: MessageHandlerContext): any
+    (ctx: MessageHandlerContext, ...args: any[]): any
 }

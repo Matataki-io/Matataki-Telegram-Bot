@@ -6,9 +6,9 @@ import { User as TelegramUser } from "telegraf/typings/telegram-types";
 import { Controller, Command, InjectRepository, Event } from "#/decorators";
 import { MessageHandlerContext } from "#/definitions";
 import { Group, User } from "#/entities";
-import { Injections } from "#/constants";
+import { Injections, LogCategories } from "#/constants";
 import { IUserRepository, IGroupRepository } from "#/repositories";
-import { IBotService, IMatatakiService, IWeb3Service } from "#/services";
+import { IBotService, IMatatakiService, IWeb3Service, ILoggerService } from "#/services";
 
 import { BaseController } from ".";
 
@@ -19,6 +19,7 @@ export class GroupController extends BaseController<GroupController> {
         @InjectRepository(Group) private groupRepo: IGroupRepository,
         @inject(Injections.BotService) private botService: IBotService,
         @inject(Injections.Web3Service) private web3Service: IWeb3Service,
+        @inject(Injections.LoggerService) private loggerService: ILoggerService,
         @inject(Injections.MatatakiService) private matatakiService: IMatatakiService) {
         super();
     }
@@ -307,5 +308,66 @@ export class GroupController extends BaseController<GroupController> {
         const group = await this.groupRepo.getGroup(message.chat.id);
 
         await this.groupRepo.changeGroupTitle(group, message.new_chat_title);
+    }
+
+    async joinGroupWithStartPayload({ reply, message, telegram }: MessageHandlerContext, groupId: number): Promise<boolean> {
+        let group: Group;
+        try {
+            group = await this.groupRepo.getGroup(groupId);
+        } catch (e) {
+            this.loggerService.error(LogCategories.TelegramUpdate, "GroupId not found", groupId);
+            return false;
+        }
+
+        const sender = message.from.id;
+
+        if (sender === Number(group.creatorId)) {
+            const button = Markup.urlButton(group.title, await telegram.exportChatInviteLink(groupId));
+
+            await reply("你是该群群主：", Markup.inlineKeyboard([button]).extra());
+            return true;
+        }
+
+        const info = await this.matatakiService.getAssociatedInfo(sender);
+        if (!info.user) {
+            await reply("抱歉，你没有在 瞬Matataki 绑定该 Telegram 帐号");
+            return true;
+        }
+
+        const groupRequirement = group.requirement.minetoken?.amount ?? 0;
+
+        const walletAddress = await this.matatakiService.getEthWallet(sender);;
+        const contractAddress = await this.matatakiService.getContractAddressOfMinetoken(group.tokenId);
+        const balance = await this.web3Service.getBalance(contractAddress, walletAddress);
+
+        const { minetoken } = await this.matatakiService.getAssociatedInfo(Number(group.creatorId));
+
+        if (!minetoken) {
+            throw new Error("Impossible situation");
+        }
+
+        if (balance < groupRequirement) {
+            await reply(`抱歉，你持有的 Fan票 不满足群 ${group.title} 的条件：
+要求 ${minetoken.name}(${minetoken.symbol}) >= ${groupRequirement}`);
+            return true;
+        }
+
+        const chatMember = await telegram.getChatMember(groupId, sender);
+        if (chatMember.status === "member") {
+            const button = Markup.urlButton(group.title, await telegram.exportChatInviteLink(groupId));
+
+            await reply("你已经是该 Fan票 群群员：", Markup.inlineKeyboard([button]).extra());
+            return true;
+        }
+
+        if (chatMember.status === "kicked") {
+            // @ts-ignore
+            await telegram.unbanChatMember(groupId, sender);
+        }
+
+        const button = Markup.urlButton(group.title, await telegram.exportChatInviteLink(groupId));
+
+        await reply("你现在可以进入该群：：", Markup.inlineKeyboard([button]).extra());
+        return true;
     }
 }

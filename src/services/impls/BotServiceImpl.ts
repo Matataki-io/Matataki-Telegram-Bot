@@ -1,6 +1,7 @@
 import { inject, Container } from "inversify";
 import Telegraf, { ContextMessageUpdate, Middleware, session } from "telegraf";
 import { User } from "telegraf/typings/telegram-types";
+import { getRepository } from "typeorm";
 
 import { Constants, MetadataKeys, Injections, LogCategories } from "#/constants";
 import { ControllerConstructor } from "#/controllers";
@@ -10,7 +11,7 @@ import { Service } from "#/decorators";
 import { Group, Metadata } from "#/entities";
 import { IBotService, IDatabaseService, ILoggerService } from "#/services";
 import { delay } from "#/utils";
-import { getRepository } from "typeorm";
+import { GroupController } from "#/controllers/GroupController";
 
 @Service(Injections.BotService)
 export class BotServiceImpl implements IBotService {
@@ -66,7 +67,28 @@ export class BotServiceImpl implements IBotService {
                 reply("Unhandled error: " + err);
             }
         });
-        this.bot.start((ctx) => ctx.reply(`欢迎使用 ${Constants.BotName} `));
+        this.bot.start(async ctx => {
+            const { startPayload } = ctx as any;
+
+            do {
+                if (!startPayload) {
+                    break;
+                }
+
+                const groupId = Number.parseInt(startPayload);
+                if (Number.isNaN(groupId)) {
+                    break;
+                }
+
+                const controller = container.getNamed<GroupController>(Injections.Controller, GroupController.name);
+
+                if (await controller.joinGroupWithStartPayload(ctx as MessageHandlerContext, startPayload)) {
+                    return;
+                }
+            } while (false);
+
+            await ctx.reply(`欢迎使用 ${Constants.BotName}`);
+        });
 
         this.processControllers(controllers);
 
