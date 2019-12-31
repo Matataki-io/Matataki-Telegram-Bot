@@ -9,7 +9,7 @@ ormconfig.*
 *.njsproj
 *.sln
 *.sw*
-
+.DS_Store
 .vscode/launch.json
 .vscode/settings.json
 
