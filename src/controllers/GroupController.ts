@@ -152,7 +152,7 @@ Fan 票：${info.minetoken?.symbol}
                 await telegram.unbanChatMember(groupId, sender);
             }
 
-            return Markup.urlButton(info.title, await telegram.exportChatInviteLink(groupId));
+            return Markup.urlButton(info.title, info.invite_link ?? await telegram.exportChatInviteLink(groupId));
         }));
 
         await reply("你现在可以进入以下的群：", Markup.inlineKeyboard([

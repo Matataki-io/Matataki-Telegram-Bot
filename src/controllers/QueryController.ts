@@ -46,7 +46,7 @@ export class QueryController extends BaseController<QueryController> {
                 array.push(`你已加入 ${user.groups.length} 个 Fan票 群`);
                 const groups = await this.botService.getGroupInfos(user.groups);
                 for (const group of groups) {
-                    const inviteLink = await telegram.exportChatInviteLink(group.id);
+                    const inviteLink = group.invite_link ?? await telegram.exportChatInviteLink(group.id);
 
                     array.push(`/ [${group.title ?? group.id}](${inviteLink})`);
                 }
@@ -63,7 +63,7 @@ export class QueryController extends BaseController<QueryController> {
                     const group = myGroups[i];
                     const groupInfo = groupInfos[i];
                     const noRequirement = (group.requirement.minetoken?.amount ?? 0) === 0;
-                    const inviteLink = await telegram.exportChatInviteLink(group.id);
+                    const inviteLink = groupInfo.invite_link ?? await telegram.exportChatInviteLink(group.id);
 
                     array.push(`/ [${groupInfo.title ?? groupInfo.id}](${inviteLink}) （${!noRequirement ? "已有规则" : "暂无规则"}）`);
                 }
