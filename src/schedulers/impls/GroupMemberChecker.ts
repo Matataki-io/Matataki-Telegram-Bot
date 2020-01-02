@@ -56,7 +56,19 @@ export class GroupMemberChecker implements IScheduler {
                     continue;
                 }
 
-                const walletAddress = await this.matatakiService.getEthWallet(userId);;
+                let walletAddress: string;
+                try {
+                    walletAddress = await this.matatakiService.getEthWallet(userId);
+                } catch (e) {
+                    try {
+                        await this.botService.kickMember(groupId, userId);
+                        await this.botService.sendMessage(userId, `抱歉，你现在没有绑定 瞬Matataki，现已被移出`);
+                    } catch {
+                        this.loggerService.warn(LogCategories.Cron, e);
+                    }
+                    continue;
+                }
+
                 const balance = await this.web3Service.getBalance(contractAddress, walletAddress);
 
                 if (balance >= balanceRequirement) {
