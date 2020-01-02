@@ -35,6 +35,8 @@ export class GroupMemberChecker implements IScheduler {
             } catch (e) {
                 if (e.code === 400 && e.description === "Bad Request: chat not found") {
                     await this.groupRepo.removeGroup(group);
+                } else if (e.code === 403 && e.description === "Forbidden: bot was kicked from the supergroup chat") {
+                    await this.groupRepo.setActive(group, false);
                 } else {
                     this.loggerService.error(LogCategories.Cron, e);
                 }
