@@ -60,7 +60,7 @@ export class GroupController extends BaseController<GroupController> {
             await reply(`群组 ID：${group.id}
 名字：${groupNames.get(group)}
 Fan 票：${info.minetoken?.symbol}
-最低要求${group.requirement.minetoken?.amount ?? 0}`);
+最低要求：${group.requirement.minetoken?.amount ?? 0}`);
 
             isFirst = false;
         }
