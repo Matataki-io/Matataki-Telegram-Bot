@@ -218,7 +218,19 @@ export class GroupController extends BaseController<GroupController> {
             const contractAddress = await this.matatakiService.getContractAddressOfMinetoken(group.tokenId);
             const requirement = group.requirement.minetoken?.amount ?? 0;
 
-            const walletAddress = await this.matatakiService.getEthWallet(member.id);;
+            let walletAddress: string;
+            try {
+                walletAddress = await this.matatakiService.getEthWallet(member.id);
+            } catch (e) {
+                try {
+                    await this.botService.kickMember(groupId, member.id);
+                    await this.botService.sendMessage(member.id, `抱歉，你现在没有绑定 瞬Matataki，现已被移出`);
+                } catch (e) {
+                    this.loggerService.warn(LogCategories.TelegramUpdate, e);
+                }
+                continue;
+            }
+
             const balance = await this.web3Service.getBalance(contractAddress, walletAddress);
 
             if (balance >= requirement) {
@@ -228,10 +240,9 @@ export class GroupController extends BaseController<GroupController> {
 
             try {
                 await this.botService.kickMember(groupId, member.id);
-
-                await this.botService.sendMessage(member.id, `你现在的 Fan 票不满足群 ${groupName} 的条件，现已被移出`);
-            } catch {
-                console.warn("机器人没有权限");
+                await this.botService.sendMessage(member.id, `抱歉，你现在的 Fan 票不满足群 ${groupName} 的条件，现已被移出`);
+            } catch (e) {
+                this.loggerService.warn(LogCategories.TelegramUpdate, e);
             }
         }
 

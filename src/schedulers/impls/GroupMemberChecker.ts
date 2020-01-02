@@ -1,5 +1,5 @@
 import { inject } from "inversify";
-import { Chat } from "telegraf/typings/telegram-types";
+import { Chat, User as TelegramUser } from "telegraf/typings/telegram-types";
 
 import { Scheduler, InjectRepository } from "#/decorators";
 import { Injections, LogCategories } from "#/constants";
@@ -35,6 +35,8 @@ export class GroupMemberChecker implements IScheduler {
             } catch (e) {
                 if (e.code === 400 && e.description === "Bad Request: chat not found") {
                     await this.groupRepo.removeGroup(group);
+                } else if (e.code === 403 && e.description === "Forbidden: bot was kicked from the supergroup chat") {
+                    await this.groupRepo.setActive(group, false);
                 } else {
                     this.loggerService.error(LogCategories.Cron, e);
                 }
@@ -44,6 +46,7 @@ export class GroupMemberChecker implements IScheduler {
             const contractAddress = await this.matatakiService.getContractAddressOfMinetoken(group.tokenId);
 
             const kickedUsers = new Array<User>();
+            const kickedUserInfos = new Array<TelegramUser>();
 
             for (const user of group.members) {
                 const userId = Number(user.id);
@@ -54,7 +57,22 @@ export class GroupMemberChecker implements IScheduler {
                     continue;
                 }
 
-                const walletAddress = await this.matatakiService.getEthWallet(userId);;
+                let walletAddress: string;
+                try {
+                    walletAddress = await this.matatakiService.getEthWallet(userId);
+                } catch (e) {
+                    try {
+                        await this.botService.kickMember(groupId, userId);
+                        await this.botService.sendMessage(userId, `抱歉，你现在没有绑定 瞬Matataki，现已被移出`);
+
+                        kickedUsers.push(user);
+                        kickedUserInfos.push(userInfo.user);
+                    } catch {
+                        this.loggerService.warn(LogCategories.Cron, e);
+                    }
+                    continue;
+                }
+
                 const balance = await this.web3Service.getBalance(contractAddress, walletAddress);
 
                 if (balance >= balanceRequirement) {
@@ -63,17 +81,20 @@ export class GroupMemberChecker implements IScheduler {
 
                 try {
                     await this.botService.kickMember(groupId, userId);
-                    await this.botService.sendMessage(userId, `你现在的 Fan 票不满足群 ${groupInfo.title} 的条件，现已被移出`);
+                    await this.botService.sendMessage(userId, `抱歉，你现在的 Fan 票不满足群 ${groupInfo.title} 的条件，现已被移出`);
 
                     kickedUsers.push(user);
-                } catch {
-                    console.warn("机器人没有权限");
+                    kickedUserInfos.push(userInfo.user);
+                } catch (e) {
+                    this.loggerService.warn(LogCategories.Cron, e);
                 }
             }
 
             if (kickedUsers.length === 0) {
                 continue;
             }
+
+            this.loggerService.info(LogCategories.Cron, `Kicked members of group ${groupInfo.title}`, kickedUserInfos);
 
             await this.groupRepo.removeMembers(group, kickedUsers);
         }
