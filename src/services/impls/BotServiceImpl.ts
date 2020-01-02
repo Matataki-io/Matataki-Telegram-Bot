@@ -90,7 +90,7 @@ export class BotServiceImpl implements IBotService {
             await ctx.reply(`欢迎使用 ${Constants.BotName}。输入 /help 可获得帮助信息`);
         });
         this.bot.help(ctx => {
-            ctx.reply(`👉🏻我应该如何建立Fan票群？
+            ctx.replyWithMarkdown(`👉🏻我应该如何建立Fan票群？
 ❗此功能仅向已经发行过 Fan票 的用户开放，其他用户暂不支持建立 Fan票群
 ❗如果希望发行 Fan票，请先填写并提交表单 https://wj.qq.com/s2/5208015/8e5d/
 1️⃣ 在 瞬Matataki 上登录后绑定 Telegram 账号
@@ -99,8 +99,8 @@ export class BotServiceImpl implements IBotService {
 4️⃣ 在群组中将 @${this.botInfo?.username} 设置为群管理员（操作此步骤之后群组将会自动升级为超级群）
 5️⃣ 与 @${this.botInfo?.username} 私聊，输入 /mygroups 查询自己创建的群组并记录下刚才群组的 ID 信息
 6️⃣ 与 @${this.botInfo?.username} 私聊，输入 /set [群组ID] [参数]即可设置群规则（参数代表至少持有您的 Fan票 数量）
-👨‍👩‍👦‍👦完成以上6步操作即可完成Fan票群建立,已经建立过的 Fan票 群组将会显示在 Fan票 的详情页中
-如有其他问题请在 瞬Matataki 的官方TG群中询问 https://t.me/smartsignature_io`);
+👨‍👩‍👦‍👦完成以上 6 步操作即可完成 Fan票 群建立,已经建立过的 Fan票 群组将会显示在 Fan票 的详情页中
+如有其他问题请在 瞬Matataki 的官方 TG 群中询问 https://t.me/smartsignature_io`);
         });
 
         this.processControllers(controllers);
