@@ -1,5 +1,4 @@
 import { inject } from "inversify";
-import { table } from "table";
 import { Extra, Markup } from "telegraf";
 import { User as TelegramUser } from "telegraf/typings/telegram-types";
 
@@ -52,15 +51,19 @@ export class GroupController extends BaseController<GroupController> {
             groupNames.set(group, info.title);
         }));
 
-        const array = [
-            ["群组 ID", "名字", "Fan 票", "最低要求"]
-        ];
-
+        let isFirst = true;
         for (const group of groups) {
-            array.push([group.id.toString(), groupNames.get(group) ?? "", info.minetoken?.symbol ?? "", (group.requirement.minetoken?.amount ?? 0).toString()]);
-        }
+            if (!isFirst) {
+                console.log("=====================");
+            }
 
-        await reply(table(array));
+            await reply(`群组 ID：${group.id}
+名字：${groupNames.get(group)}
+Fan 票：${info.minetoken?.symbol}
+最低要求${group.requirement.minetoken?.amount ?? 0}`);
+
+            isFirst = false;
+        }
     }
 
     @Command("set", { ignorePrefix: true })
@@ -149,7 +152,7 @@ export class GroupController extends BaseController<GroupController> {
                 await telegram.unbanChatMember(groupId, sender);
             }
 
-            return Markup.urlButton(info.title, await telegram.exportChatInviteLink(groupId));
+            return Markup.urlButton(info.title, info.invite_link ?? await telegram.exportChatInviteLink(groupId));
         }));
 
         await reply("你现在可以进入以下的群：", Markup.inlineKeyboard([

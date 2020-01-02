@@ -19,7 +19,7 @@ export class QueryController extends BaseController<QueryController> {
     }
 
     @Command("stat", { ignorePrefix: true })
-    async queryStat({ message, replyWithMarkdown }: MessageHandlerContext) {
+    async queryStat({ message, replyWithMarkdown, telegram }: MessageHandlerContext) {
         const id = message.from.id;
         const info = await this.matatakiService.getAssociatedInfo(id);
 
@@ -46,7 +46,9 @@ export class QueryController extends BaseController<QueryController> {
                 array.push(`你已加入 ${user.groups.length} 个 Fan票 群`);
                 const groups = await this.botService.getGroupInfos(user.groups);
                 for (const group of groups) {
-                    array.push(`/ [${group.title ?? group.id}](${group.invite_link})`);
+                    const inviteLink = group.invite_link ?? await telegram.exportChatInviteLink(group.id);
+
+                    array.push(`/ [${group.title ?? group.id}](${inviteLink})`);
                 }
                 array.push("");
             }
@@ -61,8 +63,9 @@ export class QueryController extends BaseController<QueryController> {
                     const group = myGroups[i];
                     const groupInfo = groupInfos[i];
                     const noRequirement = (group.requirement.minetoken?.amount ?? 0) === 0;
+                    const inviteLink = groupInfo.invite_link ?? await telegram.exportChatInviteLink(group.id);
 
-                    array.push(`/ [${groupInfo.title ?? groupInfo.id}](${groupInfo.invite_link}) （${!noRequirement ? "已有规则" : "暂无规则"}）`);
+                    array.push(`/ [${groupInfo.title ?? groupInfo.id}](${inviteLink}) （${!noRequirement ? "已有规则" : "暂无规则"}）`);
                 }
             }
         }
