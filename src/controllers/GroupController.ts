@@ -224,9 +224,9 @@ export class GroupController extends BaseController<GroupController> {
             } catch (e) {
                 try {
                     await this.botService.kickMember(groupId, member.id);
-                    await this.botService.sendMessage(member.id, `你还没有绑定 瞬Matataki，现已被移出`);
-                } catch {
-                    console.warn("机器人没有权限");
+                    await this.botService.sendMessage(member.id, `抱歉，你现在没有绑定 瞬Matataki，现已被移出`);
+                } catch (e) {
+                    this.loggerService.warn(LogCategories.TelegramUpdate, e);
                 }
                 continue;
             }
@@ -240,10 +240,9 @@ export class GroupController extends BaseController<GroupController> {
 
             try {
                 await this.botService.kickMember(groupId, member.id);
-
-                await this.botService.sendMessage(member.id, `你现在的 Fan 票不满足群 ${groupName} 的条件，现已被移出`);
-            } catch {
-                console.warn("机器人没有权限");
+                await this.botService.sendMessage(member.id, `抱歉，你现在的 Fan 票不满足群 ${groupName} 的条件，现已被移出`);
+            } catch (e) {
+                this.loggerService.warn(LogCategories.TelegramUpdate, e);
             }
         }
 

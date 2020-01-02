@@ -81,7 +81,7 @@ export class GroupMemberChecker implements IScheduler {
 
                     kickedUsers.push(user);
                 } catch {
-                    console.warn("机器人没有权限");
+                    this.loggerService.warn(LogCategories.Cron, e);
                 }
             }
 
