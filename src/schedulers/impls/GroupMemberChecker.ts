@@ -80,7 +80,7 @@ export class GroupMemberChecker implements IScheduler {
                     await this.botService.sendMessage(userId, `你现在的 Fan 票不满足群 ${groupInfo.title} 的条件，现已被移出`);
 
                     kickedUsers.push(user);
-                } catch {
+                } catch (e) {
                     this.loggerService.warn(LogCategories.Cron, e);
                 }
             }
