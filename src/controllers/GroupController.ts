@@ -75,7 +75,7 @@ Fan 票：${info.minetoken?.symbol}
             return;
         }
 
-        const match = /^\/set (-?\d+) (\d+)$/.exec(message.text);
+        const match = /^\/set (-?\d+) (\d+.?\d*)$/.exec(message.text);
         if (!match || match.length < 2) {
             return reply("格式不对，请输入 `/set group_id amount`");
         }
