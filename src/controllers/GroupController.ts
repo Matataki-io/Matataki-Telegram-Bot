@@ -75,12 +75,12 @@ Fan 票：${info.minetoken?.symbol}
             return;
         }
 
-        const match = /^\/set (-?\d+) (\d+.?\d*)$/.exec(message.text);
+        const match = /^\/set\s+-?(\d+)\s+(\d+.?\d*)/.exec(message.text);
         if (!match || match.length < 2) {
             return reply("格式不对，请输入 `/set group_id amount`");
         }
 
-        const groupId = Number(match[1]);
+        const groupId = -Number(match[1]);
         const groups = await this.groupRepo.getGroupsOfCreator(sender);
         const group = groups.find(group => Number(group.id) === groupId);
 
