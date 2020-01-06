@@ -92,7 +92,7 @@ export class BotServiceImpl implements IBotService {
         });
         this.bot.help(ctx => {
             const username = this.botInfo!.username!;
-            const escapedUsername = username.replace("_", "\\_");
+            const escapedUsername = username.replace(/_/g, "\\_");
             const urlPrefix = process.env.MATATAKI_URLPREFIX!;
 
             ctx.telegram.sendMessage(ctx.chat!.id, `您在与 Matataki 粉丝群助手对话时可以使用以下指令
