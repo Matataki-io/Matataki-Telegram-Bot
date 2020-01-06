@@ -66,6 +66,34 @@ Fan 票：${info.minetoken?.symbol}
         }
     }
 
+    @Command("rule", { ignorePrefix: true })
+    async getCurrentGroupRules({ message, reply }: MessageHandlerContext) {
+        const { chat } = message;
+
+        if (chat.type !== "group" && chat.type !== "supergroup") {
+            await reply("该命令仅限群聊里使用");
+            return;
+        }
+
+        const group = await this.groupRepo.getGroupOrDefault(chat.id);
+        if (!group) {
+            await reply("该群还不是 Fan 票粉丝群");
+            return;
+        }
+
+        const info = await this.matatakiService.getAssociatedInfo(Number(group.creatorId));
+
+        if (!info.minetoken) {
+            throw new Error("Impossible situation");
+        }
+
+        if (group.requirement.minetoken && group.requirement.minetoken.amount > 0) {
+            await reply(`该群目前要求 ${info.minetoken.symbol} ≥ ${group.requirement.minetoken.amount}`);
+        } else {
+            await reply(`该群目前没有 ${info.minetoken.symbol} 要求`);
+        }
+    }
+
     @Command("set", { ignorePrefix: true })
     async setGroupRequirement({ message, reply, telegram }: MessageHandlerContext) {
         const sender = message.from.id;

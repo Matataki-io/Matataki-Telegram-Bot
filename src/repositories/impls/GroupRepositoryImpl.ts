@@ -34,6 +34,9 @@ export class GroupRepositoryImpl extends BaseRepository<Group> implements IGroup
     getGroup(id: number) {
         return this.repository.findOneOrFail(id, { where: { active: true }, ...relationsOption });
     }
+    getGroupOrDefault(id: number) {
+        return this.repository.findOne(id, { where: { active: true }, ...relationsOption }) ?? null;
+    }
     getGroupsOfCreator(creatorId: number) {
         return this.repository.find({ where: { creatorId, active: true }, ...relationsOption });
     }
