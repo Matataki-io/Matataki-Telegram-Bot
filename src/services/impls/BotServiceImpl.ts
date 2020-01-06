@@ -100,7 +100,8 @@ export class BotServiceImpl implements IBotService {
 
 /help： 查看帮助
 /start： 开始建立 Fan票 粉丝群
-/status： 查询您的所有状态信息（创建的 Fan票、创建的群组、已加入的群组、可以加入的群组）
+/status： 查询您的所有状态信息（创建的 Fan票、创建的群组、已加入的群组）
+/join：查询您还未加入的Fan票群信息
 /mygroups： 查询您建立的Fan票粉丝群组信息（群 ID、群名称、Fan 票名、群规则）
 /set： 设置群规则，输入 \`/set [群组ID] [参数]\` 即可设置群规则（参数代表至少持有您的 Fan票 数量），例如 \`/set 1234565 100\` 就是设置 123456 这个群的入群条件为 ≥100
 /rule：查询当前群组的群规则
