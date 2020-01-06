@@ -128,6 +128,13 @@ Fan 票：${info.minetoken?.symbol}
         await this.groupRepo.setRequirement(group, amount);
 
         await reply("OK");
+
+        await telegram.sendMessage(groupId, `当前群规则已修改为：
+群组 ID：${groupId}
+名字：${group.title}
+Fan 票：${info.minetoken.symbol}
+最低要求：${amount}`);
+
         return true;
     }
 
