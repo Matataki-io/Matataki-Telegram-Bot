@@ -18,8 +18,8 @@ export class QueryController extends BaseController<QueryController> {
         super();
     }
 
-    @Command("stat", { ignorePrefix: true })
-    async queryStat({ message, replyWithMarkdown, telegram }: MessageHandlerContext) {
+    @Command("status", { ignorePrefix: true })
+    async queryStatus({ message, replyWithMarkdown, telegram }: MessageHandlerContext) {
         const id = message.from.id;
         const info = await this.matatakiService.getAssociatedInfo(id);
 
