@@ -87,22 +87,42 @@ export class BotServiceImpl implements IBotService {
                 }
             } while (false);
 
-            await ctx.reply(`欢迎使用 ${Constants.BotName}。输入 /help 可获得帮助信息`);
+            ctx.telegram.sendMessage(ctx.chat!.id, `感谢您使用 Matataki 粉丝群助手，输入 /help 查看更多功能列表
+👉🏻[介绍文档](https://www.matataki.io/p/1638)`, { parse_mode: 'Markdown', disable_web_page_preview: true });
         });
         this.bot.help(ctx => {
-            ctx.telegram.sendMessage(ctx.chat!.id, `👉**我应该如何建立 Fan票群？**
-❗此功能仅向已经发行过Fan票的用户开放，其他用户暂不支持建立 Fan票群
+            const username = this.botInfo!.username!;
+            const escapedUsername = username.replace("_", "\\_");
+            const urlPrefix = process.env.MATATAKI_URLPREFIX!;
+
+            ctx.telegram.sendMessage(ctx.chat!.id, `您在与 Matataki 粉丝群助手对话时可以使用以下指令
+您也可以点击输入框边的"/"按钮查看全部指令
+
+/help： 查看帮助
+/start： 开始建立 Fan票 粉丝群
+/status： 查询您的所有状态信息（创建的 Fan票、创建的群组、已加入的群组）
+/join：查询您还未加入的Fan票群信息
+/mygroups： 查询您建立的Fan票粉丝群组信息（群 ID、群名称、Fan 票名、群规则）
+/set： 设置群规则，输入 \`/set [群组ID] [参数]\` 即可设置群规则（参数代表至少持有您的 Fan票 数量），例如 \`/set 1234565 100\` 就是设置 123456 这个群的入群条件为 ≥100
+/rule：查询当前群组的群规则
+
+================
+
+👉*我应该如何建立 Fan票 群？*
+❗此功能仅向已经发行过 Fan票 的用户开放，其他用户暂不支持建立 Fan票 群
 ❗如果希望发行 Fan票，请先填写并提交[表单](https://wj.qq.com/s2/5208015/8e5d/)
 
 操作步骤：
-1️⃣ 在 瞬Matataki 上登录后绑定 Telegram 账号
-2️⃣ 在 TG 中搜索 @${this.botInfo!.username} 并添加为好友
-3️⃣ 在 TG 中新建一个 Group，并将 @${this.botInfo!.username} 邀请入群
-4️⃣ 在群组中将 @${this.botInfo!.username} 设置为群管理员（操作此步骤之后群组将会自动升级为超级群）
-5️⃣ 与 @${this.botInfo!.username} 私聊，输入 /mygroups 查询自己创建的群组并记录下刚才群组的 ID 信息
-6️⃣ 与 @${this.botInfo!.username} 私聊，输入 /set [群组ID] [参数]即可设置群规则（参数代表至少持有您的 Fan票 数量）
+1️⃣ 在 瞬Matataki 上登录后[绑定 Telegram 账号](${urlPrefix}/setting/account)
+2️⃣ 在 TG 中搜索 @${escapedUsername} 并添加为好友，或点击此[链接](https://t.me/${escapedUsername}?start)
+3️⃣ 在 TG 中新建一个 Group，并将 @${escapedUsername} 邀请入群
+4️⃣ 在群组中将 @${escapedUsername} 设置为群管理员
+5️⃣ 设置 @${escapedUsername} 的管理员权限：先关闭邀请权限并保存，然后再打开邀请权限（操作此步骤之后群组将会自动升级为超级群）
+6️⃣ 与 @${escapedUsername} 私聊，输入 \`/mygroups\` 查询自己创建的群组并记录下刚才群组的 ID 信息
+7️⃣ 与 @${escapedUsername} 私聊，输入 \`/set [群组ID] [参数]\` 即可设置群规则（参数代表至少持有您的 Fan票 数量），例如 \`/set 1234565 100\` 就是设置 123456 这个群的入群条件为 ≥100
 
-👨‍👩‍👦‍👦完成以上 6 步操作即可完成 Fan票 群建立,已经建立过的 Fan票 群组将会显示在 Fan票 的详情页中
+👨‍👩‍👦‍👦完成以上 7 步操作即可完成 Fan票 群建立
+已经建立过的 Fan票 群组将会显示在 Fan票 详情页中
 如有其他问题请在 瞬Matataki 的[官方 TG 群](https://t.me/smartsignature_io)询问`, { parse_mode: 'Markdown', disable_web_page_preview: true });
         });
 

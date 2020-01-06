@@ -66,6 +66,34 @@ Fan 票：${info.minetoken?.symbol}
         }
     }
 
+    @Command("rule", { ignorePrefix: true })
+    async getCurrentGroupRules({ message, reply }: MessageHandlerContext) {
+        const { chat } = message;
+
+        if (chat.type !== "group" && chat.type !== "supergroup") {
+            await reply("该命令仅限群聊里使用");
+            return;
+        }
+
+        const group = await this.groupRepo.getGroupOrDefault(chat.id);
+        if (!group) {
+            await reply("该群还不是 Fan 票粉丝群");
+            return;
+        }
+
+        const info = await this.matatakiService.getAssociatedInfo(Number(group.creatorId));
+
+        if (!info.minetoken) {
+            throw new Error("Impossible situation");
+        }
+
+        if (group.requirement.minetoken && group.requirement.minetoken.amount > 0) {
+            await reply(`该群目前要求 ${info.minetoken.symbol} ≥ ${group.requirement.minetoken.amount}`);
+        } else {
+            await reply(`该群目前没有 ${info.minetoken.symbol} 要求`);
+        }
+    }
+
     @Command("set", { ignorePrefix: true })
     async setGroupRequirement({ message, reply, telegram }: MessageHandlerContext) {
         const sender = message.from.id;
@@ -75,12 +103,12 @@ Fan 票：${info.minetoken?.symbol}
             return;
         }
 
-        const match = /^\/set (-?\d+) (\d+)$/.exec(message.text);
+        const match = /^\/set\s+-?(\d+)\s+(\d+.?\d*)/.exec(message.text);
         if (!match || match.length < 2) {
             return reply("格式不对，请输入 `/set group_id amount`");
         }
 
-        const groupId = Number(match[1]);
+        const groupId = -Number(match[1]);
         const groups = await this.groupRepo.getGroupsOfCreator(sender);
         const group = groups.find(group => Number(group.id) === groupId);
 
@@ -100,6 +128,13 @@ Fan 票：${info.minetoken?.symbol}
         await this.groupRepo.setRequirement(group, amount);
 
         await reply("OK");
+
+        await telegram.sendMessage(groupId, `当前群规则已修改为：
+群组 ID：${groupId}
+名字：${group.title}
+Fan 票：${info.minetoken.symbol}
+最低要求：${amount}`);
+
         return true;
     }
 
@@ -112,52 +147,71 @@ Fan 票：${info.minetoken?.symbol}
             return;
         }
 
-        const walletAddress = await this.matatakiService.getEthWallet(sender);;
-
-        const balanceCache = new Map<number, number>();
-        const contractAddressCache = new Map<number, string>();
-
         const groups = await this.groupRepo.getGroupsExceptMyToken(info.minetoken?.id);
-        await Promise.all(groups.map(async group => {
-            let balance = balanceCache.get(group.tokenId);
-            if (typeof balance === "number") {
-                return;
-            }
 
-            let contractAddress = contractAddressCache.get(group.tokenId);
-            if (!contractAddress) {
-                contractAddress = await this.matatakiService.getContractAddressOfMinetoken(group.tokenId);
-                contractAddressCache.set(group.tokenId, contractAddress);
-            }
+        const tokens = new Set<number>();
+        for (const group of groups) {
+            tokens.add(group.tokenId);
+        }
 
-            balance = await this.web3Service.getBalance(contractAddress, walletAddress);
-            balanceCache.set(group.tokenId, balance!);
+        const walletAddress = await this.matatakiService.getEthWallet(sender);;
+        const balanceCache = new Map<number, number>();
+        await Promise.all(Array.from(tokens).map(async token => {
+            const contractAddress = await this.matatakiService.getContractAddressOfMinetoken(token);
+            const balance = await this.web3Service.getBalance(contractAddress, walletAddress);
+
+            balanceCache.set(token, balance!);
         }));
+
         const acceptableGroups = groups.filter(group => (balanceCache.get(group.tokenId) ?? -1) >= (group.requirement.minetoken?.amount ?? 0));
         if (acceptableGroups.length === 0) {
-            await reply("抱歉，你持有的 Fan票 不满足任何一个群的条件");
+            await reply(`抱歉，你持有的 Fan票 不足以加入别的群
+
+输入 /status 查看已经加入的 Fan票 群`);
             return;
         }
 
-        const buttons = await Promise.all(acceptableGroups.map(async group => {
+        const symbolMap = new Map<number, string>();
+        for (const group of acceptableGroups) {
+            if (symbolMap.has(group.tokenId)) {
+                continue;
+            }
+
+            const info = await this.matatakiService.getAssociatedInfo(Number(group.creatorId));
+
+            symbolMap.set(group.tokenId, info.minetoken!.symbol);
+        }
+
+        const array = new Array<string>();
+
+        array.push(`*您现在还可以加入 ${acceptableGroups.length} 个 Fan票 群*`);
+
+        for (const group of acceptableGroups) {
             const groupId = Number(group.id);
-            const info = await telegram.getChat(groupId);
-            if (!info.title) {
+            const groupInfo = await telegram.getChat(groupId);
+            if (!groupInfo.title) {
                 throw new Error("What happened?");
             }
 
-            const cm = await telegram.getChatMember(groupId, sender);
-            if (cm.status === "kicked") {
+            const { status } = await telegram.getChatMember(groupId, sender);
+            if (status === "kicked") {
                 // @ts-ignore
                 await telegram.unbanChatMember(groupId, sender);
             }
+            if (status !== "left") {
+                continue;
+            }
 
-            return Markup.urlButton(info.title, info.invite_link ?? await telegram.exportChatInviteLink(groupId));
-        }));
+            const inviteLink = groupInfo.invite_link ?? await telegram.exportChatInviteLink(groupId);
+            const requiredAmount = group.requirement.minetoken?.amount ?? 0;
 
-        await reply("你现在可以进入以下的群：", Markup.inlineKeyboard([
-            buttons
-        ]).extra());
+            array.push(`/ [${groupInfo.title ?? groupInfo.id}](${inviteLink}) （${requiredAmount > 0 ? `${symbolMap.get(group.tokenId)} ≥ ${requiredAmount}` : "暂无规则"}）`);
+        }
+
+        array.push("");
+        array.push("输入 /status 查看已经加入的 Fan票 群");
+
+        await telegram.sendMessage(message.chat.id, array.join("\n"), { parse_mode: 'Markdown', disable_web_page_preview: true });
     }
 
     @Event("new_chat_members")

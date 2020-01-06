@@ -12,7 +12,7 @@ function createController() {
 }
 
 describe("QueryController", () => {
-    describe("/stat", () => {
+    describe("/status", () => {
         it("Without Matataki account", async () => {
             const ctx = createMockedContext();
             // @ts-ignore
@@ -23,7 +23,7 @@ describe("QueryController", () => {
             } as Message;
 
             const controller = createController();
-            await controller.queryStat(ctx);
+            await controller.queryStatus(ctx);
 
             expect(ctx.replyWithMarkdown).toBeCalledTimes(1);
             expect(ctx.replyWithMarkdown).toBeCalledWith(`尚未绑定 瞬Matataki 账户
@@ -57,7 +57,7 @@ describe("QueryController", () => {
             } as Message;
 
             const controller = createController();
-            await controller.queryStat(ctx);
+            await controller.queryStatus(ctx);
 
             expect(ctx.replyWithMarkdown).toBeCalledTimes(1);
             expect(ctx.replyWithMarkdown).toBeCalledWith(`瞬Matataki 昵称：[李田所](http://MATATAKI/user/114514)
