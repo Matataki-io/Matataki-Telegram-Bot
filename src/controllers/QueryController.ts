@@ -38,38 +38,58 @@ export class QueryController extends BaseController<QueryController> {
         }
 
         if (info.user) {
+            array.push("");
+
             const user = await this.userRepo.getUser(id);
 
             if (!user || user.groups.length === 0) {
-                array.push("你尚未加入 Fan票 群");
+                array.push("*你尚未加入 Fan票 群*");
             } else {
-                array.push(`你已加入 ${user.groups.length} 个 Fan票 群`);
-                const groups = await this.botService.getGroupInfos(user.groups);
-                for (const group of groups) {
-                    const inviteLink = group.invite_link ?? await telegram.exportChatInviteLink(group.id);
+                const symbolMap = new Map<number, string>();
+                for (const group of user.groups) {
+                    if (symbolMap.has(group.tokenId)) {
+                        continue;
+                    }
 
-                    array.push(`/ [${group.title ?? group.id}](${inviteLink})`);
+                    const info = await this.matatakiService.getAssociatedInfo(Number(group.creatorId));
+
+                    symbolMap.set(group.tokenId, info.minetoken!.symbol);
                 }
-                array.push("");
+
+                array.push(`*你已加入 ${user.groups.length} 个 Fan票 群*`);
+                const groupInfos = await this.botService.getGroupInfos(user.groups);
+                for (let i = 0; i < user.groups.length; i++) {
+                    const group = user.groups[i];
+                    const groupInfo = groupInfos[i];
+                    const inviteLink = groupInfo.invite_link ?? await telegram.exportChatInviteLink(group.id);
+                    const requiredAmount = group.requirement.minetoken?.amount ?? 0;
+
+                    array.push(`/ [${groupInfo.title ?? groupInfo.id}](${inviteLink}) （${requiredAmount > 0 ? `${symbolMap.get(group.tokenId)} ≥ ${requiredAmount}` : "暂无规则"}）`);
+                }
             }
+
+            array.push("");
 
             const myGroups = await this.groupRepo.getGroupsOfCreator(id);
             if (myGroups.length === 0) {
-                array.push("你尚未建立 Fan票 群");
+                array.push("*你尚未建立 Fan票 群*");
             } else {
-                array.push(`你已建立 ${myGroups.length} 个 Fan票 群`);
+                array.push(`*你已建立 ${myGroups.length} 个 Fan票 群*`);
                 const groupInfos = await this.botService.getGroupInfos(myGroups);
                 for (let i = 0; i < myGroups.length; i++) {
                     const group = myGroups[i];
                     const groupInfo = groupInfos[i];
-                    const noRequirement = (group.requirement.minetoken?.amount ?? 0) === 0;
                     const inviteLink = groupInfo.invite_link ?? await telegram.exportChatInviteLink(group.id);
+                    const requiredAmount = group.requirement.minetoken?.amount ?? 0;
 
-                    array.push(`/ [${groupInfo.title ?? groupInfo.id}](${inviteLink}) （${!noRequirement ? "已有规则" : "暂无规则"}）`);
+                    array.push(`/ [${groupInfo.title ?? groupInfo.id}](${inviteLink}) （${requiredAmount > 0 ? `${info.minetoken!.symbol} ≥ ${requiredAmount}` : "暂无规则"}）`);
                 }
             }
         }
 
-        await replyWithMarkdown(array.join("\n"));
+        array.push("");
+        array.push("输入 /join 查看更多可以加入的 Fan票 群");
+
+        await telegram.sendMessage(message.chat.id, array.join("\n"), { parse_mode: 'Markdown', disable_web_page_preview: true });
     }
 }
