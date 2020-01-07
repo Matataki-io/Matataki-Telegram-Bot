@@ -205,12 +205,16 @@ Fan 票：${info.minetoken.symbol}
                 continue;
             }
 
-            joinableGroupCount++;
+            try {
+                const inviteLink = groupInfo.invite_link ?? await telegram.exportChatInviteLink(groupId);
+                const requiredAmount = group.requirement.minetoken?.amount ?? 0;
 
-            const inviteLink = groupInfo.invite_link ?? await telegram.exportChatInviteLink(groupId);
-            const requiredAmount = group.requirement.minetoken?.amount ?? 0;
+                joinableGroupCount++;
 
-            array.push(`/ [${groupInfo.title ?? groupInfo.id}](${inviteLink}) （${requiredAmount > 0 ? `${symbolMap.get(group.tokenId)} ≥ ${requiredAmount}` : "暂无规则"}）`);
+                array.push(`/ [${groupInfo.title ?? groupInfo.id}](${inviteLink}) （${requiredAmount > 0 ? `${symbolMap.get(group.tokenId)} ≥ ${requiredAmount}` : "暂无规则"}）`);
+            } catch (e) {
+                this.loggerService.error(LogCategories.TelegramUpdate, e);
+            }
         }
 
         array.unshift(`*您现在还可以加入 ${joinableGroupCount} 个 Fan票 群*`);
