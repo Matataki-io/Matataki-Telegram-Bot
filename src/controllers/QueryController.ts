@@ -2,10 +2,10 @@ import { inject } from "inversify";
 
 import { Controller, Command, InjectRepository } from "#/decorators";
 import { MessageHandlerContext } from "#/definitions";
-import { Injections } from "#/constants";
+import { Injections, LogCategories } from "#/constants";
 import { User, Group } from "#/entities";
 import { IUserRepository, IGroupRepository } from "#/repositories";
-import { IMatatakiService, IBotService } from "#/services";
+import { IMatatakiService, IBotService, ILoggerService } from "#/services";
 
 import { BaseController } from ".";
 
@@ -14,6 +14,7 @@ export class QueryController extends BaseController<QueryController> {
     constructor(@inject(Injections.MatatakiService) private matatakiService: IMatatakiService,
         @InjectRepository(User) private userRepo: IUserRepository,
         @InjectRepository(Group) private groupRepo: IGroupRepository,
+        @inject(Injections.LoggerService) private loggerService: ILoggerService,
         @inject(Injections.BotService) private botService: IBotService) {
         super();
     }
@@ -59,12 +60,16 @@ export class QueryController extends BaseController<QueryController> {
                 array.push(`*你已加入 ${user.groups.length} 个 Fan票 群*`);
                 const groupInfos = await this.botService.getGroupInfos(user.groups);
                 for (let i = 0; i < user.groups.length; i++) {
-                    const group = user.groups[i];
-                    const groupInfo = groupInfos[i];
-                    const inviteLink = groupInfo.invite_link ?? await telegram.exportChatInviteLink(group.id);
-                    const requiredAmount = group.requirement.minetoken?.amount ?? 0;
+                    try {
+                        const group = user.groups[i];
+                        const groupInfo = groupInfos[i];
+                        const inviteLink = groupInfo.invite_link ?? await telegram.exportChatInviteLink(group.id);
+                        const requiredAmount = group.requirement.minetoken?.amount ?? 0;
 
-                    array.push(`/ [${groupInfo.title ?? groupInfo.id}](${inviteLink}) （${requiredAmount > 0 ? `${symbolMap.get(group.tokenId)} ≥ ${requiredAmount}` : "暂无规则"}）`);
+                        array.push(`/ [${groupInfo.title ?? groupInfo.id}](${inviteLink}) （${requiredAmount > 0 ? `${symbolMap.get(group.tokenId)} ≥ ${requiredAmount}` : "暂无规则"}）`);
+                    } catch (e) {
+                        this.loggerService.error(LogCategories.TelegramUpdate, e);
+                    }
                 }
             }
 
@@ -77,12 +82,16 @@ export class QueryController extends BaseController<QueryController> {
                 array.push(`*你已建立 ${myGroups.length} 个 Fan票 群*`);
                 const groupInfos = await this.botService.getGroupInfos(myGroups);
                 for (let i = 0; i < myGroups.length; i++) {
-                    const group = myGroups[i];
-                    const groupInfo = groupInfos[i];
-                    const inviteLink = groupInfo.invite_link ?? await telegram.exportChatInviteLink(group.id);
-                    const requiredAmount = group.requirement.minetoken?.amount ?? 0;
+                    try {
+                        const group = myGroups[i];
+                        const groupInfo = groupInfos[i];
+                        const inviteLink = groupInfo.invite_link ?? await telegram.exportChatInviteLink(group.id);
+                        const requiredAmount = group.requirement.minetoken?.amount ?? 0;
 
-                    array.push(`/ [${groupInfo.title ?? groupInfo.id}](${inviteLink}) （${requiredAmount > 0 ? `${info.minetoken!.symbol} ≥ ${requiredAmount}` : "暂无规则"}）`);
+                        array.push(`/ [${groupInfo.title ?? groupInfo.id}](${inviteLink}) （${requiredAmount > 0 ? `${info.minetoken!.symbol} ≥ ${requiredAmount}` : "暂无规则"}）`);
+                    } catch (e) {
+                        this.loggerService.error(LogCategories.TelegramUpdate, e);
+                    }
                 }
             }
         }
