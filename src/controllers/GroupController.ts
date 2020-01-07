@@ -140,6 +140,13 @@ Fan 票：${info.minetoken.symbol}
 
     @Command("join", { ignorePrefix: true })
     async joinGroup({ message, reply, telegram }: MessageHandlerContext) {
+        const { chat } = message;
+
+        if (chat.type !== "private") {
+            await reply("该命令仅限和机器人私聊里使用");
+            return;
+        }
+
         const sender = message.from.id;
         const info = await this.matatakiService.getAssociatedInfo(sender);
         if (!info.user) {
