@@ -51,19 +51,16 @@ export class GroupController extends BaseController<GroupController> {
             groupNames.set(group, info.title);
         }));
 
-        let isFirst = true;
-        for (const group of groups) {
-            if (!isFirst) {
-                console.log("=====================");
-            }
+        const array = new Array<string>();
 
-            await reply(`群组 ID：${group.id}
+        for (const group of groups) {
+            array.push(`群组 ID：${group.id}
 名字：${groupNames.get(group)}
 Fan 票：${info.minetoken?.symbol}
 最低要求：${group.requirement.minetoken?.amount ?? 0}`);
-
-            isFirst = false;
         }
+
+        await reply(array.join("\n=====================\n"));
     }
 
     @Command("rule", { ignorePrefix: true })
