@@ -27,7 +27,7 @@ describe("QueryController", () => {
 
             expect(ctx.replyWithMarkdown).toBeCalledTimes(1);
             expect(ctx.replyWithMarkdown).toBeCalledWith(`尚未绑定 瞬Matataki 账户
-你在 瞬Matataki 尚未发行 Fan票`);
+您在 瞬Matataki 尚未发行 Fan票`);
         });
         it("With Matataki account but no minetoken", async () => {
             const ctx = createMockedContext();
@@ -43,9 +43,9 @@ describe("QueryController", () => {
 
             expect(ctx.replyWithMarkdown).toBeCalledTimes(1);
             expect(ctx.replyWithMarkdown).toBeCalledWith(`瞬Matataki 昵称：[野獣先輩](http://MATATAKI/user/810)
-你在 瞬Matataki 尚未发行 Fan票
-你尚未加入 Fan票 群
-你尚未建立 Fan票 群`);
+您在 瞬Matataki 尚未发行 Fan票
+您尚未加入 Fan票 群
+您尚未建立 Fan票 群`);
         });
         it("With both Matataki account and minetoken", async () => {
             const ctx = createMockedContext();
@@ -62,8 +62,8 @@ describe("QueryController", () => {
             expect(ctx.replyWithMarkdown).toBeCalledTimes(1);
             expect(ctx.replyWithMarkdown).toBeCalledWith(`瞬Matataki 昵称：[李田所](http://MATATAKI/user/114514)
 Fan票 名称：[INM（银票）](http://MATATAKI/token/1919)
-你尚未加入 Fan票 群
-你尚未建立 Fan票 群`);
+您尚未加入 Fan票 群
+您尚未建立 Fan票 群`);
         });
     });
 });
