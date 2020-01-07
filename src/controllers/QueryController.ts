@@ -33,7 +33,7 @@ export class QueryController extends BaseController<QueryController> {
         }
 
         if (!info.minetoken) {
-            array.push("你在 瞬Matataki 尚未发行 Fan票");
+            array.push("您在 瞬Matataki 尚未发行 Fan票");
         } else {
             array.push(`Fan票 名称：[${info.minetoken.symbol}（${info.minetoken.name}）](${this.matatakiService.urlPrefix}/token/${info.minetoken.id})`);
         }
@@ -44,7 +44,7 @@ export class QueryController extends BaseController<QueryController> {
             const user = await this.userRepo.getUser(id);
 
             if (!user || user.groups.length === 0) {
-                array.push("*你尚未加入 Fan票 群*");
+                array.push("*您尚未加入 Fan票 群*");
             } else {
                 const symbolMap = new Map<number, string>();
                 for (const group of user.groups) {
@@ -57,7 +57,7 @@ export class QueryController extends BaseController<QueryController> {
                     symbolMap.set(group.tokenId, info.minetoken!.symbol);
                 }
 
-                array.push(`*你已加入 ${user.groups.length} 个 Fan票 群*`);
+                array.push(`*您已加入 ${user.groups.length} 个 Fan票 群*`);
                 const groupInfos = await this.botService.getGroupInfos(user.groups);
                 for (let i = 0; i < user.groups.length; i++) {
                     try {
@@ -77,9 +77,9 @@ export class QueryController extends BaseController<QueryController> {
 
             const myGroups = await this.groupRepo.getGroupsOfCreator(id);
             if (myGroups.length === 0) {
-                array.push("*你尚未建立 Fan票 群*");
+                array.push("*您尚未建立 Fan票 群*");
             } else {
-                array.push(`*你已建立 ${myGroups.length} 个 Fan票 群*`);
+                array.push(`*您已建立 ${myGroups.length} 个 Fan票 群*`);
                 const groupInfos = await this.botService.getGroupInfos(myGroups);
                 for (let i = 0; i < myGroups.length; i++) {
                     try {

@@ -247,7 +247,7 @@ export class BotServiceImpl implements IBotService {
             return;
         }
 
-        console.error("你的机器人信息对不上当前的数据库 schema，请把 ormconfig.js 的 schema 改成别的然后做 migrations 再运行机器人");
+        console.error("您的机器人信息对不上当前的数据库 schema，请把 ormconfig.js 的 schema 改成别的然后做 migrations 再运行机器人");
 
         process.exit();
     }

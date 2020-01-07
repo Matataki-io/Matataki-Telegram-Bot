@@ -63,7 +63,7 @@ export class GroupMemberChecker implements IScheduler {
                 } catch (e) {
                     try {
                         await this.botService.kickMember(groupId, userId);
-                        await this.botService.sendMessage(userId, `抱歉，你现在没有绑定 瞬Matataki，现已被移出`);
+                        await this.botService.sendMessage(userId, `抱歉，您现在没有绑定 瞬Matataki，现已被移出`);
 
                         kickedUsers.push(user);
                         kickedUserInfos.push(userInfo.user);
@@ -81,7 +81,7 @@ export class GroupMemberChecker implements IScheduler {
 
                 try {
                     await this.botService.kickMember(groupId, userId);
-                    await this.botService.sendMessage(userId, `抱歉，你现在的 Fan 票不满足群 ${groupInfo.title} 的条件，现已被移出`);
+                    await this.botService.sendMessage(userId, `抱歉，您现在的 Fan 票不满足群 ${groupInfo.title} 的条件，现已被移出`);
 
                     kickedUsers.push(user);
                     kickedUserInfos.push(userInfo.user);

@@ -29,14 +29,14 @@ export class GroupController extends BaseController<GroupController> {
 
         const info = await this.matatakiService.getAssociatedInfo(sender);
         if (!info.user || !info.minetoken) {
-            await reply("抱歉，你没有在 瞬Matataki 绑定该 Telegram 帐号或者尚未发行 Fan 票");
+            await reply("抱歉，您没有在 瞬Matataki 绑定该 Telegram 帐号或者尚未发行 Fan 票");
             return;
         }
 
         const groups = await this.groupRepo.getGroupsOfCreator(sender);
 
         if (groups.length === 0) {
-            await reply(`抱歉，你还没有创建 Fan票 群`);
+            await reply(`抱歉，您还没有创建 Fan票 群`);
             return;
         }
 
@@ -96,7 +96,7 @@ Fan 票：${info.minetoken?.symbol}
         const sender = message.from.id;
         const info = await this.matatakiService.getAssociatedInfo(sender);
         if (!info.user || !info.minetoken) {
-            await reply("抱歉，你没有在 瞬Matataki 绑定该 Telegram 帐号或者尚未发行 Fan 票");
+            await reply("抱歉，您没有在 瞬Matataki 绑定该 Telegram 帐号或者尚未发行 Fan 票");
             return;
         }
 
@@ -147,7 +147,7 @@ Fan 票：${info.minetoken.symbol}
         const sender = message.from.id;
         const info = await this.matatakiService.getAssociatedInfo(sender);
         if (!info.user) {
-            await reply("抱歉，你没有在 瞬Matataki 绑定该 Telegram 帐号");
+            await reply("抱歉，您没有在 瞬Matataki 绑定该 Telegram 帐号");
             return;
         }
 
@@ -169,7 +169,7 @@ Fan 票：${info.minetoken.symbol}
 
         const acceptableGroups = groups.filter(group => (balanceCache.get(group.tokenId) ?? -1) >= (group.requirement.minetoken?.amount ?? 0));
         if (acceptableGroups.length === 0) {
-            await reply(`抱歉，你持有的 Fan票 不足以加入别的群
+            await reply(`抱歉，您持有的 Fan票 不足以加入别的群
 
 输入 /status 查看已经加入的 Fan票 群`);
             return;
@@ -267,7 +267,7 @@ Fan 票：${info.minetoken.symbol}
 
             group = await this.groupRepo.ensureGroup(groupId, groupName ?? "", creator.user.id, info.minetoken.id);
 
-            await this.botService.sendMessage(creatorId, `你已把机器人拉进群 **${groupName}**。为了机器人的正常工作，请把机器人设置为管理员并取消群员拉人权限`);
+            await this.botService.sendMessage(creatorId, `您已把机器人拉进群 **${groupName}**。为了机器人的正常工作，请把机器人设置为管理员并取消群员拉人权限`);
 
             if (groupInfo.type === "group") {
                 await this.botService.sendMessage(creatorId, `**${groupName}** 现在是一个小群，对于机器人的正常工作存在一定影响，建议采取一些操作升级到大群。包括但不限于以下操作：
@@ -292,7 +292,7 @@ Fan 票：${info.minetoken.symbol}
             } catch (e) {
                 try {
                     await this.botService.kickMember(groupId, member.id);
-                    await this.botService.sendMessage(member.id, `抱歉，你现在没有绑定 瞬Matataki，现已被移出`);
+                    await this.botService.sendMessage(member.id, `抱歉，您现在没有绑定 瞬Matataki，现已被移出`);
                 } catch (e) {
                     this.loggerService.warn(LogCategories.TelegramUpdate, e);
                 }
@@ -308,7 +308,7 @@ Fan 票：${info.minetoken.symbol}
 
             try {
                 await this.botService.kickMember(groupId, member.id);
-                await this.botService.sendMessage(member.id, `抱歉，你现在的 Fan 票不满足群 ${groupName} 的条件，现已被移出`);
+                await this.botService.sendMessage(member.id, `抱歉，您现在的 Fan 票不满足群 ${groupName} 的条件，现已被移出`);
             } catch (e) {
                 this.loggerService.warn(LogCategories.TelegramUpdate, e);
             }
@@ -403,13 +403,13 @@ Fan 票：${info.minetoken.symbol}
         if (sender === Number(group.creatorId)) {
             const button = Markup.urlButton(group.title, await telegram.exportChatInviteLink(groupId));
 
-            await reply("你是该群群主：", Markup.inlineKeyboard([button]).extra());
+            await reply("您是该群群主：", Markup.inlineKeyboard([button]).extra());
             return true;
         }
 
         const info = await this.matatakiService.getAssociatedInfo(sender);
         if (!info.user) {
-            await reply("抱歉，你没有在 瞬Matataki 绑定该 Telegram 帐号");
+            await reply("抱歉，您没有在 瞬Matataki 绑定该 Telegram 帐号");
             return true;
         }
 
@@ -426,7 +426,7 @@ Fan 票：${info.minetoken.symbol}
         }
 
         if (balance < groupRequirement) {
-            await reply(`抱歉，你持有的 Fan票 不满足群 ${group.title} 的条件：
+            await reply(`抱歉，您持有的 Fan票 不满足群 ${group.title} 的条件：
 要求 ${minetoken.name}(${minetoken.symbol}) >= ${groupRequirement}`);
             return true;
         }
@@ -435,7 +435,7 @@ Fan 票：${info.minetoken.symbol}
         if (chatMember.status === "member") {
             const button = Markup.urlButton(group.title, await telegram.exportChatInviteLink(groupId));
 
-            await reply("你已经是该 Fan票 群群员：", Markup.inlineKeyboard([button]).extra());
+            await reply("您已经是该 Fan票 群群员：", Markup.inlineKeyboard([button]).extra());
             return true;
         }
 
@@ -446,7 +446,7 @@ Fan 票：${info.minetoken.symbol}
 
         const button = Markup.urlButton(group.title, await telegram.exportChatInviteLink(groupId));
 
-        await reply("你现在可以进入该群：：", Markup.inlineKeyboard([button]).extra());
+        await reply("您现在可以进入该群：：", Markup.inlineKeyboard([button]).extra());
         return true;
     }
 }
