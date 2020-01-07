@@ -51,19 +51,16 @@ export class GroupController extends BaseController<GroupController> {
             groupNames.set(group, info.title);
         }));
 
-        let isFirst = true;
-        for (const group of groups) {
-            if (!isFirst) {
-                console.log("=====================");
-            }
+        const array = new Array<string>();
 
-            await reply(`群组 ID：${group.id}
+        for (const group of groups) {
+            array.push(`群组 ID：${group.id}
 名字：${groupNames.get(group)}
 Fan 票：${info.minetoken?.symbol}
 最低要求：${group.requirement.minetoken?.amount ?? 0}`);
-
-            isFirst = false;
         }
+
+        await reply(array.join("\n=====================\n"));
     }
 
     @Command("rule", { ignorePrefix: true })
@@ -140,6 +137,13 @@ Fan 票：${info.minetoken.symbol}
 
     @Command("join", { ignorePrefix: true })
     async joinGroup({ message, reply, telegram }: MessageHandlerContext) {
+        const { chat } = message;
+
+        if (chat.type !== "private") {
+            await reply("该命令仅限和机器人私聊里使用");
+            return;
+        }
+
         const sender = message.from.id;
         const info = await this.matatakiService.getAssociatedInfo(sender);
         if (!info.user) {
@@ -183,8 +187,7 @@ Fan 票：${info.minetoken.symbol}
         }
 
         const array = new Array<string>();
-
-        array.push(`*您现在还可以加入 ${acceptableGroups.length} 个 Fan票 群*`);
+        let joinableGroupCount = 0;
 
         for (const group of acceptableGroups) {
             const groupId = Number(group.id);
@@ -202,11 +205,19 @@ Fan 票：${info.minetoken.symbol}
                 continue;
             }
 
-            const inviteLink = groupInfo.invite_link ?? await telegram.exportChatInviteLink(groupId);
-            const requiredAmount = group.requirement.minetoken?.amount ?? 0;
+            try {
+                const inviteLink = groupInfo.invite_link ?? await telegram.exportChatInviteLink(groupId);
+                const requiredAmount = group.requirement.minetoken?.amount ?? 0;
 
-            array.push(`/ [${groupInfo.title ?? groupInfo.id}](${inviteLink}) （${requiredAmount > 0 ? `${symbolMap.get(group.tokenId)} ≥ ${requiredAmount}` : "暂无规则"}）`);
+                joinableGroupCount++;
+
+                array.push(`/ [${groupInfo.title ?? groupInfo.id}](${inviteLink}) （${requiredAmount > 0 ? `${symbolMap.get(group.tokenId)} ≥ ${requiredAmount}` : "暂无规则"}）`);
+            } catch (e) {
+                this.loggerService.error(LogCategories.TelegramUpdate, e);
+            }
         }
+
+        array.unshift(`*您现在还可以加入 ${joinableGroupCount} 个 Fan票 群*`);
 
         array.push("");
         array.push("输入 /status 查看已经加入的 Fan票 群");
