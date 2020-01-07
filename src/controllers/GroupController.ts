@@ -183,8 +183,7 @@ Fan 票：${info.minetoken.symbol}
         }
 
         const array = new Array<string>();
-
-        array.push(`*您现在还可以加入 ${acceptableGroups.length} 个 Fan票 群*`);
+        let joinableGroupCount = 0;
 
         for (const group of acceptableGroups) {
             const groupId = Number(group.id);
@@ -202,11 +201,15 @@ Fan 票：${info.minetoken.symbol}
                 continue;
             }
 
+            joinableGroupCount++;
+
             const inviteLink = groupInfo.invite_link ?? await telegram.exportChatInviteLink(groupId);
             const requiredAmount = group.requirement.minetoken?.amount ?? 0;
 
             array.push(`/ [${groupInfo.title ?? groupInfo.id}](${inviteLink}) （${requiredAmount > 0 ? `${symbolMap.get(group.tokenId)} ≥ ${requiredAmount}` : "暂无规则"}）`);
         }
+
+        array.unshift(`*您现在还可以加入 ${joinableGroupCount} 个 Fan票 群*`);
 
         array.push("");
         array.push("输入 /status 查看已经加入的 Fan票 群");
