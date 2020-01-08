@@ -213,7 +213,7 @@ export class BotServiceImpl implements IBotService {
     }
 
     async run() {
-        await this.databaseService.waitForConnectionCreated();
+        await this.databaseService.ensureDatabase();
 
         await this.checkBotOwner();
 

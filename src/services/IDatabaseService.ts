@@ -1,3 +1,3 @@
 export interface IDatabaseService {
-    waitForConnectionCreated(): Promise<void>;
+    ensureDatabase(): Promise<void>;
 }
