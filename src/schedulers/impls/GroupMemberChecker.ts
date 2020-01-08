@@ -73,7 +73,7 @@ export class GroupMemberChecker implements IScheduler {
                     continue;
                 }
 
-                const balance = await this.web3Service.getBalance(contractAddress, walletAddress);
+                const balance = (await this.web3Service.getBalance(contractAddress, walletAddress)) / 10000;
 
                 if (balance >= balanceRequirement) {
                     continue;
