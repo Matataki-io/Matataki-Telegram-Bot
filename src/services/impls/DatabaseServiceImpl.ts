@@ -50,7 +50,9 @@ export class DatabaseServiceImpl implements IDatabaseService {
         });
     }
 
-    async waitForConnectionCreated() {
-        await this.connection;
+    async ensureDatabase() {
+        const connection = await this.connection;
+
+        await connection.runMigrations();
     }
 }
