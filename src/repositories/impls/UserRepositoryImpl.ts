@@ -23,6 +23,6 @@ export class UserRepositoryImpl extends BaseRepository<User> implements IUserRep
     }
 
     getUser(id: number) {
-        return this.repository.findOne(id, { relations: ["groups"] });
+        return this.repository.createQueryBuilder("user").innerJoinAndSelect("user.groups", "group", "group.active").where("user.id = :id", { id }).getOne();
     }
 }
