@@ -53,7 +53,7 @@ export class GroupRepositoryImpl extends BaseRepository<Group> implements IGroup
     }
 
     async addMembers(group: Group, members: User[]) {
-        const maps = new Map<number, User>(members.map(user => [Number(user.id), user]));
+        const maps = new Map<number, User>(group.members.map(user => [Number(user.id), user]));
 
         for (const member of members) {
             const id = Number(member.id);
