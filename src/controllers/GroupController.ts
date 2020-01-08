@@ -10,6 +10,7 @@ import { IUserRepository, IGroupRepository } from "#/repositories";
 import { IBotService, IMatatakiService, IWeb3Service, ILoggerService } from "#/services";
 
 import { BaseController } from ".";
+import { table } from "table";
 
 @Controller("group")
 export class GroupController extends BaseController<GroupController> {
@@ -166,6 +167,16 @@ Fan 票：${info.minetoken.symbol}
 
             balanceCache.set(token, balance!);
         }));
+
+        const tableArray = [["Token", "Balance"]];
+
+        for (const token of tokens) {
+            tableArray.push([token.toString(), balanceCache.get(token)?.toString() ?? ""]);
+        }
+
+        const tableString = table(tableArray);
+        console.log(tableString);
+        this.loggerService.trace(LogCategories.TelegramUpdate, tableString);
 
         const acceptableGroups = groups.filter(group => (balanceCache.get(group.tokenId) ?? -1) >= (group.requirement.minetoken?.amount ?? 0));
         if (acceptableGroups.length === 0) {
