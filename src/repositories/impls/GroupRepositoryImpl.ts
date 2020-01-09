@@ -24,8 +24,6 @@ export class GroupRepositoryImpl extends BaseRepository<Group> implements IGroup
             group.requirement = {};
         }
 
-        group.active = true;
-
         await this.repository.save(group);
 
         return group;
@@ -100,6 +98,7 @@ export class GroupRepositoryImpl extends BaseRepository<Group> implements IGroup
                 canEqual: true,
             },
         }
+        group.active = true;
 
         await this.repository.save(group);
     }
