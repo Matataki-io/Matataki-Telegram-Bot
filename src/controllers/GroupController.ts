@@ -42,6 +42,10 @@ export class GroupController extends BaseController<GroupController> {
         }
 
         const array = (await Promise.all(groups.map(async group => {
+            if (!group.active) {
+                return null;
+            }
+
             const groupId = Number(group.id);
             const groupInfo = await telegram.getChat(groupId);
 
