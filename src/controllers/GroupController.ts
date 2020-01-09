@@ -41,24 +41,43 @@ export class GroupController extends BaseController<GroupController> {
             return;
         }
 
-        const groupNames = new Map<Group, string>();
+        const array = (await Promise.all(groups.map(async group => {
+            const groupId = Number(group.id);
+            const groupInfo = await telegram.getChat(groupId);
 
-        await Promise.all(groups.map(async group => {
-            const info = await telegram.getChat(group.id);
-            if (!info.title) {
-                throw new Error("What happened?");
+            const memberCount = await telegram.getChatMembersCount(groupId);
+            if (memberCount === 1) {
+                await this.groupRepo.setActive(group, false);
+                return null;
             }
 
-            groupNames.set(group, info.title);
-        }));
+            const admins = await telegram.getChatAdministrators(groupId);
+            let hasCreator = false;
+            let hasMe = false;
+            for (const admin of admins) {
+                if (admin.status === "creator") {
+                    hasCreator = true;
+                    continue;
+                }
 
-        const array = new Array<string>();
+                if (admin.user.id === this.botService.info.id) {
+                    hasMe = true;
+                }
+            }
+            if (!hasCreator || !hasMe) {
+                await this.groupRepo.setActive(group, false);
+                return null;
+            }
 
-        for (const group of groups) {
-            array.push(`群组 ID：${group.id}
-名字：${groupNames.get(group)}
+            return `群组 ID：${group.id}
+名字：${groupInfo.title}
 Fan 票：${info.minetoken?.symbol}
-最低要求：${group.requirement.minetoken?.amount ?? 0}`);
+最低要求：${group.requirement.minetoken?.amount ?? 0}`;
+        }))).filter(Boolean);
+
+        if (array.length === 0) {
+            await reply(`抱歉，您还没有创建 Fan票 群`);
+            return;
         }
 
         await reply(array.join("\n=====================\n"));
@@ -116,8 +135,23 @@ Fan 票：${info.minetoken?.symbol}
         }
 
         const administrators = await telegram.getChatAdministrators(groupId);
-        const me = administrators.find(admin => admin.user.id === this.botService.info.id);
-        if (!me || !me.can_invite_users) {
+        let hasCreator = false;
+        let hasMe = false;
+        for (const admin of administrators) {
+            if (admin.status === "creator") {
+                hasCreator = true;
+                continue;
+            }
+
+            if (admin.user.id === this.botService.info.id) {
+                hasMe = admin.can_invite_users ?? false;
+            }
+        }
+        if (!hasCreator) {
+            await reply("您是该群群主但是已经退群了");
+            return;
+        }
+        if (!hasMe) {
             await reply("请把机器人设置为管理员并设置邀请用户权限");
             return;
         }
