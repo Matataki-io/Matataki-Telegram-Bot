@@ -70,7 +70,7 @@ export class GroupController extends BaseController<GroupController> {
             return `群组 ID：${group.id}
 名字：${groupInfo.title}
 Fan 票：${info.minetoken?.symbol}
-最低要求：${group.requirement.minetoken?.amount ?? 0}`;
+最低要求：${group.requirement.minetoken?.amount ?? "未设置"}`;
         }))).filter(Boolean);
 
         if (array.length === 0) {
