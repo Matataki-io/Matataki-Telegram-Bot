@@ -5,5 +5,6 @@ export const MetadataKeys = {
     Context: Symbol.for("ContextMetadata"),
     EntityType: Symbol.for("EntityMetadata"),
     Scheduler: Symbol.for("SchedulerMetadata"),
-    Event: Symbol.for("EventMetadata"),
+    EventNames: Symbol.for("EventNamesMetadata"),
+    ActionNames: Symbol.for("ActionNamesMetadata"),
 }

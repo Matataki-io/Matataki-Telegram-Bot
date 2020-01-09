@@ -6,7 +6,7 @@ import { getRepository, Repository } from "typeorm";
 import { Constants, MetadataKeys, Injections, LogCategories } from "#/constants";
 import { ControllerConstructor } from "#/controllers";
 import { controllers } from "#/controllers/export";
-import { CommandHandlerInfo, EventHandlerInfo, MessageHandler, MessageHandlerContext } from "#/definitions";
+import { CommandHandlerInfo, EventHandlerInfo, MessageHandler, MessageHandlerContext, ActionHandlerInfo } from "#/definitions";
 import { Service } from "#/decorators";
 import { Group, Metadata, Update } from "#/entities";
 import { IBotService, IDatabaseService, ILoggerService } from "#/services";
@@ -176,7 +176,8 @@ export class BotServiceImpl implements IBotService {
             const { prototype } = constructor;
             const prefix = Reflect.getMetadata(MetadataKeys.ControllerPrefix, constructor);
             const commands = Reflect.getMetadata(MetadataKeys.CommandNames, constructor) as CommandHandlerInfo[] ?? [];
-            const events = Reflect.getMetadata(MetadataKeys.Event, constructor) as EventHandlerInfo[] ?? [];
+            const events = Reflect.getMetadata(MetadataKeys.EventNames, constructor) as EventHandlerInfo[] ?? [];
+            const actions = Reflect.getMetadata(MetadataKeys.ActionNames, constructor) as ActionHandlerInfo[] ?? [];
 
             for (const { name, methodName, ignorePrefix } of commands) {
                 const handler: MessageHandler = prototype[methodName];
@@ -193,13 +194,20 @@ export class BotServiceImpl implements IBotService {
 
                 this.bot.on(name, this.handlerFactory(constructor.name, methodName));
             }
+
+            for (const { name, methodName } of actions) {
+                const handler: MessageHandler = prototype[methodName];
+                console.assert(handler instanceof Function, `${constructor.name}.${methodName} must be a function of type MessageHandlerContext`);
+
+                this.bot.action(name, this.handlerFactory(constructor.name, methodName));
+            }
         }
     }
     private handlerFactory(controllerName: string, methodName: string) {
         return (ctx: ContextMessageUpdate) => {
-            const { message, from } = ctx;
+            const { message, callbackQuery, from } = ctx;
 
-            if (!message) {
+            if (!message && !callbackQuery) {
                 throw new Error("What happended?");
             }
             if (!from) {

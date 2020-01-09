@@ -1,3 +1,4 @@
+export * from "./ActionHandlerInfo";
 export * from "./AssociatedInfo";
 export * from "./CommandHandlerInfo";
 export * from "./EventHandlerInfo";
