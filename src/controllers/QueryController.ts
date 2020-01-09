@@ -85,9 +85,34 @@ export class QueryController extends BaseController<QueryController> {
                 createdGroupsArray.push("*您尚未建立 Fan票 群*");
             } else {
                 const results = await allPromiseSettled(myGroups.map(async group => {
-                    const groupInfo = await telegram.getChat(Number(group.id));
+                    const groupId = Number(group.id);
+                    const groupInfo = await telegram.getChat(groupId);
                     const inviteLink = groupInfo.invite_link ?? await telegram.exportChatInviteLink(group.id);
                     const requiredAmount = group.requirement.minetoken?.amount ?? 0;
+
+                    const memberCount = await telegram.getChatMembersCount(groupId);
+                    if (memberCount === 1) {
+                        await this.groupRepo.setActive(group, false);
+                        return null;
+                    }
+
+                    const admins = await telegram.getChatAdministrators(groupId);
+                    let hasCreator = false;
+                    let hasMe = false;
+                    for (const admin of admins) {
+                        if (admin.status === "creator") {
+                            hasCreator = true;
+                            continue;
+                        }
+
+                        if (admin.user.id === this.botService.info.id) {
+                            hasMe = true;
+                        }
+                    }
+                    if (!hasCreator || !hasMe) {
+                        await this.groupRepo.setActive(group, false);
+                        return null;
+                    }
 
                     return `/ [${groupInfo.title ?? groupInfo.id}](${inviteLink}) （${requiredAmount > 0 ? `${info.minetoken!.symbol} ≥ ${requiredAmount}` : "暂无规则"}）`;
                 }));
