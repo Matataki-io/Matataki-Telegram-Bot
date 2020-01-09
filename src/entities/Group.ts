@@ -15,7 +15,7 @@ export class Group {
     @Index({ where: "active" })
     creatorId!: number | string;
 
-    @Column({ type: "boolean", default: true })
+    @Column({ type: "boolean" })
     active!: boolean;
 
     @Column({ type: "int" })

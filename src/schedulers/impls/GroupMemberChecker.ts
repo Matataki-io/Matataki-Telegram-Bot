@@ -8,6 +8,7 @@ import { Group, User } from "#/entities";
 import { IGroupRepository } from "#/repositories";
 import { IMatatakiService } from "#/services";
 import { IScheduler } from "#/schedulers";
+import { allPromiseSettled } from "#/utils";
 
 @Scheduler("0 */1 * * * *")
 export class GroupMemberChecker implements IScheduler {
@@ -25,7 +26,7 @@ export class GroupMemberChecker implements IScheduler {
         }
 
         const groups = await this.groupRepo.getGroups();
-        for (const group of groups) {
+        const results = await allPromiseSettled(groups.map(async group => {
             const groupId = Number(group.id);
             const balanceRequirement = group.requirement.minetoken?.amount ?? 0;
 
@@ -40,7 +41,24 @@ export class GroupMemberChecker implements IScheduler {
                 } else {
                     this.loggerService.error(LogCategories.Cron, e);
                 }
-                continue;
+                return;
+            }
+
+            const admins = await this.botService.api.getChatAdministrators(groupId);
+            let hasCreator = false;
+            let hasMe = false;
+            for (const admin of admins) {
+                if (admin.status === "creator") {
+                    hasCreator = true;
+                    continue;
+                }
+
+                if (admin.user.id === this.botService.info.id) {
+                    hasMe = true;
+                }
+            }
+            if (!hasCreator || !hasMe) {
+                return;
             }
 
             const contractAddress = await this.matatakiService.getContractAddressOfMinetoken(group.tokenId);
@@ -91,12 +109,12 @@ export class GroupMemberChecker implements IScheduler {
             }
 
             if (kickedUsers.length === 0) {
-                continue;
+                return;
             }
 
             this.loggerService.info(LogCategories.Cron, `Kicked members of group ${groupInfo.title}`, kickedUserInfos);
 
             await this.groupRepo.removeMembers(group, kickedUsers);
-        }
+        }));
     }
 }

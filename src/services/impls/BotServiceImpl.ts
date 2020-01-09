@@ -31,6 +31,10 @@ export class BotServiceImpl implements IBotService {
         return this._isRunning;
     }
 
+    get api() {
+        return this.bot.telegram;
+    }
+
     private updateRepo?: Repository<Update>;
 
     constructor(@inject(Injections.DatabaseService) private databaseService: IDatabaseService,
