@@ -385,10 +385,13 @@ Fan 票：${info.minetoken.symbol}
         const groupId = message.chat.id;
         const group = await this.groupRepo.getGroup(groupId);
 
-        if (member.is_bot && member.id === this.botService.info.id) {
-            await this.groupRepo.setActive(group, false);
+        if (member.is_bot) {
+            if (member.id === this.botService.info.id) {
+                await this.groupRepo.setActive(group, false);
+            }
             return;
         }
+
         if (member.id === Number(group.creatorId)) {
             await this.groupRepo.setActive(group, false);
             return;
