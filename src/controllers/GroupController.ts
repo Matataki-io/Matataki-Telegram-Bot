@@ -42,6 +42,10 @@ export class GroupController extends BaseController<GroupController> {
         }
 
         const array = (await Promise.all(groups.map(async group => {
+            if (!group.active) {
+                return null;
+            }
+
             const groupId = Number(group.id);
             const groupInfo = await telegram.getChat(groupId);
 
@@ -381,8 +385,14 @@ Fan 票：${info.minetoken.symbol}
         const groupId = message.chat.id;
         const group = await this.groupRepo.getGroup(groupId);
 
-        if (member.is_bot && member.id === this.botService.info.id) {
+        if (member.is_bot) {
+            if (member.id === this.botService.info.id) {
+                await this.groupRepo.setActive(group, false);
+            }
+            return;
+        }
 
+        if (member.id === Number(group.creatorId)) {
             await this.groupRepo.setActive(group, false);
             return;
         }
