@@ -85,6 +85,10 @@ export class QueryController extends BaseController<QueryController> {
                 createdGroupsArray.push("*您尚未建立 Fan票 群*");
             } else {
                 const results = await allPromiseSettled(myGroups.map(async group => {
+                    if (!group.active) {
+                        return null;
+                    }
+
                     const groupId = Number(group.id);
                     const groupInfo = await telegram.getChat(groupId);
                     const inviteLink = groupInfo.invite_link ?? await telegram.exportChatInviteLink(group.id);

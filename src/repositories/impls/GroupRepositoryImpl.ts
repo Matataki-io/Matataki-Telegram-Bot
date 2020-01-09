@@ -22,6 +22,7 @@ export class GroupRepositoryImpl extends BaseRepository<Group> implements IGroup
             group.creatorId = creatorId;
             group.tokenId = tokenId;
             group.requirement = {};
+            group.active = false;
         }
 
         await this.repository.save(group);
@@ -36,7 +37,7 @@ export class GroupRepositoryImpl extends BaseRepository<Group> implements IGroup
         return this.repository.findOne(id, { where: { active: true }, ...relationsOption }) ?? null;
     }
     getGroupsOfCreator(creatorId: number) {
-        return this.repository.find({ where: { creatorId, active: true }, ...relationsOption });
+        return this.repository.find({ where: { creatorId }, ...relationsOption });
     }
 
     getGroups() {
