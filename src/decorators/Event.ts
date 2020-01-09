@@ -8,11 +8,11 @@ export function Event(name: UpdateType | UpdateType[] | MessageSubTypes | Messag
             throw new Error("Impossible situation");
         }
 
-        if (!Reflect.hasMetadata(MetadataKeys.Event, target.constructor)) {
-            Reflect.defineMetadata(MetadataKeys.Event, [], target.constructor);
+        if (!Reflect.hasMetadata(MetadataKeys.EventNames, target.constructor)) {
+            Reflect.defineMetadata(MetadataKeys.EventNames, [], target.constructor);
         }
 
-        const commands = Reflect.getMetadata(MetadataKeys.Event, target.constructor) as EventHandlerInfo[];
+        const commands = Reflect.getMetadata(MetadataKeys.EventNames, target.constructor) as EventHandlerInfo[];
         commands.push({
             name,
             methodName,
