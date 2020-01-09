@@ -47,7 +47,6 @@ export class GroupController extends BaseController<GroupController> {
 
             const memberCount = await telegram.getChatMembersCount(groupId);
             if (memberCount === 1) {
-                await this.groupRepo.setActive(group, false);
                 return null;
             }
 
@@ -65,7 +64,6 @@ export class GroupController extends BaseController<GroupController> {
                 }
             }
             if (!hasCreator || !hasMe) {
-                await this.groupRepo.setActive(group, false);
                 return null;
             }
 
