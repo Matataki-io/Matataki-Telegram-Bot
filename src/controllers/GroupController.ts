@@ -150,11 +150,11 @@ Fan 票：${info.minetoken?.symbol}
             }
         }
         if (!hasCreator) {
-            await reply("您是该群群主但是已经退群了");
+            await reply("您是此群群主但是已经退群了");
             return;
         }
         if (!hasMe) {
-            await reply("请把机器人设置为管理员并设置邀请用户权限");
+            await reply("请把本机器人设置为此群的管理员并设置邀请用户权限");
             return;
         }
 
