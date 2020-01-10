@@ -329,6 +329,10 @@ Fan 票：${info.minetoken.symbol}
             if (member.is_bot) {
                 continue;
             }
+            if (member.id === Number(group.creatorId) && group.requirement.minetoken) {
+                await this.groupRepo.setActive(group, true);
+                continue;
+            }
 
             const contractAddress = await this.matatakiService.getContractAddressOfMinetoken(group.tokenId);
             const requirement = group.requirement.minetoken?.amount ?? 0;
