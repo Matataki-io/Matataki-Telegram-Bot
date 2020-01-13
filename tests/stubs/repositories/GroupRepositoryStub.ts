@@ -32,7 +32,7 @@ export class GroupRepositoryStub implements IGroupRepository {
     setRequirement(group: Group, tokenAmount: number): Promise<void> {
         throw new Error("Method not implemented.");
     }
-    changeGroupId(group: Group, newId: number): Promise<void> {
+    changeGroupId(oldId: number, newId: number): Promise<void> {
         throw new Error("Method not implemented.");
     }
 

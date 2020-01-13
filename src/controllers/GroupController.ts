@@ -430,9 +430,7 @@ Fan 票：${info.minetoken.symbol}
             throw new Error("Impossible situation");
         }
 
-        const group = await this.groupRepo.getGroup(message.chat.id);
-
-        await this.groupRepo.changeGroupId(group, message.migrate_to_chat_id);
+        await this.groupRepo.changeGroupId(message.chat.id, message.migrate_to_chat_id);
     }
 
     @Event("new_chat_title")

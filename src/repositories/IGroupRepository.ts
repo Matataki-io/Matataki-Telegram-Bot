@@ -12,7 +12,7 @@ export interface IGroupRepository {
     removeMembers(group: Group, members: User[]): Promise<void>;
     setActive(group: Group, active: boolean): Promise<void>;
     setRequirement(group: Group, tokenAmount: number): Promise<void>;
-    changeGroupId(group: Group, newId: number): Promise<void>;
+    changeGroupId(oldId: number, newId: number): Promise<void>;
     changeGroupTitle(group: Group, newTitle: string): Promise<void>;
     removeGroup(group: Group): Promise<void>;
 }
