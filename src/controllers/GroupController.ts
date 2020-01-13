@@ -11,6 +11,7 @@ import { IBotService, IMatatakiService, IWeb3Service, ILoggerService } from "#/s
 
 import { BaseController } from ".";
 import { table } from "table";
+import { allPromiseSettled } from "#/utils";
 
 @Controller("group")
 export class GroupController extends BaseController<GroupController> {
@@ -41,11 +42,8 @@ export class GroupController extends BaseController<GroupController> {
             return;
         }
 
-        const array = (await Promise.all(groups.map(async group => {
-            if (!group.active) {
-                return null;
-            }
-
+        const array = new Array<string>();
+        const results = (await allPromiseSettled(groups.map(async group => {
             const groupId = Number(group.id);
             const groupInfo = await telegram.getChat(groupId);
 
@@ -75,7 +73,17 @@ export class GroupController extends BaseController<GroupController> {
 名字：${groupInfo.title}
 Fan 票：${info.minetoken?.symbol}
 最低要求：${group.requirement.minetoken?.amount ?? "未设置"}`;
-        }))).filter(Boolean);
+        })));
+
+        for (const result of results) {
+            if (result.status === "rejected") {
+                continue;
+            }
+
+            if (result.value) {
+                array.push(result.value);
+            }
+        }
 
         if (array.length === 0) {
             await reply(`抱歉，您还没有创建 Fan票 群`);
