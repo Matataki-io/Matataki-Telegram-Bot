@@ -104,8 +104,8 @@ export class GroupRepositoryImpl extends BaseRepository<Group> implements IGroup
         await this.repository.save(group);
     }
 
-    async changeGroupId(group: Group, newId: number) {
-        const oldId = Number(group.id);
+    async changeGroupId(oldId: number, newId: number) {
+        const group = await this.repository.findOneOrFail(oldId, relationsOption);
         group.id = newId;
 
         await this.repository.save(group);
