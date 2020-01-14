@@ -22,6 +22,7 @@ type UserMinetokenBalance = {
 @Service(Injections.MatatakiService)
 export class MatatakiServiceImpl implements IMatatakiService {
     private axios: AxiosInstance;
+    private axiosForTransfer: AxiosInstance;
 
     public get urlPrefix() {
         return process.env.MATATAKI_URLPREFIX!;
@@ -37,6 +38,14 @@ export class MatatakiServiceImpl implements IMatatakiService {
             headers: {
                 common: {
                     "X-Access-Token": process.env.MATATAKI_ACCESS_TOKEN,
+                },
+            },
+        });
+        this.axiosForTransfer = axios.create({
+            baseURL: process.env.MATATAKI_APIURLPREFIX,
+            headers: {
+                common: {
+                    "X-Access-Token": process.env.MATATAKI_TRANSFER_API_ACCESS_TOKEN,
                 },
             },
         });
@@ -132,6 +141,27 @@ export class MatatakiServiceImpl implements IMatatakiService {
             }
 
             throw new Error("Failed to request user's minetoken");
+        }
+    }
+
+    async transfer(from: number, to: number, symbol: string, amount: number) {
+        try {
+            const { data: { data } } = await this.axios.get<ApiResponse<MinetokenInfo>>(`/token/symbol/${symbol}`);
+
+            await this.axiosForTransfer.post<ApiResponse<any>>(`/_internal_bot/minetoken/${data.id}/transferFrom`, {
+                from, to,
+                value: amount,
+            });
+        } catch (e) {
+            const { response } = e as AxiosError;
+
+            if (response) {
+                if (response.status === 401) {
+                    throw new Error("Invalid Access Token");
+                }
+            }
+
+            throw new Error("Failed to transfer");
         }
     }
 }

@@ -82,4 +82,32 @@ export class WalletController extends BaseController<WalletController> {
 
         await reply(balance.toString());
     }
+
+    @Command("transfer", { ignorePrefix: true })
+    async transfer({ message, replyWithMarkdown }: MessageHandlerContext) {
+        const sender = message.from.id;
+        const info = await this.matatakiService.getAssociatedInfo(sender);
+        if (!info.user) {
+            await replyWithMarkdown("抱歉，您没有在 瞬Matataki 绑定该 Telegram 帐号");
+            return;
+        }
+
+        const match = /^\/transfer(?:@[\w_]+)?\s+(\d+)\s+(\w+)\s+(\d+.?\d*)/.exec(message.text);
+        if (!match || match.length < 4) {
+            await replyWithMarkdown("格式不对，请输入 `/set [group_id] [amount]`");
+            return;
+        }
+
+        const userId = Number(match[1]);
+        const symbol = match[2];
+        const amount = Number(match[3]) * 10000;
+
+        try {
+            await this.matatakiService.transfer(info.user.id, userId, symbol, amount);
+
+            await replyWithMarkdown("转账成功");
+        } catch {
+            await replyWithMarkdown("转账失败");
+        }
+    }
 }
