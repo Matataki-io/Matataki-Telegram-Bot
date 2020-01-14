@@ -1,11 +1,13 @@
 ---
 title: 指南
 ---
+# Matataki Bot - Telegram 群管机器人🤖️
+
 ## Matataki Bot 是什么
 
-Matataki Bot 是一个用于 Telegram 实现群管的功能。
+Matataki Bot 是为 Telegram 和 Token 而生的群管机器人的功能。
 
-与其它大型框架不同的是，Vue 被设计为可以自底向上逐层应用。Vue 的核心库只关注视图层，不仅易于上手，还便于与第三方库或既有项目整合。另一方面，当与现代化的工具链以及各种支持类库结合使用时，Vue 也完全能够为复杂的单页应用提供驱动。
+与其它群管机器人不同的是，Matataki Bot 为 Token 而生，致力于用 Token 打造你的 Telegream 私密圈子，即**Token 是在群的通证**。
 
 ## 技术细节
 
@@ -15,7 +17,7 @@ Matataki Bot 是一个用于 Telegram 实现群管的功能。
 
 为了架构的清晰，我们使用了 [Inversify IoC](http://inversify.io/) 框架做依赖注入实现对象之间的解耦，也仿照一些 MVC 框架的路由设计来处理机器人命令。
 
-因为用了 web3，涉及到 node-gyp, 如果安装依赖出现了错误，建议检查 node 版本，我用的是 Node v12.13.0
+因为用了 web3，涉及到 node-gyp, 如果安装依赖出现了错误，建议检查 node 版本，我们开发团队目前用的是 Node v12.13.0
 
 
 ## 开发模块
@@ -26,28 +28,13 @@ Matataki Bot 是一个用于 Telegram 实现群管的功能。
     - [ ] 查询Token相关信息
     - [ ] 绑定用户以太坊钱包 (以太坊钱包 对应用户的 Telegram 帐户)
 
-    ---
-home: false
-footer: Copyright © 2018-present Andoromeda Limited
----
-# 🤖️ Matataki Telegram 群聊机器人
-[[toc]]
+
 
 ## 相关链接
 - [项目 Repo](https://andoromeda.coding.net/p/MatatakiBot/d/TokenBot/git)
 - [Telegraf 框架文档](https://telegraf.js.org/)
 - [史诗任务和需求拆分](https://andoromeda.coding.net/p/smart-signature-future/epics/issues/2608?filter=f82e70d63e9c9662a8b5056ba36466de)
 
-## 概述
-### 名称
-粉丝小助手 √
-Fan票群聊机器人 ×
-小Fan ×
-
-### 策略
-
-
-随着持有 Fan 票的相关功能越来越完善，持有 Fan 票的用户量越来越多。Fan 票未来的发展离不开社群支持的传播。我们需要给与这些愿意尝试 Fan 票功能的用户提供方便交流和获取信息的渠道，帮助持有同类 Fan 票的用持有者相互沟通，并促进 Fan票 的价值增长。所以我们选择在 Telegram 上开发基于 Fan票 的群聊助手，我们之所以首先选择 Telegram 平台作为 Fan票 群是因为 Telegram 对机器人的支持更加完善，并且没有跟多的监管机制。Fan 票群聊助手是 Fan 票作为令牌功能的重要落地场景：充分利用用户间传播的能量，活用 Fan 票特性来及早建立社群可以帮助我们减轻官方运营的工作量——这就创建了一个良性循环并惠及所有的 Fan 票 用户。（包含语言问题，暂时没时间斟字酌句改）
 
 ### 要点
 - Matataki 的兄弟产品，为饭票的社群提供了新的方向。
@@ -61,9 +48,9 @@ Fan票群聊机器人 ×
 Alice 是一个网红，创建了自己的 Fan票 ACC（AliceCoin）, 她想用这个币来打造一个她和金主的私密圈子。Alice 想要规定只有持有 100 个 ACC 才有入群资格。Alice 要做到这一点，她需要：
 - AliceCoin 代币合约（如果她不会发，那来瞬发币）
 - 一个 Telegram 群组
-- 粉丝小助手（TG机器人）
+- 粉丝小助手（Telegram 机器人）
 
-Alice 首先在 瞬 Matataki 中绑定了自己的 Telegram 账号，然后在 Telegram 中新建了一个名字叫做 “Alice粉丝群” 的群组并邀请了“粉丝小助手”（TG机器人）进群。
+Alice 首先在 瞬 Matataki 中绑定了自己的 Telegram 账号，然后在 Telegram 中新建了一个名字叫做 “Alice粉丝群” 的群组并邀请了“粉丝小助手”（Telegram 机器人）进群。
 
 Alice通过与粉丝小助手私聊查询到了自己刚才建立的 “Alice 粉丝群” ，通过对话她选择为这个群组创建了一条规则：“只有持有 100 个或更多 ACC 的人才有资格进入群内”。设定完毕之后，在 AliceCoin 的详情页中即可看到这个群组的加群入口，金主们看到这条消息和加群规则后后纷纷都去购买 AliceCoin入群了。
 
@@ -72,7 +59,7 @@ Alice通过与粉丝小助手私聊查询到了自己刚才建立的 “Alice �
 > 岛娘案：目前国内社区所有的流量几乎都在微信 Group 里聚集，但是微信最大的问题就是她几乎无法进行任何有效的管理、沉淀和群租间的连接。以管理举例，踢人这个动作是个不得不周期性进行，但是大多数管理员不愿意面对（以免得罪人）的事情，结果导致 Group 陷入沉寂的怪圈，最终导向分叉。
 
 ## 技术方向和选型
-### TgBot 与 Matataki 的关系
+### TelegramBot 与 Matataki 的关系
 
 这个机器人应该**与 Matataki饭票 独立开来**，但允许相互之间的互利推广及其优惠政策（类似于淘宝与支付宝的关系）
 
@@ -106,19 +93,19 @@ Matataki的饭票之所以可以用，是因为它是ERC20 Token，所以才可�
 
 ## 规则和操作流程
 ### 基本规则
-1. Fan票的创始人可以利用 粉丝小助手（TG机器人），为自己的Fan票创建多个具有准入门槛和自动踢群功能的Fan票粉丝群，只有符合规则的粉丝可以加入其中
+1. Fan票的创始人可以利用 粉丝小助手（Telegram 机器人），为自己的Fan票创建多个具有准入门槛和自动踢群功能的Fan票粉丝群，只有符合规则的粉丝可以加入其中
 3. 创建群组的Fan票创始人不会受群规则限制而导致被踢群
 
 ### 操作总流程
 - 【创建者建群】-->
-    - 1.绑定TG账号-->
-    - 2.创建TG群组并引入瞬Bot-->
+    - 1.绑定Telegram账号-->
+    - 2.创建Telegram群组并引入瞬Bot-->
     - 3.设置群规则-->
     - 4.自动同步入群规则到Fan票后台-->
     - 5.在Fan票后台开关前端加群入口
 
 - 【用户加群】-->
-    - 1.绑定TG账号-->
+    - 1.绑定Telegram账号-->
     - 2.点击Fan票前台的加群入口-->
     - 3.与瞬Bot对话后进入准入的群组
 
@@ -135,14 +122,14 @@ Matataki的饭票之所以可以用，是因为它是ERC20 Token，所以才可�
 
 操作步骤：
 1️⃣ 在瞬matataki上登录后绑定Telegram账号
-2️⃣ 在TG中搜索瞬 Matataki.io 机器人并添加为好友
-3️⃣ 在TG中新建一个Group，并将瞬 Matataki.io 机器人邀请入群
+2️⃣ 在Telegram中搜索瞬 Matataki.io 机器人并添加为好友
+3️⃣ 在Telegram中新建一个Group，并将瞬 Matataki.io 机器人邀请入群
 4️⃣ 在群组中将瞬 Matataki.io 机器人设置为群管理员（操作此步骤之后群组将会自动升级为超级群）
 5️⃣ 与瞬 Matataki.io 机器人私聊，输入 /mygroups 查询自己创建的群组并记录下刚才群组的ID信息
 6️⃣ 与瞬 Matataki.io 机器人私聊，输入 /set [群组ID] [参数]即可设置群规则（参数代表至少持有您的Fan票数量）
 
 👨‍👩‍👦‍👦完成以上6步操作即可完成Fan票群建立,已经建立过的Fan票群组将会显示在Fan票的详情页中
-如有其他问题请在瞬Matataki的[官方TG群](https://t.me/smartsignature_io)询问
+如有其他问题请在瞬Matataki的[官方Telegram群](https://t.me/smartsignature_io)询问
 
 ## 功能清单
 
@@ -196,11 +183,11 @@ Matataki的饭票之所以可以用，是因为它是ERC20 Token，所以才可�
 
 ### Fan票详情页群入口功能(已完成)-P1
 在没有Fan票群管理后台的情况下，默认展示所有开启的群组
-- [x] 1. 点击“入群指南”可以查看弹出的帮助信息，在帮助中引导用户去绑定TG账号。-p1
-- [x]     1.1如果已经绑定TG则提供用户跳转至账号管理页面功能-p2
+- [x] 1. 点击“入群指南”可以查看弹出的帮助信息，在帮助中引导用户去绑定Telegram账号。-p1
+- [x]     1.1如果已经绑定Telegram则提供用户跳转至账号管理页面功能-p2
 - [x] 2. 展示当前开放的群组、群规则、群员数量-p1
 - [x] 3. 自动检测是否符合入群规则，以区分显示是否可以加群的入口样式-p2
-- [ ] 4. 在入群指南中可以切换TG和微信两种类型的指南-p2
+- [ ] 4. 在入群指南中可以切换Telegram和微信两种类型的指南-p2
 
 **Fan票详情页**
 ![](https://i.imgur.com/fl83gMk.png)
@@ -227,47 +214,6 @@ Fan票群管理后台不是MVP的内容，但是在完善的时候需要有
 ![](https://i.imgur.com/DBT9Ksc.png)
 
 
-
-## 开发节奏和排期
-前期因为同期开发的重要需求太多，中间还经历了一次技术底层设计思路专项，导致没能够按时完成此需求。从12月13号开始，此需求由Frank和link来制定解决方案，由yyf来执行和开发。
-
-P0代表必须要做的功能
-P1代表次要做的功能
-P2代表可做可不做的功能
-
-26号27号完成正式网数据向链上同步
-27号开始向tg接入个性化Fan票信息
-30号开始开发前端加群功能
-
-
-
-### 阶段1（已完成）：
-**截止时间为2019年12月19号周四**（实际完成时间为2019年12月26号）
-开发先行做出一个可以使用机器人以及调整数据库来实现的版本（开发内测）：
-
-- [x] 开发者可以手动在数据库中人添加 参与测试的matataki用户ID（Frank: 或许与我们**与 Matataki 不产生耦合** 冲突，以 Ethereum 钱包这种通用形式的帐户或许会更好） 和 telegram账号 的对应关系（绑定功能）
-- [x] 创作者可创建群组或将 粉丝小助手（TG机器人）拉入群中，并且通过机器人来为群组设置群管规则
-- [x] 参与测试的用户可以在被添加到数据库后手动入群，并接受群规则的检测
-
-
-### 阶段2（已完成）：
-**截止时间为2019年12月23号周一**（实际完成时间为2020年1月3号）
-开发出有后台和TG绑定的版本（用户内测版）：
-- [x] 瞬matataki支持绑定和解绑telegram账号（同时支持自动双向校验持币情况和是否满足入群规则）
-- [x] 增加对新手用户的完善引导（入群指南）
-- [x] 在“Fan票详情”页中查看关联的TG群组的加群入口和信息（P0功能为显示加群入口，P1功能是各种信息的检测判断和展示，详见下方的Fan票详情页群入口功能）
-- [x] 完善“Fan票详情页”中TG群组入口的信息展示，并且能够根据当前登录用户的身份来切换样式
-- [ ] 在“发行的Fan票”页面中添加 “创建Fan票群指南”，纯文档内容，通过点击按钮展开显示-p1
-
-
-### 阶段3（未开始）：
-**截止时间为2019年12月26号周四（暂定）**
-完善细节（用户公测版）
-- [ ] 创作者可以在“发行的Fan票”页面中设定群规则并发布，自动和对应的群进行信息同步
-- [ ] 用户可以在“发行的Fan票”（Fan票后台）页中查看并管理已经建立的群组（详见下方的Fan票后台群管理功能）
-
-
-
 ## 开发手札
 
 ### 调研笔记
@@ -289,7 +235,7 @@ P2代表可做可不做的功能
 
 #### Setup 前你需要?
 1. 去 Telegram 找 @botfather 拿到你的 bot token
-2. 准备一个 PostgreSQL 数据库
+2. 准备一个 PosTelegramreSQL 数据库
 3. Clone Git 仓库
 4. 安装依赖包（npm install/yarn）
 5. 设置环境变量
@@ -316,7 +262,7 @@ P2代表可做可不做的功能
 
 把 `ormconfig.js.example` 改名为 `ormconfig.js`，然后填上自己服务器具体的信息
 
-**注意：为了避免和源数据库和其它同数据库开发者的冲突，建议使用自己的 schema**
+> 注意：为了避免和源数据库和其它同数据库开发者的冲突，请**自定义自己的 schema**
 
 设置好数据库信息后，请运行以下代码建立属于自己的数据库表
 
@@ -324,7 +270,7 @@ P2代表可做可不做的功能
 npm run migrations
 ```
 
-具体配置项可参考[这篇文档](https://typeorm.io/#/using-ormconfig)和[这篇](https://typeorm.io/#/connection-options/postgres--cockroachdb-connection-options)。
+具体配置项可参考[这篇文档](https://typeorm.io/#/using-ormconfig)和[这篇](https://typeorm.io/#/connection-options/posTelegramres--cockroachdb-connection-options)。
 
 ### 如何运行
 
@@ -355,12 +301,12 @@ yarn start
 
 6. 不翻墙的话在Matataki无法获得群信息
 7. 如果有用户将机器人拉入群中后不做其他处理，所有人在使用/join和/status指令的时候都会出现400错误
-8. 目前Fan票群助手只要入群，就会将当前的群作为Fan票群处理并显示在Matataki上，但是这可能只是我不小心的误操作。这导致我如果作为群主我退群了，这个TG群根据TG的规则依然会存在，那么就会导致在Matataki上存在这个群的信息，但是群主无法入群对群进行管理了。
+8. 目前Fan票群助手只要入群，就会将当前的群作为Fan票群处理并显示在Matataki上，但是这可能只是我不小心的误操作。这导致我如果作为群主我退群了，这个Telegram群根据Telegram的规则依然会存在，那么就会导致在Matataki上存在这个群的信息，但是群主无法入群对群进行管理了。
     解决思路：
     - [x] 1. 首先如果要激活一个群成为Fan票群，一定需要作者进行启动操作，比如作者只有给群设置过群规则之后群才可以生效（哪怕将规则设置为0），只有生效的群才可以被显示在Matataki里。
     - [x] 2. 其次如果群主从一个已经激活的Fan票粉丝群中退出了，那么在Matataki里就不应该再显示这个群组的先关信息，视作群主自己主动放弃了此群。
-    - [x] 3. 如果群主还在群中，但是将机器人是踢出了群组，那么该群也会立即解除Fan票粉丝群激活，变成普通TG群。
-    - [ ] 4. 如果群主还在群中，但是取消了机器人的管理员权限，那么该群也会立即解除Fan票粉丝群激活，变成普通TG群。此时如果想要设置群规则，机器人会提示“请先将机器人添加为管理员并开启邀请权限”
+    - [x] 3. 如果群主还在群中，但是将机器人是踢出了群组，那么该群也会立即解除Fan票粉丝群激活，变成普通Telegram群。
+    - [ ] 4. 如果群主还在群中，但是取消了机器人的管理员权限，那么该群也会立即解除Fan票粉丝群激活，变成普通Telegram群。此时如果想要设置群规则，机器人会提示“请先将机器人添加为管理员并开启邀请权限”
     - [ ] 5. 如果群主退出已经激活的群后，再次又返回了群中，此时如果机器人还在群内，即可以立即让此群生效。
 
 10. 即便是在Telegram的上的/status
@@ -371,9 +317,9 @@ yarn start
 ### 标准设定
 
 #### 用户的3个级别
-未绑定Matataki账号的TG用户
-已绑定Matataki账号的TG用户
-已绑定Matataki账号且符合入群规则的TG用户
+未绑定Matataki账号的Telegram用户
+已绑定Matataki账号的Telegram用户
+已绑定Matataki账号且符合入群规则的Telegram用户
 
 #### 群员的4个身份
 创始人-创建粉丝群的群主
@@ -433,7 +379,7 @@ PS: Telegram Bot 所用的 MD 语法有[少许区别](https://core.telegram.org/
 我是Fan票粉丝群助手，您也可以叫我小Fan~
 我会帮助您创建或加入Fan票粉丝群
 有什么不明白的问题就请输入/help查看帮助吧
-如有其他问题请在 瞬Matataki 的[官方 TG 群](https://t.me/smartsignature_io)询问
+如有其他问题请在 瞬Matataki 的[官方 Telegram 群](https://t.me/smartsignature_io)询问
 
 ================
 
@@ -484,8 +430,8 @@ PS: Telegram Bot 所用的 MD 语法有[少许区别](https://core.telegram.org/
 
 操作步骤：
 1️⃣ 在 瞬Matataki 上登录后[绑定 Telegram 账号](${url_prefix}/setting/account)
-2️⃣ 在 TG 中搜索 @${username_escaped} 并添加为好友，或点击此[链接](https://t.me/${username}?start)
-3️⃣ 在 TG 中新建一个 Group，并将 @${username_escaped} 邀请入群
+2️⃣ 在 Telegram 中搜索 @${username_escaped} 并添加为好友，或点击此[链接](https://t.me/${username}?start)
+3️⃣ 在 Telegram 中新建一个 Group，并将 @${username_escaped} 邀请入群
 4️⃣ 在群组中将 @${username_escaped} 设置为群管理员
 5️⃣ 设置 @${username_escaped} 的管理员权限：先关闭邀请权限并保存，然后再打开邀请权限（操作此步骤之后群组将会自动升级为超级群）
 6️⃣ 与 @${username_escaped} 私聊，输入 `/mygroups` 查询自己创建的群组并记录下刚才群组的 ID 信息
@@ -493,7 +439,7 @@ PS: Telegram Bot 所用的 MD 语法有[少许区别](https://core.telegram.org/
 
 👨‍👩‍👦‍👦完成以上 7 步操作即可完成 Fan票 群建立
 已经建立的 Fan票 群组将会显示在 Fan票 详情页中
-如有其他问题请在 瞬Matataki 的[官方 TG 群](https://t.me/smartsignature_io)询问
+如有其他问题请在 瞬Matataki 的[官方 Telegram 群](https://t.me/smartsignature_io)询问
 
 [视频教程](https://www.bilibili.com/video/av82492702)
 
@@ -508,7 +454,7 @@ PS: Telegram Bot 所用的 MD 语法有[少许区别](https://core.telegram.org/
 1️⃣ 进入需要删除的Fan票群
 2️⃣ 取消 @${username_escaped} 的管理员权限
 
-完成上述的操作后此群会成为普通TG群组
+完成上述的操作后此群会成为普通Telegram群组
 
 [视频教程](https://www.bilibili.com/video/av82585384)
 
@@ -528,7 +474,7 @@ PS: Telegram Bot 所用的 MD 语法有[少许区别](https://core.telegram.org/
 
 👉*我有别的问题*
 
-如有其他问题请在 瞬Matataki 的[官方 TG 群](https://t.me/smartsignature_io)询问
+如有其他问题请在 瞬Matataki 的[官方 Telegram 群](https://t.me/smartsignature_io)询问
 
 ============
 
@@ -575,36 +521,6 @@ Fan票 名称：LINK（林可票）
 
 
 
-## 运营和增长
-
-运营工具：
-点->Fan票->通证
-线->Fan群->运营
-面->Fan圈->内容
-
-运营对象：
-大->文章
-小->分享
-
-
-
-
-现阶段的目标是广撒网多圈地，先建立足够多的群，让用户有群可加。
-在Matataki粉丝群功能刚上线时期，Matataki需要让早期的这些持币用户能够尽可能的先加群试玩。但是我们目前Fan票群的密度还不够高，用户很容易无法注意到别的Fan票也建立了粉丝群。为了提高入群人数，我们需要在用户的日常操作中引导用户可以加入更多的群组。解决方案有两个方向，可以同时进行：
-1. 原有的/Join指令查询的内容（我目前可以加入的群）归类到/stat指令查询的内容当中。当用户查询自己的状态时就可以看到自己当前还可以加入更多的群组，以此来实现更多联结。
-2. 在Matataki中优化UED，让用户在进行Fan票相关操作时被引导提示：可以加入Fan票粉丝群可以实现与Fan票更深的互动。
-
-下一步是提高每个群内的粉丝粘性，让用户只要持有Fan票就不愿意离开群。
-新建立的Fan票群很容易凉凉，因为Fan票机器人提供的体验到普通用户入群之后就基本结束了。Fan票粉丝群是matataki希望用来维护Fan票交易热度的渠道，既然如此就首先得要让用户能够在粉丝群中保持活跃。用户体验的流程应该是可以不断深入的，此处需要一些游戏化设计以及促活的功能引入。下面是一些思路
-1. 根据用户在群组的活跃度可以自动获得群主用于运营的Fan票奖励（激励机制）
-2. 粉丝群助手可以同时向所有的群广播消息，内容包括活动通知，版本更新通知、推荐文章（唤醒机制）(后续有待讨论)
-3. 用户可以通过给Fan票助手私聊，自动上传草稿内容到Matataki（实用功能）
-4. 用户可以通过@Fan票助手来发送内容到分享大厅（实用功能）
-5. 粉丝群助手会在不同的Fan票群中定时提示当前Fan票的价格变动情况（唤醒机制+实用功能）
-6. 组织群主们在自己的粉丝群中经常发布内容，并且邀请群员参与决策（运营）
-7. 群主可以在瞬中快速转发文章到自己的群组中（运营）
-…
-但是任何唤醒机制都不应该以打扰用户为前提，会引发用户的反感。
 
 
 ## 资金操作
@@ -638,4 +554,4 @@ send LINK to @guanchao71S2W
 [神樹桜乃-攻城狮1号](https://t.me/kodamasakuno)
 [Frank-攻城狮2号](https://t.me/frankwei) 
 
-或在[官方 TG 群](https://t.me/smartsignature_io)询问
+或在[官方 Telegram 群](https://t.me/smartsignature_io)询问
