@@ -131,8 +131,8 @@ Fan 票：${info.minetoken?.symbol}
         }
 
         const match = /^\/set\s+-?(\d+)\s+(\d+.?\d*)/.exec(message.text);
-        if (!match || match.length < 2) {
-            return reply("格式不对，请输入 `/set group_id amount`");
+        if (!match || match.length < 3) {
+            return reply("格式不对，请输入 `/set [group_id] [amount]`");
         }
 
         const groupId = -Number(match[1]);
@@ -207,7 +207,7 @@ Fan 票：${info.minetoken.symbol}
         const balanceCache = new Map<number, number>();
         await Promise.all(Array.from(tokens).map(async token => {
             const contractAddress = await this.matatakiService.getContractAddressOfMinetoken(token);
-            const balance = (await this.web3Service.getBalance(contractAddress, walletAddress)) / 10000;
+            const balance = await this.web3Service.getBalance(contractAddress, walletAddress);
 
             balanceCache.set(token, balance!);
         }));
@@ -358,7 +358,7 @@ Fan 票：${info.minetoken.symbol}
                 continue;
             }
 
-            const balance = (await this.web3Service.getBalance(contractAddress, walletAddress)) / 10000;
+            const balance = await this.web3Service.getBalance(contractAddress, walletAddress);
 
             if (balance >= requirement) {
                 acceptedUsers.add(member);
@@ -480,7 +480,7 @@ Fan 票：${info.minetoken.symbol}
 
         const walletAddress = await this.matatakiService.getEthWallet(sender);;
         const contractAddress = await this.matatakiService.getContractAddressOfMinetoken(group.tokenId);
-        const balance = (await this.web3Service.getBalance(contractAddress, walletAddress)) / 10000;
+        const balance = await this.web3Service.getBalance(contractAddress, walletAddress);
 
         const { minetoken } = await this.matatakiService.getAssociatedInfo(Number(group.creatorId));
 
