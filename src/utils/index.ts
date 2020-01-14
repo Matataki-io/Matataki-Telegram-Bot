@@ -25,3 +25,17 @@ export function allPromiseSettled<T>(values: Array<Promise<T>>): Promise<Array<P
         reason,
     }))));
 }
+
+export function filterNotNull<T>(array: Array<(T | null)>) {
+    const result = new Array<T>();
+
+    for (const item of array) {
+        if (item === null) {
+            continue;
+        }
+
+        result.push(item);
+    }
+
+    return result;
+}
