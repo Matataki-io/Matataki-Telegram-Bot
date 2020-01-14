@@ -2,9 +2,9 @@
 
 ## 概述
 
-Matataki.io 为 Matataki Bot 提供了几个 API 用于机器人基于 Matataki 饭票的群管功能
+Matataki.io 为 Matataki Bot 提供了几个 API 用于机器人基于 Matataki 饭票的群管功能。
 
-大部分 API 都以 `_internal_bot/` 为开头 prefix
+这部分适合针对机器人本身进行开发的开发者，大部分 API 都以 `_internal_bot/` 为开头 prefix
 
 
 ## minetokens - 查询所有的粉丝币
@@ -59,7 +59,7 @@ Matataki.io 为 Matataki Bot 提供了几个 API 用于机器人基于 Matataki 
 *GET* `_internal_bot/minetoken/:uid/:symbol/balance`
 ### URL 参数
 
-| Param            | Type    | Default            | Description   |
+| 参数            | 类型    | 默认值            | 参数描述   |
 | ---------------- | ------- | ------------------ | -------------------------------------- |
 | uid          | Number  |  |  Matataki 的 用户ID     |
 | symbol     | String |              | Matataki 的饭票符号   |
@@ -90,13 +90,13 @@ Matataki.io 为 Matataki Bot 提供了几个 API 用于机器人基于 Matataki 
 请求 `headers` 需要带有 **特殊专用与转账等敏感权限** 的 `x-access-token`
 ### URL 参数
 
-| Param            | Type    | Default            | Description   |
+| 参数            | 类型    | 默认值            | 参数描述   |
 | ---------------- | ------- | ------------------ | -------------------------------------- |
 | tokenId          | Number  |  |  Matataki 的 Token ID     |
 
 ### Request Body 的参数 
 
-| Param            | Type    | Default            | Description   |
+| 参数            | 类型    | 默认值            | 参数描述   |
 | ---------------- | ------- | ------------------ | -------------------------------------- |
 | from          | Number  |  |  发送者的 Matataki 用户ID     |
 | to     | Number |              | 接收者的 Matataki 用户ID  |
