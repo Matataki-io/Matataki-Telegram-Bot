@@ -32,6 +32,7 @@ export class MatatakiServiceImpl implements IMatatakiService {
         console.assert(process.env.MATATAKI_URLPREFIX);
         console.assert(process.env.MATATAKI_APIURLPREFIX);
         console.assert(process.env.MATATAKI_ACCESS_TOKEN);
+        console.assert(process.env.MATATAKI_TRANSFER_API_ACCESS_TOKEN);
 
         this.axios = axios.create({
             baseURL: process.env.MATATAKI_APIURLPREFIX,
