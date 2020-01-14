@@ -4,3 +4,4 @@ export * from "./CommandHandlerInfo";
 export * from "./EventHandlerInfo";
 export * from "./GroupRequirement";
 export * from "./MessageHandler";
+export * from "./MinetokenInfo";

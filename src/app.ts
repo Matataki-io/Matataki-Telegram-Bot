@@ -9,6 +9,7 @@ config();
         "MATATAKI_URLPREFIX",
         "MATATAKI_APIURLPREFIX",
         "MATATAKI_ACCESS_TOKEN",
+        "MATATAKI_TRANSFER_API_ACCESS_TOKEN",
     ];
 
     const missedEnvironmentVariables = requiredEnvironmentVariables.filter(envVar => typeof process.env[envVar] !== "string");
