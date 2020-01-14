@@ -7,12 +7,13 @@ Matataki.io 为 Matataki Bot 提供了几个 API 用于机器人基于 Matataki 
 大部分 API 都以 `_internal_bot/` 为开头 prefix
 
 
-## 查询所有的粉丝币
+## minetokens - 查询所有的粉丝币
 
 *GET* `_internal_bot/minetokens`
-- 需要权限：请求 `headers` 需要带有专用的 `x-access-token`
-- 结果：
-结果
+### 需要权限
+请求 `headers` 需要带有专用的 `x-access-token`
+### 结果：
+
 ```json
 {
     "code": 0,
@@ -54,13 +55,18 @@ Matataki.io 为 Matataki Bot 提供了几个 API 用于机器人基于 Matataki 
 
 
 
-## 查询某人的饭票余额
-*GET* `_internal_bot/minetoken/:uId/:symbol/balance`
-- URL 参数: 
-    - `uId`: Matataki 的 用户ID
-    - `symbol`: Matataki 的 Token 符号
-- 需要权限：请求 `headers` 需要带有专用的 `x-access-token`
-- 结果：
+## balance - 查询某人的饭票余额
+*GET* `_internal_bot/minetoken/:uid/:symbol/balance`
+### URL 参数
+
+| Param            | Type    | Default            | Description   |
+| ---------------- | ------- | ------------------ | -------------------------------------- |
+| uid          | Number  |  |  Matataki 的 用户ID     |
+| symbol     | String |              | Matataki 的饭票符号   |
+
+### 需要权限
+请求 `headers` 需要带有专用的 `x-access-token`
+### 结果
 在测试网时
     - `uId` 为 1001
     - `symbol`: 为 DAO
@@ -78,19 +84,33 @@ Matataki.io 为 Matataki Bot 提供了几个 API 用于机器人基于 Matataki 
 ```
 
 
-## （面向机器人的）转账指令
-*POST* `_internal_bot/minetoken/:token_id/transferFrom`
-- 需要权限：请求 `headers` 需要带有 **特殊专用与转账等敏感权限** 的 `x-access-token`
-- URL 参数: `token_id`: Matataki 的 Token ID
-- request body 参数有: 
+## transferFrom - 转账指令
+*POST* `_internal_bot/minetoken/:tokenId/transferFrom`
+### 需要权限
+请求 `headers` 需要带有 **特殊专用与转账等敏感权限** 的 `x-access-token`
+### URL 参数
+
+| Param            | Type    | Default            | Description   |
+| ---------------- | ------- | ------------------ | -------------------------------------- |
+| tokenId          | Number  |  |  Matataki 的 Token ID     |
+
+### Request Body 的参数 
+
+| Param            | Type    | Default            | Description   |
+| ---------------- | ------- | ------------------ | -------------------------------------- |
+| from          | Number  |  |  发送者的 Matataki 用户ID     |
+| to     | Number |              | 接收者的 Matataki 用户ID  |
+| value     | String |     0         | 带有decimal的金额，用 String 是避免 JavaScript 的大数问题   |
+
+例子：
 ```json
 {
-	"from": "1247", // 发送者的 Matataki UID
-	"to": "1109", // 接收者的 Matataki UID
-	"value": "1000" // 带有decimal的金额
+	"from": "1247", 
+	"to": "1109",
+	"value": "1000"
 }
 ```
-- 结果：
+### 结果
 ```json
 {
     "code": 0, // 0 为成功 1 为失败
