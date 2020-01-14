@@ -2,7 +2,7 @@
 home: true
 # heroImage: /hero.png
 heroText: Matataki 机器人开发者文档
-tagline: 为 Matataki 饭票服务的 Telegram 群管机器人
+tagline: 一个 Telegram 群管🤖️ (🚧 文档正在施工完善中)
 actionText: 快速上手 →
 actionLink: /nav.01.Guide/
 features:
