@@ -23,3 +23,8 @@ jobs:
         yarn run docs:build
       env:
         CI: true
+    - name: install Firebase CLI tools and deploy hosting
+      run: |
+        yarn run docs:deploy
+      env:
+        FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
