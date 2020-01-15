@@ -146,7 +146,7 @@ export class QueryController extends BaseController<QueryController> {
     }
 
     @Command("price", { ignorePrefix: true })
-    async queryPrice({ message, replyWithMarkdown }: MessageHandlerContext) {
+    async queryPrice({ message, reply, replyWithMarkdown }: MessageHandlerContext) {
         const match = /^\/price(?:@[\w_]+)?\s+(\w+)/.exec(message.text);
         if (!match || match.length < 2) {
             await replyWithMarkdown("格式不对，请输入 `/price [symbol]`");
@@ -154,8 +154,20 @@ export class QueryController extends BaseController<QueryController> {
         }
 
         const symbol = match[1];
-        const price = await this.matatakiService.getPrice(symbol);
 
-        await replyWithMarkdown(`当前价格：${price} CNY`);
+        try {
+            const price = await this.matatakiService.getPrice(symbol);
+
+            await replyWithMarkdown(`当前价格：${price} CNY`);
+        } catch (e) {
+            if (e instanceof Error) {
+                if (e.message === "Failed to get minetoken id") {
+                    await reply("抱歉，不存在这样的 Fan票");
+                    return;
+                }
+            }
+
+            throw e;
+        }
     }
 }

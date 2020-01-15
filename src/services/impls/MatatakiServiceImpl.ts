@@ -198,14 +198,6 @@ export class MatatakiServiceImpl implements IMatatakiService {
 
             return id;
         } catch (e) {
-            const { response } = e as AxiosError;
-
-            if (response) {
-                if (response.status === 404) {
-                    throw new Error("Minetoken not found");
-                }
-            }
-
             throw new Error("Failed to get minetoken id");
         }
     }
