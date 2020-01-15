@@ -144,4 +144,18 @@ export class QueryController extends BaseController<QueryController> {
 
         await telegram.sendMessage(message.chat.id, array.join("\n"), { parse_mode: 'Markdown', disable_web_page_preview: true });
     }
+
+    @Command("price", { ignorePrefix: true })
+    async queryPrice({ message, replyWithMarkdown }: MessageHandlerContext) {
+        const match = /^\/price(?:@[\w_]+)?\s+(\w+)/.exec(message.text);
+        if (!match || match.length < 2) {
+            await replyWithMarkdown("格式不对，请输入 `/price [symbol]`");
+            return;
+        }
+
+        const symbol = match[1];
+        const price = await this.matatakiService.getPrice(symbol);
+
+        await replyWithMarkdown(`当前价格：${price} CNY`);
+    }
 }
