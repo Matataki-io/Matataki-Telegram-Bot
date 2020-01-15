@@ -19,6 +19,12 @@ type UserMinetokenBalance = {
     decimals: number,
 }
 
+type PublicMinetokenInfo = {
+    exchange: {
+        price: number,
+    },
+}
+
 @Service(Injections.MatatakiService)
 export class MatatakiServiceImpl implements IMatatakiService {
     private axios: AxiosInstance;
@@ -146,10 +152,10 @@ export class MatatakiServiceImpl implements IMatatakiService {
     }
 
     async transfer(from: number, to: number, symbol: string, amount: number) {
-        try {
-            const { data: { data } } = await this.axios.get<ApiResponse<MinetokenInfo>>(`/token/symbol/${symbol}`);
+        const minetokenId = await this.getMinetokenIdFromSymbol(symbol);
 
-            await this.axiosForTransfer.post<ApiResponse<any>>(`/_internal_bot/minetoken/${data.id}/transferFrom`, {
+        try {
+            await this.axiosForTransfer.post<ApiResponse<any>>(`/_internal_bot/minetoken/${minetokenId}/transferFrom`, {
                 from, to,
                 value: amount,
             });
@@ -163,6 +169,36 @@ export class MatatakiServiceImpl implements IMatatakiService {
             }
 
             throw new Error("Failed to transfer");
+        }
+    }
+
+    async getPrice(symbol: string) {
+        const minetokenId = await this.getMinetokenIdFromSymbol(symbol);
+
+        try {
+            const { data: { data } } = await this.axios.get<ApiResponse<PublicMinetokenInfo>>(`/minetoken/${minetokenId}`);
+
+            return data.exchange?.price ?? 0;
+        } catch (e) {
+            const { response } = e as AxiosError;
+
+            if (response) {
+                if (response.status === 401) {
+                    throw new Error("Invalid Access Token");
+                }
+            }
+
+            throw new Error("Failed to get price");
+        }
+    }
+
+    private async getMinetokenIdFromSymbol(symbol: string) {
+        try {
+            const { data: { data: { id } } } = await this.axios.get<ApiResponse<MinetokenInfo>>(`/token/symbol/${symbol}`);
+
+            return id;
+        } catch (e) {
+            throw new Error("Failed to get minetoken id");
         }
     }
 }

@@ -9,4 +9,5 @@ export interface IMatatakiService {
     getAllMinetokens(): Promise<Array<MinetokenInfo>>;
     getUserMinetoken(userId: number, symbol: string): Promise<number>;
     transfer(from: number, to: number, symbol: string, amount: number): Promise<void>;
+    getPrice(symbol: string): Promise<number>;
 }
