@@ -94,7 +94,7 @@ export class WalletController extends BaseController<WalletController> {
 
         const match = /^\/transfer(?:@[\w_]+)?\s+(\d+)\s+(\w+)\s+(\d+.?\d*)/.exec(message.text);
         if (!match || match.length < 4) {
-            await replyWithMarkdown("格式不对，请输入 `/set [group_id] [amount]`");
+            await replyWithMarkdown("格式不对，请输入 `/transfer [matataki id] [symbol] [amount]`");
             return;
         }
 
