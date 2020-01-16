@@ -2,8 +2,8 @@ import { Group, User } from "#/entities";
 
 export interface IGroupRepository {
     ensureGroup(id: number, title: string, creatorId: number, tokenId: number): Promise<Group>;
-    getGroup(id: number): Promise<Group>;
-    getGroupOrDefault(id: number): Promise<Group | undefined>;
+    getGroup(id: number, includeInactive?: boolean): Promise<Group>;
+    getGroupOrDefault(id: number, includeInactive?: boolean): Promise<Group | undefined>;
     getGroupsOfCreator(creatorId: number): Promise<Group[]>;
     getGroups(): Promise<Group[]>;
     getGroupsExceptMyToken(tokenId?: number): Promise<Group[]>;

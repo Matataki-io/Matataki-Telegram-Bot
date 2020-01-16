@@ -42,10 +42,13 @@ export class HelpController extends BaseController<HelpController> {
 /start： 开始引导
 /help： 查看帮助
 /status： 查询您的所有状态信息（创建的 Fan票、创建的群组、已加入的群组）
-/join：查询您还未加入的 Fan票 群信息
+/join： 查询您还未加入的 Fan票 群信息
 /mygroups： 查询您建立的 Fan票 粉丝群组信息（群 ID、群名称、Fan票 名、群规则）
 /set： 设置群规则，输入 \`/set [群组ID] [参数]\` 即可设置群规则（参数代表至少持有您的Fan票数量），例如 \`/set -1234565 100\` 就是设置 123456 这个群的入群条件为 ≥100
-/rule：查询当前群组的群规则
+/rule： 查询当前群组的群规则
+/query： 不带参数的时候为查询个人持有的 Fan 票余额；而输入 \`/query [Matataki UID] [Fan票符号]\` 可查询指定用户的指定 Fan票 余额，例如 \`/query 123 ABC\` 就是查询 Matataki ID 123 帐号的 ABC Fan票 余额
+/price： 查询 Fan票 价格，格式为 \`/price [Fan票符号]\`
+/transfer： Fan票 转账，输入 \`/transfer [Matataki UID] [Fan票符号] [数量]\` 可给指定用户转账指定数量的指定 Fan票，例如 \`/transfer 123 ABC 100\` 就是给 Matataki ID 123 帐号转账 100 个 ABC
 
 [如何调戏 Fan票 粉丝群助手视频教程](https://www.bilibili.com/video/av82477411)`, { parse_mode: 'Markdown', disable_web_page_preview: true });
     }

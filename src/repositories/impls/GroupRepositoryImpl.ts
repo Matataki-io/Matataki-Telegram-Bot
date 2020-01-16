@@ -30,11 +30,15 @@ export class GroupRepositoryImpl extends BaseRepository<Group> implements IGroup
         return group;
     }
 
-    getGroup(id: number) {
-        return this.repository.findOneOrFail(id, { where: { active: true }, ...relationsOption });
+    getGroup(id: number, includeInactive?: boolean) {
+        const options = includeInactive ? relationsOption : { where: { active: true }, ...relationsOption };
+
+        return this.repository.findOneOrFail(id, options);
     }
-    getGroupOrDefault(id: number) {
-        return this.repository.findOne(id, { where: { active: true }, ...relationsOption }) ?? null;
+    getGroupOrDefault(id: number, includeInactive?: boolean) {
+        const options = includeInactive ? relationsOption : { where: { active: true }, ...relationsOption };
+
+        return this.repository.findOne(id, options);
     }
     getGroupsOfCreator(creatorId: number) {
         return this.repository.find({ where: { creatorId }, ...relationsOption });
@@ -88,6 +92,10 @@ export class GroupRepositoryImpl extends BaseRepository<Group> implements IGroup
 
     async setActive(group: Group, active: boolean) {
         group.active = active;
+
+        if (!active) {
+            group.requirement = {};
+        }
 
         await this.repository.save(group);
     }

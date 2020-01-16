@@ -58,6 +58,7 @@ export class GroupMemberChecker implements IScheduler {
                 }
             }
             if (!hasCreator || !hasMe) {
+                await this.groupRepo.setActive(group, false);
                 return;
             }
 
