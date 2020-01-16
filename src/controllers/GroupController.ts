@@ -288,7 +288,7 @@ Fan 票：${info.minetoken.symbol}
             return;
         }
 
-        let group: Group;
+        let group: Group | undefined;
 
         const groupId = message.chat.id;
         const groupInfo = await telegram.getChat(groupId);
@@ -299,7 +299,10 @@ Fan 票：${info.minetoken.symbol}
         let newMembers = message.new_chat_members ?? [];
         const me = newMembers.find(member => member.id === this.botService.info.id);
         if (!me) {
-            group = await this.groupRepo.getGroup(groupId);
+            group = await this.groupRepo.getGroupOrDefault(groupId);
+            if (!group) {
+                return;
+            }
         } else {
             const administrators = await telegram.getChatAdministrators(groupId);
             const creator = administrators.find(admin => admin.status === "creator");
@@ -338,8 +341,7 @@ Fan 票：${info.minetoken.symbol}
             if (member.is_bot) {
                 continue;
             }
-            if (member.id === Number(group.creatorId) && group.requirement.minetoken) {
-                await this.groupRepo.setActive(group, true);
+            if (member.id === Number(group.creatorId)) {
                 continue;
             }
 
@@ -396,7 +398,10 @@ Fan 票：${info.minetoken.symbol}
         }
 
         const groupId = message.chat.id;
-        const group = await this.groupRepo.getGroup(groupId);
+        const group = await this.groupRepo.getGroupOrDefault(groupId, true);
+        if (!group) {
+            return;
+        }
 
         if (member.is_bot) {
             if (member.id === this.botService.info.id) {
