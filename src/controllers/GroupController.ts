@@ -85,12 +85,13 @@ Fan 票：${info.minetoken?.symbol}
             }
         }
 
-        if (array.length === 0) {
-            await reply(`抱歉，您还没有创建 Fan票 群`);
-            return;
-        }
+        let content = array.length === 0 ? "抱歉，您还没有创建 Fan票 群" : array.join("\n=====================\n");
 
-        await reply(array.join("\n=====================\n"));
+        content += `
+
+查询前请将 Fan票 群中的粉丝群助手设置为管理员`;
+
+        await reply(content);
     }
 
     @Command("rule", { ignorePrefix: true })
