@@ -153,7 +153,7 @@ export class QueryController extends BaseController<QueryController> {
             return;
         }
 
-        const symbol = match[1];
+        const symbol = match[1].toUpperCase();
 
         try {
             const price = await this.matatakiService.getPrice(symbol);
