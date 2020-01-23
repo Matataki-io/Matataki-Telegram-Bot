@@ -32,6 +32,6 @@ export class Web3ServiceImpl implements IWeb3Service {
 
         const result = await contract.methods.balanceOf(walletAddress).call();
 
-        return Number.parseInt(result);
+        return Number.parseInt(result) / 10000;
     }
 }

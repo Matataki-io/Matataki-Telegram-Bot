@@ -85,12 +85,13 @@ Fan 票：${info.minetoken?.symbol}
             }
         }
 
-        if (array.length === 0) {
-            await reply(`抱歉，您还没有创建 Fan票 群`);
-            return;
-        }
+        let content = array.length === 0 ? "抱歉，您还没有创建 Fan票 群" : array.join("\n=====================\n");
 
-        await reply(array.join("\n=====================\n"));
+        content += `
+
+查询前请将 Fan票 群中的粉丝群助手设置为管理员`;
+
+        await reply(content);
     }
 
     @Command("rule", { ignorePrefix: true })
@@ -131,8 +132,8 @@ Fan 票：${info.minetoken?.symbol}
         }
 
         const match = /^\/set\s+-?(\d+)\s+(\d+.?\d*)/.exec(message.text);
-        if (!match || match.length < 2) {
-            return reply("格式不对，请输入 `/set group_id amount`");
+        if (!match || match.length < 3) {
+            return reply("格式不对，请输入 `/set [group_id] [amount]`");
         }
 
         const groupId = -Number(match[1]);
@@ -207,7 +208,7 @@ Fan 票：${info.minetoken.symbol}
         const balanceCache = new Map<number, number>();
         await Promise.all(Array.from(tokens).map(async token => {
             const contractAddress = await this.matatakiService.getContractAddressOfMinetoken(token);
-            const balance = (await this.web3Service.getBalance(contractAddress, walletAddress)) / 10000;
+            const balance = await this.web3Service.getBalance(contractAddress, walletAddress);
 
             balanceCache.set(token, balance!);
         }));
@@ -287,7 +288,7 @@ Fan 票：${info.minetoken.symbol}
             return;
         }
 
-        let group: Group;
+        let group: Group | undefined;
 
         const groupId = message.chat.id;
         const groupInfo = await telegram.getChat(groupId);
@@ -298,7 +299,10 @@ Fan 票：${info.minetoken.symbol}
         let newMembers = message.new_chat_members ?? [];
         const me = newMembers.find(member => member.id === this.botService.info.id);
         if (!me) {
-            group = await this.groupRepo.getGroup(groupId);
+            group = await this.groupRepo.getGroupOrDefault(groupId);
+            if (!group) {
+                return;
+            }
         } else {
             const administrators = await telegram.getChatAdministrators(groupId);
             const creator = administrators.find(admin => admin.status === "creator");
@@ -337,8 +341,7 @@ Fan 票：${info.minetoken.symbol}
             if (member.is_bot) {
                 continue;
             }
-            if (member.id === Number(group.creatorId) && group.requirement.minetoken) {
-                await this.groupRepo.setActive(group, true);
+            if (member.id === Number(group.creatorId)) {
                 continue;
             }
 
@@ -358,7 +361,7 @@ Fan 票：${info.minetoken.symbol}
                 continue;
             }
 
-            const balance = (await this.web3Service.getBalance(contractAddress, walletAddress)) / 10000;
+            const balance = await this.web3Service.getBalance(contractAddress, walletAddress);
 
             if (balance >= requirement) {
                 acceptedUsers.add(member);
@@ -395,7 +398,10 @@ Fan 票：${info.minetoken.symbol}
         }
 
         const groupId = message.chat.id;
-        const group = await this.groupRepo.getGroup(groupId);
+        const group = await this.groupRepo.getGroupOrDefault(groupId, true);
+        if (!group) {
+            return;
+        }
 
         if (member.is_bot) {
             if (member.id === this.botService.info.id) {
@@ -480,7 +486,7 @@ Fan 票：${info.minetoken.symbol}
 
         const walletAddress = await this.matatakiService.getEthWallet(sender);;
         const contractAddress = await this.matatakiService.getContractAddressOfMinetoken(group.tokenId);
-        const balance = (await this.web3Service.getBalance(contractAddress, walletAddress)) / 10000;
+        const balance = await this.web3Service.getBalance(contractAddress, walletAddress);
 
         const { minetoken } = await this.matatakiService.getAssociatedInfo(Number(group.creatorId));
 

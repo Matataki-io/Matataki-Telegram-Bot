@@ -58,6 +58,7 @@ export class GroupMemberChecker implements IScheduler {
                 }
             }
             if (!hasCreator || !hasMe) {
+                await this.groupRepo.setActive(group, false);
                 return;
             }
 
@@ -91,7 +92,7 @@ export class GroupMemberChecker implements IScheduler {
                     continue;
                 }
 
-                const balance = (await this.web3Service.getBalance(contractAddress, walletAddress)) / 10000;
+                const balance = await this.web3Service.getBalance(contractAddress, walletAddress);
 
                 if (balance >= balanceRequirement) {
                     continue;
