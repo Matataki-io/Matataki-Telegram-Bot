@@ -1,0 +1,13 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\src",
+    "\\src\\constants",
+    "\\src\\controllers",
+    "\\src\\services",
+    "\\src\\services\\impls",
+    "\\tests\\stubs"
+  ],
+  "SelectedNode": "\\src\\services\\IWeb3Service.ts",
+  "PreviewInSolutionExplorer": false
+}
