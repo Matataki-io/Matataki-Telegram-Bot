@@ -1,7 +1,7 @@
 /node_modules
 
 # Editor directories and files
-.vs/
+/.vs
 .idea
 *.env
 *.suo
