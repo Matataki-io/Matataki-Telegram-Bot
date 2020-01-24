@@ -29,6 +29,7 @@ const Msgs = {
 export class RedEnvelopeServiceImpl implements IRedEnvelopeService {
     constructor(@inject(Injections.MatatakiService) private matatakiService: IMatatakiService) {
         process.on('exit', this.beforeExit.bind(this));
+        process.on('SIGINT', this.beforeExit.bind(this,0));
     }
     private envelopes: Envelope[] = new Array();
     private removeEmptyEnvelopes() {
@@ -69,7 +70,8 @@ export class RedEnvelopeServiceImpl implements IRedEnvelopeService {
         }));
         return mixedRes.filter(Boolean) as string[];
     }
-    private beforeExit(code : number) {
+    private beforeExit(code: number) {
+        console.log('do something before exit');
     }
 
 }
