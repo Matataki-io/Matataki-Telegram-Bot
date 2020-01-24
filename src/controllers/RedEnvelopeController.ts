@@ -1,4 +1,4 @@
-import { BaseController } from '.';
+ï»¿import { BaseController } from '.';
 import { Controller,Command } from '#/decorators';
 import { MessageHandlerContext } from '#/definitions';
 import { inject } from 'inversify';
@@ -7,17 +7,18 @@ import { IMatatakiService, IRedEnvelopeService } from '#/services';
 
 const Msgs = {
     helpMessage: [
-        "·¢ºì°ü:/fahongbao <FanÆ±·ûºÅ> <µ¥¸öºì°ü½ğ¶î> <ºì°üÊıÁ¿>",
-        "ÊÕºì°ü:/hongbao"].join("\n"),
-    errorMessage: "´íÎóµÄÖ¸Áî¸ñÊ½¡£",
-    nonPositiveQuantity: "ÊıÁ¿²»ÄÜÎª0»òÕß¸ºÅ¶¡£",
-    noUserMessage: "ÉĞÎ´°ó¶¨ Ë²Matataki ÕË»§",
-    insuffMessage: "ÄúµÄ½ğ¶î²»×ãÅ¶¡£",
+        "å‘çº¢åŒ…:/fahongbao <Fanç¥¨ç¬¦å·> <å•ä¸ªçº¢åŒ…é‡‘é¢> <çº¢åŒ…æ•°é‡>",
+        "æ”¶çº¢åŒ…:/hongbao"].join("\n"),
+    errorMessage: "é”™è¯¯çš„æŒ‡ä»¤æ ¼å¼ã€‚",
+    nonPositiveQuantity: "æ•°é‡ä¸èƒ½ä¸º0æˆ–è€…è´Ÿå“¦ã€‚",
+    noUserMessage: "å°šæœªç»‘å®š ç¬Matataki è´¦æˆ·",
+    insuffMessage: "æ‚¨çš„é‡‘é¢ä¸è¶³å“¦ã€‚",
     successMessage:
         (userName: string) => userName +
-            "·¢ÁËºì°ü£¬¿ìÀ´ÇÀ°É£¡ÊäÈë/hongbaoÇÀºì°ü",
+            "å‘äº†çº¢åŒ…ï¼Œå¿«æ¥æŠ¢å§ï¼è¾“å…¥/hongbaoæŠ¢çº¢åŒ…",
     grabMessage:
-        (n: number) => n === 0 ? "Ò»¸öºì°üÒ²Ã»ÇÀµ½" : `ÄãÇÀµ½ÁË${n}¸öºì°ü`
+        (x: string[]) => x.length === 0 ? "ä¸€ä¸ªçº¢åŒ…ä¹Ÿæ²¡æŠ¢åˆ°" :
+            x.join('\n')
 };
 
 interface Arguments {
@@ -51,8 +52,8 @@ export class RedEnvelopeController extends BaseController<RedEnvelopeController>
     @Command('hongbao', { ignorePrefix: true })
     async getEnvelope(ctx: MessageHandlerContext) {
         let user = await this.getMatatakiUser(ctx.message.from.id);
-        let succeedNums = await this.redEnvelopService.grab(user);
-        await ctx.reply(Msgs.grabMessage(succeedNums));
+        let msgs = await this.redEnvelopService.grab(user);
+        await ctx.reply(Msgs.grabMessage(msgs));
     }
     private err(errMsg: string) {
         return new Error(errMsg + "\n" + Msgs.helpMessage);
@@ -64,7 +65,7 @@ export class RedEnvelopeController extends BaseController<RedEnvelopeController>
         return q;
     }
     private parseArgument(text: string): Arguments {
-        const match = /^\/fahongbao(?:@[\w_]+)?\s+(\w+)\s+(\d+)\s+(\d+)/.exec(text);
+        let match = /^\/fahongbao(?:@[\w_]+)?\s+(\w+)\s+(\d*\.?\d*)\s+(\d+)/.exec(text);
         if (match && match.length === 4) {
             return {
                 unit: match[1],

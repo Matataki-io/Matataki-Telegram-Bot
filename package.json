@@ -26,6 +26,7 @@
     "mysql2": "^2.1.0",
     "pg": "^7.17.0",
     "reflect-metadata": "^0.1.13",
+    "socks-proxy-agent": "^4.0.2",
     "table": "^5.4.6",
     "telegraf": "^3.35.0",
     "typeorm": "^0.2.22",

@@ -2,12 +2,10 @@
   "ExpandedNodes": [
     "",
     "\\src",
-    "\\src\\constants",
     "\\src\\controllers",
     "\\src\\services",
-    "\\src\\services\\impls",
-    "\\tests\\stubs"
+    "\\src\\services\\impls"
   ],
-  "SelectedNode": "\\src\\services\\IWeb3Service.ts",
+  "SelectedNode": "\\src\\services\\impls\\RedEnvelopeServiceImpl.ts",
   "PreviewInSolutionExplorer": false
 }
