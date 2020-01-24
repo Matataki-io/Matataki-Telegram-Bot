@@ -1,6 +1,9 @@
 import { inject, Container } from "inversify";
 import Telegraf, { ContextMessageUpdate, Middleware, session, Markup, Extra } from "telegraf";
 import { User } from "telegraf/typings/telegram-types";
+import HttpsProxyAgent from "https-proxy-agent";
+const SocksProxyAgent = require("socks-proxy-agent");
+// this library has no type decalarations for now
 import { getRepository, Repository } from "typeorm";
 
 import { Constants, MetadataKeys, Injections, LogCategories } from "#/constants";
@@ -42,7 +45,18 @@ export class BotServiceImpl implements IBotService {
         @inject(Injections.Container) private container: Container) {
         console.assert(process.env.BOT_TOKEN);
 
-        this.bot = new Telegraf<ContextMessageUpdate>(process.env.BOT_TOKEN!)
+        const agent = process.env.HTTPS_PROXY_HOST && process.env.HTTPS_PROXY_PORT ?
+            new HttpsProxyAgent({
+                host: process.env.HTTPS_PROXY_HOST,
+                port: process.env.HTTPS_PROXY_PORT
+            }) :
+            process.env.SOCKS_PROXY ?
+                new SocksProxyAgent(process.env.SOCKS_PROXY)
+                : undefined;
+
+        this.bot = new Telegraf<ContextMessageUpdate>(process.env.BOT_TOKEN!, { telegram: { agent } });
+
+
 
         this.bot.use(session());
 

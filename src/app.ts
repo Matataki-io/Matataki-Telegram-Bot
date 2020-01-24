@@ -44,6 +44,6 @@ import { IBotService } from "#/services";
             const instance = container.getNamed<IScheduler>(Injections.Scheduler, scheduler.name);
 
             instance.onTick();
-        }, undefined, true);
+        }, () => { console.log('exit') }, true);
     }
 })();
