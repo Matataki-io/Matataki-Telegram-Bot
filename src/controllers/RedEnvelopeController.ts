@@ -7,7 +7,7 @@ import { IMatatakiService, IRedEnvelopeService } from '#/services';
 
 const Msgs = {
     helpMessage: [
-        "发红包:/fahongbao <Fan票符号> <单个红包金额> <红包数量>",
+        "发红包:/fahongbao <Fan票符号> <单个红包金额> <红包数量> [<描述>]",
         "收红包:/hongbao"].join("\n"),
     errorMessage: "错误的指令格式。",
     nonPositiveQuantity: "数量不能为0或者负哦。",
@@ -25,6 +25,7 @@ interface Arguments {
     unit: string;
     amount: string;
     quantity: number;
+    description: string;
 };
 
 
@@ -41,8 +42,9 @@ export class RedEnvelopeController extends BaseController<RedEnvelopeController>
         try {
             let args: Arguments = this.parseArgument(ctx.message.text);
             let sender = await this.getMatatakiUser(ctx.message.from.id);
+            sender.name = ctx.message.from.first_name + ctx.message.from.last_name;
             this.redEnvelopService.registerEnvelope(sender,
-                args.unit, args.amount, args.quantity);
+                args.unit, args.amount, args.quantity, args.description);
             ctx.reply(Msgs.successMessage(sender.name));
         }
         catch (e) {
@@ -52,6 +54,7 @@ export class RedEnvelopeController extends BaseController<RedEnvelopeController>
     @Command('hongbao', { ignorePrefix: true })
     async getEnvelope(ctx: MessageHandlerContext) {
         let user = await this.getMatatakiUser(ctx.message.from.id);
+        user.name = ctx.message.from.first_name + ctx.message.from.last_name;
         let msgs = await this.redEnvelopService.grab(user);
         await ctx.reply(Msgs.grabMessage(msgs));
     }
@@ -65,12 +68,13 @@ export class RedEnvelopeController extends BaseController<RedEnvelopeController>
         return q;
     }
     private parseArgument(text: string): Arguments {
-        let match = /^\/fahongbao(?:@[\w_]+)?\s+(\w+)\s+(\d*\.?\d*)\s+(\d+)/.exec(text);
-        if (match && match.length === 4) {
+        let match = /^\/fahongbao(?:@[\w_]+)?\s+(\w+)\s+(\d*\.?\d*)\s+(\d+)\s*(\S*)/.exec(text);
+        if (match && match.length === 5) {
             return {
                 unit: match[1],
                 amount: match[2],
-                quantity: this.checkPositiveQuantity(parseInt(match[3]))
+                quantity: this.checkPositiveQuantity(parseInt(match[3])),
+                description:match[4]
             };
         } else {
             throw this.err(Msgs.errorMessage);

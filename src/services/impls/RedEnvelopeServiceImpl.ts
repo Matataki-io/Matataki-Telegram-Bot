@@ -9,20 +9,23 @@ type Envelope = {
     unit: string,
     amount: string,
     quantity: number,
-    takenUsers: number[]
+    takenUsers: number[],
+    description : string
 };
 
 type Transfer = {
-    fromName:string
+    fromName: string,
+    toName: string,
     from: number,
     to: number,
     amount: string,
-    unit: string
+    unit: string,
+    description : string
 };
 
 const Msgs = {
-    grabMessage: (who: string, amount: string, unit: string) =>
-        `你抢到了${who}的一个红包,价值 ${amount} ${unit}`
+    grabMessage: ({ unit, fromName, toName, amount, description }: Transfer) =>
+        `${toName}抢到了${fromName}的一个${description}红包, 价值 ${ amount } ${ unit }`
 };
 
 @Service(Injections.RedEnvelopeService)
@@ -36,33 +39,42 @@ export class RedEnvelopeServiceImpl implements IRedEnvelopeService {
             return takenUsers.length < quantity;
         });
     }
-    registerEnvelope(user: MatatakiUser, unit: string, amount: string, quantity: number) {
+    registerEnvelope(user: MatatakiUser, unit: string, amount: string,
+        quantity: number, description: string) {
         this.envelopes.push({
             sender: user,
             unit,
             amount,
             quantity,
-            takenUsers: []
+            takenUsers: [],
+            description
         });
     }
     async grab({ id, name }: MatatakiUser): Promise<string[]> {
         let validEnvelopes = this.envelopes.filter(({ takenUsers, quantity }) => {
             return !takenUsers.includes(id) && takenUsers.length < quantity;
         });
-        let transfers: Transfer[] = validEnvelopes.map(({ unit, amount, sender }) => {
-            return { unit, amount, from: sender.id, to: id ,fromName:sender.name};
+        let transfers: Transfer[] = validEnvelopes.map(({ unit, amount, sender, description, takenUsers }) => {
+            takenUsers.push(id);
+            return {
+                unit, amount,
+                from: sender.id, fromName: sender.name,
+                to: id, toName: name,
+                description
+            };
         });
         let msgs = await this.processTransfers(transfers);
         this.removeEmptyEnvelopes();
         return msgs;
     }
     private async processTransfers(transfers: Transfer[]): Promise<string[]> {
-        let mixedRes = await Promise.all(transfers.map(async ({ from, to, unit, amount, fromName }) => {
+        let mixedRes = await Promise.all(transfers.map(async (transfer:Transfer) => {
             try {
+                let { amount, from, to, unit } = transfer;
                 let amountNum = Number(amount) * 10000;
                 await this.matatakiService.transfer(from,
                     to, unit, amountNum);
-                return Msgs.grabMessage(fromName, amount, unit);
+                return Msgs.grabMessage(transfer);
             } catch (e) {
                 return undefined
             }
