@@ -42,7 +42,7 @@ export class RedEnvelopeController extends BaseController<RedEnvelopeController>
         try {
             let args: Arguments = this.parseArgument(ctx.message.text);
             let sender = await this.getMatatakiUser(ctx.message.from.id);
-            sender.name = ctx.message.from.first_name + ctx.message.from.last_name;
+            sender.name = this.getTgName(ctx);
             this.redEnvelopService.registerEnvelope(sender,
                 args.unit, args.amount, args.quantity, args.description);
             ctx.reply(Msgs.successMessage(sender.name));
@@ -54,7 +54,7 @@ export class RedEnvelopeController extends BaseController<RedEnvelopeController>
     @Command('hongbao', { ignorePrefix: true })
     async getEnvelope(ctx: MessageHandlerContext) {
         let user = await this.getMatatakiUser(ctx.message.from.id);
-        user.name = ctx.message.from.first_name + ctx.message.from.last_name;
+        user.name = this.getTgName(ctx);
         let msgs = await this.redEnvelopService.grab(user);
         await ctx.reply(Msgs.grabMessage(msgs));
     }
@@ -89,4 +89,8 @@ export class RedEnvelopeController extends BaseController<RedEnvelopeController>
             return info.user;
         }
     }
+    private getTgName(ctx: MessageHandlerContext): string {
+        return ctx.message.from.first_name +
+            (ctx.message.from.last_name ? ctx.message.from.last_name : '');
+    };
 }
