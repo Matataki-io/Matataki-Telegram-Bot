@@ -44,7 +44,7 @@ export class RedEnvelopeController extends BaseController<RedEnvelopeController>
             let sender = await this.getMatatakiUser(ctx.message.from.id);
             sender.name = this.getTgName(ctx);
             this.redEnvelopService.registerEnvelope(sender,
-                args.unit, args.amount, args.quantity, args.description);
+                args.unit.toUpperCase(), args.amount, args.quantity, args.description);
             ctx.reply(Msgs.successMessage(sender.name));
         }
         catch (e) {
