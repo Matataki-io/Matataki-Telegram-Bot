@@ -49,6 +49,9 @@ export class HelpController extends BaseController<HelpController> {
 /query： 不带参数的时候为查询个人持有的 Fan 票余额；而输入 \`/query [Matataki UID] [Fan票符号]\` 可查询指定用户的指定 Fan票 余额，例如 \`/query 123 ABC\` 就是查询 Matataki ID 123 帐号的 ABC Fan票 余额
 /price： 查询 Fan票 价格，格式为 \`/price [Fan票符号]\`
 /transfer： Fan票 转账，输入 \`/transfer [Matataki UID] [Fan票符号] [数量]\` 可给指定用户转账指定数量的指定 Fan票，例如 \`/transfer 123 ABC 100\` 就是给 Matataki ID 123 帐号转账 100 个 ABC
+/fahongbao： 发红包，格式为 \`/fahongbao [Fan票符号] [总红包金额] [红包数量] [描述（可选）]\`
+/sfahongbao： 发随机红包，格式为 \`/sfahongbao [Fan票符号] [总红包金额] [红包数量] [描述（可选）]\`
+/hongbao： 收红包
 
 [如何调戏 Fan票 粉丝群助手视频教程](https://www.bilibili.com/video/av82477411)`, { parse_mode: 'Markdown', disable_web_page_preview: true });
     }
