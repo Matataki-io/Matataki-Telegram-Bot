@@ -120,7 +120,7 @@ export class RedEnvelopeController extends BaseController<RedEnvelopeController>
   private normalDistribute(amount: number,quantity : number) : number[]{
     let single = Math.floor(amount / quantity);
     let extra = amount - quantity * single;
-    return new Array(quantity).map((v, i) =>
+    return new Array(quantity).fill(1).map((v, i) =>
       i == quantity - 1 ? single + extra : single);
   }
   private randDistribute(amount: number, quantity: number): number[] {
