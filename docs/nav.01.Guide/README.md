@@ -277,7 +277,7 @@ npm run migrations
 以上步骤操作完成后，请通过 npm 或者 yarn 安装依赖
 ```bash
 npm start
-# or 
+# or
 yarn start
 ```
 
@@ -347,7 +347,7 @@ PS: Telegram Bot 所用的 MD 语法有[少许区别](https://core.telegram.org/
 
 * username：机器人 id（不带 @）
 * username_escaped：机器人 id（不带 @），但`_`会替换成`\_`以避免被当作斜体文本的划分符号
-* url_prefix：Matataki 页面 URL 前缀 
+* url_prefix：Matataki 页面 URL 前缀
 
 **/start 信息**
 
@@ -402,7 +402,13 @@ PS: Telegram Bot 所用的 MD 语法有[少许区别](https://core.telegram.org/
 /join：查询您还未加入的Fan票群信息
 /mygroups： 查询您建立的 Fan票 粉丝群组信息（群 ID、群名称、Fan票 名、群规则）
 /set： 设置群规则，输入 `/set [群组ID] [参数]` 即可设置群规则（参数代表至少持有您的Fan票数量），例如 `/set -1234565 100` 就是设置 123456 这个群的入群条件为 ≥100
-/rule：查询当前群组的群规则
+/rule： 查询当前群组的群规则
+/query： 不带参数的时候为查询个人持有的 Fan 票余额；而输入 `/query [Matataki UID] [Fan票符号]` 可查询指定用户的指定 Fan票 余额，例如 `/query 123 ABC` 就是查询 Matataki ID 123 帐号的 ABC Fan票 余额
+/price： 查询 Fan票 价格，格式为 `/price [Fan票符号]`
+/transfer： Fan票 转账，输入 `/transfer [Matataki UID] [Fan票符号] [数量]` 可给指定用户转账指定数量的指定 Fan票，例如 `/transfer 123 ABC 100` 就是给 Matataki ID 123 帐号转账 100 个 ABC
+/fahongbao： 发红包，格式为 `/fahongbao [Fan票符号] [总红包金额] [红包数量] [描述（可选）]`
+/sfahongbao： 发随机红包，格式为 `/sfahongbao [Fan票符号] [总红包金额] [红包数量] [描述（可选）]`
+/hongbao： 收红包
 
 [如何调戏Fan票粉丝群助手视频教程](https://www.bilibili.com/video/av82477411)
 
@@ -482,7 +488,7 @@ PS: Telegram Bot 所用的 MD 语法有[少许区别](https://core.telegram.org/
 
 **/status 信息**
 ```
-瞬Matataki 昵称：林可 
+瞬Matataki 昵称：林可
 Fan票 名称：LINK（林可票）
 
 **您已建立 1 个 Fan票群**
@@ -513,12 +519,17 @@ Fan票 名称：LINK（林可票）
 /help： 查看帮助
 /start： 开始
 /status： 查询您的所有状态信息
-/join：查询您还未加入的Fan票群信息
+/query： 查询自己或用户持有的 Fan 票余额
+/transfer： Fan票 转账
+/price： 查询 Fan票 币价格
+/join：查询您还未加入的 Fan票 群信息
 /mygroups： 查询您建立的 Fan票 粉丝群组信息
 /set： 设置群规则
 /rule：查询当前群组的群规则
-/ping：ping
-
+/fahongbao： 发红包
+/sfahongbao： 发随机红包
+/hongbao： 收红包
+/ping： ping
 
 
 
@@ -536,7 +547,7 @@ Fan票 名称：LINK（林可票）
 > [LINK林可币](https://www.matataki.io//token/18)：30
 > [DAO岛岛币](https://www.matataki.io//token/18)：120.3
 
-### 用户可以通过指令给特定的群员发送Fan票 
+### 用户可以通过指令给特定的群员发送Fan票
 
 
 ### 用户可以通过指令让机器人在群里发送红包
@@ -550,8 +561,8 @@ send LINK to @guanchao71S2W
 # 任何疑问？
 
 请不要犹豫在Telegram上联系我们
-[林可-产品经理](https://t.me/guanchao71) 
+[林可-产品经理](https://t.me/guanchao71)
 [神樹桜乃-攻城狮1号](https://t.me/kodamasakuno)
-[Frank-攻城狮2号](https://t.me/frankwei) 
+[Frank-攻城狮2号](https://t.me/frankwei)
 
 或在[官方 Telegram 群](https://t.me/smartsignature_io)询问
