@@ -18,7 +18,7 @@ const Msgs = {
   cantGetUserInfo:"Matataki用户信息获取失败",
   successMessage:
     (userName: string) => userName +
-      "发了红包，快来抢吧！输入/hongbao抢红包",
+      "发了红包，快来抢吧！输入 /hongbao 抢红包",
   grabMessage:
     (x: string[]) => x.length === 0 ? "一个红包也没抢到" :
       x.join('\n')
@@ -101,7 +101,7 @@ export class RedEnvelopeController extends BaseController<RedEnvelopeController>
       await ctx.reply(e.message);
     }
   }
-  
+
   private parseArgument(cmd: string, text: string): Arguments {
     let match: any = RegExp('^/' + cmd + '(?:@[\\w_]+)?\\s+(\\w+)\\s+(\\d*\\.?\\d*)\\s+(\\d+)\\s*(\\S*)')
       .exec(text);
