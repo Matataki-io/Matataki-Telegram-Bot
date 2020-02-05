@@ -44,8 +44,6 @@ export class DatabaseServiceImpl implements IDatabaseService {
 
     constructor(@inject(Injections.LoggerService) logger: ILoggerService) {
         this.connection = getConnectionOptions().then(options => {
-            globalThis.JsonColumnType = options.type === "postgres" ? "jsonb" : "simple-json";
-
             return createConnection(Object.assign(options, {
                 logger: new TypeORMLogger(logger),
             }));
