@@ -126,7 +126,8 @@ export class WalletController extends BaseController<WalletController> {
 
             const targetInfo = await this.matatakiService.getAssociatedInfo(targetId);
             if (!targetInfo.user) {
-                throw new Error("What happended?");
+                await replyWithMarkdown("抱歉，目标帐号没有在 瞬Matataki 绑定 Telegram 帐号");
+                return;
             }
 
             userId = targetInfo.user.id;
