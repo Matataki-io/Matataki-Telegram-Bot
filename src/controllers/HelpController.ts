@@ -139,7 +139,7 @@ export class HelpController extends BaseController<HelpController> {
 
 *发红包*
 可以输入 /fahongbao 发普通红包或者输入 /sfahongbao 发随机红包
-后面接的命令参数均为 \`[Fan票符号] [总红包金额] [红包数量] [描述（可选）]\`
+后面接的命令参数均为 \`[Fan票符号] [总红包金额] [红包数量] [描述（可选）]\`，参数间用空格相连
 
 *抢红包*
 在有人发出红包的时候输入 /hongbao 命令抢红包`, { parse_mode: 'Markdown', disable_web_page_preview: true });
