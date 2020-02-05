@@ -46,14 +46,15 @@ export class HelpController extends BaseController<HelpController> {
 /mygroups： 查询您建立的 Fan票 粉丝群组信息（群 ID、群名称、Fan票 名、群规则）
 /set： 设置群规则，输入 \`/set [群组ID] [参数]\` 即可设置群规则（参数代表至少持有您的Fan票数量），例如 \`/set -1234565 100\` 就是设置 123456 这个群的入群条件为 ≥100
 /rule： 查询当前群组的群规则
-/query： 不带参数的时候为查询个人持有的 Fan 票余额；而输入 \`/query [Matataki UID] [Fan票符号]\` 可查询指定用户的指定 Fan票 余额，例如 \`/query 123 ABC\` 就是查询 Matataki ID 123 帐号的 ABC Fan票 余额
+/query： 不带参数的时候为查询个人持有的 Fan 票余额；而输入 \`/query [目标帐号] [Fan票符号]\` 可查询指定用户的指定 Fan票 余额，目标帐号可以为 Matataki UID 或者 @ 后接 Telegram 帐号用户名，例如 \`/query 123 ABC\` 就是查询 Matataki ID 123 帐号的 ABC Fan票 余额；而 \`/query @someone ABC\` 就是查询 Telegram 的 \`@someone\` 所绑定的 Matataki 帐号的 ABC Fan票 余额
 /price： 查询 Fan票 价格，格式为 \`/price [Fan票符号]\`
-/transfer： Fan票 转账，输入 \`/transfer [Matataki UID] [Fan票符号] [数量]\` 可给指定用户转账指定数量的指定 Fan票，例如 \`/transfer 123 ABC 100\` 就是给 Matataki ID 123 帐号转账 100 个 ABC
+/transfer： Fan票 转账，输入 \`/transfer [目标帐号] [Fan票符号] [数量]\` 可给指定用户转账指定数量的指定 Fan票，目标帐号可以为 Matataki UID 或者 @ 后接 Telegram 帐号用户名，例如 \`/transfer 123 ABC 100\` 就是给 Matataki ID 123 帐号转账 100 个 ABC；而 \`/transfer @someone ABC 100\` 就是给 Telegram 的 \`@someone\` 所绑定的 Matataki 帐号转账 100 个 ABC
 /fahongbao： 发红包，格式为 \`/fahongbao [Fan票符号] [总红包金额] [红包数量] [描述（可选）]\`
 /sfahongbao： 发随机红包，格式为 \`/sfahongbao [Fan票符号] [总红包金额] [红包数量] [描述（可选）]\`
 /hongbao： 收红包
+/syncusername： 同步 Telegram 帐号用户名，用作转账和查询时的目标
 
-[如何调戏 Fan票 粉丝群助手视频教程](https://www.bilibili.com/video/av82477411)`, { parse_mode: 'Markdown', disable_web_page_preview: true });
+[如何调戏 Fan票 粉丝群助手视频教程](https://www.bilibili.com/video/av82477411)`, { parse_mode: 'MarkdownV2', disable_web_page_preview: true });
     }
 
     @Action("help4")
