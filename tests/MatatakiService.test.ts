@@ -16,6 +16,29 @@ describe("Matataki Service", () => {
     test("Failed to receive a minetoken contract address", () => {
         return expect(service.getContractAddressOfMinetoken(0)).rejects.toThrowError("Associated contract address not found");
     });
+    test("Responded all minetokens", async () => {
+        const response = await service.getAllMinetokens();
+
+        expect(response).toHaveLength(1);
+        expect(response).toEqual([{
+            id: 1919,
+            name: "银票",
+            symbol: "INM",
+            contract_address: "0x1145141919810",
+        }]);
+    });
+    test("Transfer minetoken", () => {
+        return expect(service.transfer(1, 2, "INM", 1)).resolves.not.toThrow();
+    });
+    test("Transfer minetoken with a wrong symbol", () => {
+        return expect(service.transfer(1, 2, "NOTFOUND", 1)).rejects.toThrowError("Failed to get minetoken id");
+    });
+    test("Responded a minetoken price", () => {
+        return expect(service.getPrice("INM")).resolves.toBe(11.4514);
+    });
+    test("Request minetoken price with a wrong symbol", () => {
+        return expect(service.getPrice("NOTFOUND")).rejects.toThrowError("Failed to get minetoken id");
+    });
 
     test("Request with invalid access token (ETH wallet address)", () => {
         return expect(notAuthorized.getEthWallet(114514)).rejects.toThrowError("Invalid Access Token");
@@ -25,5 +48,14 @@ describe("Matataki Service", () => {
     });
     test("Request with invalid access token (Minetoken contract address)", () => {
         return expect(notAuthorized.getContractAddressOfMinetoken(0)).rejects.toThrowError("Invalid Access Token");
+    });
+    test("Request with invalid access token (All minetokens)", () => {
+        return expect(notAuthorized.getAllMinetokens()).rejects.toThrowError("Invalid Access Token");
+    });
+    test("Request with invalid access token (Transfer)", () => {
+        return expect(notAuthorized.transfer(0, 1, "NOTFOUND", 0)).rejects.toThrowError("Invalid Access Token");
+    });
+    test("Request with invalid access token (Minetoken price)", () => {
+        return expect(notAuthorized.getPrice("INM")).rejects.toThrowError("Invalid Access Token");
     });
 });
