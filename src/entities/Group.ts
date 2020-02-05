@@ -1,7 +1,8 @@
 import { Entity, PrimaryColumn, ManyToMany, Column, Index } from "typeorm";
 
 import { User } from "./User";
-import { GroupRequirement } from "definitions/GroupRequirement";
+import { JsonColumn } from "#/decorators";
+import { GroupRequirement } from "#/definitions";
 
 @Entity()
 export class Group {
@@ -22,7 +23,7 @@ export class Group {
     @Index({ where: "active" })
     tokenId!: number;
 
-    @Column({ type: "jsonb" })
+    @JsonColumn()
     requirement!: GroupRequirement;
 
     @ManyToMany(type => User, user => user.groups)
