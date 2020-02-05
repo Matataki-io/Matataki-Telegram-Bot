@@ -179,7 +179,7 @@ export class BotServiceImpl implements IBotService {
                 const handler: MessageHandler = prototype[methodName];
                 console.assert(handler instanceof Function, `${constructor.name}.${methodName} must be a function of type MessageHandlerContext`);
 
-                const commandName = prefix === "/" || ignorePrefix ? name : `${prefix}_${name}`;
+                const commandName = prefix === "/" || ignorePrefix ? name : (prefix + name);
 
                 this.bot.command(commandName, this.handlerFactory(constructor.name, methodName));
             }
