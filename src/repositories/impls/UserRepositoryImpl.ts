@@ -33,4 +33,9 @@ export class UserRepositoryImpl extends BaseRepository<User> implements IUserRep
 
         await this.repository.save(user);
     }
+    async getIdByUsername(username: string): Promise<number> {
+        const user = await this.repository.findOneOrFail({ where: { username }});
+
+        return Number(user.id);
+    }
 }
