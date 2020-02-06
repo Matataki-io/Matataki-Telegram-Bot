@@ -25,7 +25,7 @@ export class WalletController extends BaseController<WalletController> {
         const { message, replyWithMarkdown } = ctx;
         const { text } = message;
 
-        const match = /^\/query(?:@[\w_]+)?\s+(\d+|@[\w+_]{5,32})\s+(\w+)/.exec(text);
+        const match = /^\/query(?:@[\w_]+)?\s+(\d+|@[\w_]{5,32})\s+(\w+)/.exec(text);
         if (match && match.length === 3) {
             const target = match[1];
             let userId: number;
@@ -111,7 +111,7 @@ export class WalletController extends BaseController<WalletController> {
             return;
         }
 
-        const match = /^\/transfer(?:@[\w_]+)?\s+(\d+|@[\w+_]{5,32})\s+(\w+)\s+(\d+.?\d*)/.exec(message.text);
+        const match = /^\/transfer(?:@[\w_]+)?\s+(\d+|@[\w_]{5,32})\s+(\w+)\s+(\d+.?\d*)/.exec(message.text);
         if (!match || match.length < 4) {
             await replyWithMarkdown("格式不对，请输入 `/transfer [matataki id] [symbol] [amount]`");
             return;
