@@ -27,22 +27,22 @@ type Transfer = {
 };
 
 const Msgs = {
-  grabMessage: ({ unit, fromName, toName, amount, description }: Transfer,
-  txHash:string) =>
-    `[${toName}抢到了${fromName}的一个${description}红包, 价值 ${amount / 10000} ${unit}]`
+    grabMessage: ({ unit, fromName, toName, amount, description }: Transfer,
+        txHash:string) =>
+        `[${toName}抢到了${fromName}的一个${description}红包, 价值 ${amount / 10000} ${unit}]`
     + `(https://rinkeby.etherscan.io/tx/${txHash})`
 };
 
 @Service(Injections.RedEnvelopeService)
 export class RedEnvelopeServiceImpl implements IRedEnvelopeService {
-  constructor(@inject(Injections.MatatakiService) private matatakiService: IMatatakiService) {
+    constructor(@inject(Injections.MatatakiService) private matatakiService: IMatatakiService) {
     //process.on('SIGINT', this.beforeExit.bind(this));
-  }
+    }
   private envelopes: Envelope[] = new Array();
   private removeEmptyEnvelopes() {
-    this.envelopes = this.envelopes.filter(({ quantity, takenUsers }) => {
-      return takenUsers.length < quantity;
-    });
+      this.envelopes = this.envelopes.filter(({ quantity, takenUsers }) => {
+          return takenUsers.length < quantity;
+      });
   }
   registerEnvelope(msgCtx:MessageContext,user: MatatakiUser, unit: string, amountArr: number[],
     quantity: number, description: string) {
@@ -87,6 +87,7 @@ export class RedEnvelopeServiceImpl implements IRedEnvelopeService {
       }
     }));
     return mixedRes.filter(Boolean) as MessageContext[];
+
   }
   private beforeExit() {
   }

@@ -12,6 +12,7 @@ import { IBotService, IMatatakiService, IWeb3Service, ILoggerService } from "#/s
 import { BaseController } from ".";
 import { table } from "table";
 import { allPromiseSettled } from "#/utils";
+import moment = require("moment");
 
 @Controller("group")
 export class GroupController extends BaseController<GroupController> {
@@ -517,5 +518,72 @@ Fan 票：${info.minetoken.symbol}
 
         await reply("您现在可以进入该群：：", Markup.inlineKeyboard([button]).extra());
         return true;
+    }
+
+    @Command("ban", { ignorePrefix: true })
+    async banMember({ message, replyWithMarkdown, telegram }: MessageHandlerContext) {
+        const { chat } = message;
+
+        if (chat.type !== "group" && chat.type !== "supergroup") {
+            await replyWithMarkdown("该命令仅限群聊里使用");
+            return;
+        }
+
+        const match = /^\/ban(?:@[\w_]+)?\s+@([\w_]{5,32})\s+(\d+)/.exec(message.text);
+        if (!match || match.length < 3) {
+            await replyWithMarkdown("格式不对，请输入 `/ban [@用户名] [禁言分钟数]`");
+            return;
+        }
+
+        const sender = message.from.id;
+        const senderInfo = await this.matatakiService.getAssociatedInfo(sender);
+        if (!senderInfo.user) {
+            await replyWithMarkdown("抱歉，您没有在 瞬Matataki 绑定该 Telegram 帐号");
+            return;
+        }
+
+        const target = match[1];
+        const targetId = await this.userRepo.getIdByUsername(target);
+        if (!targetId) {
+            await replyWithMarkdown("抱歉，对方还没有同步用户名到数据库里");
+            return;
+        }
+
+        const group = await this.groupRepo.getGroup(chat.id);
+        const creatorInfo = await this.matatakiService.getAssociatedInfo(Number(group.creatorId));
+        if (!creatorInfo.user) {
+            await replyWithMarkdown("抱歉，目标帐号没有在 瞬Matataki 绑定 Telegram 帐号");
+            return;
+        }
+
+        const symbol = creatorInfo.minetoken!.symbol;
+        const transactionMessage = await replyWithMarkdown("禁言中...");
+
+        let finalMessage;
+        try {
+            if (message.from.id !== Number(group.creatorId)) {
+                await this.matatakiService.transfer(senderInfo.user.id, creatorInfo.user.id, symbol, 10000);
+            }
+
+            const time = Number(match[2]);
+            const untilDateTimestamp = Math.round(Date.now() / 1000) + time * 60;
+
+            // @ts-ignore
+            await telegram.restrictChatMember(chat.id, targetId, {
+                until_date: untilDateTimestamp,
+                can_send_messages: false,
+                can_send_media_messages: false,
+                can_send_other_messages: false,
+                can_add_web_page_previews: false,
+            });
+
+            const untilDate = moment.unix(untilDateTimestamp);
+
+            finalMessage = `禁言成功 (禁言至 ${untilDate.format("lll")})`;
+        } catch {
+            finalMessage = "禁言失败";
+        }
+
+        await telegram.editMessageText(chat.id, transactionMessage.message_id, undefined, finalMessage);
     }
 }
