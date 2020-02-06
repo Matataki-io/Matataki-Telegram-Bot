@@ -27,7 +27,7 @@ const Msgs = {
   grabMessage: ({ unit, fromName, toName, amount, description }: Transfer,
   txHash:string) =>
     `[${toName}抢到了${fromName}的一个${description}红包, 价值 ${amount / 10000} ${unit}]`
-    + `(https://ropsten.etherscan.io/tx/${txHash})`
+    + `(https://rinkeby.etherscan.io/tx/${txHash})`
 };
 
 @Service(Injections.RedEnvelopeService)
