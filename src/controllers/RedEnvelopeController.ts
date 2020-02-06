@@ -30,6 +30,12 @@ interface Arguments {
   quantity: number;
   description: string;
 };
+
+type MessageContext = {
+  messages: string;
+  messageId: number;
+  chatId: number;
+};
 function err(errMsg: string): never {
   throw new Error(errMsg + "\n" + Msgs.helpMessage);
 }
@@ -77,13 +83,16 @@ export class RedEnvelopeController extends BaseController<RedEnvelopeController>
     cmd : string,
     distribution: (amount: number, quantity: number) => number[]) {
     try {
-      let args: Arguments = this.parseArgument(cmd,ctx.message.text);
+      const args: Arguments = this.parseArgument(cmd,ctx.message.text);
       let sender = await this.getMatatakiUser(ctx.message.from.id);
       sender.name = this.getTgName(ctx);
-      let amountArr = distribution(args.amount, args.quantity);
-      this.redEnvelopService.registerEnvelope(sender,
+      const amountArr = distribution(args.amount, args.quantity);
+      const messages = Msgs.successMessage(sender.name);
+      const { message_id } = await ctx.replyWithMarkdown(messages);
+      this.redEnvelopService.registerEnvelope({
+        messages, messageId: message_id, chatId : ctx.message.chat.id
+      }, sender,
         args.unit.toUpperCase(), amountArr, args.quantity, args.description);
-      ctx.reply(Msgs.successMessage(sender.name));
     }
     catch (e) {
       await ctx.reply(e.message);
@@ -96,7 +105,13 @@ export class RedEnvelopeController extends BaseController<RedEnvelopeController>
       let user = await this.getMatatakiUser(ctx.message.from.id);
       user.name = this.getTgName(ctx);
       let msgs = await this.redEnvelopService.grab(user);
-      await ctx.replyWithMarkdown(Msgs.grabMessage(msgs));
+      for (const { messageId, chatId, messages } of msgs) {
+        await ctx.telegram.editMessageText(chatId, messageId, undefined,
+          messages, {
+          parse_mode: 'Markdown',
+          disable_web_page_preview: true
+        });
+      }
     } catch (e) {
       await ctx.reply(e.message);
     }

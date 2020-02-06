@@ -4,7 +4,9 @@ import { IRedEnvelopeService, IMatatakiService } from "#/services";
 import { inject } from "inversify";
 
 type MatatakiUser = { id: number, name: string };
+type MessageContext = { messages: string, messageId: number,chatId : number};
 type Envelope = {
+  msgCtx: MessageContext,
   sender: MatatakiUser,
   unit: string,
   amountArr: number[],
@@ -20,7 +22,8 @@ type Transfer = {
   to: number,
   amount: number,
   unit: string,
-  description: string
+  description: string,
+  msgCtx: MessageContext
 };
 
 const Msgs = {
@@ -41,9 +44,10 @@ export class RedEnvelopeServiceImpl implements IRedEnvelopeService {
       return takenUsers.length < quantity;
     });
   }
-  registerEnvelope(user: MatatakiUser, unit: string, amountArr: number[],
+  registerEnvelope(msgCtx:MessageContext,user: MatatakiUser, unit: string, amountArr: number[],
     quantity: number, description: string) {
     this.envelopes.push({
+      msgCtx,
       sender: user,
       unit,
       amountArr,
@@ -52,35 +56,37 @@ export class RedEnvelopeServiceImpl implements IRedEnvelopeService {
       description
     });
   }
-  async grab({ id, name }: MatatakiUser): Promise<string[]> {
+  async grab({ id, name }: MatatakiUser): Promise<MessageContext[]> {
     let validEnvelopes = this.envelopes.filter(({ takenUsers, quantity }) => {
       return !takenUsers.includes(id) && takenUsers.length < quantity;
     });
-    let transfers: Transfer[] = validEnvelopes.map(({ unit, amountArr, sender, description, takenUsers }) => {
+    let transfers: Transfer[] = validEnvelopes.map(({ unit, amountArr, sender,
+      description, takenUsers, msgCtx }) => {
       takenUsers.push(id);
       return {
         unit, amount: amountArr[takenUsers.length-1],
         from: sender.id, fromName: sender.name,
         to: id, toName: name,
-        description
+        description,msgCtx
       };
     });
     let msgs = await this.processTransfers(transfers);
     this.removeEmptyEnvelopes();
     return msgs;
   }
-  private async processTransfers(transfers: Transfer[]): Promise<string[]> {
+  private async processTransfers(transfers: Transfer[]): Promise<MessageContext[]> {
     let mixedRes = await Promise.all(transfers.map(async (transfer: Transfer) => {
       try {
-        let { amount, from, to, unit } = transfer;
+        let { amount, from, to, unit,msgCtx } = transfer;
         let txHash = await this.matatakiService.transfer(from,
           to, unit, amount);
-        return Msgs.grabMessage(transfer,txHash);
+        msgCtx.messages += '\n' + Msgs.grabMessage(transfer, txHash);
+        return msgCtx;
       } catch (e) {
-        return undefined
+        return undefined;
       }
     }));
-    return mixedRes.filter(Boolean) as string[];
+    return mixedRes.filter(Boolean) as MessageContext[];
   }
   private beforeExit() {
   }

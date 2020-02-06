@@ -11579,7 +11579,7 @@ tcp-port-used@^1.0.1:
     debug "4.1.0"
     is2 "2.0.1"
 
-telegraf@^3.35.0:
+telegraf@^3.36.0:
   version "3.36.0"
   resolved "https://registry.npm.taobao.org/telegraf/download/telegraf-3.36.0.tgz#eab1160159df6033d3cb92ac990902523277822a"
   integrity sha1-6rEWAVnfYDPTy5KsmQkCUjJ3gio=
