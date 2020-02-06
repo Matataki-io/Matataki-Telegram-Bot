@@ -4,8 +4,6 @@ module.exports = {
         "node": true
     },
     "extends": [
-        "eslint:recommended",
-        "plugin:@typescript-eslint/eslint-recommended"
     ],
     "globals": {
         "Atomics": "readonly",
@@ -20,5 +18,6 @@ module.exports = {
         "@typescript-eslint"
     ],
     "rules": {
+        "indent": ["error", 4]
     }
 };
