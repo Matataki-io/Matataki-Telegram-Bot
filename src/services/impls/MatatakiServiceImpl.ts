@@ -2,7 +2,7 @@ import axios, { AxiosInstance, AxiosError } from "axios";
 
 import { Injections } from "#/constants";
 import { Service } from "#/decorators";
-import { AssociatedInfo, MinetokenInfo } from "#/definitions";
+import { AssociatedInfo, MinetokenInfo, TransferInfo } from "#/definitions";
 import { IMatatakiService } from "#/services";
 
 type ApiResponse<T> = {
@@ -150,15 +150,16 @@ export class MatatakiServiceImpl implements IMatatakiService {
             throw new Error("Failed to request user's minetoken");
         }
     }
-
+   
     async transfer(from: number, to: number, symbol: string, amount: number) {
         const minetokenId = await this.getMinetokenIdFromSymbol(symbol);
 
-        try {
-            await this.axiosForTransfer.post<ApiResponse<any>>(`/_internal_bot/minetoken/${minetokenId}/transferFrom`, {
+      try {
+        const response = await this.axiosForTransfer.post<ApiResponse<TransferInfo>>(`/_internal_bot/minetoken/${minetokenId}/transferFrom`, {
                 from, to,
                 value: amount,
-            });
+        });
+        return response.data.data.tx_hash;
         } catch (e) {
             const { response } = e as AxiosError;
 

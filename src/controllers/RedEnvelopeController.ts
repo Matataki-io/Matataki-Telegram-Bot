@@ -96,7 +96,7 @@ export class RedEnvelopeController extends BaseController<RedEnvelopeController>
       let user = await this.getMatatakiUser(ctx.message.from.id);
       user.name = this.getTgName(ctx);
       let msgs = await this.redEnvelopService.grab(user);
-      await ctx.reply(Msgs.grabMessage(msgs));
+      await ctx.replyWithMarkdown(Msgs.grabMessage(msgs));
     } catch (e) {
       await ctx.reply(e.message);
     }

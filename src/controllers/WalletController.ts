@@ -103,9 +103,9 @@ export class WalletController extends BaseController<WalletController> {
         const amount = Number(match[3]) * 10000;
 
         try {
-            await this.matatakiService.transfer(info.user.id, userId, symbol, amount);
+            let tx_hash=await this.matatakiService.transfer(info.user.id, userId, symbol, amount);
 
-            await replyWithMarkdown("转账成功");
+          await replyWithMarkdown(`[转账成功](https://ropsten.etherscan.io/tx/${tx_hash})\n`);
         } catch {
             await replyWithMarkdown("转账失败");
         }
