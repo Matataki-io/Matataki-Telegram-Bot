@@ -2,7 +2,16 @@ import { config } from "dotenv";
 
 config();
 
+import path from "path";
+import fs from "fs";
+
 (function checkRequirement() {
+    const huskyDirectory = path.resolve(__dirname) + "/../node_modules/husky";
+    if (!fs.existsSync(huskyDirectory)) {
+        console.error("Husky package required. Please run 'npm install' or 'yarn'");
+        process.exit(1);
+    }
+
     const requiredEnvironmentVariables = [
         "BOT_TOKEN",
         "INFURA_ID",
