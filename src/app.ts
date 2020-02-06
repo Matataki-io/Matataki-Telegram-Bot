@@ -1,6 +1,8 @@
 import { config } from "dotenv";
+import moment from "moment";
 
 config();
+moment.locale("zh-cn");
 
 import path from "path";
 import fs from "fs";
