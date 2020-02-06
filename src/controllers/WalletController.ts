@@ -31,6 +31,11 @@ export class WalletController extends BaseController<WalletController> {
             let userId: number;
             if (target[0] === "@") {
                 const targetId = await this.userRepo.getIdByUsername(target.slice(1));
+                if (!targetId) {
+                    await replyWithMarkdown("抱歉，对方还没有同步用户名到数据库里");
+                    return;
+                }
+
                 const targetInfo = await this.matatakiService.getAssociatedInfo(targetId);
                 if (!targetInfo.user) {
                     throw new Error("What happended?");
@@ -123,6 +128,10 @@ export class WalletController extends BaseController<WalletController> {
         let userId: number;
         if (target[0] === "@") {
             const targetId = await this.userRepo.getIdByUsername(target.slice(1));
+            if (!targetId) {
+                await replyWithMarkdown("抱歉，对方还没有同步用户名到数据库里");
+                return;
+            }
 
             const targetInfo = await this.matatakiService.getAssociatedInfo(targetId);
             if (!targetInfo.user) {
