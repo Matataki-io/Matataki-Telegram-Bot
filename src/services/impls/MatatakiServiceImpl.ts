@@ -154,12 +154,12 @@ export class MatatakiServiceImpl implements IMatatakiService {
     async transfer(from: number, to: number, symbol: string, amount: number) {
         const minetokenId = await this.getMinetokenIdFromSymbol(symbol);
 
-      try {
-        const response = await this.axiosForTransfer.post<ApiResponse<TransferInfo>>(`/_internal_bot/minetoken/${minetokenId}/transferFrom`, {
+        try {
+            const response = await this.axiosForTransfer.post<ApiResponse<TransferInfo>>(`/_internal_bot/minetoken/${minetokenId}/transferFrom`, {
                 from, to,
                 value: amount,
-        });
-        return response.data.data.tx_hash;
+            });
+            return response.data.data.tx_hash;
         } catch (e) {
             const { response } = e as AxiosError;
 
