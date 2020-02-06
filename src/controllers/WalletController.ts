@@ -46,7 +46,7 @@ export class WalletController extends BaseController<WalletController> {
                 userId = Number(match[1]);
             }
 
-            const symbol = match[2];
+            const symbol = match[2].toUpperCase();
 
             await this.queryUserToken(ctx, userId, symbol);
             return;
