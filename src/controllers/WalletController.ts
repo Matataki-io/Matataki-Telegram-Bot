@@ -25,15 +25,21 @@ export class WalletController extends BaseController<WalletController> {
         const { message, replyWithMarkdown } = ctx;
         const { text } = message;
 
-        const match = /^\/query(?:@[\w_]+)?\s+(\d+|@[\w+_]{5,32})\s+(\w+)/.exec(text);
+        const match = /^\/query(?:@[\w_]+)?\s+(\d+|@[\w_]{5,32})\s+(\w+)/.exec(text);
         if (match && match.length === 3) {
             const target = match[1];
             let userId: number;
             if (target[0] === "@") {
                 const targetId = await this.userRepo.getIdByUsername(target.slice(1));
+                if (!targetId) {
+                    await replyWithMarkdown("抱歉，对方还没有同步用户名到数据库里");
+                    return;
+                }
+
                 const targetInfo = await this.matatakiService.getAssociatedInfo(targetId);
                 if (!targetInfo.user) {
-                    throw new Error("What happended?");
+                    await replyWithMarkdown("抱歉，目标帐号没有在 瞬Matataki 绑定 Telegram 帐号");
+                    return;
                 }
 
                 userId = targetInfo.user.id;
@@ -41,7 +47,7 @@ export class WalletController extends BaseController<WalletController> {
                 userId = Number(match[1]);
             }
 
-            const symbol = match[2];
+            const symbol = match[2].toUpperCase();
 
             await this.queryUserToken(ctx, userId, symbol);
             return;
@@ -111,7 +117,7 @@ export class WalletController extends BaseController<WalletController> {
           return;
       }
 
-      const match = /^\/transfer(?:@[\w_]+)?\s+(\d+|@[\w+_]{5,32})\s+(\w+)\s+(\d+.?\d*)/.exec(message.text);
+      const match = /^\/transfer(?:@[\w_]+)?\s+(\d+|@[\w_]{5,32})\s+(\w+)\s+(\d+.?\d*)/.exec(message.text);
       if (!match || match.length < 4) {
           await replyWithMarkdown("格式不对，请输入 `/transfer [matataki id] [symbol] [amount]`");
           return;
@@ -123,6 +129,10 @@ export class WalletController extends BaseController<WalletController> {
       let userId: number;
       if (target[0] === "@") {
           const targetId = await this.userRepo.getIdByUsername(target.slice(1));
+          if (!targetId) {
+              await replyWithMarkdown("抱歉，对方还没有同步用户名到数据库里");
+              return;
+          }
 
           const targetInfo = await this.matatakiService.getAssociatedInfo(targetId);
           if (!targetInfo.user) {
