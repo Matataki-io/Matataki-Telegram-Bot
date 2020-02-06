@@ -12,6 +12,7 @@ import { IBotService, IMatatakiService, IWeb3Service, ILoggerService } from "#/s
 import { BaseController } from ".";
 import { table } from "table";
 import { allPromiseSettled } from "#/utils";
+import moment = require("moment");
 
 @Controller("group")
 export class GroupController extends BaseController<GroupController> {
@@ -565,17 +566,20 @@ Fan 票：${info.minetoken.symbol}
             }
 
             const time = Number(match[2]);
+            const untilDateTimestamp = Math.round(Date.now() / 1000) + time * 60;
 
             // @ts-ignore
             await telegram.restrictChatMember(chat.id, targetId, {
-                until_date: Math.round(Date.now() / 1000) + time * 60,
+                until_date: untilDateTimestamp,
                 can_send_messages: false,
                 can_send_media_messages: false,
                 can_send_other_messages: false,
                 can_add_web_page_previews: false,
             });
 
-            finalMessage = "禁言成功";
+            const untilDate = moment.unix(untilDateTimestamp);
+
+            finalMessage = `禁言成功 (禁言至 ${untilDate.format("lll")})`;
         } catch {
             finalMessage = "禁言失败";
         }
