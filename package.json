@@ -23,6 +23,7 @@
     "eth-sig-util": "^2.5.2",
     "inversify": "^5.0.1",
     "log4js": "^6.1.1",
+    "moment": "^2.24.0",
     "mysql2": "^2.1.0",
     "pg": "^7.18.1",
     "reflect-metadata": "^0.1.13",
