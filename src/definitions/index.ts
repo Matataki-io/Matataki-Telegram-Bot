@@ -6,3 +6,4 @@ export * from "./GroupRequirement";
 export * from "./MatatakiUserInfo";
 export * from "./MessageHandler";
 export * from "./MinetokenInfo";
+export * from "./TransferInfo";

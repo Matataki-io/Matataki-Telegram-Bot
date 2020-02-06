@@ -24,8 +24,10 @@ type Transfer = {
 };
 
 const Msgs = {
-  grabMessage: ({ unit, fromName, toName, amount, description }: Transfer) =>
-    `${toName}抢到了${fromName}的一个${description}红包, 价值 ${amount/10000} ${unit}`
+  grabMessage: ({ unit, fromName, toName, amount, description }: Transfer,
+  txHash:string) =>
+    `[${toName}抢到了${fromName}的一个${description}红包, 价值 ${amount / 10000} ${unit}]`
+    + `(https://rinkeby.etherscan.io/tx/${txHash})`
 };
 
 @Service(Injections.RedEnvelopeService)
@@ -71,9 +73,9 @@ export class RedEnvelopeServiceImpl implements IRedEnvelopeService {
     let mixedRes = await Promise.all(transfers.map(async (transfer: Transfer) => {
       try {
         let { amount, from, to, unit } = transfer;
-        await this.matatakiService.transfer(from,
+        let txHash = await this.matatakiService.transfer(from,
           to, unit, amount);
-        return Msgs.grabMessage(transfer);
+        return Msgs.grabMessage(transfer,txHash);
       } catch (e) {
         return undefined
       }
