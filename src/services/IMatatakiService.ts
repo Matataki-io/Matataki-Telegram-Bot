@@ -1,4 +1,4 @@
-import { AssociatedInfo, MinetokenInfo } from "#/definitions";
+import { AssociatedInfo, MinetokenInfo, MatatakiUserInfo } from "#/definitions";
 
 export interface IMatatakiService {
     readonly urlPrefix: string;
@@ -10,4 +10,5 @@ export interface IMatatakiService {
     getUserMinetoken(userId: number, symbol: string): Promise<number>;
     transfer(from: number, to: number, symbol: string, amount: number): Promise<string>;
     getPrice(symbol: string): Promise<number>;
+    getInfoByMatatakiId(matatakiId: number): Promise<MatatakiUserInfo>;
 }

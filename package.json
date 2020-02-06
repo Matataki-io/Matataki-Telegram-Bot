@@ -28,7 +28,7 @@
     "reflect-metadata": "^0.1.13",
     "socks-proxy-agent": "^4.0.2",
     "table": "^5.4.6",
-    "telegraf": "^3.35.0",
+    "telegraf": "^3.36.0",
     "typeorm": "^0.2.22",
     "web3": "^1.2.4"
   },

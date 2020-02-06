@@ -1,9 +1,5 @@
 const { INFURA_ID } = process.env;
 
-if (process.env.NODE_ENV !== "test") {
-    console.assert(INFURA_ID);
-}
-
 // Infura API Endpoints for different networks
 const networks = {
     MAINNET: `https://mainnet.infura.io/v3/${INFURA_ID}`,

@@ -1265,7 +1265,12 @@
   resolved "https://registry.npm.taobao.org/@types/node/download/@types/node-12.12.22.tgz?cache=0&sync_timestamp=1577380234433&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2F%40types%2Fnode%2Fdownload%2F%40types%2Fnode-12.12.22.tgz#b8d9eae3328b96910a373cf06ac8d3c5abe9c200"
   integrity sha1-uNnq4zKLlpEKNzzwasjTxavpwgA=
 
-"@types/node@^13.1.0", "@types/node@^13.1.2":
+"@types/node@^13.1.0":
+  version "13.7.0"
+  resolved "https://registry.npm.taobao.org/@types/node/download/@types/node-13.7.0.tgz#b417deda18cf8400f278733499ad5547ed1abec4"
+  integrity sha1-tBfe2hjPhADyeHM0ma1VR+0avsQ=
+
+"@types/node@^13.1.2":
   version "13.1.2"
   resolved "https://registry.npm.taobao.org/@types/node/download/@types/node-13.1.2.tgz?cache=0&sync_timestamp=1577727780099&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2F%40types%2Fnode%2Fdownload%2F%40types%2Fnode-13.1.2.tgz#fe94285bf5e0782e1a9e5a8c482b1c34465fa385"
   integrity sha1-/pQoW/XgeC4anlqMSCscNEZfo4U=
@@ -11575,9 +11580,9 @@ tcp-port-used@^1.0.1:
     is2 "2.0.1"
 
 telegraf@^3.35.0:
-  version "3.35.0"
-  resolved "https://registry.npm.taobao.org/telegraf/download/telegraf-3.35.0.tgz#edf454ef3239efa1b754c5cd24407d56863e586c"
-  integrity sha1-7fRU7zI576G3VMXNJEB9VoY+WGw=
+  version "3.36.0"
+  resolved "https://registry.npm.taobao.org/telegraf/download/telegraf-3.36.0.tgz#eab1160159df6033d3cb92ac990902523277822a"
+  integrity sha1-6rEWAVnfYDPTy5KsmQkCUjJ3gio=
   dependencies:
     "@types/node" "^13.1.0"
     debug "^4.0.1"

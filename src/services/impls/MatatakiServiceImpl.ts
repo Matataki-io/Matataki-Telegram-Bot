@@ -2,7 +2,7 @@ import axios, { AxiosInstance, AxiosError } from "axios";
 
 import { Injections } from "#/constants";
 import { Service } from "#/decorators";
-import { AssociatedInfo, MinetokenInfo, TransferInfo } from "#/definitions";
+import { AssociatedInfo, MinetokenInfo, MatatakiUserInfo, TransferInfo } from "#/definitions";
 import { IMatatakiService } from "#/services";
 
 type ApiResponse<T> = {
@@ -200,6 +200,16 @@ export class MatatakiServiceImpl implements IMatatakiService {
             return id;
         } catch (e) {
             throw new Error("Failed to get minetoken id");
+        }
+    }
+
+    async getInfoByMatatakiId(matatakiId: number): Promise<MatatakiUserInfo> {
+        try {
+            const { data: { data } } = await this.axios.get<ApiResponse<MatatakiUserInfo>>(`/user/${matatakiId}`);
+
+            return data;
+        } catch (e) {
+            throw new Error("Failed to get matataki user info");
         }
     }
 }
