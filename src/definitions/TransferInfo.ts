@@ -1,3 +1,3 @@
 export type TransferInfo = {
-  tx_hash: string;
+    tx_hash: string;
 }

@@ -14,9 +14,9 @@ import { Extra, Markup } from "telegraf";
 @Controller("wallet")
 export class WalletController extends BaseController<WalletController> {
     constructor(
-    @inject(Injections.MatatakiService) private matatakiService: IMatatakiService,
-    @inject(Injections.Web3Service) private web3Service: IWeb3Service,
-    @InjectRepository(User) private userRepo: IUserRepository) {
+        @inject(Injections.MatatakiService) private matatakiService: IMatatakiService,
+        @inject(Injections.Web3Service) private web3Service: IWeb3Service,
+        @InjectRepository(User) private userRepo: IUserRepository) {
         super();
     }
 

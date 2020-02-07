@@ -14,6 +14,6 @@ export interface IBotService {
     getMember(groupId: number, memberId: number): Promise<ChatMember>;
     kickMember(groupId: number, memberId: number): Promise<any>;
     sendMessage(memberId: number, message: string): Promise<Message>;
-    getGroupInfo(group: Group) : Promise<Chat>;
-    getGroupInfos(groups: Group[]) : Promise<Chat[]>;
+    getGroupInfo(group: Group): Promise<Chat>;
+    getGroupInfos(groups: Group[]): Promise<Chat[]>;
 }
