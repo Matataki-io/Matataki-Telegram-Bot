@@ -12,7 +12,8 @@ module.exports = {
     parser: "@typescript-eslint/parser",
     parserOptions: {
         ecmaVersion: 2018,
-        sourceType: "module"
+        sourceType: "module",
+        project: "./tsconfig.json"
     },
     plugins: [
         "@typescript-eslint"
@@ -35,5 +36,8 @@ module.exports = {
                 }
             }
         }],
+        "@typescript-eslint/prefer-optional-chain": "error",
+        "@typescript-eslint/prefer-nullish-coalescing": "error",
+        "@typescript-eslint/prefer-string-starts-ends-with": "error",
     }
 };

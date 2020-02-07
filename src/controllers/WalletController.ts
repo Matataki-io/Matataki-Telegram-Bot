@@ -29,7 +29,7 @@ export class WalletController extends BaseController<WalletController> {
         if (match && match.length === 3) {
             const target = match[1];
             let userId: number;
-            if (target[0] === "@") {
+            if (target.startsWith("@")) {
                 const targetId = await this.userRepo.getIdByUsername(target.slice(1));
                 if (!targetId) {
                     await replyWithMarkdown("抱歉，对方还没有同步用户名到数据库里");
@@ -127,7 +127,7 @@ export class WalletController extends BaseController<WalletController> {
 
         const target = match[1];
         let userId: number;
-        if (target[0] === "@") {
+        if (target.startsWith("@")) {
             const targetId = await this.userRepo.getIdByUsername(target.slice(1));
             if (!targetId) {
                 await replyWithMarkdown("抱歉，对方还没有同步用户名到数据库里");

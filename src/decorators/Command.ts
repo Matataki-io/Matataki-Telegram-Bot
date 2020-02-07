@@ -19,7 +19,7 @@ export function Command(name: string, options?: CommandBindingOptions): MethodDe
         commands.push({
             name,
             methodName,
-            ignorePrefix: options?.ignorePrefix || false,
+            ignorePrefix: options?.ignorePrefix ?? false,
         });
     };
 }

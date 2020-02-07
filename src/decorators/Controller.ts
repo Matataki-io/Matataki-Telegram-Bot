@@ -11,7 +11,7 @@ export function Controller(prefix?: string): ClassDecorator {
 
         decorate(injectable(), target);
 
-        Reflect.defineMetadata(MetadataKeys.ControllerPrefix, prefix || "/", target);
+        Reflect.defineMetadata(MetadataKeys.ControllerPrefix, prefix ?? "/", target);
 
         if (Reflect.hasMetadata(MetadataKeys.CommandNames, target)) {
             return;
