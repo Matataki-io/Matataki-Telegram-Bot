@@ -8,7 +8,7 @@ export class UserRepositoryImpl extends BaseRepository<User> implements IUserRep
         super(User);
     }
 
-    async ensureUser(id: number) {
+    async ensureUser(id: number, username?: string) {
         let user = await this.repository.findOne(id);
         if (user) {
             return user;
@@ -16,6 +16,7 @@ export class UserRepositoryImpl extends BaseRepository<User> implements IUserRep
 
         user = this.repository.create();
         user.id = id.toString();
+        user.username = username ?? null;
 
         await this.repository.save(user);
 
@@ -26,13 +27,6 @@ export class UserRepositoryImpl extends BaseRepository<User> implements IUserRep
         return this.repository.createQueryBuilder("user").innerJoinAndSelect("user.groups", "group", "group.active").where("user.id = :id", { id }).getOne();
     }
 
-    async setUsername(id: number, username: string): Promise<void> {
-        const user = await this.ensureUser(id);
-
-        user.username = username;
-
-        await this.repository.save(user);
-    }
     async getIdByUsername(username: string): Promise<number | null> {
         const user = await this.repository.findOne({ where: { username }});
         if (!user) {
