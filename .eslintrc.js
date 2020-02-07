@@ -19,13 +19,16 @@ module.exports = {
         "@typescript-eslint"
     ],
     rules: {
+        "eol-last": ["error", "always"],
+        "key-spacing": ["error", { beforeColon: false }],
         "@typescript-eslint/comma-spacing": ["error", {
             before: false,
             after: true
         }],
-        "eol-last": ["error", "always"],
         "@typescript-eslint/indent": ["error", 4],
-        "key-spacing": ["error", { beforeColon: false }],
+        "@typescript-eslint/prefer-optional-chain": "error",
+        "@typescript-eslint/prefer-nullish-coalescing": "error",
+        "@typescript-eslint/prefer-string-starts-ends-with": "error",
         "@typescript-eslint/type-annotation-spacing": ["error", {
             before: false,
             after: true,
@@ -36,8 +39,5 @@ module.exports = {
                 }
             }
         }],
-        "@typescript-eslint/prefer-optional-chain": "error",
-        "@typescript-eslint/prefer-nullish-coalescing": "error",
-        "@typescript-eslint/prefer-string-starts-ends-with": "error",
     }
 };
