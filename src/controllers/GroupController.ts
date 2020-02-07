@@ -381,7 +381,7 @@ Fan 票：${info.minetoken.symbol}
             return;
         }
 
-        const members = await Promise.all(Array.from(acceptedUsers).map(member => this.userRepo.ensureUser(member.id)));
+        const members = await Promise.all(Array.from(acceptedUsers).map(member => this.userRepo.ensureUser(member.id, member.username)));
 
         await this.groupRepo.addMembers(group, members);
     }

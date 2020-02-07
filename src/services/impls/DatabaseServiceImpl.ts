@@ -23,17 +23,17 @@ class TypeORMLogger implements Logger {
     }
     log(level: "log" | "info" | "warn", message: any, queryRunner?: QueryRunner) {
         switch (level) {
-        case "log":
-            this.logger.trace(LogCategories.TypeORM, message);
-            break;
+            case "log":
+                this.logger.trace(LogCategories.TypeORM, message);
+                break;
 
-        case "info":
-            this.logger.info(LogCategories.TypeORM, message);
-            break;
+            case "info":
+                this.logger.info(LogCategories.TypeORM, message);
+                break;
 
-        case "warn":
-            this.logger.warn(LogCategories.TypeORM, message);
-            break;
+            case "warn":
+                this.logger.warn(LogCategories.TypeORM, message);
+                break;
         }
     }
 }

@@ -150,7 +150,7 @@ export class MatatakiServiceImpl implements IMatatakiService {
             throw new Error("Failed to request user's minetoken");
         }
     }
-   
+
     async transfer(from: number, to: number, symbol: string, amount: number) {
         const minetokenId = await this.getMinetokenIdFromSymbol(symbol);
 

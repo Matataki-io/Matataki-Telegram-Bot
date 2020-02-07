@@ -21,7 +21,7 @@ export class SyncController extends BaseController<SyncController> {
             return;
         }
 
-        await this.userRepo.setUsername(message.from.id, username);
+        await this.userRepo.ensureUser(message.from.id, username);
 
         await reply("OK");
     }

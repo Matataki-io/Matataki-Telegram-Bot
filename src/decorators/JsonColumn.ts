@@ -2,7 +2,7 @@ import { Column, ColumnOptions } from "typeorm";
 
 declare global {
     namespace globalThis {
-       var JsonColumnType: "jsonb" | "simple-json";
+        var JsonColumnType: "jsonb" | "simple-json";
     }
 }
 
