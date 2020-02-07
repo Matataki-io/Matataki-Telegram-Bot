@@ -147,6 +147,14 @@ export class HelpController extends BaseController<HelpController> {
     }
 
     @Action("help9")
+    async transfer(ctx: MessageHandlerContext) {
+        await ctx.answerCbQuery();
+        await ctx.telegram.sendMessage(ctx.chat!.id, `👉*如何使用转账功能*
+
+可以输入 \`/transfer [转账目标] [Fan票符号] [数量]\` 给目标转账指定数量的 Fan票，转账目标可以为 Matataki UID 或者 @ 后接 Telegram 帐号用户名（需要对方有执行 /syncusername）`, { parse_mode: 'Markdown', disable_web_page_preview: true });
+    }
+
+    @Action("help10")
     async anyQuestion(ctx: MessageHandlerContext) {
         await ctx.answerCbQuery();
         await ctx.telegram.sendMessage(ctx.chat!.id, `👉*我有别的问题*
