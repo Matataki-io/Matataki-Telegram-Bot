@@ -58,7 +58,7 @@ export class WalletController extends BaseController<WalletController> {
             return;
         }
 
-        await replyWithMarkdown("格式不对，暂时只接受 `/query` 和 `/query [Matataki UID] [Fan票 符号]`");
+        await replyWithMarkdown("格式不对，暂时只接受 `/query` 和 `/query [Matataki UID/@Telegram 用户名] [Fan票 符号]`");
     }
     private async queryMyTokens({ message, telegram }: MessageHandlerContext) {
         const id = message.from.id;
@@ -119,7 +119,7 @@ export class WalletController extends BaseController<WalletController> {
 
         const match = /^\/transfer(?:@[\w_]+)?\s+(\d+|@[\w_]{5,32})\s+(\w+)\s+(\d+.?\d*)/.exec(message.text);
         if (!match || match.length < 4) {
-            await replyWithMarkdown("格式不对，请输入 `/transfer [matataki id] [symbol] [amount]`");
+            await replyWithMarkdown("格式不对，请输入 `/transfer [Matataki UID/@Telegram 用户名] [symbol] [amount]`");
             return;
         }
 
