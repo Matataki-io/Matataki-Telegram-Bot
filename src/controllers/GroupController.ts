@@ -310,7 +310,7 @@ Fan 票：${info.minetoken.symbol}
             if (!creator) {
                 throw new Error("Impossible situation");
             }
-
+            /*
             const creatorId = creator.user.id;
             if (inviterId !== creatorId) {
                 await reply("邀请者不是群主，立即退出");
@@ -333,7 +333,7 @@ Fan 票：${info.minetoken.symbol}
                 await this.botService.sendMessage(creatorId, `**${groupName}** 现在是一个小群，对于机器人的正常工作存在一定影响，建议采取一些操作升级到大群。包括但不限于以下操作：
 - 临时转公开并设置群链接
 - 修改任意管理员操作权限`);
-            }
+            }*/
         }
 
         const acceptedUsers = new Set<TelegramUser>();
@@ -520,10 +520,77 @@ Fan 票：${info.minetoken.symbol}
         return true;
     }
 
+    @Command("kick", { ignorePrefix: true })
+    async kickMember({ message, replyWithMarkdown, telegram }: MessageHandlerContext) {
+        const { chat } = message;
+        
+        if (chat.type !== "group" && chat.type !== "supergroup") {
+            await replyWithMarkdown("该命令仅限群聊里使用");
+            return;
+        }
+
+        const match = /^\/kick(?:@[\w_]+)?\s+@([\w_]{5,32})\s+(\d+)/.exec(message.text);
+        if (!match || match.length < 3) {
+            await replyWithMarkdown("格式不对，请输入 `/kick [@用户名] [放逐分钟数]`");
+            return;
+        }
+
+        /*
+        const sender = message.from.id;
+        const senderInfo = await this.matatakiService.getAssociatedInfo(sender);
+        if (!senderInfo.user) {
+            await replyWithMarkdown("抱歉，您没有在 瞬Matataki 绑定该 Telegram 帐号");
+            return;
+        }*/
+        
+        const target = match[1];
+        const targetId = await this.userRepo.getIdByUsername(target);
+        if (!targetId) {
+            await replyWithMarkdown("抱歉，对方还没有同步用户名到数据库里");
+            return;
+        }
+    
+        // const group = await this.groupRepo.getGroup(chat.id);
+        
+        /*const creatorInfo = await this.matatakiService.getAssociatedInfo(Number(group.creatorId));
+        if (!creatorInfo.user) {
+            await replyWithMarkdown("抱歉，目标帐号没有在 瞬Matataki 绑定 Telegram 帐号");
+            return;
+        }*/
+
+       // const symbol = creatorInfo.minetoken!.symbol;
+        const transactionMessage = await replyWithMarkdown("放逐中...");
+
+        let finalMessage;
+        try {
+            /*
+            if (message.from.id !== Number(group.creatorId)) {
+                await this.matatakiService.transfer(senderInfo.user.id, creatorInfo.user.id, symbol, 10000);
+            }*/
+
+            const time = Number(match[2]);
+            const untilDateTimestamp = Math.round(Date.now() / 1000) + time * 60;
+
+            // @ts-ignore
+            
+            await telegram.kickChatMember(chat.id, targetId, untilDateTimestamp);
+
+            const untilDate = moment.unix(untilDateTimestamp);
+
+            finalMessage = `放逐成功 (放逐至 ${untilDate.format("lll")})`;
+        } catch {
+            replyWithMarkdown(targetId.toString());
+            replyWithMarkdown(chat.id.toString());            
+            finalMessage = "放逐失败！";
+        }
+
+        await telegram.editMessageText(chat.id, transactionMessage.message_id, undefined, finalMessage);
+    }    
+
     @Command("ban", { ignorePrefix: true })
     async banMember({ message, replyWithMarkdown, telegram }: MessageHandlerContext) {
         const { chat } = message;
-
+        
         if (chat.type !== "group" && chat.type !== "supergroup") {
             await replyWithMarkdown("该命令仅限群聊里使用");
             return;
@@ -535,40 +602,44 @@ Fan 票：${info.minetoken.symbol}
             return;
         }
 
+        /*
         const sender = message.from.id;
         const senderInfo = await this.matatakiService.getAssociatedInfo(sender);
         if (!senderInfo.user) {
             await replyWithMarkdown("抱歉，您没有在 瞬Matataki 绑定该 Telegram 帐号");
             return;
-        }
-
+        }*/
+        
         const target = match[1];
         const targetId = await this.userRepo.getIdByUsername(target);
         if (!targetId) {
             await replyWithMarkdown("抱歉，对方还没有同步用户名到数据库里");
             return;
         }
-
-        const group = await this.groupRepo.getGroup(chat.id);
-        const creatorInfo = await this.matatakiService.getAssociatedInfo(Number(group.creatorId));
+    
+        // const group = await this.groupRepo.getGroup(chat.id);
+        
+        /*const creatorInfo = await this.matatakiService.getAssociatedInfo(Number(group.creatorId));
         if (!creatorInfo.user) {
             await replyWithMarkdown("抱歉，目标帐号没有在 瞬Matataki 绑定 Telegram 帐号");
             return;
-        }
+        }*/
 
-        const symbol = creatorInfo.minetoken!.symbol;
+       // const symbol = creatorInfo.minetoken!.symbol;
         const transactionMessage = await replyWithMarkdown("禁言中...");
 
         let finalMessage;
         try {
+            /*
             if (message.from.id !== Number(group.creatorId)) {
                 await this.matatakiService.transfer(senderInfo.user.id, creatorInfo.user.id, symbol, 10000);
-            }
+            }*/
 
             const time = Number(match[2]);
             const untilDateTimestamp = Math.round(Date.now() / 1000) + time * 60;
 
             // @ts-ignore
+            
             await telegram.restrictChatMember(chat.id, targetId, {
                 until_date: untilDateTimestamp,
                 can_send_messages: false,
@@ -581,7 +652,7 @@ Fan 票：${info.minetoken.symbol}
 
             finalMessage = `禁言成功 (禁言至 ${untilDate.format("lll")})`;
         } catch {
-            finalMessage = "禁言失败";
+            finalMessage = "禁言失败！";
         }
 
         await telegram.editMessageText(chat.id, transactionMessage.message_id, undefined, finalMessage);
