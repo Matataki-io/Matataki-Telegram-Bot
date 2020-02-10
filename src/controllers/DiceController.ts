@@ -6,7 +6,16 @@ import { Injections } from "../constants";
 import { IMatatakiService } from "../services";
 import _ from 'lodash';
 const Msgs = {
-  rollMsg : (x:number) => `点数为${x}`
+  helpMessage : [],
+  rollMsg: (x: number) => `点数为${x}`,
+  errorMessage: "错误的指令格式。",
+  noUserMessage: "尚未绑定 瞬Matataki 账户",
+  cantGetUserInfo: "Matataki用户信息获取失败",
+}
+
+type MatatakiUser = {
+  name: string;
+  id: number;
 }
 @Controller('Dice')
 export class DiceController extends BaseController<DiceController>{
@@ -24,5 +33,12 @@ export class DiceController extends BaseController<DiceController>{
 
   private parseDiceArguments(txt :string) {
     const match = txt.match(/^\/new_game_roll(?:@[\w_]+)?\s+(\d*\.?\d*)\s+(\w+)/);
+  }
+
+  private async getMatatakiUser(ctx: MessageHandlerContext): Promise<MatatakiUser> {
+    let info = await asyncReplaceErr(this.matatakiService.getAssociatedInfo(tgid),
+      Msgs.cantGetUserInfo);
+    check(info.user, Msgs.noUserMessage);
+    return info.user as unknown as Promise<{ name: string, id: number }>;
   }
 }

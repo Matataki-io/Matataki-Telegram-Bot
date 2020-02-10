@@ -8,6 +8,7 @@ import { QueryController } from "./QueryController";
 import { HelpController } from "./HelpController";
 import { RedEnvelopeController } from "./RedEnvelopeController";
 import { SyncController } from "./SyncController";
+import { DiceController } from "./DiceController";
 
 export const controllers: ControllerConstructor[] = [
     DebugController,
@@ -18,5 +19,6 @@ export const controllers: ControllerConstructor[] = [
     GroupController,
     QueryController,
     RedEnvelopeController,
-    SyncController,
+  SyncController,
+  DiceController
 ];
