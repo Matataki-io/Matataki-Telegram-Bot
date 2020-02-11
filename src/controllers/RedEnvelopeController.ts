@@ -24,7 +24,8 @@ const Msgs = {
       "发了红包，快来抢吧!",
     grabMessage:
     (x: string[]) => x.length === 0 ? "一个红包也没抢到" :
-        x.join('\n')
+        x.join('\n'),
+    instruction: "前往 www.matataki.io 注册并绑定此TG账号即可参与抢红包啦！",
 };
 
 @Controller("RedEnvelope")
@@ -73,7 +74,12 @@ export class RedEnvelopeController extends BaseController<RedEnvelopeController>
             const _id = this.parseCbArg(data);
             await this.redEnvelopService.grab(user, ctx, _id);
         } catch (e) {
-            await ctx.reply([e.message, Msgs.helpMessage].join('\n'));
+            let array = [e.message, Msgs.helpMessage];
+            if (e.message === Msgs.noUserMessage) {
+                array = [e.message, Msgs.instruction];
+            }
+
+            await ctx.reply(array.join('\n'));
         }
     }
     @Action(/hongbao_resend \d+/)
@@ -85,7 +91,12 @@ export class RedEnvelopeController extends BaseController<RedEnvelopeController>
             const _id = this.parseCbArg(data);
             await this.redEnvelopService.resendEnvelope(ctx, _id);
         } catch (e) {
-            await ctx.reply([e.message, Msgs.helpMessage].join('\n'));
+            let array = [e.message, Msgs.helpMessage];
+            if (e.message === Msgs.noUserMessage) {
+                array = [e.message, Msgs.instruction];
+            }
+
+            await ctx.reply(array.join('\n'));
         }
     }
 
