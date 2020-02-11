@@ -116,7 +116,9 @@ export class WalletController extends BaseController<WalletController> {
     private async queryUserToken({ message, reply }: MessageHandlerContext, userId: number, symbol: string) {
         const balance = await this.matatakiService.getUserMinetoken(userId, symbol);
 
-        await reply(`${balance} ${symbol}`);
+        await reply(`${balance} ${symbol}`, {
+            reply_to_message_id: message.chat.type !== "private" ? message.message_id : undefined,
+        });
     }
 
     @Command("transfer", { ignorePrefix: true })
