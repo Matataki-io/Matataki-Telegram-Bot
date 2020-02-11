@@ -2,7 +2,7 @@ import { inject } from "inversify";
 
 import { Injections } from "#/constants";
 import { Controller, Command, InjectRepository } from "#/decorators";
-import { MessageHandlerContext } from "#/definitions";
+import { MessageHandlerContext, AssociatedInfo } from "#/definitions";
 import { User } from "#/entities";
 import { IUserRepository } from "#/repositories";
 import { IMatatakiService, IWeb3Service } from "#/services";
@@ -10,6 +10,8 @@ import { filterNotNull } from "#/utils";
 
 import { BaseController } from ".";
 import { Extra, Markup } from "telegraf";
+import { RequireMatatakiAccount } from "#/decorators/RequireMatatakiAccount";
+import { SenderMatatakiInfo } from "#/decorators/SenderMatatakiInfo";
 
 @Controller("wallet")
 export class WalletController extends BaseController<WalletController> {
@@ -109,14 +111,8 @@ export class WalletController extends BaseController<WalletController> {
     }
 
     @Command("transfer", { ignorePrefix: true })
-    async transfer({ message, replyWithMarkdown, telegram }: MessageHandlerContext) {
-        const sender = message.from.id;
-        const info = await this.matatakiService.getAssociatedInfo(sender);
-        if (!info.user) {
-            await replyWithMarkdown("抱歉，您没有在 瞬Matataki 绑定该 Telegram 帐号");
-            return;
-        }
-
+    @RequireMatatakiAccount()
+    async transfer({ message, replyWithMarkdown, telegram }: MessageHandlerContext, @SenderMatatakiInfo() senderInfo: Required<Omit<AssociatedInfo, "minetoken">>) {
         const match = /^\/transfer(?:@[\w_]+)?\s+(\d+|@[\w_]{5,32})\s+(\w+)\s+(\d+.?\d*)/.exec(message.text);
         if (!match || match.length < 4) {
             await replyWithMarkdown("格式不对，请输入 `/transfer [Matataki UID/@Telegram 用户名] [symbol] [amount]`");
@@ -155,14 +151,14 @@ export class WalletController extends BaseController<WalletController> {
 
         let commonMessage = `
 
-转账方：[${info.user.name}](${this.matatakiService.urlPrefix}/user/${info.user.id})
+转账方：[${senderInfo.user.name}](${this.matatakiService.urlPrefix}/user/${senderInfo.user.id})
 被转账方：[${targetName}](${this.matatakiService.urlPrefix}/user/${userId})
 转账数目：${amount / 10000} ${symbol}`;
         const transactionMessage = await replyWithMarkdown("转账交易进行中..." + commonMessage, { disable_web_page_preview: true });
 
         let finalMessage, replyMarkup;
         try {
-            const tx_hash = await this.matatakiService.transfer(info.user.id, userId, symbol, amount);
+            const tx_hash = await this.matatakiService.transfer(senderInfo.user.id, userId, symbol, amount);
 
             finalMessage = "*转账成功*" + commonMessage;
 

@@ -2,8 +2,8 @@ import { inject } from "inversify";
 import { Extra, Markup } from "telegraf";
 import { User as TelegramUser } from "telegraf/typings/telegram-types";
 
-import { Controller, Command, InjectRepository, Event, GroupOnly, PrivateChatOnly } from "#/decorators";
-import { MessageHandlerContext } from "#/definitions";
+import { Controller, Command, InjectRepository, Event, GroupOnly, PrivateChatOnly, RequireMatatakiAccount, SenderMatatakiInfo } from "#/decorators";
+import { MessageHandlerContext, AssociatedInfo } from "#/definitions";
 import { Group, User } from "#/entities";
 import { Injections, LogCategories } from "#/constants";
 import { IUserRepository, IGroupRepository } from "#/repositories";
@@ -180,14 +180,9 @@ Fan 票：${info.minetoken.symbol}
 
     @Command("join", { ignorePrefix: true })
     @PrivateChatOnly()
-    async joinGroup({ message, reply, telegram }: MessageHandlerContext) {
+    @RequireMatatakiAccount()
+    async joinGroup({ message, reply, telegram }: MessageHandlerContext, @SenderMatatakiInfo() info: AssociatedInfo) {
         const sender = message.from.id;
-        const info = await this.matatakiService.getAssociatedInfo(sender);
-        if (!info.user) {
-            await reply("抱歉，您没有在 瞬Matataki 绑定该 Telegram 帐号");
-            return;
-        }
-
         const groups = await this.groupRepo.getGroupsExceptMyToken(info.minetoken?.id);
 
         const tokens = new Set<number>();
@@ -195,7 +190,7 @@ Fan 票：${info.minetoken.symbol}
             tokens.add(group.tokenId);
         }
 
-        const walletAddress = await this.matatakiService.getEthWallet(sender);;
+        const walletAddress = await this.matatakiService.getEthWallet(sender);
         const balanceCache = new Map<number, number>();
         await Promise.all(Array.from(tokens).map(async token => {
             const contractAddress = await this.matatakiService.getContractAddressOfMinetoken(token);
@@ -512,19 +507,13 @@ Fan 票：${info.minetoken.symbol}
 
     @Command("ban", { ignorePrefix: true })
     @GroupOnly()
-    async banMember({ message, replyWithMarkdown, telegram }: MessageHandlerContext) {
+    @RequireMatatakiAccount()
+    async banMember({ message, replyWithMarkdown, telegram }: MessageHandlerContext, @SenderMatatakiInfo() senderInfo: Required<Omit<AssociatedInfo, "minetoken">>) {
         const { chat } = message;
 
         const match = /^\/ban(?:@[\w_]+)?\s+@([\w_]{5,32})\s+(\d+)/.exec(message.text);
         if (!match || match.length < 3) {
             await replyWithMarkdown("格式不对，请输入 `/ban [@用户名] [禁言分钟数]`");
-            return;
-        }
-
-        const sender = message.from.id;
-        const senderInfo = await this.matatakiService.getAssociatedInfo(sender);
-        if (!senderInfo.user) {
-            await replyWithMarkdown("抱歉，您没有在 瞬Matataki 绑定该 Telegram 帐号");
             return;
         }
 
