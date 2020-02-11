@@ -1,24 +1,20 @@
 import { ControllerConstructor } from ".";
-
 import { DebugController } from "./DebugController";
-
-import { WalletController } from "./WalletController";
+import { DiceController } from "./DiceController";
 import { GroupController } from "./GroupController";
-import { QueryController } from "./QueryController";
 import { HelpController } from "./HelpController";
+import { WalletController } from "./WalletController";
+import { QueryController } from "./QueryController";
 import { RedEnvelopeController } from "./RedEnvelopeController";
 import { SyncController } from "./SyncController";
-import { DiceController } from "./DiceController";
 
 export const controllers: ControllerConstructor[] = [
     DebugController,
-
+    DiceController,
+    GroupController,    
     HelpController,
-
     WalletController,
-    GroupController,
     QueryController,
     RedEnvelopeController,
   SyncController,
-  DiceController
 ];
