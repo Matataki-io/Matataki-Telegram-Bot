@@ -33,9 +33,9 @@ export class DiceController extends BaseController<DiceController>{
             });
         await this.diceService.resendGame(ctx, _id);
     }
-    @Command('join', { ignorePrefix: true })
-    async join(ctx: MessageHandlerContext) {
-    }
+    // @Command('join', { ignorePrefix: true })
+    // async join(ctx: MessageHandlerContext) {
+    // }
     @Command('roll', { ignorePrefix: true })
     async roll(ctx: MessageHandlerContext) {
         await ctx.replyWithMarkdown(Msgs.rollMessage(_.random(1, 99)));
