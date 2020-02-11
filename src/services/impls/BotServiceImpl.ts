@@ -9,7 +9,7 @@ import { getRepository, Repository } from "typeorm";
 import { Constants, MetadataKeys, Injections, LogCategories } from "#/constants";
 import { ControllerConstructor } from "#/controllers";
 import { controllers } from "#/controllers/export";
-import { CommandHandlerInfo, EventHandlerInfo, MessageHandler, MessageHandlerContext, ActionHandlerInfo } from "#/definitions";
+import { CommandHandlerInfo, EventHandlerInfo, MessageHandler, MessageHandlerContext, ActionHandlerInfo, ControllerMethodContext } from "#/definitions";
 import { Service } from "#/decorators";
 import { Group, Metadata, Update } from "#/entities";
 import { IBotService, IDatabaseService, ILoggerService } from "#/services";
@@ -211,10 +211,9 @@ export class BotServiceImpl implements IBotService {
                 throw new Error("What happended?");
             }
 
-            type ContextType = ReturnType<typeof BotServiceImpl.prototype.createContext>;
-            const context = Reflect.getMetadata(MetadataKeys.Context, ctx) as ContextType;
+            const context = Reflect.getMetadata(MetadataKeys.Context, ctx) as ControllerMethodContext;
 
-            context.container.bind<ContextType>(Injections.Context).toConstantValue(context);
+            context.container.bind<ControllerMethodContext>(Injections.Context).toConstantValue(context);
 
             const controller = context.container.getNamed<any>(Injections.Controller, controllerName);
             const handler = controller[methodName] as MessageHandler;

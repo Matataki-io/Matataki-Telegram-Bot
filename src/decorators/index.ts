@@ -5,6 +5,8 @@ export * from "./Event";
 export * from "./GroupOnly";
 export * from "./JsonColumn";
 export * from "./PrivateChatOnly";
+export * from "./RequireMatatakiAccount";
 export * from "./Repository";
 export * from "./Service";
+export * from "./SenderMatatakiInfo";
 export * from "./Scheduler";
