@@ -1,4 +1,4 @@
 export type ActionHandlerInfo = {
-    name: string,
+    name: string | RegExp,
     methodName: string,
 }

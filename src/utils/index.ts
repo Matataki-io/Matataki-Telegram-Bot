@@ -39,3 +39,34 @@ export function filterNotNull<T>(array: Array<(T | null)>) {
 
     return result;
 }
+
+
+export function check(test: any, errMsg: string) {
+    if (!test) { throw new Error(errMsg); }
+}
+export function checkNotNull<T>(val: T | null | undefined, errMsg: string): T {
+    if (val) {
+        return val;
+    } else {
+        throw new Error(errMsg);
+    }
+}
+export function checkWith<T>(val: T, checker: (v: T) => any, errMsg: string): T {
+    if (!checker(val)) { throw new Error(errMsg); } else {
+        return val;
+    }
+}
+export function replaceErr<T>(thunk: () => T, errMsg: string): T {
+    try {
+        return thunk();
+    } catch (err) {
+        throw new Error(errMsg);
+    }
+}
+export async function asyncReplaceErr<T>(p: Promise<T>, errMsg: string): Promise<T> {
+    try {
+        return await p;
+    } catch (err) {
+        throw new Error(errMsg);
+    }
+}
