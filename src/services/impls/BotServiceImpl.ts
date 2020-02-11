@@ -169,6 +169,8 @@ export class BotServiceImpl implements IBotService {
             this.container.bind(Injections.Controller).to(constructor).whenTargetNamed(name);
         }
 
+        const commandMapping = new Map<string, ControllerConstructor>();
+
         for (const constructor of constructors) {
             const { prototype } = constructor;
             const prefix = Reflect.getMetadata(MetadataKeys.ControllerPrefix, constructor);
@@ -181,6 +183,13 @@ export class BotServiceImpl implements IBotService {
                 console.assert(handler instanceof Function, `${constructor.name}.${methodName} must be a function of type MessageHandlerContext`);
 
                 const commandName = prefix === "/" || ignorePrefix ? name : (prefix + name);
+
+                const ownerController = commandMapping.get(commandName);
+                if (ownerController && ownerController !== constructor) {
+                    throw new Error(`Command '${commandName}' is registered by other controller`);
+                }
+
+                commandMapping.set(commandName, constructor);
 
                 this.bot.command(commandName, this.handlerFactory(constructor.name, methodName));
             }
