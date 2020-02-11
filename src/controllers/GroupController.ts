@@ -2,7 +2,7 @@ import { inject } from "inversify";
 import { Extra, Markup } from "telegraf";
 import { User as TelegramUser } from "telegraf/typings/telegram-types";
 
-import { Controller, Command, InjectRepository, Event, GroupOnly, PrivateChatOnly, RequireMatatakiAccount, SenderMatatakiInfo } from "#/decorators";
+import { Controller, Command, InjectRepository, Event, GroupOnly, PrivateChatOnly, RequireMatatakiAccount, SenderMatatakiInfo, RequireMintedMinetoken } from "#/decorators";
 import { MessageHandlerContext, AssociatedInfo } from "#/definitions";
 import { Group, User } from "#/entities";
 import { Injections, LogCategories } from "#/constants";
@@ -27,16 +27,9 @@ export class GroupController extends BaseController<GroupController> {
     }
 
     @Command("mygroups", { ignorePrefix: true })
-    async listMyGroups({ message, reply, telegram }: MessageHandlerContext) {
-        const sender = message.from.id;
-
-        const info = await this.matatakiService.getAssociatedInfo(sender);
-        if (!info.user || !info.minetoken) {
-            await reply("抱歉，您没有在 瞬Matataki 绑定该 Telegram 帐号或者尚未发行 Fan 票");
-            return;
-        }
-
-        const groups = await this.groupRepo.getGroupsOfCreator(sender);
+    @RequireMintedMinetoken()
+    async listMyGroups({ message, reply, telegram }: MessageHandlerContext, @SenderMatatakiInfo() senderInfo: Required<AssociatedInfo>) {
+        const groups = await this.groupRepo.getGroupsOfCreator(message.from.id);
 
         if (groups.length === 0) {
             await reply(`抱歉，您还没有创建 Fan票 群`);
@@ -72,7 +65,7 @@ export class GroupController extends BaseController<GroupController> {
 
             return `群组 ID：${group.id}
 名字：${groupInfo.title}
-Fan 票：${info.minetoken?.symbol}
+Fan 票：${senderInfo.minetoken.symbol}
 最低要求：${group.requirement.minetoken?.amount ?? "未设置"}`;
         })));
 
@@ -120,21 +113,15 @@ Fan 票：${info.minetoken?.symbol}
     }
 
     @Command("set", { ignorePrefix: true })
-    async setGroupRequirement({ message, reply, telegram }: MessageHandlerContext) {
-        const sender = message.from.id;
-        const info = await this.matatakiService.getAssociatedInfo(sender);
-        if (!info.user || !info.minetoken) {
-            await reply("抱歉，您没有在 瞬Matataki 绑定该 Telegram 帐号或者尚未发行 Fan 票");
-            return;
-        }
-
+    @RequireMintedMinetoken()
+    async setGroupRequirement({ message, reply, telegram }: MessageHandlerContext, @SenderMatatakiInfo() senderInfo: Required<AssociatedInfo>) {
         const match = /^\/set\s+-?(\d+)\s+(\d+.?\d*)/.exec(message.text);
         if (!match || match.length < 3) {
             return reply("格式不对，请输入 `/set [group_id] [amount]`");
         }
 
         const groupId = -Number(match[1]);
-        const groups = await this.groupRepo.getGroupsOfCreator(sender);
+        const groups = await this.groupRepo.getGroupsOfCreator(message.from.id);
         const group = groups.find(group => Number(group.id) === groupId);
 
         if (!group) {
@@ -172,7 +159,7 @@ Fan 票：${info.minetoken?.symbol}
         await telegram.sendMessage(groupId, `当前群规则已修改为：
 群组 ID：${groupId}
 名字：${group.title}
-Fan 票：${info.minetoken.symbol}
+Fan 票：${senderInfo.minetoken.symbol}
 最低要求：${amount}`);
 
         return true;
