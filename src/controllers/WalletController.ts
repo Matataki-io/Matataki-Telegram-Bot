@@ -34,13 +34,17 @@ export class WalletController extends BaseController<WalletController> {
             if (target.startsWith("@")) {
                 const targetId = await this.userRepo.getIdByUsername(target.slice(1));
                 if (!targetId) {
-                    await replyWithMarkdown("抱歉，对方还没有同步用户名到数据库里");
+                    await replyWithMarkdown("抱歉，对方还没有同步用户名到数据库里", {
+                        reply_to_message_id: message.chat.type !== "private" ? message.message_id : undefined,
+                    });
                     return;
                 }
 
                 const targetInfo = await this.matatakiService.getAssociatedInfo(targetId);
                 if (!targetInfo.user) {
-                    await replyWithMarkdown("抱歉，目标帐号没有在 瞬Matataki 绑定 Telegram 帐号");
+                    await replyWithMarkdown("抱歉，目标帐号没有在 瞬Matataki 绑定 Telegram 帐号", {
+                        reply_to_message_id: message.chat.type !== "private" ? message.message_id : undefined,
+                    });
                     return;
                 }
 
@@ -60,9 +64,11 @@ export class WalletController extends BaseController<WalletController> {
             return;
         }
 
-        await replyWithMarkdown("格式不对，暂时只接受 `/query` 和 `/query [Matataki UID/@Telegram 用户名] [Fan票 符号]`");
+        await replyWithMarkdown("格式不对，暂时只接受 `/query` 和 `/query [Matataki UID/@Telegram 用户名] [Fan票 符号]`", {
+            reply_to_message_id: message.chat.type !== "private" ? message.message_id : undefined,
+        });
     }
-    private async queryMyTokens({ message, telegram }: MessageHandlerContext) {
+    private async queryMyTokens({ message, replyWithMarkdown }: MessageHandlerContext) {
         const id = message.from.id;
         const info = await this.matatakiService.getAssociatedInfo(id);
 
@@ -102,7 +108,10 @@ export class WalletController extends BaseController<WalletController> {
             }
         }
 
-        await telegram.sendMessage(message.chat.id, array.join("\n"), { parse_mode: "Markdown", disable_web_page_preview: true });
+        await replyWithMarkdown(array.join("\n"), {
+            disable_web_page_preview: true,
+            reply_to_message_id: message.chat.type !== "private" ? message.message_id : undefined,
+        });
     }
     private async queryUserToken({ message, reply }: MessageHandlerContext, userId: number, symbol: string) {
         const balance = await this.matatakiService.getUserMinetoken(userId, symbol);
