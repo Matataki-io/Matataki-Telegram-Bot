@@ -2,8 +2,8 @@ import { inject } from "inversify";
 import { Extra, Markup } from "telegraf";
 import { User as TelegramUser } from "telegraf/typings/telegram-types";
 
-import { Controller, Command, InjectRepository, Event } from "#/decorators";
-import { MessageHandlerContext } from "#/definitions";
+import { Controller, Command, InjectRepository, Event, GroupOnly, PrivateChatOnly, RequireMatatakiAccount, SenderMatatakiInfo, RequireMintedMinetoken } from "#/decorators";
+import { MessageHandlerContext, AssociatedInfo } from "#/definitions";
 import { Group, User } from "#/entities";
 import { Injections, LogCategories } from "#/constants";
 import { IUserRepository, IGroupRepository } from "#/repositories";
@@ -27,16 +27,9 @@ export class GroupController extends BaseController<GroupController> {
     }
 
     @Command("mygroups", { ignorePrefix: true })
-    async listMyGroups({ message, reply, telegram }: MessageHandlerContext) {
-        const sender = message.from.id;
-
-        const info = await this.matatakiService.getAssociatedInfo(sender);
-        if (!info.user || !info.minetoken) {
-            await reply("抱歉，您没有在 瞬Matataki 绑定该 Telegram 帐号或者尚未发行 Fan 票");
-            return;
-        }
-
-        const groups = await this.groupRepo.getGroupsOfCreator(sender);
+    @RequireMintedMinetoken()
+    async listMyGroups({ message, reply, telegram }: MessageHandlerContext, @SenderMatatakiInfo() senderInfo: Required<AssociatedInfo>) {
+        const groups = await this.groupRepo.getGroupsOfCreator(message.from.id);
 
         if (groups.length === 0) {
             await reply(`抱歉，您还没有创建 Fan票 群`);
@@ -72,7 +65,7 @@ export class GroupController extends BaseController<GroupController> {
 
             return `群组 ID：${group.id}
 名字：${groupInfo.title}
-Fan 票：${info.minetoken?.symbol}
+Fan 票：${senderInfo.minetoken.symbol}
 最低要求：${group.requirement.minetoken?.amount ?? "未设置"}`;
         })));
 
@@ -96,13 +89,9 @@ Fan 票：${info.minetoken?.symbol}
     }
 
     @Command("rule", { ignorePrefix: true })
+    @GroupOnly()
     async getCurrentGroupRules({ message, reply }: MessageHandlerContext) {
         const { chat } = message;
-
-        if (chat.type !== "group" && chat.type !== "supergroup") {
-            await reply("该命令仅限群聊里使用");
-            return;
-        }
 
         const group = await this.groupRepo.getGroupOrDefault(chat.id);
         if (!group) {
@@ -124,21 +113,15 @@ Fan 票：${info.minetoken?.symbol}
     }
 
     @Command("set", { ignorePrefix: true })
-    async setGroupRequirement({ message, reply, telegram }: MessageHandlerContext) {
-        const sender = message.from.id;
-        const info = await this.matatakiService.getAssociatedInfo(sender);
-        if (!info.user || !info.minetoken) {
-            await reply("抱歉，您没有在 瞬Matataki 绑定该 Telegram 帐号或者尚未发行 Fan 票");
-            return;
-        }
-
+    @RequireMintedMinetoken()
+    async setGroupRequirement({ message, reply, telegram }: MessageHandlerContext, @SenderMatatakiInfo() senderInfo: Required<AssociatedInfo>) {
         const match = /^\/set\s+-?(\d+)\s+(\d+.?\d*)/.exec(message.text);
         if (!match || match.length < 3) {
             return reply("格式不对，请输入 `/set [group_id] [amount]`");
         }
 
         const groupId = -Number(match[1]);
-        const groups = await this.groupRepo.getGroupsOfCreator(sender);
+        const groups = await this.groupRepo.getGroupsOfCreator(message.from.id);
         const group = groups.find(group => Number(group.id) === groupId);
 
         if (!group) {
@@ -176,28 +159,17 @@ Fan 票：${info.minetoken?.symbol}
         await telegram.sendMessage(groupId, `当前群规则已修改为：
 群组 ID：${groupId}
 名字：${group.title}
-Fan 票：${info.minetoken.symbol}
+Fan 票：${senderInfo.minetoken.symbol}
 最低要求：${amount}`);
 
         return true;
     }
 
     @Command("join", { ignorePrefix: true })
-    async joinGroup({ message, reply, telegram }: MessageHandlerContext) {
-        const { chat } = message;
-
-        if (chat.type !== "private") {
-            await reply("该命令仅限和机器人私聊里使用");
-            return;
-        }
-
+    @PrivateChatOnly()
+    @RequireMatatakiAccount()
+    async joinGroup({ message, reply, telegram }: MessageHandlerContext, @SenderMatatakiInfo() info: AssociatedInfo) {
         const sender = message.from.id;
-        const info = await this.matatakiService.getAssociatedInfo(sender);
-        if (!info.user) {
-            await reply("抱歉，您没有在 瞬Matataki 绑定该 Telegram 帐号");
-            return;
-        }
-
         const groups = await this.groupRepo.getGroupsExceptMyToken(info.minetoken?.id);
 
         const tokens = new Set<number>();
@@ -205,7 +177,7 @@ Fan 票：${info.minetoken.symbol}
             tokens.add(group.tokenId);
         }
 
-        const walletAddress = await this.matatakiService.getEthWallet(sender);;
+        const walletAddress = await this.matatakiService.getEthWallet(sender);
         const balanceCache = new Map<number, number>();
         await Promise.all(Array.from(tokens).map(async token => {
             const contractAddress = await this.matatakiService.getContractAddressOfMinetoken(token);
@@ -520,13 +492,9 @@ Fan 票：${info.minetoken.symbol}
     }
 
     @Command("kick", { ignorePrefix: true })
+    @GroupOnly()
     async kickMember({ message, replyWithMarkdown, telegram }: MessageHandlerContext) {
         const { chat } = message;
-        
-        if (chat.type !== "group" && chat.type !== "supergroup") {
-            await replyWithMarkdown("该命令仅限群聊里使用");
-            return;
-        }
 
         const match = /^\/kick(?:@[\w_]+)?\s+@([\w_]{5,32})\s+(\d+)/.exec(message.text);
         if (!match || match.length < 3) {
@@ -541,16 +509,16 @@ Fan 票：${info.minetoken.symbol}
             await replyWithMarkdown("抱歉，您没有在 瞬Matataki 绑定该 Telegram 帐号");
             return;
         }*/
-        
+
         const target = match[1];
         const targetId = await this.userRepo.getIdByUsername(target);
         if (!targetId) {
             await replyWithMarkdown("抱歉，对方还没有同步用户名到数据库里");
             return;
         }
-    
+
         // const group = await this.groupRepo.getGroup(chat.id);
-        
+
         /*const creatorInfo = await this.matatakiService.getAssociatedInfo(Number(group.creatorId));
         if (!creatorInfo.user) {
             await replyWithMarkdown("抱歉，目标帐号没有在 瞬Matataki 绑定 Telegram 帐号");
@@ -571,7 +539,7 @@ Fan 票：${info.minetoken.symbol}
             const untilDateTimestamp = Math.round(Date.now() / 1000) + time * 60;
 
             // @ts-ignore
-            
+
             await telegram.kickChatMember(chat.id, targetId, untilDateTimestamp);
 
             const untilDate = moment.unix(untilDateTimestamp);
@@ -579,21 +547,17 @@ Fan 票：${info.minetoken.symbol}
             finalMessage = `放逐成功 (放逐至 ${untilDate.format("lll")})`;
         } catch {
             replyWithMarkdown(targetId.toString());
-            replyWithMarkdown(chat.id.toString());            
+            replyWithMarkdown(chat.id.toString());
             finalMessage = "放逐失败！";
         }
 
         await telegram.editMessageText(chat.id, transactionMessage.message_id, undefined, finalMessage);
-    }    
+    }
 
     @Command("ban", { ignorePrefix: true })
+    @GroupOnly()
     async banMember({ message, replyWithMarkdown, telegram }: MessageHandlerContext) {
         const { chat } = message;
-        
-        if (chat.type !== "group" && chat.type !== "supergroup") {
-            await replyWithMarkdown("该命令仅限群聊里使用");
-            return;
-        }
 
         const match = /^\/ban(?:@[\w_]+)?\s+@([\w_]{5,32})\s+(\d+)/.exec(message.text);
         if (!match || match.length < 3) {
@@ -608,16 +572,16 @@ Fan 票：${info.minetoken.symbol}
             await replyWithMarkdown("抱歉，您没有在 瞬Matataki 绑定该 Telegram 帐号");
             return;
         }*/
-        
+
         const target = match[1];
         const targetId = await this.userRepo.getIdByUsername(target);
         if (!targetId) {
             await replyWithMarkdown("抱歉，对方还没有同步用户名到数据库里");
             return;
         }
-    
+
         // const group = await this.groupRepo.getGroup(chat.id);
-        
+
         /*const creatorInfo = await this.matatakiService.getAssociatedInfo(Number(group.creatorId));
         if (!creatorInfo.user) {
             await replyWithMarkdown("抱歉，目标帐号没有在 瞬Matataki 绑定 Telegram 帐号");
@@ -638,7 +602,7 @@ Fan 票：${info.minetoken.symbol}
             const untilDateTimestamp = Math.round(Date.now() / 1000) + time * 60;
 
             // @ts-ignore
-            
+
             await telegram.restrictChatMember(chat.id, targetId, {
                 until_date: untilDateTimestamp,
                 can_send_messages: false,

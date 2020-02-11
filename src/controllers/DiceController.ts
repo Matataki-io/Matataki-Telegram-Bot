@@ -32,7 +32,7 @@ export class DiceController extends BaseController<DiceController>{
                 messageId: 0
             });
         await this.diceService.resendGame(ctx, _id);
-    }  
+    }
     @Command('join', { ignorePrefix: true })
     async join(ctx: MessageHandlerContext) {
     }
@@ -42,7 +42,7 @@ export class DiceController extends BaseController<DiceController>{
     }
     @Command('close', { ignorePrefix: true })
     async close(ctx: MessageHandlerContext) {
-    }  
+    }
     private parseDiceArguments(txt: string): Arguments {
         let match = txt.match(/^\/new_game(?:@[\w_]+)?\s+(\d*\.?\d*)\s+(\w+)/);
         match = checkNotNull(match, Msgs.errorMessage);

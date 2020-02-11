@@ -11,7 +11,7 @@ import { SyncController } from "./SyncController";
 export const controllers: ControllerConstructor[] = [
     DebugController,
     DiceController,
-    GroupController,    
+    GroupController,
     HelpController,
     WalletController,
     QueryController,
