@@ -2,7 +2,7 @@ import { inject } from "inversify";
 import { Extra, Markup } from "telegraf";
 import { User as TelegramUser } from "telegraf/typings/telegram-types";
 
-import { Controller, Command, InjectRepository, Event } from "#/decorators";
+import { Controller, Command, InjectRepository, Event, GroupOnly, PrivateChatOnly } from "#/decorators";
 import { MessageHandlerContext } from "#/definitions";
 import { Group, User } from "#/entities";
 import { Injections, LogCategories } from "#/constants";
@@ -96,13 +96,9 @@ Fan 票：${info.minetoken?.symbol}
     }
 
     @Command("rule", { ignorePrefix: true })
+    @GroupOnly()
     async getCurrentGroupRules({ message, reply }: MessageHandlerContext) {
         const { chat } = message;
-
-        if (chat.type !== "group" && chat.type !== "supergroup") {
-            await reply("该命令仅限群聊里使用");
-            return;
-        }
 
         const group = await this.groupRepo.getGroupOrDefault(chat.id);
         if (!group) {
@@ -183,14 +179,8 @@ Fan 票：${info.minetoken.symbol}
     }
 
     @Command("join", { ignorePrefix: true })
+    @PrivateChatOnly()
     async joinGroup({ message, reply, telegram }: MessageHandlerContext) {
-        const { chat } = message;
-
-        if (chat.type !== "private") {
-            await reply("该命令仅限和机器人私聊里使用");
-            return;
-        }
-
         const sender = message.from.id;
         const info = await this.matatakiService.getAssociatedInfo(sender);
         if (!info.user) {
@@ -521,13 +511,9 @@ Fan 票：${info.minetoken.symbol}
     }
 
     @Command("ban", { ignorePrefix: true })
+    @GroupOnly()
     async banMember({ message, replyWithMarkdown, telegram }: MessageHandlerContext) {
         const { chat } = message;
-
-        if (chat.type !== "group" && chat.type !== "supergroup") {
-            await replyWithMarkdown("该命令仅限群聊里使用");
-            return;
-        }
 
         const match = /^\/ban(?:@[\w_]+)?\s+@([\w_]{5,32})\s+(\d+)/.exec(message.text);
         if (!match || match.length < 3) {
