@@ -16,5 +16,5 @@ export const controllers: ControllerConstructor[] = [
     WalletController,
     QueryController,
     RedEnvelopeController,
-  SyncController,
+    SyncController,
 ];

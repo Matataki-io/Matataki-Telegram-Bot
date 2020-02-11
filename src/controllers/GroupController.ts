@@ -557,7 +557,7 @@ Fan 票：${info.minetoken.symbol}
             return;
         }*/
 
-       // const symbol = creatorInfo.minetoken!.symbol;
+        // const symbol = creatorInfo.minetoken!.symbol;
         const transactionMessage = await replyWithMarkdown("放逐中...");
 
         let finalMessage;
@@ -624,7 +624,7 @@ Fan 票：${info.minetoken.symbol}
             return;
         }*/
 
-       // const symbol = creatorInfo.minetoken!.symbol;
+        // const symbol = creatorInfo.minetoken!.symbol;
         const transactionMessage = await replyWithMarkdown("禁言中...");
 
         let finalMessage;
