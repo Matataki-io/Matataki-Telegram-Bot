@@ -21,6 +21,7 @@ module.exports = {
     rules: {
         "eol-last": ["error", "always"],
         "key-spacing": ["error", { beforeColon: false }],
+        "no-trailing-spaces": "error",
         "@typescript-eslint/comma-spacing": ["error", {
             before: false,
             after: true
