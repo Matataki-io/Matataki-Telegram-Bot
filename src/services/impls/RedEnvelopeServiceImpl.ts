@@ -137,6 +137,10 @@ export class RedEnvelopeServiceImpl implements IRedEnvelopeService {
                     reply_markup: empty ? undefined : replyMarkup
                 });
         } else {
+            if (e.msgCtx.messageId != 0) {
+                await ctx.telegram.deleteMessage(e.msgCtx.chatId,
+                    e.msgCtx.messageId);
+            }
             const { message_id } = await ctx.replyWithMarkdown(messages, {
                 disable_web_page_preview: true,
                 reply_markup: empty ? undefined : replyMarkup
