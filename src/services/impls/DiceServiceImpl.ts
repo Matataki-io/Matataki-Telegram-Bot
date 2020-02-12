@@ -71,7 +71,7 @@ export class DiceServiceImpl implements IDiceService {
             await this.renderGame(ctx, g, false);
         }
     }
-    
+
     async renderGame(ctx: MessageHandlerContext, game: Game, modified = true) {
         const gameTitle = Msgs.gameTitle(game);
         const userTexts = game.joinUsers.map(
@@ -148,7 +148,7 @@ export class DiceServiceImpl implements IDiceService {
                         const txHash = await this.matatakiService.transfer(
                             id, winner.id, game.args.unit, game.args.amount);
                         messages += `<a href="https://rinkeby.etherscan.io/tx/${txHash}">\
-结算成功:${name} -${game.args.amount / 10000} ${game.args.unit} < /a>\n`;
+结算成功:${name} -${game.args.amount / 10000} ${game.args.unit} </a>\n`;
                         bonus += game.args.amount;
                     }
                 }catch(err) {
@@ -163,5 +163,5 @@ export class DiceServiceImpl implements IDiceService {
         const balance = await this.matatakiService.getUserMinetoken(user.id, tokenSymbol);
         return balance * 10000;
     }
-    
+
 }
