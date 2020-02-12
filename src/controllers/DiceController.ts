@@ -1,5 +1,5 @@
 import { BaseController } from "./BaseController";
-import { Controller, Command } from "../decorators";
+import { Controller, Command, Action } from "../decorators";
 import { MessageHandlerContext } from "../definitions";
 import { inject } from "inversify";
 import { Injections } from "../constants";
@@ -8,13 +8,14 @@ import { MatatakiUser, Arguments, IDiceService } from "#/services/IDiceService";
 import _ from 'lodash';
 import { asyncReplaceErr, checkNotNull, checkWith } from "../utils";
 const Msgs = {
-    helpMessage: ["roll一个点数(1-99):/roll",
-        "开始一局游戏:/new_game <赌注> <赌注单位>"].join("\n"),
+    helpMessage: [
+        "开始一局游戏:/new_game <赌注> <赌注单位>",
+        "注意:只有发送者能够开局或者流局"].join("\n"),
     rollMessage: (x: number) => `点数为${x}`,
     errorMessage: "错误的指令格式。",
     noUserMessage: "尚未绑定 瞬Matataki 账户",
     cantGetUserInfo: "Matataki用户信息获取失败",
-    postiveAmount: "金额必须为正数"
+    postiveAmount: "金额必须为正数",
 }
 
 @Controller('Dice')
@@ -25,24 +26,45 @@ export class DiceController extends BaseController<DiceController>{
     }
     @Command('new_game', { ignorePrefix: true })
     async dice(ctx: MessageHandlerContext) {
-        const args = this.parseDiceArguments(ctx.message.text);
-        const sender = await this.getMatatakiUser(ctx);
-        const _id = this.diceService.registerGame(args, sender,
-            {chatId: ctx.message.chat.id,
-                messageId: 0
-            });
-        await this.diceService.resendGame(ctx, _id);
-    }  
-    @Command('join', { ignorePrefix: true })
+        try {
+            const args = this.parseDiceArguments(ctx.message.text);
+            const sender = await this.getMatatakiUser(ctx);
+            const _id = this.diceService.registerGame(args, sender,
+                {
+                    chatId: ctx.message.chat.id,
+                    messageId: 0
+                });
+            await this.diceService.resendGame(ctx, _id);
+        } catch (err) {
+            await ctx.reply([err.message, Msgs.helpMessage]
+                .join('\n'));
+        }
+    }
+    @Action(/dice_resend \w+/)
+    async resend(ctx: MessageHandlerContext) {
+        this.doAction(ctx, async (_id)=>
+            await this.diceService.resendGame(ctx, _id));
+    }
+    @Action(/dice_join \w+/)
     async join(ctx: MessageHandlerContext) {
+        this.doAction(ctx, async (_id) => {
+            const joiner = await this.getMatatakiUser(ctx);
+            await this.diceService.joinGame(ctx, joiner, _id);
+        });
     }
-    @Command('roll', { ignorePrefix: true })
+    @Action(/dice_roll \w+/)
     async roll(ctx: MessageHandlerContext) {
-        await ctx.replyWithMarkdown(Msgs.rollMessage(_.random(1, 99)));
+        this.doAction(ctx, async (_id) => {
+            const user = await this.getMatatakiUser(ctx);
+            await this.diceService.rollGame(ctx, _id, user.id);});
     }
-    @Command('close', { ignorePrefix: true })
+    @Action(/dice_close \w+/)
     async close(ctx: MessageHandlerContext) {
-    }  
+        this.doAction(ctx, async (_id) => {
+            const user = await this.getMatatakiUser(ctx);
+            await this.diceService.closeGame(ctx, _id, user.id);
+        });
+    }
     private parseDiceArguments(txt: string): Arguments {
         let match = txt.match(/^\/new_game(?:@[\w_]+)?\s+(\d*\.?\d*)\s+(\w+)/);
         match = checkNotNull(match, Msgs.errorMessage);
@@ -65,6 +87,25 @@ export class DiceController extends BaseController<DiceController>{
         const from = ctx.callbackQuery ? ctx.callbackQuery.from :
             ctx.message.from;
         return from.first_name +
-      (from.last_name ? from.last_name : '');
-    };
+            (from.last_name ? from.last_name : '');
+    }
+    private parseCbArg(text: string): number {
+        let match = text.match(/[\w_]+\s(.+)/);
+        match = checkNotNull(match, "redEnvelope : callback arg parse fail");
+        return Number(match[1]);
+    }
+
+    private async doAction(ctx: MessageHandlerContext,
+        f: (x: number) => Promise<void>) {
+        const cb = ctx.callbackQuery;
+        if (cb?.data) {
+            try {
+                const id = this.parseCbArg(cb.data);
+                await f(id);
+            } catch (err) {
+                await ctx.reply([err.message, Msgs.helpMessage]
+                    .join('\n'));
+            }
+        }
+    }
 }
