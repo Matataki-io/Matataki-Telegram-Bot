@@ -1,6 +1,6 @@
 import { inject } from "inversify";
 
-import { Controller, Command, GroupOnly, PrivateChatOnly } from "#/decorators";
+import { Controller, Command, GroupOnly, PrivateChatOnly, RequireMatatakiAccount, RequireMintedMinetoken } from "#/decorators";
 import { MessageHandlerContext } from "#/definitions";
 import { BaseController } from ".";
 
@@ -30,6 +30,17 @@ export class DebugController extends BaseController<DebugController> {
     @Command("privatechatonly")
     @PrivateChatOnly()
     privateChatOnly({ reply }: MessageHandlerContext) {
+        return reply("Ok");
+    }
+
+    @Command("requirematataki")
+    @RequireMatatakiAccount()
+    requireMatatakiAccount({ reply }: MessageHandlerContext) {
+        return reply("Ok");
+    }
+    @Command("requiremintedminetoken")
+    @RequireMintedMinetoken()
+    requireMintedMinetoken({ reply }: MessageHandlerContext) {
         return reply("Ok");
     }
 }

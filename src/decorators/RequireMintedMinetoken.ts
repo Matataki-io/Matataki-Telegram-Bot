@@ -12,23 +12,22 @@ export function RequireMintedMinetoken(): MethodDecorator {
 
         const decoratedMethod = <HandlerFunc>descriptor.value;
 
-        const map = Reflect.getMetadata(MetadataKeys.Parameters, target.constructor) as Map<string, Map<number, ParameterInfo>>;
-        const parameters = map.get(methodName);
-        if (!parameters) {
-            throw new Error("Missed");
-        }
-
         let index: number = -1;
-        for (const [parameterIndex, info] of parameters) {
-            if (info.type !== ParameterTypes.SenderMatatakiInfo) {
-                continue;
+
+        const map = Reflect.getMetadata(MetadataKeys.Parameters, target.constructor) as Map<string, Map<number, ParameterInfo>> | undefined;
+        if (map) {
+            const parameters = map.get(methodName);
+            if (!parameters) {
+                throw new Error("Missed");
             }
 
-            index = parameterIndex;
-        }
+            for (const [parameterIndex, info] of parameters) {
+                if (info.type !== ParameterTypes.SenderMatatakiInfo) {
+                    continue;
+                }
 
-        if (index === -1) {
-            throw new Error("Missed");
+                index = parameterIndex;
+            }
         }
 
         descriptor.value = async function (ctx: MessageHandlerContext, ...args: any[]) {
@@ -41,7 +40,9 @@ export function RequireMintedMinetoken(): MethodDecorator {
                 return;
             }
 
-            args[index - 1] = info;
+            if (index === -1) {
+                args[index - 1] = info;
+            }
 
             return decoratedMethod.call(this, ctx, ...args);
         };

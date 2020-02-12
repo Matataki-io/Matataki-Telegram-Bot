@@ -19,7 +19,7 @@ describe("QueryController", () => {
                 message: {
                     ...ctx.message,
                     from: {
-                        id: 3,
+                        id: 1,
                     },
                 },
             });
@@ -39,7 +39,7 @@ describe("QueryController", () => {
                 message: {
                     ...ctx.message,
                     from: {
-                        id: 2,
+                        id: 8102,
                     },
                 },
             });
@@ -63,7 +63,7 @@ describe("QueryController", () => {
                 message: {
                     ...ctx.message,
                     from: {
-                        id: 1,
+                        id: 8101,
                     },
                 },
             });
