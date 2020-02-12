@@ -3,11 +3,11 @@ import { getRepository } from "typeorm";
 import { GroupController } from "#/controllers/GroupController";
 import { Group } from "#/entities";
 
-import { createMockedContext } from "./Utils";
-import { UserRepositoryStub } from "./stubs/repositories/UserRepositoryStub";
-import { GroupRepositoryStub } from "./stubs/repositories/GroupRepositoryStub";
-import { MatatakiServiceStub } from "./stubs/services/MatatakiServiceStub";
-import { BotServiceStub } from "./stubs/services/BotServiceStub";
+import { createMockedContext } from "../Utils";
+import { UserRepositoryStub } from "../stubs/repositories/UserRepositoryStub";
+import { GroupRepositoryStub } from "../stubs/repositories/GroupRepositoryStub";
+import { MatatakiServiceStub } from "../stubs/services/MatatakiServiceStub";
+import { BotServiceStub } from "../stubs/services/BotServiceStub";
 
 const botService = new BotServiceStub();
 

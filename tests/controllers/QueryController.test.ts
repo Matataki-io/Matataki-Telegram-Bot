@@ -1,11 +1,12 @@
-import { MatatakiServiceStub } from "./stubs/services/MatatakiServiceStub";
-import { createMockedContext } from "./Utils";
 import { QueryController } from "#/controllers/QueryController";
-import { UserRepositoryStub } from "./stubs/repositories/UserRepositoryStub";
-import { GroupRepositoryStub } from "./stubs/repositories/GroupRepositoryStub";
 import { MessageHandlerContext } from "#/definitions";
-import { LoggerServiceStub } from "./stubs/services/LoggerServiceStub";
-import { BotServiceStub } from "./stubs/services/BotServiceStub";
+
+import { createMockedContext } from "../Utils";
+import { MatatakiServiceStub } from "../stubs/services/MatatakiServiceStub";
+import { UserRepositoryStub } from "../stubs/repositories/UserRepositoryStub";
+import { GroupRepositoryStub } from "../stubs/repositories/GroupRepositoryStub";
+import { LoggerServiceStub } from "../stubs/services/LoggerServiceStub";
+import { BotServiceStub } from "../stubs/services/BotServiceStub";
 
 const matatakiService = new MatatakiServiceStub();
 
@@ -72,7 +73,7 @@ describe("QueryController", () => {
 
             const controller = createController();
             await controller.queryStatus(ctx);
-
+;
             expect(ctx.replyWithMarkdown).toBeCalledTimes(1);
             expect(ctx.replyWithMarkdown).toBeCalledWith(`瞬Matataki 昵称：[李田所](http://MATATAKI/user/114514)
 Fan票 名称：[INM（银票）](http://MATATAKI/token/1919)

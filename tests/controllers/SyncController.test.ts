@@ -1,8 +1,10 @@
-import { SyncController } from "#/controllers/SyncController";
-import { createMockedContext } from "./Utils";
-import { UserRepositoryStub } from "./stubs/repositories/UserRepositoryStub";
-import { User } from "#/entities";
 import { getRepository } from "typeorm";
+
+import { SyncController } from "#/controllers/SyncController";
+import { User } from "#/entities";
+
+import { createMockedContext } from "../Utils";
+import { UserRepositoryStub } from "../stubs/repositories/UserRepositoryStub";
 
 function createController() {
     return new SyncController(new UserRepositoryStub());

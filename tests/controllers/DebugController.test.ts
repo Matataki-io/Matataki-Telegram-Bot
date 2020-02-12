@@ -1,7 +1,6 @@
-import "reflect-metadata";
-
 import { DebugController } from "#/controllers/DebugController";
-import { createMockedContext } from "./Utils";
+
+import { createMockedContext } from "../Utils";
 
 const controller = new DebugController();
 
