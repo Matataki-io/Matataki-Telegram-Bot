@@ -98,7 +98,7 @@ Fan票 名称：[INM（银票）](http://MATATAKI/token/1919)
             Object.assign(ctx, {
                 message: {
                     ...ctx.message,
-                    text: "/price INM"
+                    text: "/price INM",
                 },
             });
             await assertSuccessfulSession(ctx);
@@ -108,7 +108,7 @@ Fan票 名称：[INM（银票）](http://MATATAKI/token/1919)
             Object.assign(ctx, {
                 message: {
                     ...ctx.message,
-                    text: "/price inm"
+                    text: "/price inm",
                 },
             });
             await assertSuccessfulSession(ctx);
@@ -118,7 +118,7 @@ Fan票 名称：[INM（银票）](http://MATATAKI/token/1919)
             Object.assign(ctx, {
                 message: {
                     ...ctx.message,
-                    text: "/price iNM"
+                    text: "/price iNM",
                 },
             });
             await assertSuccessfulSession(ctx);
@@ -128,7 +128,7 @@ Fan票 名称：[INM（银票）](http://MATATAKI/token/1919)
             Object.assign(ctx, {
                 message: {
                     ...ctx.message,
-                    text: "/price   INM   "
+                    text: "/price   INM   ",
                 },
             });
             await assertSuccessfulSession(ctx);
@@ -139,7 +139,7 @@ Fan票 名称：[INM（银票）](http://MATATAKI/token/1919)
             Object.assign(ctx, {
                 message: {
                     ...ctx.message,
-                    text: "/price NOTFOUND"
+                    text: "/price NOTFOUND",
                 },
             });
 
@@ -156,7 +156,7 @@ Fan票 名称：[INM（银票）](http://MATATAKI/token/1919)
             Object.assign(ctx, {
                 message: {
                     ...ctx.message,
-                    text: "/price !@#"
+                    text: "/price !@#",
                 },
             });
 

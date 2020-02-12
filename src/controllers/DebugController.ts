@@ -1,6 +1,6 @@
 import { inject } from "inversify";
 
-import { Controller, Command } from "#/decorators";
+import { Controller, Command, GroupOnly, PrivateChatOnly } from "#/decorators";
 import { MessageHandlerContext } from "#/definitions";
 import { BaseController } from ".";
 
@@ -21,14 +21,15 @@ export class DebugController extends BaseController<DebugController> {
         return Promise.reject(new Error("An intentional error"));
     }
 
-    @Command("table")
-    displayTable({ replyWithHTML }: MessageHandlerContext) {
-        return replyWithHTML(`<pre>
-| Tables   |      Are      |  Cool |
-|----------|:-------------:|------:|
-| col 1 is |  left-aligned | $1600 |
-| col 2 is |    centered   |   $12 |
-| col 3 is | right-aligned |    $1 |
-</pre>`);
+    @Command("grouponly")
+    @GroupOnly()
+    groupOnly({ reply }: MessageHandlerContext) {
+        return reply("Ok");
+    }
+
+    @Command("privatechatonly")
+    @PrivateChatOnly()
+    privateChatOnly({ reply }: MessageHandlerContext) {
+        return reply("Ok");
     }
 }
