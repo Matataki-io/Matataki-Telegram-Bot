@@ -10,6 +10,10 @@ export async function initializeData(conn: Connection) {
     user.id = 1;
     await userRepo.save(user);
 
+    user.id = 2;
+    user.username = "theseconduser";
+    await userRepo.save(user);
+
     let group = new Group();
 
     group.id = -114514;
