@@ -1,6 +1,6 @@
 import { inject, Container } from "inversify";
 import Telegraf, { ContextMessageUpdate, Middleware, session, Markup, Extra } from "telegraf";
-import { User } from "telegraf/typings/telegram-types";
+import { User as TelegramUser } from "telegraf/typings/telegram-types";
 import HttpsProxyAgent from "https-proxy-agent";
 const SocksProxyAgent = require("socks-proxy-agent");
 // this library has no type decalarations for now
@@ -9,18 +9,19 @@ import { getRepository, Repository } from "typeorm";
 import { Constants, MetadataKeys, Injections, LogCategories } from "#/constants";
 import { ControllerConstructor } from "#/controllers";
 import { controllers } from "#/controllers/export";
-import { CommandHandlerInfo, EventHandlerInfo, MessageHandler, MessageHandlerContext, ActionHandlerInfo } from "#/definitions";
+import { CommandHandlerInfo, EventHandlerInfo, MessageHandler, MessageHandlerContext, ActionHandlerInfo, ControllerMethodContext } from "#/definitions";
 import { Service } from "#/decorators";
-import { Group, Metadata, Update } from "#/entities";
+import { Group, Metadata, Update, User } from "#/entities";
 import { IBotService, IDatabaseService, ILoggerService } from "#/services";
 import { delay } from "#/utils";
 import { GroupController } from "#/controllers/GroupController";
+import { IUserRepository } from "#/repositories";
 
 @Service(Injections.BotService)
 export class BotServiceImpl implements IBotService {
     private bot: Telegraf<ContextMessageUpdate>;
 
-    private botInfo?: User;
+    private botInfo?: TelegramUser;
     get info() {
         if (!this.botInfo) {
             throw new Error("The bot is not running");
@@ -97,7 +98,11 @@ export class BotServiceImpl implements IBotService {
             }
         });
         this.bot.start(async ctx => {
+            const { message } = ctx;
             const { startPayload } = ctx as any;
+
+            const userRepo = container.getNamed<IUserRepository>(Injections.Repository, User.name);
+            await userRepo.ensureUser(message!.from!.id, message!.from!.username);
 
             do {
                 if (!startPayload) {
@@ -169,6 +174,8 @@ export class BotServiceImpl implements IBotService {
             this.container.bind(Injections.Controller).to(constructor).whenTargetNamed(name);
         }
 
+        const commandMapping = new Map<string, ControllerConstructor>();
+
         for (const constructor of constructors) {
             const { prototype } = constructor;
             const prefix = Reflect.getMetadata(MetadataKeys.ControllerPrefix, constructor);
@@ -181,6 +188,13 @@ export class BotServiceImpl implements IBotService {
                 console.assert(handler instanceof Function, `${constructor.name}.${methodName} must be a function of type MessageHandlerContext`);
 
                 const commandName = prefix === "/" || ignorePrefix ? name : (prefix + name);
+
+                const ownerController = commandMapping.get(commandName);
+                if (ownerController && ownerController !== constructor) {
+                    throw new Error(`Command '${commandName}' is registered by other controller`);
+                }
+
+                commandMapping.set(commandName, constructor);
 
                 this.bot.command(commandName, this.handlerFactory(constructor.name, methodName));
             }
@@ -211,10 +225,9 @@ export class BotServiceImpl implements IBotService {
                 throw new Error("What happended?");
             }
 
-            type ContextType = ReturnType<typeof BotServiceImpl.prototype.createContext>;
-            const context = Reflect.getMetadata(MetadataKeys.Context, ctx) as ContextType;
+            const context = Reflect.getMetadata(MetadataKeys.Context, ctx) as ControllerMethodContext;
 
-            context.container.bind<ContextType>(Injections.Context).toConstantValue(context);
+            context.container.bind<ControllerMethodContext>(Injections.Context).toConstantValue(context);
 
             const controller = context.container.getNamed<any>(Injections.Controller, controllerName);
             const handler = controller[methodName] as MessageHandler;

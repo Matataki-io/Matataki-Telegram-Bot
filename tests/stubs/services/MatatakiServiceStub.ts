@@ -1,4 +1,4 @@
-import { AssociatedInfo, MinetokenInfo } from "#/definitions";
+import { AssociatedInfo, MinetokenInfo, MatatakiUserInfo } from "#/definitions";
 import { IMatatakiService } from "#/services";
 
 export class MatatakiServiceStub implements IMatatakiService {
@@ -67,9 +67,9 @@ export class MatatakiServiceStub implements IMatatakiService {
 
         throw new Error("Failed to request user's minetoken");
     }
-    transfer(from: number, to: number, symbol: string, amount: number): Promise<void> {
+    transfer(from: number, to: number, symbol: string, amount: number): Promise<string> {
         if (symbol === "INM") {
-            return Promise.resolve();
+            return Promise.resolve("0x1919810");
         }
 
         return Promise.reject(new Error("Failed to get minetoken id"));
@@ -80,6 +80,23 @@ export class MatatakiServiceStub implements IMatatakiService {
         }
 
         return Promise.reject(new Error("Failed to get minetoken id"));
+    }
+    getInfoByMatatakiId(matatakiId: number): Promise<MatatakiUserInfo> {
+        switch (matatakiId) {
+            case 810:
+                return Promise.resolve({
+                    username: "YJSNPI",
+                    nickname: "野獣先輩",
+                });
+
+            case 114514:
+                return Promise.resolve({
+                    username: "litiansuo",
+                    nickname: "李田所",
+                });
+        }
+
+        return Promise.reject(new Error("Failed to get matataki user info"));
     }
 }
 
@@ -103,10 +120,13 @@ export class MatatakiServiceNotAuthorizedStub implements IMatatakiService {
     getUserMinetoken(userId: number, symbol: string): Promise<number> {
         return Promise.reject(new Error("Invalid Access Token"));
     }
-    transfer(from: number, to: number, symbol: string, amount: number): Promise<void> {
+    transfer(from: number, to: number, symbol: string, amount: number): Promise<string> {
         return Promise.reject(new Error("Invalid Access Token"));
     }
     getPrice(symbol: string): Promise<number> {
+        return Promise.reject(new Error("Invalid Access Token"));
+    }
+    getInfoByMatatakiId(matatakiId: number): Promise<MatatakiUserInfo> {
         return Promise.reject(new Error("Invalid Access Token"));
     }
 }

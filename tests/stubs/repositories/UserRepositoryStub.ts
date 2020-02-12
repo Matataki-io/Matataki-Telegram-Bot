@@ -9,10 +9,12 @@ export class UserRepositoryStub implements IUserRepository {
             {
                 id: 1,
                 groups: [],
+                username: "user1",
             },
             {
                 id: 2,
                 groups: [],
+                username: "user2",
             }
         ];
     }
@@ -26,7 +28,8 @@ export class UserRepositoryStub implements IUserRepository {
 
         const result = {
             id,
-            groups: []
+            groups: [],
+            username: "user" + id,
         };
         this.users.push(result);
 
@@ -41,5 +44,12 @@ export class UserRepositoryStub implements IUserRepository {
         }
 
         return Promise.resolve(undefined);
+    }
+
+    setUsername(id: number, username: string): Promise<void> {
+        throw new Error("Method not implemented.");
+    }
+    getIdByUsername(username: string): Promise<number | null> {
+        throw new Error("Method not implemented.");
     }
 }

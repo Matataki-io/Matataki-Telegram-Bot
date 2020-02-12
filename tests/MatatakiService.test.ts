@@ -39,6 +39,19 @@ describe("Matataki Service", () => {
     test("Request minetoken price with a wrong symbol", () => {
         return expect(service.getPrice("NOTFOUND")).rejects.toThrowError("Failed to get minetoken id");
     });
+    test("Responded a matataki user info by matataki uid", async () => {
+        await expect(service.getInfoByMatatakiId(810)).resolves.toStrictEqual({
+            username: "YJSNPI",
+            nickname: "野獣先輩",
+        });
+        await expect(service.getInfoByMatatakiId(114514)).resolves.toStrictEqual({
+            username: "litiansuo",
+            nickname: "李田所",
+        });
+    });
+    test("Request a matataki user info by a wrong matataki uid", () => {
+        return expect(service.getInfoByMatatakiId(404)).rejects.toThrowError("Failed to get matataki user info");
+    });
 
     test("Request with invalid access token (ETH wallet address)", () => {
         return expect(notAuthorized.getEthWallet(114514)).rejects.toThrowError("Invalid Access Token");

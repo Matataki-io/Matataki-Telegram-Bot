@@ -7,4 +7,5 @@ export const MetadataKeys = {
     Scheduler: Symbol.for("SchedulerMetadata"),
     EventNames: Symbol.for("EventNamesMetadata"),
     ActionNames: Symbol.for("ActionNamesMetadata"),
+    Parameters: Symbol.for("ParametersMetadata"),
 }

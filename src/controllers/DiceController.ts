@@ -26,6 +26,7 @@ export class DiceController extends BaseController<DiceController>{
     }
     @Command('new_game', { ignorePrefix: true })
     async dice(ctx: MessageHandlerContext) {
+
         try {
             const args = this.parseDiceArguments(ctx.message.text);
             const sender = await this.getMatatakiUser(ctx);
