@@ -4,11 +4,13 @@ import { QueryController } from "#/controllers/QueryController";
 import { UserRepositoryStub } from "./stubs/repositories/UserRepositoryStub";
 import { GroupRepositoryStub } from "./stubs/repositories/GroupRepositoryStub";
 import { MessageHandlerContext } from "#/definitions";
+import { LoggerServiceStub } from "./stubs/services/LoggerServiceStub";
+import { BotServiceStub } from "./stubs/services/BotServiceStub";
 
 const matatakiService = new MatatakiServiceStub();
 
 function createController() {
-    return new QueryController(matatakiService, new UserRepositoryStub(), new GroupRepositoryStub(), null!, null!);
+    return new QueryController(matatakiService, new UserRepositoryStub(), new GroupRepositoryStub(), new LoggerServiceStub(), new BotServiceStub());
 }
 
 describe("QueryController", () => {
@@ -77,7 +79,7 @@ Fan票 名称：[INM（银票）](http://MATATAKI/token/1919)
 
 *您尚未加入 Fan票 群*
 
-*您尚未建立 Fan票 群*
+*您已建立 0 个 Fan票 群*
 
 输入 /join 查看更多可以加入的 Fan票 群`, { "disable_web_page_preview": true });
         });
