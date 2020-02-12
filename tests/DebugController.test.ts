@@ -1,7 +1,5 @@
 import "reflect-metadata";
 
-import { Message } from "telegraf/typings/telegram-types";
-
 import { DebugController } from "#/controllers/DebugController";
 import { createMockedContext } from "./Utils";
 
@@ -120,104 +118,208 @@ describe("DebugController", () => {
     });
 
     describe("/debugrequirematataki", () => {
-        it("Without matataki account", async () => {
-            const ctx = createMockedContext();
-            Object.assign(ctx, {
-                message: {
-                    ...ctx.message,
-                    from: {
-                        id: 1,
+        describe("Type A", () => {
+            it("Without matataki account", async () => {
+                const ctx = createMockedContext();
+                Object.assign(ctx, {
+                    message: {
+                        ...ctx.message,
+                        from: {
+                            id: 1,
+                        },
                     },
-                },
+                });
+
+                await controller.requireMatatakiAccount(ctx, null!);
+
+                expect(ctx.reply).toBeCalledTimes(1);
+                expect(ctx.reply).toBeCalledWith("抱歉，您没有在 瞬Matataki 绑定该 Telegram 帐号");
             });
+            it("With matataki account (No minted minetoken)", async () => {
+                const ctx = createMockedContext();
+                Object.assign(ctx, {
+                    message: {
+                        ...ctx.message,
+                        from: {
+                            id: 8102,
+                        },
+                    },
+                });
 
-            await controller.requireMatatakiAccount(ctx);
+                await controller.requireMatatakiAccount(ctx, null!);
 
-            expect(ctx.reply).toBeCalledTimes(1);
-            expect(ctx.reply).toBeCalledWith("抱歉，您没有在 瞬Matataki 绑定该 Telegram 帐号");
+                expect(ctx.reply).toBeCalledTimes(1);
+                expect(ctx.reply).toBeCalledWith("810:野獣先輩");
+            });
+            it("With matataki account (With minted minetoken)", async () => {
+                const ctx = createMockedContext();
+                Object.assign(ctx, {
+                    message: {
+                        ...ctx.message,
+                        from: {
+                            id: 8101,
+                        },
+                    },
+                });
+
+                await controller.requireMatatakiAccount(ctx, null!);
+
+                expect(ctx.reply).toBeCalledTimes(1);
+                expect(ctx.reply).toBeCalledWith("114514:李田所");
+            });
         });
-        it("With matataki account (No minted minetoken)", async () => {
-            const ctx = createMockedContext();
-            Object.assign(ctx, {
-                message: {
-                    ...ctx.message,
-                    from: {
-                        id: 8102,
+        describe("Type B", () => {
+            it("Without matataki account", async () => {
+                const ctx = createMockedContext();
+                Object.assign(ctx, {
+                    message: {
+                        ...ctx.message,
+                        from: {
+                            id: 1,
+                        },
                     },
-                },
+                });
+
+                await controller.requireMatatakiAccount2(ctx);
+
+                expect(ctx.reply).toBeCalledTimes(1);
+                expect(ctx.reply).toBeCalledWith("抱歉，您没有在 瞬Matataki 绑定该 Telegram 帐号");
             });
-
-            await controller.requireMatatakiAccount(ctx);
-
-            expect(ctx.reply).toBeCalledTimes(1);
-            expect(ctx.reply).toBeCalledWith("Ok");
-        });
-        it("With matataki account (With minted minetoken)", async () => {
-            const ctx = createMockedContext();
-            Object.assign(ctx, {
-                message: {
-                    ...ctx.message,
-                    from: {
-                        id: 8101,
+            it("With matataki account (No minted minetoken)", async () => {
+                const ctx = createMockedContext();
+                Object.assign(ctx, {
+                    message: {
+                        ...ctx.message,
+                        from: {
+                            id: 8102,
+                        },
                     },
-                },
+                });
+
+                await controller.requireMatatakiAccount2(ctx);
+
+                expect(ctx.reply).toBeCalledTimes(1);
+                expect(ctx.reply).toBeCalledWith("Ok");
             });
+            it("With matataki account (With minted minetoken)", async () => {
+                const ctx = createMockedContext();
+                Object.assign(ctx, {
+                    message: {
+                        ...ctx.message,
+                        from: {
+                            id: 8101,
+                        },
+                    },
+                });
 
-            await controller.requireMatatakiAccount(ctx);
+                await controller.requireMatatakiAccount2(ctx);
 
-            expect(ctx.reply).toBeCalledTimes(1);
-            expect(ctx.reply).toBeCalledWith("Ok");
+                expect(ctx.reply).toBeCalledTimes(1);
+                expect(ctx.reply).toBeCalledWith("Ok");
+            });
         });
     });
 
     describe("/debugmintedminetoken", () => {
-        it("Without matataki account", async () => {
-            const ctx = createMockedContext();
-            Object.assign(ctx, {
-                message: {
-                    ...ctx.message,
-                    from: {
-                        id: 1,
+        describe("Type A", () => {
+            it("Without matataki account", async () => {
+                const ctx = createMockedContext();
+                Object.assign(ctx, {
+                    message: {
+                        ...ctx.message,
+                        from: {
+                            id: 1,
+                        },
                     },
-                },
+                });
+
+                await controller.requireMintedMinetoken(ctx, null!);
+
+                expect(ctx.reply).toBeCalledTimes(1);
+                expect(ctx.reply).toBeCalledWith("抱歉，您没有在 瞬Matataki 绑定该 Telegram 帐号或者尚未发行 Fan 票");
             });
+            it("With matataki account (No minted minetoken)", async () => {
+                const ctx = createMockedContext();
+                Object.assign(ctx, {
+                    message: {
+                        ...ctx.message,
+                        from: {
+                            id: 8102,
+                        },
+                    },
+                });
 
-            await controller.requireMintedMinetoken(ctx);
+                await controller.requireMintedMinetoken(ctx, null!);
 
-            expect(ctx.reply).toBeCalledTimes(1);
-            expect(ctx.reply).toBeCalledWith("抱歉，您没有在 瞬Matataki 绑定该 Telegram 帐号或者尚未发行 Fan 票");
+                expect(ctx.reply).toBeCalledTimes(1);
+                expect(ctx.reply).toBeCalledWith("抱歉，您没有在 瞬Matataki 绑定该 Telegram 帐号或者尚未发行 Fan 票");
+            });
+            it("With matataki account (With minted minetoken)", async () => {
+                const ctx = createMockedContext();
+                Object.assign(ctx, {
+                    message: {
+                        ...ctx.message,
+                        from: {
+                            id: 8101,
+                        },
+                    },
+                });
+
+                await controller.requireMintedMinetoken(ctx, null!);
+
+                expect(ctx.reply).toBeCalledTimes(1);
+                expect(ctx.reply).toBeCalledWith("114514:李田所 w/ 1919:银票(INM)");
+            });
         });
-        it("With matataki account (No minted minetoken)", async () => {
-            const ctx = createMockedContext();
-            Object.assign(ctx, {
-                message: {
-                    ...ctx.message,
-                    from: {
-                        id: 8102,
+        describe("Type B", () => {
+            it("Without matataki account", async () => {
+                const ctx = createMockedContext();
+                Object.assign(ctx, {
+                    message: {
+                        ...ctx.message,
+                        from: {
+                            id: 1,
+                        },
                     },
-                },
+                });
+
+                await controller.requireMintedMinetoken2(ctx);
+
+                expect(ctx.reply).toBeCalledTimes(1);
+                expect(ctx.reply).toBeCalledWith("抱歉，您没有在 瞬Matataki 绑定该 Telegram 帐号或者尚未发行 Fan 票");
             });
-
-            await controller.requireMintedMinetoken(ctx);
-
-            expect(ctx.reply).toBeCalledTimes(1);
-            expect(ctx.reply).toBeCalledWith("抱歉，您没有在 瞬Matataki 绑定该 Telegram 帐号或者尚未发行 Fan 票");
-        });
-        it("With matataki account (With minted minetoken)", async () => {
-            const ctx = createMockedContext();
-            Object.assign(ctx, {
-                message: {
-                    ...ctx.message,
-                    from: {
-                        id: 8101,
+            it("With matataki account (No minted minetoken)", async () => {
+                const ctx = createMockedContext();
+                Object.assign(ctx, {
+                    message: {
+                        ...ctx.message,
+                        from: {
+                            id: 8102,
+                        },
                     },
-                },
+                });
+
+                await controller.requireMintedMinetoken2(ctx);
+
+                expect(ctx.reply).toBeCalledTimes(1);
+                expect(ctx.reply).toBeCalledWith("抱歉，您没有在 瞬Matataki 绑定该 Telegram 帐号或者尚未发行 Fan 票");
             });
+            it("With matataki account (With minted minetoken)", async () => {
+                const ctx = createMockedContext();
+                Object.assign(ctx, {
+                    message: {
+                        ...ctx.message,
+                        from: {
+                            id: 8101,
+                        },
+                    },
+                });
 
-            await controller.requireMintedMinetoken(ctx);
+                await controller.requireMintedMinetoken2(ctx);
 
-            expect(ctx.reply).toBeCalledTimes(1);
-            expect(ctx.reply).toBeCalledWith("Ok");
+                expect(ctx.reply).toBeCalledTimes(1);
+                expect(ctx.reply).toBeCalledWith("Ok");
+            });
         });
     });
 });

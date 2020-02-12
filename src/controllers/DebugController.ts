@@ -1,7 +1,5 @@
-import { inject } from "inversify";
-
-import { Controller, Command, GroupOnly, PrivateChatOnly, RequireMatatakiAccount, RequireMintedMinetoken } from "#/decorators";
-import { MessageHandlerContext } from "#/definitions";
+import { Controller, Command, GroupOnly, PrivateChatOnly, RequireMatatakiAccount, RequireMintedMinetoken, SenderMatatakiInfo } from "#/decorators";
+import { MessageHandlerContext, AssociatedInfo } from "#/definitions";
 import { BaseController } from ".";
 
 @Controller("debug")
@@ -35,12 +33,24 @@ export class DebugController extends BaseController<DebugController> {
 
     @Command("requirematataki")
     @RequireMatatakiAccount()
-    requireMatatakiAccount({ reply }: MessageHandlerContext) {
+    requireMatatakiAccount({ reply }: MessageHandlerContext, @SenderMatatakiInfo() senderInfo: Required<Omit<AssociatedInfo, "minetoken">>) {
+        const { user } = senderInfo;
+        return reply(`${user.id}:${user.name}`);
+    }
+    @Command("requirematataki2")
+    @RequireMatatakiAccount()
+    requireMatatakiAccount2({ reply }: MessageHandlerContext) {
         return reply("Ok");
     }
     @Command("requiremintedminetoken")
     @RequireMintedMinetoken()
-    requireMintedMinetoken({ reply }: MessageHandlerContext) {
+    requireMintedMinetoken({ reply }: MessageHandlerContext, @SenderMatatakiInfo() senderInfo: Required<AssociatedInfo>) {
+        const { user, minetoken } = senderInfo;
+        return reply(`${user.id}:${user.name} w/ ${minetoken.id}:${minetoken.name}(${minetoken.symbol})`);
+    }
+    @Command("requiremintedminetoken2")
+    @RequireMintedMinetoken()
+    requireMintedMinetoken2({ reply }: MessageHandlerContext) {
         return reply("Ok");
     }
 }

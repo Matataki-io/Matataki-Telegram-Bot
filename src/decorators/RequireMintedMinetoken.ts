@@ -17,16 +17,14 @@ export function RequireMintedMinetoken(): MethodDecorator {
         const map = Reflect.getMetadata(MetadataKeys.Parameters, target.constructor) as Map<string, Map<number, ParameterInfo>> | undefined;
         if (map) {
             const parameters = map.get(methodName);
-            if (!parameters) {
-                throw new Error("Missed");
-            }
+            if (parameters) {
+                for (const [parameterIndex, info] of parameters) {
+                    if (info.type !== ParameterTypes.SenderMatatakiInfo) {
+                        continue;
+                    }
 
-            for (const [parameterIndex, info] of parameters) {
-                if (info.type !== ParameterTypes.SenderMatatakiInfo) {
-                    continue;
+                    index = parameterIndex;
                 }
-
-                index = parameterIndex;
             }
         }
 
@@ -40,7 +38,7 @@ export function RequireMintedMinetoken(): MethodDecorator {
                 return;
             }
 
-            if (index === -1) {
+            if (index !== -1) {
                 args[index - 1] = info;
             }
 
