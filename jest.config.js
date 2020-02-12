@@ -4,6 +4,7 @@ module.exports = {
     collectCoverage: true,
     collectCoverageFrom: [
         "<rootDir>/src/**/*.ts",
+        "!<rootDir>/src/{app,container}.ts",
         "!<rootDir>/src/abi/**.ts",
     ],
     coveragePathIgnorePatterns: [
