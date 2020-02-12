@@ -2,12 +2,15 @@ process.env.INFURA_ID = "Test";
 
 module.exports = {
     collectCoverage: true,
+    collectCoverageFrom: [
+        "<rootDir>/src/**/*.ts",
+    ],
     coveragePathIgnorePatterns: [
         "/node_modules/",
         "/tests/"
     ],
     testMatch: [
-        "**/tests/**/*.test.ts",
+        "<rootDir>/tests/**/*.test.ts",
     ],
     transform: {
         "^.+\\.ts$": "ts-jest",
