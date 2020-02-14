@@ -51,7 +51,7 @@ export class HelpController extends BaseController<HelpController> {
 /transfer： Fan票 转账，输入 \`/transfer [目标帐号] [Fan票符号] [数量]\` 可给指定用户转账指定数量的指定 Fan票，目标帐号可以为 Matataki UID 或者 @ 后接 Telegram 帐号用户名，例如 \`/transfer 123 ABC 100\` 就是给 Matataki ID 123 帐号转账 100 个 ABC；而 \`/transfer @someone ABC 100\` 就是给 Telegram 的 \`@someone\` 所绑定的 Matataki 帐号转账 100 个 ABC
 /fahongbao： 发红包，格式为 \`/fahongbao [Fan票符号] [总红包金额] [红包数量] [描述（可选）]\`
 /sfahongbao： 发随机红包，格式为 \`/sfahongbao [Fan票符号] [总红包金额] [红包数量] [描述（可选）]\`
-/hongbao： 收红包
+/new_game：开始一局Dice游戏,格式为 \`/new_game [赌注金额] [赌注单位]\`
 /syncusername： 同步 Telegram 帐号用户名，用作转账和查询时的目标
 
 [如何调戏 Fan票 粉丝群助手视频教程](https://www.bilibili.com/video/av82477411)`, { parse_mode: 'MarkdownV2', disable_web_page_preview: true });
@@ -140,10 +140,7 @@ export class HelpController extends BaseController<HelpController> {
 
 *发红包*
 可以输入 /fahongbao 发普通红包或者输入 /sfahongbao 发随机红包
-后面接的命令参数均为 \`[Fan票符号] [总红包金额] [红包数量] [描述（可选）]\`，参数间用空格相连
-
-*抢红包*
-在有人发出红包的时候输入 /hongbao 命令抢红包`, { parse_mode: 'Markdown', disable_web_page_preview: true });
+后面接的命令参数均为 \`[Fan票符号] [总红包金额] [红包数量] [描述（可选）]\`，参数间用空格相连`, { parse_mode: 'Markdown', disable_web_page_preview: true });
     }
 
     @Action("help9")
@@ -160,5 +157,24 @@ export class HelpController extends BaseController<HelpController> {
         await ctx.telegram.sendMessage(ctx.chat!.id, `👉*我有别的问题*
 
 如有其他问题请在 瞬Matataki 的[官方 TG 群](https://t.me/smartsignature_io)询问`, { parse_mode: 'Markdown', disable_web_page_preview: true });
+    }
+    @Action("help11")
+    async dice(ctx: MessageHandlerContext) {
+        await ctx.answerCbQuery();
+        await ctx.telegram.sendMessage(ctx.chat!.id, `如何开启一局Dice
+使用/new_game命令：/new_game [赌注金额] [赌注单位]
+例如：/new_game 0.1 DAO
+加入游戏
+开启游戏后，其他人可以选择加入游戏，只有房主才能选择开局或者流局
+
+开局
+所有房间内的人获取一个从1到99的随机数，最大的那个人是胜者，如果有两个或以上人都是最大点数，
+那么第一个加入房间的人是胜者，胜者将获得该房间内的所有赌注
+
+流局
+放弃这局游戏，所有赌注全部归还`, {
+            parse_mode: 'HTML',
+            disable_web_page_preview: false
+        });
     }
 }
