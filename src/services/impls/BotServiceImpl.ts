@@ -134,6 +134,7 @@ export class BotServiceImpl implements IBotService {
                 [Markup.callbackButton("👉如何删除 Fan票 群", "help6")],
                 [Markup.callbackButton("👉视频教程(更新中)", "help7")],
                 [Markup.callbackButton("👉如何使用红包功能", "help8")],
+                [Markup.callbackButton("👉如何开启Dice小游戏", "help11")],
                 [Markup.callbackButton("👉如何使用转账功能", "help9")],
                 [Markup.callbackButton("👉我有别的问题", "help10")],
             ]).extra());

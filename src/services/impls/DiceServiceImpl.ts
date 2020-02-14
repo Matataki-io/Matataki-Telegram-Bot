@@ -155,7 +155,7 @@ export class DiceServiceImpl implements IDiceService {
                     messages += `结算失败\n`;
                 }
             }
-            messages += `${winner.name} +${bonus} ${game.args.unit}`;
+            messages += `${winner.name} +${bonus/10000} ${game.args.unit}`;
             await ctx.replyWithHTML(messages, { disable_web_page_preview: true });
         }
     }
