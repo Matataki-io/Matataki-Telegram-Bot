@@ -51,7 +51,7 @@ export class HelpController extends BaseController<HelpController> {
 /transfer： Fan票 转账，输入 \`/transfer [目标帐号] [Fan票符号] [数量]\` 可给指定用户转账指定数量的指定 Fan票，目标帐号可以为 Matataki UID 或者 @ 后接 Telegram 帐号用户名，例如 \`/transfer 123 ABC 100\` 就是给 Matataki ID 123 帐号转账 100 个 ABC；而 \`/transfer @someone ABC 100\` 就是给 Telegram 的 \`@someone\` 所绑定的 Matataki 帐号转账 100 个 ABC
 /fahongbao： 发红包，格式为 \`/fahongbao [Fan票符号] [总红包金额] [红包数量] [描述（可选）]\`
 /sfahongbao： 发随机红包，格式为 \`/sfahongbao [Fan票符号] [总红包金额] [红包数量] [描述（可选）]\`
-/new_game：开始一局Dice游戏,格式为 \`/new_game [赌注金额] [赌注单位]\`
+/new\\_game：开始一局Dice游戏,格式为 \`/new\\_game [赌注金额] [赌注单位]\`
 /syncusername： 同步 Telegram 帐号用户名，用作转账和查询时的目标
 
 [如何调戏 Fan票 粉丝群助手视频教程](https://www.bilibili.com/video/av82477411)`, { parse_mode: 'MarkdownV2', disable_web_page_preview: true });
