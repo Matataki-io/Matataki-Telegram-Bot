@@ -27,10 +27,10 @@ describe("I18nService", () => {
         });
         it.each`
         language     | expected
-        ${"en"}      | ${"Hierarchicy test"}
+        ${"en"}      | ${"Hierarchy test"}
         ${"zh-hans"} | ${"层级测试"}
         ${"zh-hant"} | ${"層級測試"}
-        `("Hierarchicy ($language)", ({ language, expected }) => {
+        `("Hierarchy ($language)", ({ language, expected }) => {
             const service = createService();
             const template = service.templateMap.get(language)!;
 
@@ -68,10 +68,10 @@ describe("I18nService", () => {
         });
         it.each`
         language     | expected
-        ${"en"}      | ${"Hierarchicy test"}
+        ${"en"}      | ${"Hierarchy test"}
         ${"zh-hans"} | ${"层级测试"}
         ${"zh-hant"} | ${"層級測試"}
-        `("Hierarchicy ($language)", ({ language, expected }) => {
+        `("Hierarchy ($language)", ({ language, expected }) => {
             const service = createService();
 
             expect(service.t(language, "a.b.c")).toBe(expected);
@@ -94,7 +94,7 @@ describe("I18nService", () => {
         ${"en"}
         ${"zh-hans"}
         ${"zh-hant"}
-        `("Hierarchicy Type A ($language)", ({ language }) => {
+        `("Hierarchy Type A ($language)", ({ language }) => {
             const service = createService();
 
             expect(() => service.t(language, "a.b")).toThrowError(`Template of key 'a.b' in '${language}' not found`);
@@ -104,7 +104,7 @@ describe("I18nService", () => {
         ${"en"}
         ${"zh-hans"}
         ${"zh-hant"}
-        `("Hierarchicy Type B ($language)", ({ language }) => {
+        `("Hierarchy Type B ($language)", ({ language }) => {
             const service = createService();
 
             expect(() => service.t(language, "a.b.c.d")).toThrowError(`Template of key 'a.b.c.d' in '${language}' not found`);
