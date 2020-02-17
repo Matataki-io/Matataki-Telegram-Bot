@@ -53,4 +53,9 @@ export class DebugController extends BaseController<DebugController> {
     requireMintedMinetoken2({ reply }: MessageHandlerContext) {
         return reply("Ok");
     }
+
+    @Command("i18n")
+    i18n({ reply, i18n }: MessageHandlerContext) {
+        return reply(i18n.t("lang"));
+    }
 }

@@ -1,6 +1,8 @@
 import { DebugController } from "#/controllers/DebugController";
 
 import { createMockedContext } from "../Utils";
+import { I18nContext } from "#/definitions";
+import { I18nServiceImpl } from "#/services/impls/I18nServiceImpl";
 
 const controller = new DebugController();
 
@@ -321,4 +323,33 @@ describe("DebugController", () => {
             });
         });
     });
+
+    describe("/debugi18n", () => {
+        const i18nService = new I18nServiceImpl();
+
+        it.each`
+        language
+        ${"en"}
+        ${"zh-hans"}
+        ${"zh-hant"}
+        ${"ja"}
+        `("$language", async ({ language }) => {
+            const ctx = createMockedContext();
+            Object.assign(ctx, {
+                message: {
+                    ...ctx.message,
+                    from: {
+                        id: 1,
+                        language_code: language,
+                    },
+                },
+                i18n: new I18nContext(i18nService.templateMap, language),
+            });
+
+            await controller.i18n(ctx);
+
+            expect(ctx.reply).toBeCalledTimes(1);
+            expect(ctx.reply).toBeCalledWith(i18nService.t(language, "lang"));
+        });
+    })
 });
