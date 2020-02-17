@@ -12,7 +12,7 @@ import { controllers } from "#/controllers/export";
 import { CommandHandlerInfo, EventHandlerInfo, MessageHandler, MessageHandlerContext, ActionHandlerInfo, ControllerMethodContext } from "#/definitions";
 import { Service } from "#/decorators";
 import { Group, Metadata, Update, User } from "#/entities";
-import { IBotService, IDatabaseService, ILoggerService } from "#/services";
+import { IBotService, IDatabaseService, ILoggerService, II18nService } from "#/services";
 import { delay } from "#/utils";
 import { GroupController } from "#/controllers/GroupController";
 import { IUserRepository } from "#/repositories";
@@ -43,6 +43,7 @@ export class BotServiceImpl implements IBotService {
 
     constructor(@inject(Injections.DatabaseService) private databaseService: IDatabaseService,
         @inject(Injections.LoggerService) private logger: ILoggerService,
+        @inject(Injections.I18nService) private i18nService: II18nService,
         @inject(Injections.Container) private container: Container) {
         console.assert(process.env.BOT_TOKEN);
 
@@ -86,6 +87,7 @@ export class BotServiceImpl implements IBotService {
 
             console.log('Response time: %sms', ms);
         });
+        this.bot.use(this.i18nService.middleware());
         this.bot.catch((err: any, ctx: ContextMessageUpdate) => {
             const { reply } = ctx;
 
