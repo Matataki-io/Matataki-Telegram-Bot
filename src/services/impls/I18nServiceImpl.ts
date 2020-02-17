@@ -17,6 +17,10 @@ type LocaleYamlDocument = {
 
 @Service(Injections.I18nService)
 export class I18nServiceImpl implements II18nService {
+    get fallbackLanguage() {
+        return "en";
+    }
+
     private directory: string;
 
     templateMap: LocaleTemplateMap;
@@ -70,12 +74,12 @@ export class I18nServiceImpl implements II18nService {
 
     middleware<T extends ContextMessageUpdate>(): Middleware<T> {
         return async (ctx: T, next: (() => any) | undefined) => {
-            const from = ctx.message?.from;
+            const from = ctx.message?.from ?? ctx.callbackQuery?.from;
             if (!from) {
                 throw new Error("What happened");
             }
 
-            const language = this.userLanguage.get(from.id) ?? from.language_code!;
+            const language = this.userLanguage.get(from.id) ?? from.language_code ?? this.fallbackLanguage;
             const i18nContext = new I18nContext(this.templateMap, language);
 
             Object.assign(ctx, {
