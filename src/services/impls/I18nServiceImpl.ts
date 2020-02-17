@@ -10,8 +10,8 @@ import { II18nService } from "#/services";
 type LocaleYamlDocument = {
     [key: string]: string | LocaleYamlDocument,
 }
-type TranslateFunc = () => string;
-type LocaleTemplates = Map<string, TranslateFunc | LocaleTemplates>;
+type TemplateFunc = () => string;
+type LocaleTemplates = Map<string, TemplateFunc | LocaleTemplates>;
 
 @Service(Injections.I18nService)
 export class I18nServiceImpl implements II18nService {
@@ -47,12 +47,46 @@ export class I18nServiceImpl implements II18nService {
     }
 
     t(language: string, key: string): string {
-        return "";
+        const shortLanguage = language.split("-")[0];
+        const template = this.getTemplate(language, key) ?? this.getTemplate(shortLanguage, key);
+        if (!template) {
+            throw new Error(`Template of key '${key}' in '${language}' not found`);
+        }
+
+        return template.call(this);
+    }
+    private getTemplate(language: string, key: string): TemplateFunc | null {
+        let map = this.templateMap.get(language);
+
+        const parts = key.split(".");
+        for (let i = 0; i < parts.length; i++) {
+            if (!map) {
+                break;
+            }
+
+            const value = map.get(parts[i]);
+
+            if (!value) {
+                break;
+            }
+
+            if (value instanceof Function) {
+                if (i === parts.length - 1) {
+                    return value;
+                }
+
+                break;
+            }
+
+            map = value;
+        }
+
+        return null;
     }
 }
 
 function compileDocument(document: LocaleYamlDocument): LocaleTemplates {
-    const result = new Map<string, TranslateFunc | LocaleTemplates>();
+    const result = new Map<string, TemplateFunc | LocaleTemplates>();
 
     for (const [key, value] of Object.entries(document)) {
         if (typeof value === "string") {
