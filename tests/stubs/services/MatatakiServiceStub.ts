@@ -15,7 +15,7 @@ export class MatatakiServiceStub implements IMatatakiService {
     }
     getAssociatedInfo(userId: number): Promise<AssociatedInfo> {
         switch (userId) {
-            case 1:
+            case 8101:
                 return Promise.resolve<AssociatedInfo>({
                     user: {
                         id: 114514,
@@ -28,7 +28,7 @@ export class MatatakiServiceStub implements IMatatakiService {
                     },
                 });
 
-            case 2:
+            case 8102:
                 return Promise.resolve<AssociatedInfo>({
                     user: {
                         id: 810,
@@ -36,7 +36,7 @@ export class MatatakiServiceStub implements IMatatakiService {
                     }
                 });
 
-            case 3:
+            case 1:
                 return Promise.resolve<AssociatedInfo>({});
 
             default:

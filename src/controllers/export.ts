@@ -7,6 +7,7 @@ import { WalletController } from "./WalletController";
 import { QueryController } from "./QueryController";
 import { RedEnvelopeController } from "./RedEnvelopeController";
 import { SyncController } from "./SyncController";
+import { I18nController } from "./I18nController";
 
 export const controllers: ControllerConstructor[] = [
     DebugController,
@@ -17,4 +18,5 @@ export const controllers: ControllerConstructor[] = [
     QueryController,
     RedEnvelopeController,
     SyncController,
+    I18nController,
 ];

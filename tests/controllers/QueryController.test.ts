@@ -1,14 +1,17 @@
-import { MatatakiServiceStub } from "./stubs/services/MatatakiServiceStub";
-import { createMockedContext } from "./Utils";
 import { QueryController } from "#/controllers/QueryController";
-import { UserRepositoryStub } from "./stubs/repositories/UserRepositoryStub";
-import { GroupRepositoryStub } from "./stubs/repositories/GroupRepositoryStub";
 import { MessageHandlerContext } from "#/definitions";
+
+import { createMockedContext } from "../Utils";
+import { MatatakiServiceStub } from "../stubs/services/MatatakiServiceStub";
+import { UserRepositoryStub } from "../stubs/repositories/UserRepositoryStub";
+import { GroupRepositoryStub } from "../stubs/repositories/GroupRepositoryStub";
+import { LoggerServiceStub } from "../stubs/services/LoggerServiceStub";
+import { BotServiceStub } from "../stubs/services/BotServiceStub";
 
 const matatakiService = new MatatakiServiceStub();
 
 function createController() {
-    return new QueryController(matatakiService, new UserRepositoryStub(), new GroupRepositoryStub(), null!, null!);
+    return new QueryController(matatakiService, new UserRepositoryStub(), new GroupRepositoryStub(), new LoggerServiceStub(), new BotServiceStub());
 }
 
 describe("QueryController", () => {
@@ -19,7 +22,7 @@ describe("QueryController", () => {
                 message: {
                     ...ctx.message,
                     from: {
-                        id: 3,
+                        id: 1,
                     },
                 },
             });
@@ -39,7 +42,7 @@ describe("QueryController", () => {
                 message: {
                     ...ctx.message,
                     from: {
-                        id: 2,
+                        id: 8102,
                     },
                 },
             });
@@ -63,21 +66,21 @@ describe("QueryController", () => {
                 message: {
                     ...ctx.message,
                     from: {
-                        id: 1,
+                        id: 8101,
                     },
                 },
             });
 
             const controller = createController();
             await controller.queryStatus(ctx);
-
+;
             expect(ctx.replyWithMarkdown).toBeCalledTimes(1);
             expect(ctx.replyWithMarkdown).toBeCalledWith(`瞬Matataki 昵称：[李田所](http://MATATAKI/user/114514)
 Fan票 名称：[INM（银票）](http://MATATAKI/token/1919)
 
 *您尚未加入 Fan票 群*
 
-*您尚未建立 Fan票 群*
+*您已建立 0 个 Fan票 群*
 
 输入 /join 查看更多可以加入的 Fan票 群`, { "disable_web_page_preview": true });
         });
@@ -98,7 +101,7 @@ Fan票 名称：[INM（银票）](http://MATATAKI/token/1919)
             Object.assign(ctx, {
                 message: {
                     ...ctx.message,
-                    text: "/price INM"
+                    text: "/price INM",
                 },
             });
             await assertSuccessfulSession(ctx);
@@ -108,7 +111,7 @@ Fan票 名称：[INM（银票）](http://MATATAKI/token/1919)
             Object.assign(ctx, {
                 message: {
                     ...ctx.message,
-                    text: "/price inm"
+                    text: "/price inm",
                 },
             });
             await assertSuccessfulSession(ctx);
@@ -118,7 +121,7 @@ Fan票 名称：[INM（银票）](http://MATATAKI/token/1919)
             Object.assign(ctx, {
                 message: {
                     ...ctx.message,
-                    text: "/price iNM"
+                    text: "/price iNM",
                 },
             });
             await assertSuccessfulSession(ctx);
@@ -128,7 +131,7 @@ Fan票 名称：[INM（银票）](http://MATATAKI/token/1919)
             Object.assign(ctx, {
                 message: {
                     ...ctx.message,
-                    text: "/price   INM   "
+                    text: "/price   INM   ",
                 },
             });
             await assertSuccessfulSession(ctx);
@@ -139,7 +142,7 @@ Fan票 名称：[INM（银票）](http://MATATAKI/token/1919)
             Object.assign(ctx, {
                 message: {
                     ...ctx.message,
-                    text: "/price NOTFOUND"
+                    text: "/price NOTFOUND",
                 },
             });
 
@@ -156,7 +159,7 @@ Fan票 名称：[INM（银票）](http://MATATAKI/token/1919)
             Object.assign(ctx, {
                 message: {
                     ...ctx.message,
-                    text: "/price !@#"
+                    text: "/price !@#",
                 },
             });
 

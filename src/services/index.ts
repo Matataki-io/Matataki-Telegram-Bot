@@ -1,5 +1,6 @@
 export * from "./IBotService";
 export * from "./IDatabaseService";
+export * from "./II18nService";
 export * from "./ILoggerService";
 export * from "./IMatatakiService";
 export * from "./IWeb3Service";

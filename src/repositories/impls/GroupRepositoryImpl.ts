@@ -8,7 +8,6 @@ const relationsOption = { relations: ["members"] };
 
 @Repository(Group)
 export class GroupRepositoryImpl extends BaseRepository<Group> implements IGroupRepository {
-
     constructor() {
         super(Group);
     }

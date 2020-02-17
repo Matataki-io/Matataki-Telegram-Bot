@@ -5,6 +5,7 @@ import { MatatakiServiceImpl } from "./MatatakiServiceImpl";
 import { Web3ServiceImpl } from "./Web3ServiceImpl";
 import { RedEnvelopeServiceImpl } from "./RedEnvelopeServiceImpl";
 import { DiceServiceImpl } from "./DiceServiceImpl";
+import { I18nServiceImpl } from "./I18nServiceImpl";
 
 export const serviceImplementations = [
     BotServiceImpl,
@@ -13,5 +14,6 @@ export const serviceImplementations = [
     MatatakiServiceImpl,
     Web3ServiceImpl,
     RedEnvelopeServiceImpl,
-    DiceServiceImpl
+    DiceServiceImpl,
+    I18nServiceImpl,
 ];

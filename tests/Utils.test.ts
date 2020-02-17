@@ -3,19 +3,6 @@ import { delay, allPromiseSettled } from "#/utils";
 describe.each``
 
 describe("Utils", () => {
-    it.each`
-    ms
-    ${1000}
-    ${2000}
-    ${3000}
-    `("delay", async ({ ms }) => {
-        const start = +new Date();
-        await delay(ms);
-        const duration = Math.abs(+new Date() - start - ms);
-
-        expect(duration).toBeLessThanOrEqual(10);
-    });
-
     describe("allPromiseSettled", () => {
         it("One resolved", async () => {
             const result = await allPromiseSettled([Promise.resolve(1)]);

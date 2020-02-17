@@ -15,19 +15,18 @@ export class SyncController extends BaseController<SyncController> {
 
     @Command("username")
     async syncUsername({ message, reply }: MessageHandlerContext) {
-        const { username } = message.from;
+        const { id, username } = message.from;
         if (!username) {
-            await reply("抱歉，您还没有设置 Telegram 帐号用户名");
+            await reply("抱歉，您还没有设置 Telegram 帐号用户名", {
+                reply_to_message_id: message.chat.type !== "private" ? message.message_id : undefined,
+            });
             return;
         }
 
-        const user = await this.userRepo.ensureUser(message.from.id, username);
-        if (!user.username) {
-            user.username = username;
+        await this.userRepo.setUsername(id, username);
 
-            await this.userRepo.setUsername(message.from.id, username);
-        }
-
-        await reply("OK");
+        await reply("Ok", {
+            reply_to_message_id: message.chat.type !== "private" ? message.message_id : undefined,
+        });
     }
 }

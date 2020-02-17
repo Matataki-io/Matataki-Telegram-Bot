@@ -1,4 +1,4 @@
-import { MatatakiServiceStub, MatatakiServiceNotAuthorizedStub } from "./stubs/services/MatatakiServiceStub";
+import { MatatakiServiceStub, MatatakiServiceNotAuthorizedStub } from "../stubs/services/MatatakiServiceStub";
 
 const service = new MatatakiServiceStub();
 const notAuthorized = new MatatakiServiceNotAuthorizedStub();
