@@ -110,4 +110,15 @@ describe("I18nService", () => {
             expect(() => service.t(language, "a.b.c.d")).toThrowError(`Template of key 'a.b.c.d' in '${language}' not found`);
         });
     });
+
+    it("Only load non-empty files with correct filename", () => {
+        const service = createService();
+
+        const installed = service.getInstalledLanguages();
+
+        expect(installed).toHaveLength(3);
+        expect(installed).toContainEqual("en");
+        expect(installed).toContainEqual("zh-hans");
+        expect(installed).toContainEqual("zh-hant");
+    })
 });

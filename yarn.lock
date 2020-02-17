@@ -6289,6 +6289,13 @@ ieee754@^1.1.4:
   resolved "https://registry.npm.taobao.org/ieee754/download/ieee754-1.1.13.tgz#ec168558e95aa181fd87d37f55c32bbcb6708b84"
   integrity sha1-7BaFWOlaoYH9h9N/VcMrvLZwi4Q=
 
+ietf-language-tag-regex@^0.0.5:
+  version "0.0.5"
+  resolved "https://registry.npm.taobao.org/ietf-language-tag-regex/download/ietf-language-tag-regex-0.0.5.tgz#81133adb3d1c929b8ff1f47254490aee7a3462ce"
+  integrity sha1-gRM62z0ckpuP8fRyVEkK7no0Ys4=
+  dependencies:
+    xregexp "^3.1.1"
+
 iferr@^0.1.5:
   version "0.1.5"
   resolved "https://registry.npm.taobao.org/iferr/download/iferr-0.1.5.tgz#c60eed69e6d8fdb6b3104a1fcbca1c192dc5b501"
@@ -13601,6 +13608,11 @@ xmlhttprequest@1.8.0:
   version "1.8.0"
   resolved "https://registry.npm.taobao.org/xmlhttprequest/download/xmlhttprequest-1.8.0.tgz#67fe075c5c24fef39f9d65f5f7b7fe75171968fc"
   integrity sha1-Z/4HXFwk/vOfnWX197f+dRcZaPw=
+
+xregexp@^3.1.1:
+  version "3.2.0"
+  resolved "https://registry.npm.taobao.org/xregexp/download/xregexp-3.2.0.tgz?cache=0&sync_timestamp=1581429211621&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fxregexp%2Fdownload%2Fxregexp-3.2.0.tgz#cb3601987bfe2695b584000c18f1c4a8c322878e"
+  integrity sha1-yzYBmHv+JpW1hAAMGPHEqMMih44=
 
 xtend@^4.0.0, xtend@~4.0.0, xtend@~4.0.1:
   version "4.0.2"

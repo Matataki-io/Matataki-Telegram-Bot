@@ -4,6 +4,7 @@ import * as fs from "fs";
 import * as yaml from "js-yaml";
 import { unmanaged } from "inversify";
 import { Middleware, ContextMessageUpdate } from "telegraf";
+const languageTagRegex = require("ietf-language-tag-regex") as () => RegExp;
 
 import { Injections } from "#/constants";
 import { Service } from "#/decorators";
@@ -43,12 +44,24 @@ export class I18nServiceImpl implements II18nService {
             }
 
             const language = path.basename(filename, extension).toLowerCase();
+            if (!languageTagRegex().test(language)) {
+                continue;
+            }
 
             const content = fs.readFileSync(path.resolve(this.directory, filename), "utf8");
             const document = yaml.safeLoad(content);
 
-            this.templateMap.set(language, compileDocument(document));
+            const compiled = compileDocument(document);
+            if (compiled.size === 0) {
+                continue;
+            }
+
+            this.templateMap.set(language, compiled);
         }
+    }
+
+    getInstalledLanguages() {
+        return Array.from(this.templateMap.keys());
     }
 
     t(language: string, key: string): string {
@@ -78,6 +91,10 @@ export class I18nServiceImpl implements II18nService {
 
 function compileDocument(document: LocaleYamlDocument): LocaleTemplates {
     const result = new Map<string, TemplateFunc | LocaleTemplates>();
+
+    if (!document) {
+        return result;
+    }
 
     for (const [key, value] of Object.entries(document)) {
         if (typeof value === "string") {
