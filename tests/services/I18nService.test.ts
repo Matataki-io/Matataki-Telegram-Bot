@@ -120,5 +120,11 @@ describe("I18nService", () => {
         expect(installed).toContainEqual("en");
         expect(installed).toContainEqual("zh-hans");
         expect(installed).toContainEqual("zh-hant");
+    });
+
+    it("Parameterized localized text", () => {
+        const service = createService();
+
+        expect(service.t("en", "parameterized", { para: "Test" })).toBe("Variable para = Test");
     })
 });

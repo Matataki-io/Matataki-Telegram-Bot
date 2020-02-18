@@ -1,5 +1,6 @@
 import * as path from "path";
 import * as fs from "fs";
+import { Script } from "vm";
 
 import * as yaml from "js-yaml";
 import { unmanaged } from "inversify";
@@ -68,8 +69,8 @@ export class I18nServiceImpl implements II18nService {
         return Array.from(this.templateMap.keys());
     }
 
-    t(language: string, key: string): string {
-        return new I18nContext(this.templateMap, language).t(key);
+    t(language: string, key: string, variables?: { [key: string]: any }): string {
+        return new I18nContext(this.templateMap, language).t(key, variables);
     }
 
     middleware<T extends ContextMessageUpdate>(): Middleware<T> {
@@ -102,7 +103,15 @@ function compileDocument(document: LocaleYamlDocument): LocaleTemplates {
 
     for (const [key, value] of Object.entries(document)) {
         if (typeof value === "string") {
-            result.set(key, () => value);
+            let compiledTemplate;
+
+            if (!value.includes("${")) {
+                compiledTemplate = () => value;
+            } else {
+                compiledTemplate = compileTemplate(value);
+            }
+
+            result.set(key, compiledTemplate);
             continue;
         }
 
@@ -114,4 +123,16 @@ function compileDocument(document: LocaleYamlDocument): LocaleTemplates {
     }
 
     return result;
+}
+function compileTemplate(template: string): TemplateFunc {
+    const escapedTemplate = `\`${template.replace(/`/gm, '\\`')}\``;
+    const script = new Script(escapedTemplate);
+
+    return context => {
+        try {
+            return script.runInNewContext(Object.assign({}, context));
+        } catch (err) {
+            throw new Error("Failed to compile template: " + err);
+        }
+    };
 }
