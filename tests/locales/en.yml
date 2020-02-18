@@ -2,3 +2,9 @@ test: International test
 a:
   b:
     c: Hierarchy test
+
+parameterized:
+  variable: ${para}
+  function:
+    pure: ${func()}
+    add: ${add(1, 2)}

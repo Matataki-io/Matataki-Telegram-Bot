@@ -122,9 +122,25 @@ describe("I18nService", () => {
         expect(installed).toContainEqual("zh-hant");
     });
 
-    it("Parameterized localized text", () => {
-        const service = createService();
+    describe("Parameterized localized text", () => {
+        it("Variable", () => {
+            const service = createService();
 
-        expect(service.t("en", "parameterized", { para: "Test" })).toBe("Variable para = Test");
+            expect(service.t("en", "parameterized.variable", { para: "Test" })).toBe("Test");
+        });
+        describe("Function", () => {
+            it("pure", () => {
+                const service = createService();
+                const func = () => "Function Test";
+
+                expect(service.t("en", "parameterized.function.pure", { func })).toBe("Function Test");
+            });
+            it("add", () => {
+                const service = createService();
+                const add = (a: number, b: number) => a + b;
+
+                expect(service.t("en", "parameterized.function.add", { add })).toBe("3");
+            });
+        });
     })
 });
