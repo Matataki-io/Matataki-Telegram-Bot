@@ -1,3 +1,8 @@
+PluralRules:
+  second:
+    one: second
+    other: seconds
+
 test: International test
 a:
   b:
@@ -8,3 +13,5 @@ parameterized:
   function:
     pure: ${func()}
     add: ${add(1, 2)}
+
+pluralTest: ${pluralize(count, word)}

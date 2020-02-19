@@ -343,7 +343,7 @@ describe("DebugController", () => {
                         language_code: language,
                     },
                 },
-                i18n: new I18nContext(i18nService.templateMap, language),
+                i18n: new I18nContext(i18nService.templateMap, i18nService.pluralRules, language),
             });
 
             await controller.i18n(ctx);

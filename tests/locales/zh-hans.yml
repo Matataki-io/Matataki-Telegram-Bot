@@ -1,4 +1,9 @@
+PluralRules:
+  second: 秒
+
 test: 多语言测试
 a:
   b:
     c: 层级测试
+
+pluralTest: ${pluralize(count, word)}

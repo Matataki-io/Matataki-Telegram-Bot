@@ -1,0 +1,8 @@
+PluralRules:
+  second:
+    one: секунда
+    few: секунды
+    many: секунд
+    other: секунды
+
+pluralTest: ${pluralize(count, word)}
