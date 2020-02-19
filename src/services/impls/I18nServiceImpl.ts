@@ -107,13 +107,13 @@ export class I18nServiceImpl implements II18nService {
     }
 }
 
-function compilePluralRules(data: any, language: string): PluralRules | null {
+export function compilePluralRules(data: any, language: string): PluralRules | null {
     if (data === undefined) {
         return null;
     }
 
-    if (typeof data !== "object") {
-        throw new Error("PluralRules should be an object");
+    if (typeof data !== "object" || data === null) {
+        throw new Error(`PluralRules of ${language} should be an object`);
     }
 
     const pluralRules = Object.keys(getPluralRulesForCardinals(language));
@@ -137,8 +137,11 @@ function compilePluralRules(data: any, language: string): PluralRules | null {
         for (const ruleName of pluralRules) {
             const localized = rules[ruleName];
 
+            if (localized === undefined) {
+                throw new Error(`The plural form '${ruleName}' of word '${key}' not found`);
+            }
             if (typeof localized !== "string") {
-                throw new Error("The value of plural rule should be a string");
+                throw new Error(`The value of plural form '${ruleName}' of word '${key}' should be a string`);
             }
 
             ruleMap.set(ruleName, localized);

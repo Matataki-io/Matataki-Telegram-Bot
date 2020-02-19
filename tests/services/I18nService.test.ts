@@ -1,4 +1,7 @@
-import { I18nServiceStub } from "../stubs/services/I18nServiceStub";
+import { safeLoad } from "js-yaml";
+
+import { I18nServiceStub, BadI18nServiceStub } from "../stubs/services/I18nServiceStub";
+import { compilePluralRules } from "#/services/impls/I18nServiceImpl";
 
 function createService() {
     return new I18nServiceStub();
@@ -6,6 +9,10 @@ function createService() {
 
 describe("I18nService", () => {
     describe("Template compilation", () => {
+        it("Failed to load locales with a wrong directory", () => {
+            expect(() => new BadI18nServiceStub()).toThrowError("Locales directory not found");
+        });
+
         it.each`
         language     | expected
         ${"en"}      | ${"International test"}
@@ -148,6 +155,32 @@ describe("I18nService", () => {
 
     describe("Plural word", () => {
         describe("Rules", () => {
+            it("Failed to compile type A", () => {
+                const data = safeLoad(`PluralRules:
+  word: words
+`);
+                expect(() => compilePluralRules(data.PluralRules, "en")).toThrowError("Value cannot be a string because language en has plural rules");
+            });
+            it("Failed to compile type B", () => {
+                const data = safeLoad(`PluralRules: null`);
+                expect(() => compilePluralRules(data.PluralRules, "en")).toThrowError("PluralRules of en should be an object");
+            });
+            it("Failed to compile type C", () => {
+                const data = safeLoad(`PluralRules:
+  word:
+    one: word
+`);
+                expect(() => compilePluralRules(data.PluralRules, "en")).toThrowError("The plural form 'other' of word 'word' not found");
+            });
+            it("Failed to compile type D", () => {
+                const data = safeLoad(`PluralRules:
+  word:
+    one: word
+    other: null
+`);
+                expect(() => compilePluralRules(data.PluralRules, "en")).toThrowError("The value of plural form 'other' of word 'word' should be a string");
+            });
+
             it("en", () => {
                 const pluralRules = createService().pluralRules.get("en")!;
 
