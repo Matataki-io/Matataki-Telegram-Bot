@@ -2937,6 +2937,11 @@ class-utils@^0.3.5:
     isobject "^3.0.0"
     static-extend "^0.1.1"
 
+cldrpluralruleparser@^1.3.2:
+  version "1.3.2"
+  resolved "https://registry.npm.taobao.org/cldrpluralruleparser/download/cldrpluralruleparser-1.3.2.tgz#1475c5de6b8f68c571e33f10086d5f90f46f938c"
+  integrity sha1-FHXF3muPaMVx4z8QCG1fkPRvk4w=
+
 clean-css@4.2.x:
   version "4.2.3"
   resolved "https://registry.npm.taobao.org/clean-css/download/clean-css-4.2.3.tgz#507b5de7d97b48ee53d84adb0160ff6216380f78"
@@ -9646,6 +9651,11 @@ plist@^3.0.1:
     base64-js "^1.2.3"
     xmlbuilder "^9.0.7"
     xmldom "0.1.x"
+
+plural-rules@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.npm.taobao.org/plural-rules/download/plural-rules-1.0.1.tgz#ff4f905dc6816d92cc044eee97d723d800bb9151"
+  integrity sha1-/0+QXcaBbZLMBE7ul9cj2AC7kVE=
 
 pn@^1.1.0:
   version "1.1.0"
