@@ -1,19 +1,25 @@
 import * as path from "path";
 import * as fs from "fs";
+import { Script } from "vm";
 
 import * as yaml from "js-yaml";
 import { unmanaged } from "inversify";
 import { Middleware, ContextMessageUpdate } from "telegraf";
 const languageTagRegex = require("ietf-language-tag-regex") as () => RegExp;
+import { getPluralRulesForCardinals, getPluralFormForCardinal } from "plural-rules";
 
 import { Injections } from "#/constants";
 import { Service } from "#/decorators";
-import { I18nContext, LocaleTemplates, TemplateFunc, LocaleTemplateMap } from "#/definitions";
+import { I18nContext, LocaleTemplates, TemplateFunc, LocaleTemplateMap, PluralRulesMap, PluralRules, TemplateVariables } from "#/definitions";
 import { II18nService } from "#/services";
 
 type LocaleYamlDocument = {
     [key: string]: string | LocaleYamlDocument,
 }
+
+const defaultVariables = {
+    pluralize,
+};
 
 @Service(Injections.I18nService)
 export class I18nServiceImpl implements II18nService {
@@ -24,6 +30,7 @@ export class I18nServiceImpl implements II18nService {
     private directory: string;
 
     templateMap: LocaleTemplateMap;
+    pluralRules: PluralRulesMap;
 
     private userLanguage: Map<number, string>;
 
@@ -31,6 +38,7 @@ export class I18nServiceImpl implements II18nService {
         this.directory = directory ?? path.resolve(__dirname, '../../../locales');
 
         this.templateMap = new Map<string, LocaleTemplates>();
+        this.pluralRules = new Map<string, Map<string, Map<string, string>>>();
         this.loadLocales();
 
         this.userLanguage = new Map<number, string>();
@@ -54,11 +62,17 @@ export class I18nServiceImpl implements II18nService {
 
             const content = fs.readFileSync(path.resolve(this.directory, filename), "utf8");
             const document = yaml.safeLoad(content);
-
-            const compiled = compileDocument(document);
-            if (compiled.size === 0) {
+            if (!document) {
                 continue;
             }
+
+            const pluralRules = compilePluralRules(document.PluralRules, language);
+            if (pluralRules) {
+                this.pluralRules.set(language, pluralRules);
+                delete document.PluralRules;
+            }
+
+            const compiled = compileDocument(document);
 
             this.templateMap.set(language, compiled);
         }
@@ -68,8 +82,8 @@ export class I18nServiceImpl implements II18nService {
         return Array.from(this.templateMap.keys());
     }
 
-    t(language: string, key: string): string {
-        return new I18nContext(this.templateMap, language).t(key);
+    t(language: string, key: string, variables?: TemplateVariables): string {
+        return new I18nContext(this.templateMap, this.pluralRules, language, defaultVariables).t(key, variables);
     }
 
     middleware<T extends ContextMessageUpdate>(): Middleware<T> {
@@ -80,7 +94,7 @@ export class I18nServiceImpl implements II18nService {
             }
 
             const language = this.userLanguage.get(from.id) ?? from.language_code ?? this.fallbackLanguage;
-            const i18nContext = new I18nContext(this.templateMap, language);
+            const i18nContext = new I18nContext(this.templateMap, this.pluralRules, language, defaultVariables);
 
             Object.assign(ctx, {
                 i18n: i18nContext,
@@ -93,16 +107,88 @@ export class I18nServiceImpl implements II18nService {
     }
 }
 
+export function compilePluralRules(data: any, language: string): PluralRules | null {
+    if (data === undefined) {
+        return null;
+    }
+
+    if (typeof data !== "object" || data === null) {
+        throw new Error(`PluralRules of ${language} should be an object`);
+    }
+
+    const pluralRules = Object.keys(getPluralRulesForCardinals(language));
+    const result = new Map<string, Map<string, string>>();
+
+    for (const [key, rules] of Object.entries(data)) {
+        const ruleMap = new Map<string, string>();
+
+        if (typeof rules === "string") {
+            if (pluralRules.length > 1) {
+                throw new Error(`Value cannot be a string because language ${language} has plural rules`);
+            }
+
+            ruleMap.set("other", rules);
+            result.set(key, ruleMap);
+            continue;
+        }
+
+        assertIsObject(rules);
+
+        for (const ruleName of pluralRules) {
+            const localized = rules[ruleName];
+
+            if (localized === undefined) {
+                throw new Error(`The plural form '${ruleName}' of word '${key}' not found`);
+            }
+            if (typeof localized !== "string") {
+                throw new Error(`The value of plural form '${ruleName}' of word '${key}' should be a string`);
+            }
+
+            ruleMap.set(ruleName, localized);
+        }
+
+        result.set(key, ruleMap);
+    }
+
+    return result;
+}
+function assertIsObject(value: any): asserts value is { [key: string]: any }
+{
+    if (typeof value !== "object" || value === null) {
+        throw new Error("Plural rules should be an object");
+    }
+}
+function pluralize(this: I18nContext, count: number, word: string) {
+    const pluralRules = this.pluralRules.get(this.language);
+    if (!pluralRules) {
+        throw new Error(`No plural rules defined in language ${this.language}`);
+    }
+
+    const rules = pluralRules.get(word);
+    if (!rules) {
+        throw new Error(`Plural rules of word '${word}' not found`);
+    }
+
+    const pluralForm = getPluralFormForCardinal(this.language, count);
+    const pluralWord = rules.get(pluralForm);
+
+    return `${count} ${pluralWord}`;
+}
+
 function compileDocument(document: LocaleYamlDocument): LocaleTemplates {
     const result = new Map<string, TemplateFunc | LocaleTemplates>();
 
-    if (!document) {
-        return result;
-    }
-
     for (const [key, value] of Object.entries(document)) {
         if (typeof value === "string") {
-            result.set(key, () => value);
+            let compiledTemplate;
+
+            if (!value.includes("${")) {
+                compiledTemplate = () => value;
+            } else {
+                compiledTemplate = compileTemplate(value);
+            }
+
+            result.set(key, compiledTemplate);
             continue;
         }
 
@@ -114,4 +200,16 @@ function compileDocument(document: LocaleYamlDocument): LocaleTemplates {
     }
 
     return result;
+}
+function compileTemplate(template: string): TemplateFunc {
+    const escapedTemplate = `\`${template.replace(/`/gm, '\\`')}\``;
+    const script = new Script(escapedTemplate);
+
+    return context => {
+        try {
+            return script.runInNewContext(Object.assign({}, context));
+        } catch (err) {
+            throw new Error("Failed to compile template: " + err);
+        }
+    };
 }

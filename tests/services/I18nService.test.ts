@@ -1,4 +1,7 @@
-import { I18nServiceStub } from "../stubs/services/I18nServiceStub";
+import { safeLoad } from "js-yaml";
+
+import { I18nServiceStub, BadI18nServiceStub } from "../stubs/services/I18nServiceStub";
+import { compilePluralRules } from "#/services/impls/I18nServiceImpl";
 
 function createService() {
     return new I18nServiceStub();
@@ -6,6 +9,10 @@ function createService() {
 
 describe("I18nService", () => {
     describe("Template compilation", () => {
+        it("Failed to load locales with a wrong directory", () => {
+            expect(() => new BadI18nServiceStub()).toThrowError("Locales directory not found");
+        });
+
         it.each`
         language     | expected
         ${"en"}      | ${"International test"}
@@ -116,9 +123,160 @@ describe("I18nService", () => {
 
         const installed = service.getInstalledLanguages();
 
-        expect(installed).toHaveLength(3);
+        expect(installed).toHaveLength(5);
         expect(installed).toContainEqual("en");
         expect(installed).toContainEqual("zh-hans");
         expect(installed).toContainEqual("zh-hant");
-    })
+        expect(installed).toContainEqual("fr");
+        expect(installed).toContainEqual("ru");
+    });
+
+    describe("Parameterized localized text", () => {
+        it("Variable", () => {
+            const service = createService();
+
+            expect(service.t("en", "parameterized.variable", { para: "Test" })).toBe("Test");
+        });
+        describe("Function", () => {
+            it("pure", () => {
+                const service = createService();
+                const func = () => "Function Test";
+
+                expect(service.t("en", "parameterized.function.pure", { func })).toBe("Function Test");
+            });
+            it("add", () => {
+                const service = createService();
+                const add = (a: number, b: number) => a + b;
+
+                expect(service.t("en", "parameterized.function.add", { add })).toBe("3");
+            });
+        });
+    });
+
+    describe("Plural word", () => {
+        describe("Rules", () => {
+            it("Failed to compile type A", () => {
+                const data = safeLoad(`PluralRules:
+  word: words
+`);
+                expect(() => compilePluralRules(data.PluralRules, "en")).toThrowError("Value cannot be a string because language en has plural rules");
+            });
+            it("Failed to compile type B", () => {
+                const data = safeLoad(`PluralRules: null`);
+                expect(() => compilePluralRules(data.PluralRules, "en")).toThrowError("PluralRules of en should be an object");
+            });
+            it("Failed to compile type C", () => {
+                const data = safeLoad(`PluralRules:
+  word:
+    one: word
+`);
+                expect(() => compilePluralRules(data.PluralRules, "en")).toThrowError("The plural form 'other' of word 'word' not found");
+            });
+            it("Failed to compile type D", () => {
+                const data = safeLoad(`PluralRules:
+  word:
+    one: word
+    other: null
+`);
+                expect(() => compilePluralRules(data.PluralRules, "en")).toThrowError("The value of plural form 'other' of word 'word' should be a string");
+            });
+
+            it("en", () => {
+                const pluralRules = createService().pluralRules.get("en")!;
+
+                const rulesOfSecond = pluralRules.get("second")!;
+                expect(rulesOfSecond).not.toBeUndefined();
+                expect(rulesOfSecond.size).toBe(2);
+                expect(rulesOfSecond.get("one")).toBe("second");
+                expect(rulesOfSecond.get("other")).toBe("seconds");
+            });
+            it("fr", () => {
+                const pluralRules = createService().pluralRules.get("fr")!;
+
+                const rulesOfSecond = pluralRules.get("second")!;
+                expect(rulesOfSecond).not.toBeUndefined();
+                expect(rulesOfSecond.size).toBe(2);
+                expect(rulesOfSecond.get("one")).toBe("seconde");
+                expect(rulesOfSecond.get("other")).toBe("secondes");
+            });
+            it("zh-hant", () => {
+                const pluralRules = createService().pluralRules.get("zh-hans")!;
+
+                const rulesOfSecond = pluralRules.get("second")!;
+                expect(rulesOfSecond).not.toBeUndefined();
+                expect(rulesOfSecond.size).toBe(1);
+                expect(rulesOfSecond.get("other")).toBe("秒");
+            });
+            it("zh-hant", () => {
+                const pluralRules = createService().pluralRules.get("zh-hans")!;
+
+                const rulesOfSecond = pluralRules.get("second")!;
+                expect(rulesOfSecond).not.toBeUndefined();
+                expect(rulesOfSecond.size).toBe(1);
+                expect(rulesOfSecond.get("other")).toBe("秒");
+            });
+            it("ru", () => {
+                const pluralRules = createService().pluralRules.get("ru")!;
+
+                const rulesOfSecond = pluralRules.get("second")!;
+                expect(rulesOfSecond).not.toBeUndefined();
+                expect(rulesOfSecond.size).toBe(4);
+                expect(rulesOfSecond.get("one")).toBe("секунда");
+                expect(rulesOfSecond.get("few")).toBe("секунды");
+                expect(rulesOfSecond.get("many")).toBe("секунд");
+                expect(rulesOfSecond.get("other")).toBe("секунды");
+            });
+        });
+        describe("Localized text with plural words", () => {
+            it.each`
+            language     | word        | count | expected
+            ${"en"}      | ${"second"} | ${0}  | ${"0 seconds"}
+            ${"en"}      | ${"second"} | ${1}  | ${"1 second"}
+            ${"en"}      | ${"second"} | ${2}  | ${"2 seconds"}
+            ${"fr"}      | ${"second"} | ${0}  | ${"0 seconde"}
+            ${"fr"}      | ${"second"} | ${1}  | ${"1 seconde"}
+            ${"fr"}      | ${"second"} | ${2}  | ${"2 secondes"}
+            ${"zh-hans"} | ${"second"} | ${0}  | ${"0 秒"}
+            ${"zh-hans"} | ${"second"} | ${1}  | ${"1 秒"}
+            ${"zh-hans"} | ${"second"} | ${2}  | ${"2 秒"}
+            ${"zh-hant"} | ${"second"} | ${0}  | ${"0 秒"}
+            ${"zh-hant"} | ${"second"} | ${1}  | ${"1 秒"}
+            ${"zh-hant"} | ${"second"} | ${2}  | ${"2 秒"}
+            ${"ru"}      | ${"second"} | ${0}  | ${"0 секунд"}
+            ${"ru"}      | ${"second"} | ${1}  | ${"1 секунда"}
+            ${"ru"}      | ${"second"} | ${2}  | ${"2 секунды"}
+            ${"ru"}      | ${"second"} | ${3}  | ${"3 секунды"}
+            ${"ru"}      | ${"second"} | ${4}  | ${"4 секунды"}
+            ${"ru"}      | ${"second"} | ${5}  | ${"5 секунд"}
+            ${"ru"}      | ${"second"} | ${6}  | ${"6 секунд"}
+            ${"ru"}      | ${"second"} | ${7}  | ${"7 секунд"}
+            ${"ru"}      | ${"second"} | ${8}  | ${"8 секунд"}
+            ${"ru"}      | ${"second"} | ${9}  | ${"9 секунд"}
+            ${"ru"}      | ${"second"} | ${10} | ${"10 секунд"}
+            ${"ru"}      | ${"second"} | ${11} | ${"11 секунд"}
+            ${"ru"}      | ${"second"} | ${12} | ${"12 секунд"}
+            ${"ru"}      | ${"second"} | ${13} | ${"13 секунд"}
+            ${"ru"}      | ${"second"} | ${14} | ${"14 секунд"}
+            ${"ru"}      | ${"second"} | ${15} | ${"15 секунд"}
+            ${"ru"}      | ${"second"} | ${16} | ${"16 секунд"}
+            ${"ru"}      | ${"second"} | ${17} | ${"17 секунд"}
+            ${"ru"}      | ${"second"} | ${18} | ${"18 секунд"}
+            ${"ru"}      | ${"second"} | ${19} | ${"19 секунд"}
+            ${"ru"}      | ${"second"} | ${20} | ${"20 секунд"}
+            ${"ru"}      | ${"second"} | ${21} | ${"21 секунда"}
+            ${"ru"}      | ${"second"} | ${22} | ${"22 секунды"}
+            ${"ru"}      | ${"second"} | ${23} | ${"23 секунды"}
+            ${"ru"}      | ${"second"} | ${24} | ${"24 секунды"}
+            ${"ru"}      | ${"second"} | ${25} | ${"25 секунд"}
+            ${"ru"}      | ${"second"} | ${26} | ${"26 секунд"}
+            ${"ru"}      | ${"second"} | ${27} | ${"27 секунд"}
+            ${"ru"}      | ${"second"} | ${28} | ${"28 секунд"}
+            ${"ru"}      | ${"second"} | ${29} | ${"29 секунд"}
+            `("$language: $count + $word = $expected", ({ language, word, count, expected }) => {
+                const service = createService();
+
+                expect(service.t(language, "pluralTest", { word, count })).toBe(expected);
+            });
+        });
+    });
 });
