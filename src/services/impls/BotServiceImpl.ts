@@ -255,7 +255,7 @@ export class BotServiceImpl implements IBotService {
 
         if (isWebhookMode) {
             // Start In the Webhook mode, Use caddy or other HTTPS Server to proxy the webhook
-            this.bot.startWebhook('/', null, Number(process.env.WEBHOOK_PORT!))
+            await this.bot.startWebhook('/', null, Number(process.env.WEBHOOK_PORT!))
             await this.bot.telegram.setWebhook(process.env.WEBHOOK_URL!);
         } else {
             // Not Detected, going to getUpdate polling
