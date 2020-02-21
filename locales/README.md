@@ -16,7 +16,7 @@ key: Text
 
 You'll get a `Text` string by `i18n.t("key")`.
 
-* One or many **key-string** elements above grouped by a **key**:
+* One or many **key-string** elements above grouped by a **key** (Nested group is supported):
 
 ```yaml
 group:
@@ -29,9 +29,9 @@ group:
 You'll get the translation by the following way:
 
 ```typescript
-i18n.t("group.key1", { content: "World!" }) // "A"
-i18n.t("group.key2", { add }) // "B"
-i18n.t("group..subgroupkey3", { add, a: 2, b: 3 }) // "C"
+i18n.t("group.key1") // "A"
+i18n.t("group.key2") // "B"
+i18n.t("group..subgroupkey3") // "C"
 ```
 
 ## How can translation work on computed values?
@@ -82,13 +82,13 @@ PluralRules:
     other: seconds
 ```
 
-Use `pluralize()` in translation placeholder:
+Use `pluralize()` in a translation placeholder:
 
 ```yaml
 key: I'll reply you in ${pluralize(time, "second")}.
 ```
 
-It works.
+Then it works.
 
 ```typescript
 i18n.t("key", { time: 0 }) // "I'll reply you in 0 seconds."
