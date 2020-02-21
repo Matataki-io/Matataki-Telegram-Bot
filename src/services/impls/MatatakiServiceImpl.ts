@@ -1,4 +1,5 @@
 import axios, { AxiosInstance, AxiosError } from "axios";
+import { unmanaged } from "inversify";
 
 import { Injections } from "#/constants";
 import { Service } from "#/decorators";
@@ -27,20 +28,15 @@ type PublicMinetokenInfo = {
 
 @Service(Injections.MatatakiService)
 export class MatatakiServiceImpl implements IMatatakiService {
-    private axios: AxiosInstance;
-    private axiosForTransfer: AxiosInstance;
+    protected axios: AxiosInstance;
+    protected axiosForTransfer: AxiosInstance;
 
     public get urlPrefix() {
         return process.env.MATATAKI_URLPREFIX!;
     }
 
-    constructor() {
-        console.assert(process.env.MATATAKI_URLPREFIX);
-        console.assert(process.env.MATATAKI_APIURLPREFIX);
-        console.assert(process.env.MATATAKI_ACCESS_TOKEN);
-        console.assert(process.env.MATATAKI_TRANSFER_API_ACCESS_TOKEN);
-
-        this.axios = axios.create({
+    constructor(@unmanaged() axiosInstance: AxiosInstance, @unmanaged() axiosForTransferInstance: AxiosInstance) {
+        this.axios = axiosInstance ?? axios.create({
             baseURL: process.env.MATATAKI_APIURLPREFIX,
             headers: {
                 common: {
@@ -48,7 +44,7 @@ export class MatatakiServiceImpl implements IMatatakiService {
                 },
             },
         });
-        this.axiosForTransfer = axios.create({
+        this.axiosForTransfer = axiosForTransferInstance ?? axios.create({
             baseURL: process.env.MATATAKI_APIURLPREFIX,
             headers: {
                 common: {
