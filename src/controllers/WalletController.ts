@@ -77,13 +77,13 @@ export class WalletController extends BaseController<WalletController> {
         if (!info.user) {
             array.push("尚未绑定 瞬Matataki 账户");
         } else {
-            array.push(`瞬Matataki 昵称：[${info.user.name}](${this.matatakiService.urlPrefix}/user/${info.user.id})`);
+            array.push(`瞬Matataki 昵称：[${info.user.name}](${this.matatakiService.urlPrefix}user/${info.user.id})`);
         }
 
         if (!info.minetoken) {
             array.push("您在 瞬Matataki 尚未发行 Fan票");
         } else {
-            array.push(`Fan票 名称：[${info.minetoken.symbol}（${info.minetoken.name}）](${this.matatakiService.urlPrefix}/token/${info.minetoken.id})`);
+            array.push(`Fan票 名称：[${info.minetoken.symbol}（${info.minetoken.name}）](${this.matatakiService.urlPrefix}token/${info.minetoken.id})`);
         }
 
         if (info.user) {
@@ -98,7 +98,7 @@ export class WalletController extends BaseController<WalletController> {
                     return null;
                 }
 
-                return `[${token.name}（${token.symbol}）](${this.matatakiService.urlPrefix}/token/${token.id})： ${balance}`;
+                return `[${token.name}（${token.symbol}）](${this.matatakiService.urlPrefix}token/${token.id})： ${balance}`;
             })));
 
             array.push(`*您当前持有 ${balances.length} 种 Fan票*`);
@@ -162,8 +162,8 @@ export class WalletController extends BaseController<WalletController> {
 
         let commonMessage = `
 
-转账方：[${senderInfo.user.name}](${this.matatakiService.urlPrefix}/user/${senderInfo.user.id})
-被转账方：[${targetName}](${this.matatakiService.urlPrefix}/user/${userId})
+转账方：[${senderInfo.user.name}](${this.matatakiService.urlPrefix}user/${senderInfo.user.id})
+被转账方：[${targetName}](${this.matatakiService.urlPrefix}user/${userId})
 转账数目：${amount / 10000} ${symbol}`;
         const transactionMessage = await replyWithMarkdown("转账交易进行中..." + commonMessage, { disable_web_page_preview: true });
 
