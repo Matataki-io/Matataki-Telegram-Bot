@@ -2,14 +2,17 @@ import { inject } from "inversify";
 import { Markup } from "telegraf";
 
 import { BaseController } from ".";
-import { Controller, Command, Action, PrivateChatOnly } from "#/decorators";
+import { Controller, Command, Action, PrivateChatOnly, InjectRepository } from "#/decorators";
 import { MessageHandlerContext } from "#/definitions";
 import { Injections } from "#/constants";
+import { User } from "#/entities";
+import { IUserRepository } from "#/repositories";
 import { II18nService } from "#/services";
 
 @Controller("i18n")
 export class I18nController extends BaseController<I18nController> {
-    constructor(@inject(Injections.I18nService) private i18nService: II18nService) {
+    constructor(@inject(Injections.I18nService) private i18nService: II18nService,
+        @InjectRepository(User) private userRepo: IUserRepository) {
         super();
     }
 
@@ -24,8 +27,13 @@ export class I18nController extends BaseController<I18nController> {
     }
 
     @Action(/setlang:([\w-]+)/)
-    async switchLanguage({ answerCbQuery, reply, match, i18n }: MessageHandlerContext) {
+    async switchLanguage({ answerCbQuery, reply, match, i18n, message }: MessageHandlerContext) {
         i18n.language = match![1];
+
+        const { id, username } = message!.from;
+
+        const user = await this.userRepo.ensureUser(id, username);
+        await this.userRepo.setUserLanguage(user, i18n.language);
 
         await answerCbQuery();
         await reply(`Current language: ${i18n.t("lang")}`);

@@ -23,7 +23,11 @@ export class UserRepositoryImpl extends BaseRepository<User> implements IUserRep
         return user;
     }
 
-    getUser(id: number) {
+    getUser(id: number, ignoreGroup?: boolean) {
+        if (ignoreGroup) {
+            return this.repository.findOne(id);
+        }
+
         return this.repository.createQueryBuilder("user").innerJoinAndSelect("user.groups", "group", "group.active").where("user.id = :id", { id }).getOne();
     }
 
@@ -41,5 +45,11 @@ export class UserRepositoryImpl extends BaseRepository<User> implements IUserRep
         }
 
         return Number(user.id);
+    }
+
+    async setUserLanguage(user: User, language: string) {
+        user.language = language;
+
+        await this.repository.save(user);
     }
 }
