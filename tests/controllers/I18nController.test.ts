@@ -56,10 +56,12 @@ describe("I18nService", () => {
         `("setlang:$language", async ({ language, languageName }) => {
             const ctx = createMockedContext();
             Object.assign(ctx, {
-                message: {
-                    ...ctx.message,
-                    chat: {
-                        type: "private",
+                callbackQuery: {
+                    message: {
+                        ...ctx.message,
+                        chat: {
+                            type: "private",
+                        },
                     },
                     from: {
                         id: 1,

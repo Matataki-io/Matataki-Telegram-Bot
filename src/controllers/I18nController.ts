@@ -27,10 +27,10 @@ export class I18nController extends BaseController<I18nController> {
     }
 
     @Action(/setlang:([\w-]+)/)
-    async switchLanguage({ answerCbQuery, reply, match, i18n, message }: MessageHandlerContext) {
+    async switchLanguage({ answerCbQuery, reply, match, i18n, callbackQuery }: MessageHandlerContext) {
         i18n.language = match![1];
 
-        const { id, username } = message!.from;
+        const { id, username } = callbackQuery!.from;
 
         const user = await this.userRepo.ensureUser(id, username);
         await this.userRepo.setUserLanguage(user, i18n.language);
