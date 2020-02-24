@@ -12,9 +12,10 @@ export class I18nContext {
 
     t(key: string, variables?: TemplateVariables): string {
         const shortLanguage = this.language.split("-")[0];
-        const template = this.getTemplate(this.language, key) ?? this.getTemplate(shortLanguage, key);
+        let template = this.getTemplate(this.language, key) ?? this.getTemplate(shortLanguage, key);
         if (!template) {
-            throw new Error(`Template of key '${key}' in '${this.language}' not found`);
+            // throw new Error(`Template of key '${key}' in '${this.language}' not found`);
+            template = () => key;
         }
 
         const context: TemplateVariables = {
