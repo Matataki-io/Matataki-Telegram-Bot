@@ -11,6 +11,7 @@ module.exports = {
     // 自己的 Bot 请使用自己专用的 schema，以免冲突
     schema: process.env.DB_SCHEMA,
     ssl: {
+        rejectUnauthorized: true,
         ca: fs.readFileSync(path.resolve(__dirname) + '/rds-ca-2019-root.pem').toString(),
     },
     logging: true,

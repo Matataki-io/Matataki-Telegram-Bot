@@ -7,11 +7,14 @@ import { unmanaged } from "inversify";
 import { Middleware, ContextMessageUpdate } from "telegraf";
 const languageTagRegex = require("ietf-language-tag-regex") as () => RegExp;
 import { getPluralRulesForCardinals, getPluralFormForCardinal } from "plural-rules";
+import { getRepository, Not } from "typeorm";
 
-import { Injections } from "#/constants";
+import { Injections, MetadataKeys } from "#/constants";
 import { Service } from "#/decorators";
-import { I18nContext, LocaleTemplates, TemplateFunc, LocaleTemplateMap, PluralRulesMap, PluralRules, TemplateVariables } from "#/definitions";
+import { I18nContext, LocaleTemplates, TemplateFunc, LocaleTemplateMap, PluralRulesMap, PluralRules, TemplateVariables, ControllerMethodContext } from "#/definitions";
 import { II18nService } from "#/services";
+import { User } from "#/entities";
+import { IUserRepository } from "#/repositories";
 
 type LocaleYamlDocument = {
     [key: string]: string | LocaleYamlDocument,
@@ -83,18 +86,21 @@ export class I18nServiceImpl implements II18nService {
     }
 
     t(language: string, key: string, variables?: TemplateVariables): string {
-        return new I18nContext(this.templateMap, this.pluralRules, language, defaultVariables).t(key, variables);
+        return this.getDefaultContext(language).t(key, variables);
     }
 
     middleware<T extends ContextMessageUpdate>(): Middleware<T> {
-        return async (ctx: T, next: (() => any) | undefined) => {
+        return async (ctx: T, next?: () => any) => {
             const from = ctx.message?.from ?? ctx.callbackQuery?.from;
             if (!from) {
                 throw new Error("What happened");
             }
 
-            const language = this.userLanguage.get(from.id) ?? from.language_code ?? this.fallbackLanguage;
-            const i18nContext = new I18nContext(this.templateMap, this.pluralRules, language, defaultVariables);
+            const context = Reflect.getMetadata(MetadataKeys.Context, ctx) as ControllerMethodContext;
+            const userRepo = context.container.getNamed<IUserRepository>(Injections.Repository, User.name);
+
+            const language = this.userLanguage.get(from.id) ?? (await userRepo.getUser(from.id, true))?.language ?? from.language_code ?? this.fallbackLanguage;
+            const i18nContext = this.getDefaultContext(language);
 
             Object.assign(ctx, {
                 i18n: i18nContext,
@@ -104,6 +110,10 @@ export class I18nServiceImpl implements II18nService {
 
             this.userLanguage.set(from.id, i18nContext.language);
         }
+    }
+
+    getDefaultContext(language: string) {
+        return new I18nContext(this.templateMap, this.pluralRules, language, defaultVariables)
     }
 }
 

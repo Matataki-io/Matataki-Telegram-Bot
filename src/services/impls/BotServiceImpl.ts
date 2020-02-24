@@ -1,9 +1,8 @@
 import { inject, Container } from "inversify";
 import Telegraf, { ContextMessageUpdate, Middleware, session, Markup, Extra } from "telegraf";
 import { User as TelegramUser } from "telegraf/typings/telegram-types";
-import HttpsProxyAgent from "https-proxy-agent";
-const SocksProxyAgent = require("socks-proxy-agent");
-// this library has no type decalarations for now
+import { HttpsProxyAgent } from "https-proxy-agent";
+import { SocksProxyAgent } from "socks-proxy-agent";
 import { getRepository, Repository } from "typeorm";
 
 import { Constants, MetadataKeys, Injections, LogCategories } from "#/constants";
@@ -56,9 +55,9 @@ export class BotServiceImpl implements IBotService {
                 new SocksProxyAgent(process.env.SOCKS_PROXY)
                 : undefined;
 
-        this.bot = new Telegraf<ContextMessageUpdate>(process.env.BOT_TOKEN!, { telegram: { agent } });
-
-
+        this.bot = new Telegraf<ContextMessageUpdate>(process.env.BOT_TOKEN!, {
+            telegram: { agent: agent ? Object.assign(agent, { options: {} }) : undefined },
+        });
 
         this.bot.use(session());
 

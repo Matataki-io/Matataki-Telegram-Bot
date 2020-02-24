@@ -14,6 +14,11 @@ export async function initializeData(conn: Connection) {
     user.username = "theseconduser";
     await userRepo.save(user);
 
+    user.id = 3;
+    user.username = "achineseuser";
+    user.language = "zh-hans";
+    await userRepo.save(user);
+
     let group = new Group();
 
     group.id = -114514;

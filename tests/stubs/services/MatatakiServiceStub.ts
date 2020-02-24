@@ -1,7 +1,116 @@
+import { AxiosInstance } from "axios";
+
 import { AssociatedInfo, MinetokenInfo, MatatakiUserInfo } from "#/definitions";
 import { IMatatakiService } from "#/services";
+import { MatatakiServiceImpl } from "#/services/impls/MatatakiServiceImpl";
+import { createMockedAxios } from "../../Utils";
 
-export class MatatakiServiceStub implements IMatatakiService {
+class MatatakiServiceStubBase extends MatatakiServiceImpl {
+    get mockedAxios() {
+        return this.axios as jest.Mocked<AxiosInstance>;
+    }
+    get mockedAxiosForTransfer() {
+        return this.axiosForTransfer as jest.Mocked<AxiosInstance>;
+    }
+}
+
+export class MatatakiServiceStub extends MatatakiServiceStubBase {
+    get urlPrefix() {
+        return "http://MATATAKI";
+    }
+
+    constructor() {
+        super(createMockedAxios({
+            get: [
+                {
+                    request: { url: "/_internal_bot/account/114514/ethWallet" },
+                    response: {
+                        status: 200,
+                        data: { code: 0, data: { public_key: "0x1145141919810" }},
+                    },
+                },
+                {
+                    request: { url: "/_internal_bot/account/0/ethWallet" },
+                    response: {
+                        status: 404,
+                        data: { code: 1 },
+                    },
+                },
+                {
+                    request: { url: "/_internal_bot/minetoken/114514/contractAddress" },
+                    response: {
+                        status: 200,
+                        data: { code: 0, data: { contractAddress: "0x1145141919810" }},
+                    },
+                },
+                {
+                    request: { url: "/_internal_bot/minetoken/0/contractAddress" },
+                    response: {
+                        status: 404,
+                        data: { code: 1 },
+                    },
+                },
+                {
+                    request: { url: "/_internal_bot/account/8101/info" },
+                    response: {
+                        status: 200,
+                        data: { code: 0, data: {
+                            user: {
+                                id: 114514,
+                                name: "李田所",
+                            },
+                            minetoken: {
+                                id: 1919,
+                                name: "银票",
+                                symbol: "INM",
+                            },
+                        }},
+                    },
+                },
+                {
+                    request: { url: "/_internal_bot/account/8102/info" },
+                    response: {
+                        status: 200,
+                        data: { code: 0, data: {
+                            user: {
+                                id: 810,
+                                name: "野獣先輩",
+                            },
+                        }},
+                    },
+                },
+                {
+                    request: { url: "/_internal_bot/account/1/info" },
+                    response: {
+                        status: 200,
+                        data: { code: 0, data: { }},
+                    },
+                },
+                {
+                    request: { url: "/token/symbol/INM" },
+                    response: {
+                        status: 200,
+                        data: { code: 0, data: { id: 1919 }},
+                    },
+                },
+                {
+                    request: { url: "/minetoken/1919" },
+                    response: {
+                        status: 200,
+                        data: {
+                            code: 0,
+                            data: {
+                                exchange: { price: 11.4514 },
+                            },
+                        },
+                    },
+                },
+            ],
+        }), jest.genMockFromModule("axios"));
+    }
+}
+
+export class MatatakiServiceStub2 implements IMatatakiService {
     get urlPrefix() {
         return "http://MATATAKI";
     }
