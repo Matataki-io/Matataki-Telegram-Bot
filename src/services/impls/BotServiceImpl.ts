@@ -56,7 +56,7 @@ export class BotServiceImpl implements IBotService {
                 : undefined;
 
         this.bot = new Telegraf<ContextMessageUpdate>(process.env.BOT_TOKEN!, {
-            telegram: { agent: Object.assign(agent, { options: {} }) },
+            telegram: { agent: agent ? Object.assign(agent, { options: {} }) : undefined },
         });
 
         this.bot.use(session());
