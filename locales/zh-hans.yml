@@ -6,7 +6,6 @@ error:
 
 transfer:
   common: |-
-
     转账方：[${senderUsername}](${senderUrl})
     被转账方：[${receiverUsername}](${receiverUrl})
     转账数目：${amount} ${symbol}

@@ -123,7 +123,7 @@ export class WalletController extends BaseController<WalletController> {
 
     @Command("transfer", { ignorePrefix: true })
     @RequireMatatakiAccount()
-    async transfer({ message, replyWithMarkdown, telegram }: MessageHandlerContext, @SenderMatatakiInfo() senderInfo: Required<Omit<AssociatedInfo, "minetoken">>) {
+    async transfer({ message, replyWithMarkdown, telegram, i18n }: MessageHandlerContext, @SenderMatatakiInfo() senderInfo: Required<Omit<AssociatedInfo, "minetoken">>) {
         const match = /^\/transfer(?:@[\w_]+)?\s+(\d+|@[\w_]{5,32})\s+(\w+)\s+(\d+.?\d*)/.exec(message.text);
         if (!match || match.length < 4) {
             await replyWithMarkdown("格式不对，请输入 `/transfer [Matataki UID/@Telegram 用户名] [symbol] [amount]`");
@@ -137,13 +137,13 @@ export class WalletController extends BaseController<WalletController> {
         if (target.startsWith("@")) {
             const targetId = await this.userRepo.getIdByUsername(target.slice(1));
             if (!targetId) {
-                await replyWithMarkdown("抱歉，对方还没有同步用户名到数据库里");
+                await replyWithMarkdown(i18n.t("error.usernameNotSynced"));
                 return;
             }
 
             const targetInfo = await this.matatakiService.getAssociatedInfo(targetId);
             if (!targetInfo.user) {
-                await replyWithMarkdown("抱歉，目标帐号没有在 瞬Matataki 绑定 Telegram 帐号");
+                await replyWithMarkdown(i18n.t("error.matatakiAccountAbsent"));
                 return;
             }
 
@@ -160,24 +160,26 @@ export class WalletController extends BaseController<WalletController> {
         const symbol = match[2];
         const amount = Number(match[3]) * 10000;
 
-        let commonMessage = `
-
-转账方：[${senderInfo.user.name}](${this.matatakiService.urlPrefix}/user/${senderInfo.user.id})
-被转账方：[${targetName}](${this.matatakiService.urlPrefix}/user/${userId})
-转账数目：${amount / 10000} ${symbol}`;
-        const transactionMessage = await replyWithMarkdown("转账交易进行中..." + commonMessage, { disable_web_page_preview: true });
+        let commonMessage = i18n.t("transfer.common", {
+            senderUsername: senderInfo.user.name,
+            senderUrl: `${this.matatakiService.urlPrefix}/user/${senderInfo.user.id}`,
+            receiverUsername: targetName,
+            receiverUrl: `${this.matatakiService.urlPrefix}/user/${userId}`,
+            amount, symbol,
+        });
+        const transactionMessage = await replyWithMarkdown(`${i18n.t("transfer.started")}\n\n${commonMessage}`, { disable_web_page_preview: true });
 
         let finalMessage, replyMarkup;
         try {
-            const tx_hash = await this.matatakiService.transfer(senderInfo.user.id, userId, symbol, amount);
+            const tx_hash = await this.matatakiService.transfer(senderInfo.user.id, userId, symbol, amount * 10000);
 
-            finalMessage = "*转账成功*" + commonMessage;
+            finalMessage = `${i18n.t("transfer.successful")}\n\n${commonMessage}`;
 
             replyMarkup = Markup.inlineKeyboard([
-                [Markup.urlButton("交易详情", `https://rinkeby.etherscan.io/tx/${tx_hash}`)]
+                [Markup.urlButton(i18n.t("transfer.transactionDetail"), `https://rinkeby.etherscan.io/tx/${tx_hash}`)]
             ]);
         } catch {
-            finalMessage = "转账失败" + commonMessage;
+            finalMessage = `${i18n.t("transfer.failed")}\n\n${commonMessage}`;
         }
 
         await telegram.editMessageText(message.chat.id, transactionMessage.message_id, undefined, finalMessage, {
