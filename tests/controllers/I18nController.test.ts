@@ -6,7 +6,9 @@ import { I18nController } from "#/controllers/I18nController";
 import { I18nServiceImpl } from "#/services/impls/I18nServiceImpl";
 import { UserRepositoryStub } from "../stubs/repositories/UserRepositoryStub";
 import { User } from "#/entities";
-import { I18nContext } from "#/definitions";
+import { I18nContext, ControllerMethodContext } from "#/definitions";
+import { MetadataKeys, Injections } from "#/constants";
+import { IUserRepository } from "#/repositories";
 
 const service = new I18nServiceImpl();
 
@@ -79,5 +81,35 @@ describe("I18nService", () => {
 
             expect(user.language).toBe(language);
         });
+    });
+
+    test("Query database at the first time", async () => {
+        const ctx = createMockedContext();
+        Object.assign(ctx, {
+            message: {
+                ...ctx.message,
+                chat: {
+                    type: "private",
+                },
+                from: {
+                    id: 3,
+                    name: "achineseuser",
+                    language: "zh-hans",
+                },
+            },
+        });
+
+        const mockedUserRepo = {
+            getUser: jest.fn(() => "zh-hans"),
+        };
+        const context = Reflect.getMetadata(MetadataKeys.Context, ctx) as ControllerMethodContext;
+        context.container.bind(Injections.Repository).toConstantValue(mockedUserRepo).whenTargetNamed(User.name);
+
+        await service.middleware()(ctx);
+        await service.middleware()(ctx);
+        await service.middleware()(ctx);
+        await service.middleware()(ctx);
+        await service.middleware()(ctx);
+        expect(mockedUserRepo.getUser).toBeCalledTimes(1);
     });
 });
