@@ -1,5 +1,3 @@
-jest.mock("telegraf");
-
 import Telegraf from "telegraf";
 import { Container } from "inversify";
 import { AxiosInstance } from "axios";
