@@ -601,10 +601,8 @@ Fan 票：${senderInfo.minetoken.symbol}
             const time = Number(match[2]);
             const untilDateTimestamp = Math.round(Date.now() / 1000) + time * 60;
 
-            // @ts-ignore
-
             await telegram.restrictChatMember(chat.id, targetId, {
-                until_date: untilDateTimestamp,
+                until_date: untilDateTimestamp as any,
                 can_send_messages: false,
                 can_send_media_messages: false,
                 can_send_other_messages: false,
