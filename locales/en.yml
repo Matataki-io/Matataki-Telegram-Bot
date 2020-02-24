@@ -1,1 +1,15 @@
 lang: English
+
+error:
+  usernameNotSynced: Sorry, please input /syncusername before receive a transfer in telegram.
+  matatakiAccountAbsent: Sorry, please bind or login your telegram account with Matataki.
+
+transfer:
+  common: |-
+    From: [${senderUsername}](${senderUrl})
+    To: [${receiverUsername}](${receiverUrl})
+    Value: ${amount} ${symbol}
+  started: "Pending..."
+  successful: "*Success*"
+  failed: "*Failure*"
+  transactionDetail: Detail
