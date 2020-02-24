@@ -94,7 +94,8 @@ describe("I18nService", () => {
         `("Flat ($language)", ({ language }) => {
             const service = createService();
 
-            expect(() => service.t(language, "notfound")).toThrowError(`Template of key 'notfound' in '${language}' not found`);
+            // expect(() => service.t(language, "notfound")).toThrowError(`Template of key 'notfound' in '${language}' not found`);
+            expect(service.t(language, "notfound")).toBe("notfound");
         });
         it.each`
         language
@@ -104,7 +105,8 @@ describe("I18nService", () => {
         `("Hierarchy Type A ($language)", ({ language }) => {
             const service = createService();
 
-            expect(() => service.t(language, "a.b")).toThrowError(`Template of key 'a.b' in '${language}' not found`);
+            // expect(() => service.t(language, "a.b")).toThrowError(`Template of key 'a.b' in '${language}' not found`);
+            expect(service.t(language, "a.b")).toBe("a.b");
         });
         it.each`
         language
@@ -114,7 +116,8 @@ describe("I18nService", () => {
         `("Hierarchy Type B ($language)", ({ language }) => {
             const service = createService();
 
-            expect(() => service.t(language, "a.b.c.d")).toThrowError(`Template of key 'a.b.c.d' in '${language}' not found`);
+            // expect(() => service.t(language, "a.b.c.d")).toThrowError(`Template of key 'a.b.c.d' in '${language}' not found`);
+            expect(service.t(language, "a.b.c.d")).toBe("a.b.c.d");
         });
     });
 
