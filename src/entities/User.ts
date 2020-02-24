@@ -10,6 +10,9 @@ export class User {
     @Column({ type: "text", nullable: true, unique: true })
     username!: string | null;
 
+    @Column({ type: "text", nullable: true })
+    language!: string | null;
+
     @ManyToMany(type => Group, group => group.members)
     @JoinTable({ name: "group_member" })
     groups!: Group[];
