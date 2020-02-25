@@ -12,6 +12,11 @@ export function Action(name: string | RegExp): MethodDecorator {
         }
 
         const commands = Reflect.getMetadata(MetadataKeys.ActionNames, target.constructor) as ActionHandlerInfo[];
+
+        if (commands.find(info => info.methodName === methodName)) {
+            throw new Error("No multiple @Action");
+        }
+
         commands.push({
             name,
             methodName,
