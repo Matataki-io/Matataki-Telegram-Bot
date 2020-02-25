@@ -3,6 +3,7 @@ export * from "./Command";
 export * from "./Controller";
 export * from "./Event";
 export * from "./GroupOnly";
+export * from "./InjectRegexMatchGroup";
 export * from "./InjectSenderMatatakiInfo";
 export * from "./JsonColumn";
 export * from "./PrivateChatOnly";
