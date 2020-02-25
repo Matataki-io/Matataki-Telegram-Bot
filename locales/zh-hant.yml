@@ -1,1 +1,15 @@
 lang: 繁體中文
+
+error:
+  usernameNotSynced: 抱歉，對方還沒有同步用戶名到數據庫裡
+  matatakiAccountAbsent: 抱歉，目標帳號還沒有在 瞬Matataki 綁定 Telegram 帳號
+
+transfer:
+  common: |-
+    轉帳方：[${senderUsername}](${senderUrl})
+    轉入方：[${receiverUsername}](${receiverUrl})
+    轉帳數量：${amount} ${symbol}
+  started: "轉帳交易進行中..."
+  successful: "*轉帳成功*"
+  failed: "*轉帳失敗*"
+  transactionDetail: 交易詳細資料
