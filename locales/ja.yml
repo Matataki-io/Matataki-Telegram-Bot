@@ -1,1 +1,14 @@
 lang: 日本語
+
+error:
+  usernameNotSynced: すいません，お振込先がデータベースにアカウントを同期していませんです。
+  matatakiAccountAbsent: すいません，対象アカウントがまだ瞬MatatakiにTelegramアカウントをバインドしていませんです。
+transfer:
+  common: |-
+    送金人：[${senderUsername}](${senderUrl}) 
+    お振込先：[${receiverUsername}](${receiverUrl})　
+    振込む金額：${amount} ${symbol}
+  started: "振り込み中..."
+  successful: "*振り込む成功しました*"
+  failed: "*振り込む失敗しました*"
+  transactionDetail: 詳細
