@@ -171,7 +171,7 @@ export class WalletController extends BaseController<WalletController> {
 
         let finalMessage, replyMarkup;
         try {
-            const tx_hash = await this.matatakiService.transfer(senderInfo.user.id, userId, symbol, amount * 10000);
+            const tx_hash = await this.matatakiService.transfer(senderInfo.user.id, userId, symbol, amount);
 
             finalMessage = `${i18n.t("transfer.successful")}\n\n${commonMessage}`;
 
