@@ -12,5 +12,6 @@ export const Injections = {
     Web3Service: Symbol.for("Web3Service"),
     RedEnvelopeService: Symbol.for("RedEnvelopeService"),
     DiceService: Symbol.for("DiceService"),
+    RPSService: Symbol.for("RPSService"),
     I18nService: Symbol.for("I18nService"),
 };

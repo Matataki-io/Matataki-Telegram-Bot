@@ -6,3 +6,4 @@ export * from "./IMatatakiService";
 export * from "./IWeb3Service";
 export { IRedEnvelopeService } from "./IRedEnvelopeService";
 export { IDiceService } from "./IDiceService";
+export { IRPSService } from "./IRPSService";
