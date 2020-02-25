@@ -158,7 +158,7 @@ export class WalletController extends BaseController<WalletController> {
         }
 
         const symbol = match[2];
-        const amount = Number(match[3]) * 10000;
+        const amount = Number(match[3]);
 
         let commonMessage = i18n.t("transfer.common", {
             senderUsername: senderInfo.user.name,
