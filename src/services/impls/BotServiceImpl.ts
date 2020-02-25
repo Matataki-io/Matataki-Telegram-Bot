@@ -251,16 +251,22 @@ export class BotServiceImpl implements IBotService {
 
         await delay(2000);
 
-        const isWebhookMode = process.env.WEBHOOK_PORT && process.env.WEBHOOK_URL;
+        const launchOptions = {};
 
+        const isWebhookMode = process.env.WEBHOOK_PORT && process.env.WEBHOOK_DOMAIN && process.env.WEBHOOK_PATH;
         if (isWebhookMode) {
             // Start In the Webhook mode, Use caddy or other HTTPS Server to proxy the webhook
-            await this.bot.startWebhook('/', null, Number(process.env.WEBHOOK_PORT!))
-            await this.bot.telegram.setWebhook(process.env.WEBHOOK_URL!);
-        } else {
-            // Not Detected, going to getUpdate polling
-            await this.bot.launch();
+            Object.assign(launchOptions, {
+                webhook: {
+                    port: Number(process.env.WEBHOOK_PORT!),
+                    domain: process.env.WEBHOOK_DOMAIN,
+                    hookPath: process.env.WEBHOOK_PATH,
+                    tlsOptions: null,
+                }
+            });
         }
+
+        await this.bot.launch(launchOptions);
 
         this._isRunning = true;
         console.log(`Matataki bot is running in ${isWebhookMode ? "Webhook" : "getUpdate Polling"} Mode...`);
