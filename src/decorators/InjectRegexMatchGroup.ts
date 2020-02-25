@@ -1,7 +1,7 @@
 import { MetadataKeys, ParameterTypes } from "#/constants";
 import { ParameterInfo } from "#/definitions";
 
-export function InjectRegexMatchGroup(groupIndex: number): ParameterDecorator {
+export function InjectRegexMatchGroup(groupIndex: number, converter?: (input: string) => any): ParameterDecorator {
     if (groupIndex < 1 || !Number.isInteger(groupIndex)) {
         throw new Error("GroupIndex should be a positive integer");
     }
@@ -25,6 +25,7 @@ export function InjectRegexMatchGroup(groupIndex: number): ParameterDecorator {
 
         parameters.set(parameterIndex, {
             type: ParameterTypes.RegexMatchGroup,
+            converter,
         });
     };
 }

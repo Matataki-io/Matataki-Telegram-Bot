@@ -1,5 +1,12 @@
 import { ParameterTypes } from "#/constants";
 
-export type ParameterInfo = {
+type GeneralParameterInfo = {
     type: ParameterTypes,
 }
+
+type RegexMatchGroupParameterInfo = {
+    type: ParameterTypes.RegexMatchGroup,
+    converter?: (input: string) => any,
+}
+
+export type ParameterInfo = GeneralParameterInfo | RegexMatchGroupParameterInfo;
