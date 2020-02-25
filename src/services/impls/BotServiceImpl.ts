@@ -259,7 +259,7 @@ export class BotServiceImpl implements IBotService {
             await this.bot.telegram.setWebhook(process.env.WEBHOOK_URL!);
         } else {
             // Not Detected, going to getUpdate polling
-            await this.bot.launch();
+            await this.bot.startPolling();
         }
 
         this._isRunning = true;
@@ -284,6 +284,7 @@ export class BotServiceImpl implements IBotService {
         }
 
         if (botInfo.value.id === this.botInfo.id) {
+            this.bot.options.username = this.botInfo.username;
             return;
         }
 
