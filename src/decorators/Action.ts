@@ -2,8 +2,8 @@ import { MetadataKeys } from "../constants";
 import { ActionHandlerInfo } from "#/definitions";
 
 export function Action(name: string | RegExp): MethodDecorator {
-    return (target: Object, methodName: string | Symbol) => {
-        if (methodName instanceof Symbol) {
+    return (target: Object, methodName: string | symbol) => {
+        if (typeof methodName === "symbol") {
             throw new Error("Impossible situation");
         }
 

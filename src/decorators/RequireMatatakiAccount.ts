@@ -5,8 +5,8 @@ import { IMatatakiService } from "#/services";
 type HandlerFunc = (ctx: MessageHandlerContext, ...args: any[]) => any;
 
 export function RequireMatatakiAccount(): MethodDecorator {
-    return (target: Object, methodName: string | Symbol, descriptor: PropertyDescriptor) => {
-        if (methodName instanceof Symbol) {
+    return (target: Object, methodName: string | symbol, descriptor: PropertyDescriptor) => {
+        if (typeof methodName === "symbol") {
             throw new Error("Impossible situation");
         }
 
