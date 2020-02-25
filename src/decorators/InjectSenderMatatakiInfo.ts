@@ -1,7 +1,7 @@
 import { MetadataKeys, ParameterTypes } from "#/constants";
 import { ParameterInfo } from "#/definitions";
 
-export function SenderMatatakiInfo(): ParameterDecorator {
+export function InjectSenderMatatakiInfo(): ParameterDecorator {
     return (target: Object, methodName: string | symbol, parameterIndex: number) => {
         if (typeof methodName === "symbol") {
             throw new Error("Impossible situation");

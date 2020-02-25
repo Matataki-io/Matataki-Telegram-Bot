@@ -1,4 +1,4 @@
-import { Controller, Command, GroupOnly, PrivateChatOnly, RequireMatatakiAccount, RequireMintedMinetoken, SenderMatatakiInfo } from "#/decorators";
+import { Controller, Command, GroupOnly, PrivateChatOnly, RequireMatatakiAccount, RequireMintedMinetoken, InjectSenderMatatakiInfo } from "#/decorators";
 import { MessageHandlerContext, AssociatedInfo } from "#/definitions";
 import { BaseController } from ".";
 
@@ -33,7 +33,7 @@ export class DebugController extends BaseController<DebugController> {
 
     @Command("requirematataki")
     @RequireMatatakiAccount()
-    requireMatatakiAccount({ reply }: MessageHandlerContext, @SenderMatatakiInfo() senderInfo: Required<Omit<AssociatedInfo, "minetoken">>) {
+    requireMatatakiAccount({ reply }: MessageHandlerContext, @InjectSenderMatatakiInfo() senderInfo: Required<Omit<AssociatedInfo, "minetoken">>) {
         const { user } = senderInfo;
         return reply(`${user.id}:${user.name}`);
     }
@@ -44,7 +44,7 @@ export class DebugController extends BaseController<DebugController> {
     }
     @Command("requiremintedminetoken")
     @RequireMintedMinetoken()
-    requireMintedMinetoken({ reply }: MessageHandlerContext, @SenderMatatakiInfo() senderInfo: Required<AssociatedInfo>) {
+    requireMintedMinetoken({ reply }: MessageHandlerContext, @InjectSenderMatatakiInfo() senderInfo: Required<AssociatedInfo>) {
         const { user, minetoken } = senderInfo;
         return reply(`${user.id}:${user.name} w/ ${minetoken.id}:${minetoken.name}(${minetoken.symbol})`);
     }
