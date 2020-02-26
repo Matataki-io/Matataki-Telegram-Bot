@@ -255,57 +255,19 @@ Fan 票：${senderInfo.minetoken.symbol}
     }
 
     @Event("new_chat_members")
-    async onNewMemberEnter({ message, reply, telegram }: MessageHandlerContext) {
-        if (message.chat.type !== "group" && message.chat.type !== "supergroup") {
+    async onNewMemberEnter({ message, telegram }: MessageHandlerContext) {
+        const { id: groupId, type, title } = message.chat;
+        if (type !== "group" && type !== "supergroup") {
             console.log("Not support private and channel");
             return;
         }
 
-        let group: Group | undefined;
+        const administrators = await telegram.getChatAdministrators(groupId);
+        const creator = administrators.find(admin => admin.status === "creator");
 
-        const groupId = message.chat.id;
-        const groupInfo = await telegram.getChat(groupId);
-        const groupName = groupInfo.title;
-
-        const inviterId = message.from.id;
+        const group = await this.groupRepo.ensureGroup(groupId, title ?? "", creator?.user.id ?? -1, -1);
 
         let newMembers = message.new_chat_members ?? [];
-        const me = newMembers.find(member => member.id === this.botService.info.id);
-        if (!me) {
-            group = await this.groupRepo.getGroupOrDefault(groupId);
-            if (!group) {
-                return;
-            }
-        } else {
-            const administrators = await telegram.getChatAdministrators(groupId);
-            const creator = administrators.find(admin => admin.status === "creator");
-            if (!creator) {
-                throw new Error("Impossible situation");
-            }
-            const creatorId = creator.user.id;
-            if (inviterId !== creatorId) {
-                await reply("邀请者不是群主，立即退出");
-                await telegram.leaveChat(groupId);
-                return;
-            }
-
-            const info = await this.matatakiService.getAssociatedInfo(inviterId);
-            if (!info.user || !info.minetoken) {
-                await reply("群主没有在 瞬Matataki 绑定该 Telegram 帐号或者尚未发行 Fan 票，立即退出");
-                await telegram.leaveChat(groupId);
-                return;
-            }
-
-            group = await this.groupRepo.ensureGroup(groupId, groupName ?? "", creator.user.id, info.minetoken.id);
-
-            await this.botService.sendMessage(creatorId, `您已把机器人拉进群 **${groupName}**。为了机器人的正常工作，请把机器人设置为管理员并取消群员拉人权限`);
-
-            if (groupInfo.type === "group") {
-                await this.botService.sendMessage(creatorId, `**${groupName}** 现在是一个小群，对于机器人的正常工作存在一定影响，建议采取一些操作升级到大群。包括但不限于以下操作：
-- 临时转公开并设置群链接
-- 修改任意管理员操作权限`);
-            }
-        }
 
         const acceptedUsers = new Set<TelegramUser>();
 
@@ -317,35 +279,37 @@ Fan 票：${senderInfo.minetoken.symbol}
                 continue;
             }
 
-            const contractAddress = await this.matatakiService.getContractAddressOfMinetoken(group.tokenId);
-            const requirement = group.requirement.minetoken?.amount ?? 0;
+            if (group.requirement.minetoken) {
+                const contractAddress = await this.matatakiService.getContractAddressOfMinetoken(group.tokenId);
+                const requirement = group.requirement.minetoken.amount;
 
-            let walletAddress: string;
-            try {
-                walletAddress = await this.matatakiService.getEthWallet(member.id);
-            } catch (e) {
+                let walletAddress: string;
                 try {
-                    await this.botService.kickMember(groupId, member.id);
-                    await this.botService.sendMessage(member.id, `抱歉，您现在没有绑定 瞬Matataki，现已被移出`);
+                    walletAddress = await this.matatakiService.getEthWallet(member.id);
                 } catch (e) {
-                    this.loggerService.warn(LogCategories.TelegramUpdate, e);
+                    try {
+                        await this.botService.kickMember(groupId, member.id);
+                        await this.botService.sendMessage(member.id, `抱歉，您现在没有绑定 瞬Matataki，现已被移出`);
+                    } catch (e) {
+                        this.loggerService.warn(LogCategories.TelegramUpdate, e);
+                    }
+                    continue;
                 }
-                continue;
+
+                const balance = await this.web3Service.getBalance(contractAddress, walletAddress);
+
+                if (balance < requirement) {
+                    try {
+                        await this.botService.kickMember(groupId, member.id);
+                        await this.botService.sendMessage(member.id, `抱歉，您现在的 Fan 票不满足群 ${title} 的条件，现已被移出`);
+                    } catch (e) {
+                        this.loggerService.warn(LogCategories.TelegramUpdate, e);
+                    }
+                    continue;
+                }
             }
 
-            const balance = await this.web3Service.getBalance(contractAddress, walletAddress);
-
-            if (balance >= requirement) {
-                acceptedUsers.add(member);
-                continue;
-            }
-
-            try {
-                await this.botService.kickMember(groupId, member.id);
-                await this.botService.sendMessage(member.id, `抱歉，您现在的 Fan 票不满足群 ${groupName} 的条件，现已被移出`);
-            } catch (e) {
-                this.loggerService.warn(LogCategories.TelegramUpdate, e);
-            }
+            acceptedUsers.add(member);
         }
 
         if (acceptedUsers.size === 0) {
@@ -401,14 +365,7 @@ Fan 票：${senderInfo.minetoken.symbol}
         const { id: groupId, title } = message.chat;
         const inviterId = message.from.id;
 
-        const info = await this.matatakiService.getAssociatedInfo(inviterId);
-        if (!info.user || !info.minetoken) {
-            await reply("群主没有在 瞬Matataki 绑定该 Telegram 帐号或者尚未发行 Fan 票，立即退出");
-            await telegram.leaveChat(groupId);
-            return;
-        }
-
-        await this.groupRepo.ensureGroup(groupId, title ?? "", inviterId, info.minetoken.id);
+        await this.groupRepo.ensureGroup(groupId, title ?? "", inviterId, -1);
     }
     @Event("migrate_to_chat_id")
     async onGroupMigration({ message }: MessageHandlerContext) {

@@ -1,5 +1,5 @@
 import { inject, Container } from "inversify";
-import Telegraf, { ContextMessageUpdate, session, Markup } from "telegraf";
+import Telegraf, { ContextMessageUpdate, session, Markup, Composer } from "telegraf";
 import { User as TelegramUser } from "telegraf/typings/telegram-types";
 import { HttpsProxyAgent } from "https-proxy-agent";
 import { SocksProxyAgent } from "socks-proxy-agent";
@@ -86,7 +86,7 @@ export class BotServiceImpl implements IBotService {
 
             console.log('Response time: %sms', ms);
         });
-        this.bot.use(this.i18nService.middleware());
+        this.bot.use(Composer.mount(["message", "callback_query"], this.i18nService.middleware()));
         this.bot.catch((err: any, ctx: ContextMessageUpdate) => {
             const { reply } = ctx;
 
@@ -172,7 +172,7 @@ export class BotServiceImpl implements IBotService {
             await this.bot.telegram.setWebhook(process.env.WEBHOOK_URL!);
         } else {
             // Not Detected, going to getUpdate polling
-            await this.bot.launch();
+            await this.bot.startPolling();
         }
 
         this._isRunning = true;
@@ -197,6 +197,7 @@ export class BotServiceImpl implements IBotService {
         }
 
         if (botInfo.value.id === this.botInfo.id) {
+            this.bot.options.username = this.botInfo.username;
             return;
         }
 
