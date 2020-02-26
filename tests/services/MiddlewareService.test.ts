@@ -3,18 +3,13 @@ import "reflect-metadata";
 import { TelegrafConstructor, ContextMessageUpdate } from "telegraf";
 import { Container } from "inversify";
 
-import { Command, Controller, Event, Action } from "#/decorators";
+import { Command, Controller, Event, Action, InjectRegexMatchGroup } from "#/decorators";
 import { ControllerConstructor, BaseController } from "#/controllers";
 import { MiddlewareServiceImpl } from "#/services/impls/MiddlewareServiceImpl";
 
 function createBotInstance(controllers: Array<ControllerConstructor>) {
-    const options = {};
-    Object.assign({}, {
-        contextType: class {},
-    });
-
     const Telegraf = jest.requireActual("telegraf") as TelegrafConstructor;
-    const bot = new Telegraf<ContextMessageUpdate>("TOKEN", options);
+    const bot = new Telegraf<ContextMessageUpdate>("TOKEN");
 
     const service = new MiddlewareServiceImpl(new Container({ skipBaseClassChecks: true }));
 
@@ -117,33 +112,97 @@ describe("MiddlewareService", () => {
         expect(func).toBeCalledTimes(1);
     });
 
-    test("Simple action", async () => {
-        const func = jest.fn();
+    describe("Action", () => {
+        test("Simple action", async () => {
+            const func = jest.fn();
 
-        @Controller("a")
-        class TestController extends BaseController<TestController> {
-            @Action("test")
-            test() {
-                func();
+            @Controller("a")
+            class TestController extends BaseController<TestController> {
+                @Action("test")
+                test() {
+                    func();
+                }
             }
-        }
 
-        const bot = createBotInstance([TestController]);
+            const bot = createBotInstance([TestController]);
 
-        await bot.handleUpdate({
-            update_id: 1,
-            callback_query: {
-                id: "blahblahblah",
-                from: {
-                    id: 1,
-                    is_bot: false,
-                    first_name: "testuser",
+            await bot.handleUpdate({
+                update_id: 1,
+                callback_query: {
+                    id: "blahblahblah",
+                    from: {
+                        id: 1,
+                        is_bot: false,
+                        first_name: "testuser",
+                    },
+                    chat_instance: "blahblahblah",
+                    data: "test",
                 },
-                chat_instance: "blahblahblah",
-                data: "test",
-            },
+            });
+
+            expect(func).toBeCalledTimes(1);
         });
 
-        expect(func).toBeCalledTimes(1);
+        describe("Action with regex", () => {
+            test("Matched", async () => {
+                const func = jest.fn();
+
+                @Controller("a")
+                class TestController extends BaseController<TestController> {
+                    @Action(/test:(\w+)/)
+                    test({}: ContextMessageUpdate, @InjectRegexMatchGroup(1) arg: string) {
+                        func(arg);
+                    }
+                }
+
+                const bot = createBotInstance([TestController]);
+
+                await bot.handleUpdate({
+                    update_id: 1,
+                    callback_query: {
+                        id: "blahblahblah",
+                        from: {
+                            id: 1,
+                            is_bot: false,
+                            first_name: "testuser",
+                        },
+                        chat_instance: "blahblahblah",
+                        data: "test:abc",
+                    },
+                });
+
+                expect(func).toBeCalledTimes(1);
+                expect(func).toBeCalledWith("abc");
+            });
+            test("Not matched", async () => {
+                const func = jest.fn();
+
+                @Controller("a")
+                class TestController extends BaseController<TestController> {
+                    @Action(/test:(\w+)/)
+                    test({}: ContextMessageUpdate, @InjectRegexMatchGroup(1) arg: string) {
+                        func(arg);
+                    }
+                }
+
+                const bot = createBotInstance([TestController]);
+
+                await bot.handleUpdate({
+                    update_id: 1,
+                    callback_query: {
+                        id: "blahblahblah",
+                        from: {
+                            id: 1,
+                            is_bot: false,
+                            first_name: "testuser",
+                        },
+                        chat_instance: "blahblahblah",
+                        data: "test:!@#",
+                    },
+                });
+
+                expect(func).toBeCalledTimes(0);
+            });
+        });
     });
 });

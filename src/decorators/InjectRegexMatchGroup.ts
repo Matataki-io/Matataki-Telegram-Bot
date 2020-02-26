@@ -25,6 +25,7 @@ export function InjectRegexMatchGroup(groupIndex: number, converter?: (input: st
 
         parameters.set(parameterIndex, {
             type: ParameterTypes.RegexMatchGroup,
+            groupIndex,
             converter,
         });
     };
