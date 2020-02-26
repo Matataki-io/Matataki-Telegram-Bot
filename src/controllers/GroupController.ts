@@ -163,7 +163,12 @@ export class GroupController extends BaseController<GroupController> {
 
         await reply("OK");
 
-        await telegram.sendMessage(groupId, i18n.t("set.reply"));
+        await telegram.sendMessage(groupId, i18n.t("set.reply", {
+            groupId,
+            title: group.title,
+            symbol: senderInfo.minetoken.symbol,
+            amount
+        }));
 
         return true;
     }
@@ -247,7 +252,9 @@ export class GroupController extends BaseController<GroupController> {
             }
         }
 
-        array.unshift(i18n.t("join.remainingGroups"));
+        array.unshift(i18n.t("join.remainingGroups", {
+            joinableGroupCount
+        }));
 
         array.push("");
         array.push(i18n.t("join.joinedGroups"));
@@ -302,7 +309,9 @@ export class GroupController extends BaseController<GroupController> {
                 if (balance < requirement) {
                     try {
                         await this.botService.kickMember(groupId, member.id);
-                        await this.botService.sendMessage(member.id, i18n.t("expel.insufficientToken"));
+                        await this.botService.sendMessage(member.id, i18n.t("expel.insufficientToken", {
+                            title
+                        }));
                     } catch (e) {
                         this.loggerService.warn(LogCategories.TelegramUpdate, e);
                     }
@@ -425,7 +434,12 @@ export class GroupController extends BaseController<GroupController> {
         }
 
         if (balance < groupRequirement) {
-            await reply(i18n.t("joinGroup.insufficientToken"));
+            await reply(i18n.t("joinGroup.insufficientToken", {
+                title: group.title,
+                name: minetoken.name,
+                symbol: minetoken.symbol,
+                groupRequirement
+            }));
             return true;
         }
 
@@ -501,7 +515,9 @@ export class GroupController extends BaseController<GroupController> {
 
             const untilDate = moment.unix(untilDateTimestamp);
 
-            finalMessage = i18n.t("kick.success");
+            finalMessage = i18n.t("kick.success", {
+                format: untilDate.format("lll")
+            });
         } catch {
             replyWithMarkdown(targetId.toString());
             replyWithMarkdown(chat.id.toString());
@@ -568,7 +584,9 @@ export class GroupController extends BaseController<GroupController> {
 
             const untilDate = moment.unix(untilDateTimestamp);
 
-            finalMessage = i18n.t("ban.success");
+            finalMessage = i18n.t("ban.success", {
+                format: untilDate.format("lll")
+            });
         } catch {
             finalMessage = i18n.t("ban.error");
         }
