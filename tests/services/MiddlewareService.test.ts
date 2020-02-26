@@ -204,5 +204,36 @@ describe("MiddlewareService", () => {
                 expect(func).toBeCalledTimes(0);
             });
         });
+
+        test("Argument converter", async () => {
+            const func = jest.fn();
+
+            @Controller("a")
+            class TestController extends BaseController<TestController> {
+                @Action(/test:(\d+)/)
+                test({}: ContextMessageUpdate, @InjectRegexMatchGroup(1, Number) arg: number) {
+                    func(arg);
+                }
+            }
+
+            const bot = createBotInstance([TestController]);
+
+            await bot.handleUpdate({
+                update_id: 1,
+                callback_query: {
+                    id: "blahblahblah",
+                    from: {
+                        id: 1,
+                        is_bot: false,
+                        first_name: "testuser",
+                    },
+                    chat_instance: "blahblahblah",
+                    data: "test:114514",
+                },
+            });
+
+            expect(func).toBeCalledTimes(1);
+            expect(func).toBeCalledWith(114514);
+        });
     });
 });

@@ -1,5 +1,5 @@
 import { MetadataKeys, ParameterTypes } from "../constants";
-import { ActionHandlerInfo, MessageHandlerContext, ParameterInfo } from "#/definitions";
+import { ActionHandlerInfo, MessageHandlerContext, ParameterInfo, RegexMatchGroupParameterInfo } from "#/definitions";
 
 type HandlerFunc = (ctx: MessageHandlerContext, ...args: any[]) => any;
 
@@ -30,7 +30,7 @@ export function Action(name: string | RegExp): MethodDecorator {
 
         const decoratedMethod = <HandlerFunc>descriptor.value;
 
-        const map = new Map<number, number>();
+        const map = new Map<number, RegexMatchGroupParameterInfo>();
 
         const methodMap = Reflect.getMetadata(MetadataKeys.Parameters, target.constructor) as Map<string, Map<number, ParameterInfo>> | undefined;
         if (methodMap) {
@@ -41,14 +41,20 @@ export function Action(name: string | RegExp): MethodDecorator {
                         continue;
                     }
 
-                    map.set(parameterIndex, info.groupIndex);
+                    map.set(parameterIndex, info);
                 }
             }
         }
 
         descriptor.value = async function (ctx: MessageHandlerContext, ...args: any[]) {
-            for (const [parameterIndex, groupIndex] of map) {
-                args[parameterIndex - 1] = ctx.match![groupIndex];
+            for (const [parameterIndex, { groupIndex, converter }] of map) {
+                let arg = ctx.match![groupIndex];
+
+                if (converter) {
+                    arg = converter(arg);
+                }
+
+                args[parameterIndex - 1] = arg;
             }
 
             return decoratedMethod.call(this, ctx, ...args);

@@ -4,7 +4,7 @@ type GeneralParameterInfo = {
     type: ParameterTypes.SenderMatatakiInfo,
 }
 
-type RegexMatchGroupParameterInfo = {
+export type RegexMatchGroupParameterInfo = {
     type: ParameterTypes.RegexMatchGroup,
     groupIndex: number,
     converter?: (input: string) => any,
