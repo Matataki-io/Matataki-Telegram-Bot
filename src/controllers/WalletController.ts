@@ -1,7 +1,7 @@
 import { inject } from "inversify";
 
 import { Injections } from "#/constants";
-import { Controller, Command, InjectRepository } from "#/decorators";
+import { Controller, Command, InjectRepository, InjectSenderMatatakiInfo } from "#/decorators";
 import { MessageHandlerContext, AssociatedInfo } from "#/definitions";
 import { User } from "#/entities";
 import { IUserRepository } from "#/repositories";
@@ -11,7 +11,6 @@ import { filterNotNull } from "#/utils";
 import { BaseController } from ".";
 import { Extra, Markup } from "telegraf";
 import { RequireMatatakiAccount } from "#/decorators/RequireMatatakiAccount";
-import { SenderMatatakiInfo } from "#/decorators/SenderMatatakiInfo";
 
 @Controller("wallet")
 export class WalletController extends BaseController<WalletController> {
@@ -123,7 +122,7 @@ export class WalletController extends BaseController<WalletController> {
 
     @Command("transfer", { ignorePrefix: true })
     @RequireMatatakiAccount()
-    async transfer({ message, replyWithMarkdown, telegram, i18n }: MessageHandlerContext, @SenderMatatakiInfo() senderInfo: Required<Omit<AssociatedInfo, "minetoken">>) {
+    async transfer({ message, replyWithMarkdown, telegram, i18n }: MessageHandlerContext, @InjectSenderMatatakiInfo() senderInfo: Required<Omit<AssociatedInfo, "minetoken">>) {
         const match = /^\/transfer(?:@[\w_]+)?\s+(\d+|@[\w_]{5,32})\s+(\w+)\s+(\d+.?\d*)/.exec(message.text);
         if (!match || match.length < 4) {
             await replyWithMarkdown("格式不对，请输入 `/transfer [Matataki UID/@Telegram 用户名] [symbol] [amount]`");

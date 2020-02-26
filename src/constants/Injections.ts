@@ -13,4 +13,5 @@ export const Injections = {
     RedEnvelopeService: Symbol.for("RedEnvelopeService"),
     DiceService: Symbol.for("DiceService"),
     I18nService: Symbol.for("I18nService"),
+    MiddlewareService: Symbol.for("MiddlewareService"),
 };

@@ -2,7 +2,7 @@ import { inject } from "inversify";
 import { Markup } from "telegraf";
 
 import { BaseController } from ".";
-import { Controller, Command, Action, PrivateChatOnly, InjectRepository } from "#/decorators";
+import { Controller, Command, Action, PrivateChatOnly, InjectRepository, InjectRegexMatchGroup } from "#/decorators";
 import { MessageHandlerContext } from "#/definitions";
 import { Injections } from "#/constants";
 import { User } from "#/entities";
@@ -27,8 +27,8 @@ export class I18nController extends BaseController<I18nController> {
     }
 
     @Action(/setlang:([\w-]+)/)
-    async switchLanguage({ answerCbQuery, reply, match, i18n, callbackQuery }: MessageHandlerContext) {
-        i18n.language = match![1];
+    async switchLanguage({ answerCbQuery, reply, i18n, callbackQuery }: MessageHandlerContext, @InjectRegexMatchGroup(1) language: string) {
+        i18n.language = language;
 
         const { id, username } = callbackQuery!.from;
 
