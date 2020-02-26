@@ -8,10 +8,12 @@ import { QueryController } from "./QueryController";
 import { RedEnvelopeController } from "./RedEnvelopeController";
 import { SyncController } from "./SyncController";
 import { I18nController } from "./I18nController";
+import { RPSController } from "./RPSController";
 
 export const controllers: ControllerConstructor[] = [
     DebugController,
     DiceController,
+    RPSController,
     GroupController,
     HelpController,
     WalletController,
