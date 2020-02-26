@@ -13,3 +13,22 @@ transfer:
   successful: "*Success*"
   failed: "*Failure*"
   transactionDetail: Detail
+
+startReply: Thank you for using Matataki Fans, enter /help for more feature list 
+    👉🏻[Introduction Document](https://www.matataki.io/p/1638)
+
+messageReply: I'm a Matataki robot, type /help for help
+
+help:
+  title: What do you want to know?
+  whoAreYou: 👉Who are you
+  whatIsTheFanGroup: 👉What is the fan ticket group
+  instruction: 👉Operation instructions
+  joinFanGroup: 👉How to join fan ticket group
+  createFanGroup: 👉How to create a fan ticket group
+  deleteFanGroup: 👉How to delete fan ticket group
+  videoTutorial: 👉Video tutorial (updating)
+  redEnvelope: 👉How to use the red envelope function
+  diceGames: 👉How to start Dice games
+  transfer: 👉How to use the transfer function
+  otherQuestions: 👉I have other questions

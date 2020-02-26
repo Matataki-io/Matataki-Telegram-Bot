@@ -13,3 +13,23 @@ transfer:
   successful: "*轉帳成功*"
   failed: "*轉帳失敗*"
   transactionDetail: 交易詳細資料
+
+startReply: |-
+  感謝您使用 Matataki 粉絲群助手，輸入 /help 查看更多功能列表
+  👉🏻[介紹文檔](https://www.matataki.io/p/1638)
+
+messageReply: 我是 Matataki 機器人，輸入 /help 可獲得幫助信息
+
+help:
+  title: 您想了解什麼？
+  whoAreYou: 👉你是誰
+  whatIsTheFanGroup: 👉Fan票 粉絲群是什麼
+  instruction: 👉操作指令說明
+  joinFanGroup: 👉如何加入 Fan票 群
+  createFanGroup: 👉如何創建 Fan票 群
+  deleteFanGroup: 👉如何刪除 Fan票 群
+  videoTutorial: 👉視頻教程(更新中)
+  redEnvelope: 👉如何使用紅包功能
+  diceGames: 👉如何開啟Dice小遊戲
+  transfer: 👉如何使用轉賬功能
+  otherQuestions: 👉我有別的問題
