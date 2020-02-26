@@ -1,5 +1,5 @@
 import { inject, Container } from "inversify";
-import Telegraf, { ContextMessageUpdate, Middleware, session, Markup, Extra } from "telegraf";
+import Telegraf, { ContextMessageUpdate, Middleware, session, Markup, Extra, Composer } from "telegraf";
 import { User as TelegramUser } from "telegraf/typings/telegram-types";
 import { HttpsProxyAgent } from "https-proxy-agent";
 import { SocksProxyAgent } from "socks-proxy-agent";
@@ -86,7 +86,7 @@ export class BotServiceImpl implements IBotService {
 
             console.log('Response time: %sms', ms);
         });
-        this.bot.use(this.i18nService.middleware());
+        this.bot.use(Composer.mount(["message", "callback_query"], this.i18nService.middleware()));
         this.bot.catch((err: any, ctx: ContextMessageUpdate) => {
             const { reply } = ctx;
 
