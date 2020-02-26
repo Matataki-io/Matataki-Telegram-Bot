@@ -63,4 +63,18 @@ describe("MiddlewareService", () => {
 
         expect(func).toBeCalledTimes(1);
     });
+    test("Ban multiple handlers for a command in multiple controllers", () => {
+        @Controller("a")
+        class AController extends BaseController<AController> {
+            @Command("test", { ignorePrefix: true })
+            test() { }
+        }
+        @Controller("b")
+        class BController extends BaseController<BController> {
+            @Command("test", { ignorePrefix: true })
+            test() { }
+        }
+
+        expect(() => createBotInstance([AController, BController])).toThrowError("Command 'test' is registered by other controller");
+    });
 });
