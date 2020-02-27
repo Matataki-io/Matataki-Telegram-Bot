@@ -90,7 +90,7 @@ joinGroup:
   canJoin: 您现在可以进入该群：
 
 kick:
-  wrongFormat: 格式不对，请输入 `/kick [@用户名] [放逐分钟数]`
+  wrongFormat: Wrong format，please input `/kick [@username] [mins]`
   notUser: 抱歉，对方还没有同步用户名到数据库里
   loading: 放逐中...
   success: 放逐成功 (放逐至 ${format})
