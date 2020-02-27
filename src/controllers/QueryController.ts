@@ -21,20 +21,20 @@ export class QueryController extends BaseController<QueryController> {
     }
 
     @Command("status", { ignorePrefix: true })
-    async queryStatus({ message, replyWithMarkdown, telegram }: MessageHandlerContext) {
+    async queryStatus({ message, replyWithMarkdown, telegram, i18n }: MessageHandlerContext) {
         const id = message.from.id;
         const info = await this.matatakiService.getAssociatedInfo(id);
 
         const array = new Array<string>();
 
         if (!info.user) {
-            array.push("尚未绑定 瞬Matataki 账户");
+            array.push(i18n.t("status.notUser"));
         } else {
             array.push(`瞬Matataki 昵称：[${info.user.name}](${this.matatakiService.urlPrefix}/user/${info.user.id})`);
         }
 
         if (!info.minetoken) {
-            array.push("您在 瞬Matataki 尚未发行 Fan票");
+            array.push(i18n.t("status.notToken"));
         } else {
             array.push(`Fan票 名称：[${info.minetoken.symbol}（${info.minetoken.name}）](${this.matatakiService.urlPrefix}/token/${info.minetoken.id})`);
         }
@@ -45,7 +45,7 @@ export class QueryController extends BaseController<QueryController> {
             const joinedGroupsArray = new Array<string>();
 
             if (!user || user.groups.length === 0) {
-                joinedGroupsArray.push("*您尚未加入 Fan票 群*");
+                joinedGroupsArray.push(i18n.t("status.notJoined"));
             } else {
                 const symbolMap = new Map<number, string>();
                 for (const group of user.groups) {
@@ -75,14 +75,16 @@ export class QueryController extends BaseController<QueryController> {
                     joinedGroupsArray.push(result.value);
                 }
 
-                joinedGroupsArray.unshift(`*您已加入 ${joinedGroupsArray.length} 个 Fan票 群*`);
+                joinedGroupsArray.unshift(i18n.t("status.joinedGroups", {
+                    joinedGroups: joinedGroupsArray.length
+                }));
             }
 
             const createdGroupsArray = new Array<string>();
 
             const myGroups = await this.groupRepo.getGroupsOfCreator(id);
             if (myGroups.length === 0) {
-                createdGroupsArray.push("*您尚未建立 Fan票 群*");
+                createdGroupsArray.push(i18n.t("status.notCreatedGroups"));
             } else {
                 const results = await allPromiseSettled(myGroups.map(async group => {
                     if (!group.active) {
@@ -130,7 +132,9 @@ export class QueryController extends BaseController<QueryController> {
                     }
                 }
 
-                createdGroupsArray.unshift(`*您已建立 ${createdGroupsArray.length} 个 Fan票 群*`);
+                createdGroupsArray.unshift(i18n.t("status.createdGroups", {
+                    createdGroups: createdGroupsArray.length
+                }));
             }
 
             array.push("");
@@ -140,7 +144,7 @@ export class QueryController extends BaseController<QueryController> {
         }
 
         array.push("");
-        array.push("输入 /join 查看更多可以加入的 Fan票 群");
+        array.push(i18n.t("status.seeMore"));
 
         await replyWithMarkdown(array.join("\n"), {
             disable_web_page_preview: true,

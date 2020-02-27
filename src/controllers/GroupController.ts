@@ -28,11 +28,11 @@ export class GroupController extends BaseController<GroupController> {
 
     @Command("mygroups", { ignorePrefix: true })
     @RequireMintedMinetoken()
-    async listMyGroups({ message, reply, telegram }: MessageHandlerContext, @InjectSenderMatatakiInfo() senderInfo: Required<AssociatedInfo>) {
+    async listMyGroups({ message, reply, telegram, i18n }: MessageHandlerContext, @InjectSenderMatatakiInfo() senderInfo: Required<AssociatedInfo>) {
         const groups = await this.groupRepo.getGroupsOfCreator(message.from.id);
 
         if (groups.length === 0) {
-            await reply(`抱歉，您还没有创建 Fan票 群`);
+            await reply(i18n.t("status.notCreatedGroups"));
             return;
         }
 
@@ -63,10 +63,12 @@ export class GroupController extends BaseController<GroupController> {
                 return null;
             }
 
-            return `群组 ID：${group.id}
-名字：${groupInfo.title}
-Fan 票：${senderInfo.minetoken.symbol}
-最低要求：${group.requirement.minetoken?.amount ?? "未设置"}`;
+            return i18n.t("mygroups.reply", {
+                id: group.id,
+                title: groupInfo.title,
+                symbol: senderInfo.minetoken.symbol,
+                amount: group.requirement.minetoken?.amount ?? "未设置",
+            });
         })));
 
         for (const result of results) {
@@ -79,23 +81,23 @@ Fan 票：${senderInfo.minetoken.symbol}
             }
         }
 
-        let content = array.length === 0 ? "抱歉，您还没有创建 Fan票 群" : array.join("\n=====================\n");
+        let content = array.length === 0 ? i18n.t("status.notCreatedGroups") : array.join("\n=====================\n");
 
         content += `
 
-查询前请将 Fan票 群中的粉丝群助手设置为管理员`;
+` + i18n.t("mygroups.needAdmin");
 
         await reply(content);
     }
 
     @Command("rule", { ignorePrefix: true })
     @GroupOnly()
-    async getCurrentGroupRules({ message, reply }: MessageHandlerContext) {
+    async getCurrentGroupRules({ message, reply, i18n }: MessageHandlerContext) {
         const { chat } = message;
 
         const group = await this.groupRepo.getGroupOrDefault(chat.id);
         if (!group) {
-            await reply("该群还不是 Fan 票粉丝群");
+            await reply(i18n.t("rule.notFanGroups"));
             return;
         }
 
@@ -106,18 +108,23 @@ Fan 票：${senderInfo.minetoken.symbol}
         }
 
         if (group.requirement.minetoken && group.requirement.minetoken.amount > 0) {
-            await reply(`该群目前要求 ${info.minetoken.symbol} ≥ ${group.requirement.minetoken.amount}`);
+            await reply(i18n.t("rule.addCondition", {
+                symbol: info.minetoken.symbol,
+                amount: group.requirement.minetoken.amount
+            }));
         } else {
-            await reply(`该群目前没有 ${info.minetoken.symbol} 要求`);
+            await reply(i18n.t("rule.noConditions", {
+                symbol: info.minetoken.symbol
+            }));
         }
     }
 
     @Command("set", { ignorePrefix: true })
     @RequireMintedMinetoken()
-    async setGroupRequirement({ message, reply, telegram }: MessageHandlerContext, @InjectSenderMatatakiInfo() senderInfo: Required<AssociatedInfo>) {
+    async setGroupRequirement({ message, reply, telegram, i18n }: MessageHandlerContext, @InjectSenderMatatakiInfo() senderInfo: Required<AssociatedInfo>) {
         const match = /^\/set\s+-?(\d+)\s+(\d+.?\d*)/.exec(message.text);
         if (!match || match.length < 3) {
-            return reply("格式不对，请输入 `/set [group_id] [amount]`");
+            return reply(i18n.t("set.wrongFormat"));
         }
 
         const groupId = -Number(match[1]);
@@ -125,7 +132,7 @@ Fan 票：${senderInfo.minetoken.symbol}
         const group = groups.find(group => Number(group.id) === groupId);
 
         if (!group) {
-            await reply(`没有找到该群`);
+            await reply(i18n.t("set.noGroupFound"));
             return;
         }
 
@@ -143,11 +150,11 @@ Fan 票：${senderInfo.minetoken.symbol}
             }
         }
         if (!hasCreator) {
-            await reply("您是此群群主但是已经退群了");
+            await reply(i18n.t("set.retired"));
             return;
         }
         if (!hasMe) {
-            await reply("请把本机器人设置为此群的管理员并设置邀请用户权限");
+            await reply(i18n.t("set.needAdmin"));
             return;
         }
 
@@ -156,11 +163,12 @@ Fan 票：${senderInfo.minetoken.symbol}
 
         await reply("OK");
 
-        await telegram.sendMessage(groupId, `当前群规则已修改为：
-群组 ID：${groupId}
-名字：${group.title}
-Fan 票：${senderInfo.minetoken.symbol}
-最低要求：${amount}`);
+        await telegram.sendMessage(groupId, i18n.t("set.reply", {
+            groupId,
+            title: group.title,
+            symbol: senderInfo.minetoken.symbol,
+            amount
+        }));
 
         return true;
     }
@@ -168,7 +176,7 @@ Fan 票：${senderInfo.minetoken.symbol}
     @Command("join", { ignorePrefix: true })
     @PrivateChatOnly()
     @RequireMatatakiAccount()
-    async joinGroup({ message, reply, telegram }: MessageHandlerContext, @InjectSenderMatatakiInfo() info: AssociatedInfo) {
+    async joinGroup({ message, reply, telegram, i18n }: MessageHandlerContext, @InjectSenderMatatakiInfo() info: AssociatedInfo) {
         const sender = message.from.id;
         const groups = await this.groupRepo.getGroupsExceptMyToken(info.minetoken?.id);
 
@@ -198,9 +206,7 @@ Fan 票：${senderInfo.minetoken.symbol}
 
         const acceptableGroups = groups.filter(group => (balanceCache.get(group.tokenId) ?? -1) >= (group.requirement.minetoken?.amount ?? 0));
         if (acceptableGroups.length === 0) {
-            await reply(`抱歉，您持有的 Fan票 不足以加入别的群
-
-输入 /status 查看已经加入的 Fan票 群`);
+            await reply(i18n.t("join.insufficientToken"));
             return;
         }
 
@@ -240,22 +246,24 @@ Fan 票：${senderInfo.minetoken.symbol}
 
                 joinableGroupCount++;
 
-                array.push(`/ [${groupInfo.title ?? groupInfo.id}](${inviteLink}) （${requiredAmount > 0 ? `${symbolMap.get(group.tokenId)} ≥ ${requiredAmount}` : "暂无规则"}）`);
+                array.push(`/ [${groupInfo.title ?? groupInfo.id}](${inviteLink}) （${requiredAmount > 0 ? `${symbolMap.get(group.tokenId)} ≥ ${requiredAmount}` : i18n.t("join.noRules")}）`);
             } catch (e) {
                 this.loggerService.error(LogCategories.TelegramUpdate, e);
             }
         }
 
-        array.unshift(`*您现在还可以加入 ${joinableGroupCount} 个 Fan票 群*`);
+        array.unshift(i18n.t("join.remainingGroups", {
+            joinableGroupCount
+        }));
 
         array.push("");
-        array.push("输入 /status 查看已经加入的 Fan票 群");
+        array.push(i18n.t("join.joinedGroups"));
 
         await telegram.sendMessage(message.chat.id, array.join("\n"), { parse_mode: 'Markdown', disable_web_page_preview: true });
     }
 
     @Event("new_chat_members")
-    async onNewMemberEnter({ message, telegram }: MessageHandlerContext) {
+    async onNewMemberEnter({ message, telegram, i18n }: MessageHandlerContext) {
         const { id: groupId, type, title } = message.chat;
         if (type !== "group" && type !== "supergroup") {
             console.log("Not support private and channel");
@@ -289,7 +297,7 @@ Fan 票：${senderInfo.minetoken.symbol}
                 } catch (e) {
                     try {
                         await this.botService.kickMember(groupId, member.id);
-                        await this.botService.sendMessage(member.id, `抱歉，您现在没有绑定 瞬Matataki，现已被移出`);
+                        await this.botService.sendMessage(member.id, i18n.t("expel.notUser"));
                     } catch (e) {
                         this.loggerService.warn(LogCategories.TelegramUpdate, e);
                     }
@@ -301,7 +309,9 @@ Fan 票：${senderInfo.minetoken.symbol}
                 if (balance < requirement) {
                     try {
                         await this.botService.kickMember(groupId, member.id);
-                        await this.botService.sendMessage(member.id, `抱歉，您现在的 Fan 票不满足群 ${title} 的条件，现已被移出`);
+                        await this.botService.sendMessage(member.id, i18n.t("expel.insufficientToken", {
+                            title
+                        }));
                     } catch (e) {
                         this.loggerService.warn(LogCategories.TelegramUpdate, e);
                     }
@@ -387,7 +397,7 @@ Fan 票：${senderInfo.minetoken.symbol}
         await this.groupRepo.changeGroupTitle(group, message.new_chat_title);
     }
 
-    async joinGroupWithStartPayload({ reply, message, telegram }: MessageHandlerContext, groupId: number): Promise<boolean> {
+    async joinGroupWithStartPayload({ reply, message, telegram, i18n }: MessageHandlerContext, groupId: number): Promise<boolean> {
         let group: Group;
         try {
             group = await this.groupRepo.getGroup(groupId);
@@ -401,13 +411,13 @@ Fan 票：${senderInfo.minetoken.symbol}
         if (sender === Number(group.creatorId)) {
             const button = Markup.urlButton(group.title, await telegram.exportChatInviteLink(groupId));
 
-            await reply("您是该群群主：", Markup.inlineKeyboard([button]).extra());
+            await reply(i18n.t("joinGroup.iAmTheOwner"), Markup.inlineKeyboard([button]).extra());
             return true;
         }
 
         const info = await this.matatakiService.getAssociatedInfo(sender);
         if (!info.user) {
-            await reply("抱歉，您没有在 瞬Matataki 绑定该 Telegram 帐号");
+            await reply(i18n.t("joinGroup.notUser"));
             return true;
         }
 
@@ -424,8 +434,12 @@ Fan 票：${senderInfo.minetoken.symbol}
         }
 
         if (balance < groupRequirement) {
-            await reply(`抱歉，您持有的 Fan票 不满足群 ${group.title} 的条件：
-要求 ${minetoken.name}(${minetoken.symbol}) >= ${groupRequirement}`);
+            await reply(i18n.t("joinGroup.insufficientToken", {
+                title: group.title,
+                name: minetoken.name,
+                symbol: minetoken.symbol,
+                groupRequirement
+            }));
             return true;
         }
 
@@ -433,7 +447,7 @@ Fan 票：${senderInfo.minetoken.symbol}
         if (chatMember.status === "member") {
             const button = Markup.urlButton(group.title, await telegram.exportChatInviteLink(groupId));
 
-            await reply("您已经是该 Fan票 群群员：", Markup.inlineKeyboard([button]).extra());
+            await reply(i18n.t("joinGroup.joined"), Markup.inlineKeyboard([button]).extra());
             return true;
         }
 
@@ -444,18 +458,18 @@ Fan 票：${senderInfo.minetoken.symbol}
 
         const button = Markup.urlButton(group.title, await telegram.exportChatInviteLink(groupId));
 
-        await reply("您现在可以进入该群：：", Markup.inlineKeyboard([button]).extra());
+        await reply(i18n.t("joinGroup.canJoin"), Markup.inlineKeyboard([button]).extra());
         return true;
     }
 
     @Command("kick", { ignorePrefix: true })
     @GroupOnly()
-    async kickMember({ message, replyWithMarkdown, telegram }: MessageHandlerContext) {
+    async kickMember({ message, replyWithMarkdown, telegram, i18n }: MessageHandlerContext) {
         const { chat } = message;
 
         const match = /^\/kick(?:@[\w_]+)?\s+@([\w_]{5,32})\s+(\d+)/.exec(message.text);
         if (!match || match.length < 3) {
-            await replyWithMarkdown("格式不对，请输入 `/kick [@用户名] [放逐分钟数]`");
+            await replyWithMarkdown(i18n.t("kick.wrongFormat"));
             return;
         }
 
@@ -470,7 +484,7 @@ Fan 票：${senderInfo.minetoken.symbol}
         const target = match[1];
         const targetId = await this.userRepo.getIdByUsername(target);
         if (!targetId) {
-            await replyWithMarkdown("抱歉，对方还没有同步用户名到数据库里");
+            await replyWithMarkdown(i18n.t("kick.notUser"));
             return;
         }
 
@@ -483,7 +497,7 @@ Fan 票：${senderInfo.minetoken.symbol}
         }*/
 
         // const symbol = creatorInfo.minetoken!.symbol;
-        const transactionMessage = await replyWithMarkdown("放逐中...");
+        const transactionMessage = await replyWithMarkdown(i18n.t("kick.loading"));
 
         let finalMessage;
         try {
@@ -501,11 +515,13 @@ Fan 票：${senderInfo.minetoken.symbol}
 
             const untilDate = moment.unix(untilDateTimestamp);
 
-            finalMessage = `放逐成功 (放逐至 ${untilDate.format("lll")})`;
+            finalMessage = i18n.t("kick.success", {
+                format: untilDate.format("lll")
+            });
         } catch {
             replyWithMarkdown(targetId.toString());
             replyWithMarkdown(chat.id.toString());
-            finalMessage = "放逐失败！";
+            finalMessage = i18n.t("kick.error");
         }
 
         await telegram.editMessageText(chat.id, transactionMessage.message_id, undefined, finalMessage);
@@ -513,12 +529,12 @@ Fan 票：${senderInfo.minetoken.symbol}
 
     @Command("ban", { ignorePrefix: true })
     @GroupOnly()
-    async banMember({ message, replyWithMarkdown, telegram }: MessageHandlerContext) {
+    async banMember({ message, replyWithMarkdown, telegram, i18n }: MessageHandlerContext) {
         const { chat } = message;
 
         const match = /^\/ban(?:@[\w_]+)?\s+@([\w_]{5,32})\s+(\d+)/.exec(message.text);
         if (!match || match.length < 3) {
-            await replyWithMarkdown("格式不对，请输入 `/ban [@用户名] [禁言分钟数]`");
+            await replyWithMarkdown(i18n.t("ban.wrongFormat"));
             return;
         }
 
@@ -533,7 +549,7 @@ Fan 票：${senderInfo.minetoken.symbol}
         const target = match[1];
         const targetId = await this.userRepo.getIdByUsername(target);
         if (!targetId) {
-            await replyWithMarkdown("抱歉，对方还没有同步用户名到数据库里");
+            await replyWithMarkdown(i18n.t("kick.notUser"));
             return;
         }
 
@@ -546,7 +562,7 @@ Fan 票：${senderInfo.minetoken.symbol}
         }*/
 
         // const symbol = creatorInfo.minetoken!.symbol;
-        const transactionMessage = await replyWithMarkdown("禁言中...");
+        const transactionMessage = await replyWithMarkdown(i18n.t("ban.loading"));
 
         let finalMessage;
         try {
@@ -568,9 +584,11 @@ Fan 票：${senderInfo.minetoken.symbol}
 
             const untilDate = moment.unix(untilDateTimestamp);
 
-            finalMessage = `禁言成功 (禁言至 ${untilDate.format("lll")})`;
+            finalMessage = i18n.t("ban.success", {
+                format: untilDate.format("lll")
+            });
         } catch {
-            finalMessage = "禁言失败！";
+            finalMessage = i18n.t("ban.error");
         }
 
         await telegram.editMessageText(chat.id, transactionMessage.message_id, undefined, finalMessage);

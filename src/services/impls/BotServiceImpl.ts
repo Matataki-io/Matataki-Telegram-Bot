@@ -99,7 +99,7 @@ export class BotServiceImpl implements IBotService {
             }
         });
         this.bot.start(async ctx => {
-            const { message } = ctx;
+            const { message, i18n } = ctx;
             const { startPayload } = ctx as any;
 
             const userRepo = container.getNamed<IUserRepository>(Injections.Repository, User.name);
@@ -122,29 +122,29 @@ export class BotServiceImpl implements IBotService {
                 }
             } while (false);
 
-            ctx.telegram.sendMessage(ctx.chat!.id, `感谢您使用 Matataki 粉丝群助手，输入 /help 查看更多功能列表
-👉🏻[介绍文档](https://www.matataki.io/p/1638)`, { parse_mode: 'Markdown', disable_web_page_preview: true });
+            ctx.telegram.sendMessage(ctx.chat!.id, i18n.t("startReply"), { parse_mode: 'Markdown', disable_web_page_preview: true });
         });
         this.bot.help(ctx => {
-            ctx.replyWithMarkdown("您想了解什么？", Markup.inlineKeyboard([
-                [Markup.callbackButton("👉你是谁", "help1")],
-                [Markup.callbackButton("👉Fan票 粉丝群是什么", "help2")],
-                [Markup.callbackButton("👉操作指令说明", "help3")],
-                [Markup.callbackButton("👉如何加入 Fan票 群", "help4")],
-                [Markup.callbackButton("👉如何创建 Fan票 群", "help5")],
-                [Markup.callbackButton("👉如何删除 Fan票 群", "help6")],
-                [Markup.callbackButton("👉视频教程(更新中)", "help7")],
-                [Markup.callbackButton("👉如何使用红包功能", "help8")],
-                [Markup.callbackButton("👉如何开启Dice小游戏", "help11")],
-                [Markup.callbackButton("👉如何使用转账功能", "help9")],
-                [Markup.callbackButton("👉我有别的问题", "help10")],
+            const { i18n } = ctx;
+            ctx.replyWithMarkdown(i18n.t("help.title"), Markup.inlineKeyboard([
+                [Markup.callbackButton(i18n.t("help.whoAreYou"), "help1")],
+                [Markup.callbackButton(i18n.t("help.whatIsTheFanGroup"), "help2")],
+                [Markup.callbackButton(i18n.t("help.instruction"), "help3")],
+                [Markup.callbackButton(i18n.t("help.joinFanGroup"), "help4")],
+                [Markup.callbackButton(i18n.t("help.createFanGroup"), "help5")],
+                [Markup.callbackButton(i18n.t("help.deleteFanGroup"), "help6")],
+                [Markup.callbackButton(i18n.t("help.videoTutorial"), "help7")],
+                [Markup.callbackButton(i18n.t("help.redEnvelope"), "help8")],
+                [Markup.callbackButton(i18n.t("help.diceGames"), "help11")],
+                [Markup.callbackButton(i18n.t("help.transfer"), "help9")],
+                [Markup.callbackButton(i18n.t("help.otherQuestions"), "help10")],
             ]).extra());
         });
 
         this.middlewareService.attachControllers(this.bot, controllers);
 
         this.bot.on("message", ctx => {
-            const { message } = ctx;
+            const { message, i18n } = ctx;
             if (!message) {
                 throw new Error("What happended?");
             }
@@ -153,7 +153,7 @@ export class BotServiceImpl implements IBotService {
                 return;
             }
 
-            ctx.reply("我是 Matataki 机器人，输入 /help 可获得帮助信息");
+            ctx.reply(i18n.t("messageReply"));
         });
     }
 

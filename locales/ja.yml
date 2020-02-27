@@ -3,6 +3,7 @@ lang: 日本語
 error:
   usernameNotSynced: すいません，お振込先がデータベースにアカウントを同期していませんです。
   matatakiAccountAbsent: すいません，対象アカウントがまだ瞬MatatakiにTelegramアカウントをバインドしていませんです。
+
 transfer:
   common: |-
     送金人：[${senderUsername}](${senderUrl}) 
@@ -12,3 +13,23 @@ transfer:
   successful: "*振り込む成功しました*"
   failed: "*振り込む失敗しました*"
   transactionDetail: 詳細
+
+startReply: |-
+  Matataki Fansをご利用いただきありがとうございます。/help と入力して機能リストをご覧ください
+  👉🏻[はじめに](https://www.matataki.io/p/1638)
+
+messageReply: 私はマタタキのロボットです。/help に助けを求めてください。
+
+help:
+  title: 何を知りたいですか？
+  whoAreYou: 👉あなたは誰ですか
+  whatIsTheFanGroup: 👉ファンチケットファンベースとは何ですか
+  instruction: 👉操作説明
+  joinFanGroup: 👉ファングループに参加するには
+  createFanGroup: 👉ファンチケットグループを作成するにはどうすればよいですか
+  deleteFanGroup: 👉ファンチケットグループを削除するにはどうすればよいですか
+  videoTutorial: 👉ビデオチュートリアル（更新中）
+  redEnvelope: 👉赤い封筒機能の使用方法
+  diceGames: 👉サイコロゲームを開始する方法は
+  transfer: 👉伝達関数の使用方法
+  otherQuestions: 👉他に質問があります
