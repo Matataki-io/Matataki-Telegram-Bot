@@ -90,25 +90,9 @@ export class GroupRepositoryImpl extends BaseRepository<Group> implements IGroup
     }
 
     async setActive(group: Group, active: boolean) {
-        group.active = active;
-
-        if (!active) {
-            group.requirement = {};
-        }
-
-        await this.repository.save(group);
     }
 
     async setRequirement(group: Group, tokenAmount: number) {
-        group.requirement = {
-            minetoken: {
-                amount: tokenAmount,
-                canEqual: true,
-            },
-        }
-        group.active = true;
-
-        await this.repository.save(group);
     }
 
     async changeGroupId(oldId: number, newId: number) {
