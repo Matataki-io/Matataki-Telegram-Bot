@@ -26,7 +26,6 @@ export class RPSController extends BaseController<RPSController>{
     @Command('new_rps_game', { ignorePrefix: true })
     async RPS(ctx: MessageHandlerContext) {
         try {
-            console.log('new game..');
             const sender = await this.getMatatakiUser(ctx);
             const _id = this.rpsService.registerGame(sender,
                 {
@@ -34,7 +33,6 @@ export class RPSController extends BaseController<RPSController>{
                     messageId: 0
                 });
             await this.rpsService.resendGame(ctx, _id);
-            console.log('created game..')
         } catch (err) {
             await ctx.reply([err.message, Msgs.helpMessage]
                 .join('\n'));
@@ -49,7 +47,6 @@ export class RPSController extends BaseController<RPSController>{
     async join(ctx: MessageHandlerContext) {
         this.doAction(ctx, async (_id) => {
             const joiner = await this.getMatatakiUser(ctx);
-            console.log("joined");
             await this.rpsService.joinGame(ctx, joiner, _id);
         });
     }

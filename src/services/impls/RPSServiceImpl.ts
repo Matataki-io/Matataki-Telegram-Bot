@@ -119,8 +119,6 @@ export class RPSServiceImpl implements IRPSService {
     registerGame(sender: MatatakiUser, msgCtx: MessageContext): number {
         this.removeEmptyGames();
         const _id = this.counter++;
-        console.log('register');
-        console.log(_id);
         this.games.push({
             sender, msgCtx, _id,
             joinUsers: [],
@@ -159,12 +157,16 @@ export class RPSServiceImpl implements IRPSService {
         }
         if (modified) {
             const { chatId, messageId } = game.msgCtx;
-            await ctx.telegram.editMessageText(chatId, messageId, undefined,
-                messages, {
-                    disable_web_page_preview: true,
-                    parse_mode: "HTML",
-                    reply_markup: replyMarkup
-                });
+            try{
+                await ctx.telegram.editMessageText(chatId, messageId, undefined,
+                    messages, {
+                        disable_web_page_preview: true,
+                        parse_mode: "HTML",
+                        reply_markup: replyMarkup
+                    });
+            } catch {
+
+            }
         } else {
             if (game.msgCtx.messageId != 0) {
                 await ctx.telegram.deleteMessage(game.msgCtx.chatId,
@@ -189,7 +191,6 @@ export class RPSServiceImpl implements IRPSService {
         }
     }
     async startGame(ctx: MessageHandlerContext, id: number, remote: number): Promise<void> {
-        console.log(id);
         const game = _.find(this.games, ({ _id }) => id === _id);
         if (game && game.status === 'room' && game.sender.id === remote) {
             game.status = 'ready';
@@ -197,19 +198,12 @@ export class RPSServiceImpl implements IRPSService {
         }
     }
     async showHand(ctx: MessageHandlerContext, id: number, remote: number): Promise<void> {
-        console.log('showed');
-        console.log(id);
         let match = ctx.match.input.match(/^rps_show(?:@[\w_]+)?\s+(\d*\.?\d*)\s+(\w+)/);
         match = checkNotNull(match, '格式错误');
         if(!id) id = Number(match[1]);
-        console.log('showed');
-        console.log(id);
         const game = _.find(this.games, ({ _id }) => id === _id);
-        console.log(match[2]);
         if(match[2]){
-            console.log(game.status)
             if(game && game.status === 'ready'){
-                console.log('ready');
                 game.joinUsers.forEach(user => {
                     if(user.id === remote){
                         user.rpsStatu = Number(match[2]);
@@ -217,7 +211,6 @@ export class RPSServiceImpl implements IRPSService {
                 });
                 var ended = true;
                 game.joinUsers.forEach(user => {
-                    console.log(user.rpsStatu)
                     if(user.rpsStatu === -1){
                         ended = false;
                     }
