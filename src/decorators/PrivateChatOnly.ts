@@ -3,7 +3,7 @@ import { MessageHandlerContext } from "#/definitions";
 type HandlerFunc = (ctx: MessageHandlerContext, ...args: any[]) => any;
 
 export function PrivateChatOnly(): MethodDecorator {
-    return (target: Object, methodName: string | Symbol, descriptor: PropertyDescriptor) => {
+    return (target: Object, methodName: string | symbol, descriptor: PropertyDescriptor) => {
         const decoratedMethod = <HandlerFunc>descriptor.value;
 
         descriptor.value = async function (ctx: MessageHandlerContext, ...args: any[]) {

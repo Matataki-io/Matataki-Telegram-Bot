@@ -3,8 +3,8 @@ import { EventHandlerInfo } from "#/definitions";
 import { UpdateType, MessageSubTypes } from "telegraf/typings/telegram-types";
 
 export function Event(name: UpdateType | UpdateType[] | MessageSubTypes | MessageSubTypes[]): MethodDecorator {
-    return (target: Object, methodName: string | Symbol) => {
-        if (methodName instanceof Symbol) {
+    return (target: Object, methodName: string | symbol) => {
+        if (typeof methodName === "symbol") {
             throw new Error("Impossible situation");
         }
 
