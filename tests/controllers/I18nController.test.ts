@@ -99,6 +99,7 @@ describe("I18nService", () => {
                     language: "zh-hans",
                 },
             },
+            updateType: "message",
         });
 
         const mockedUserRepo = {
