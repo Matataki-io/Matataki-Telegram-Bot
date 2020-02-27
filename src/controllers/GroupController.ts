@@ -53,7 +53,26 @@ export class GroupController extends BaseController<GroupController> {
 
     @Event("new_chat_members")
     async onNewMemberEnter({ message, telegram, i18n }: MessageHandlerContext) {
+        let group = await this.groupRepo.getGroupOrDefault(message.chat.id);
 
+        const newMembers = new Array<User>();
+
+        for (const member of message.new_chat_members ?? []) {
+            if (member.is_bot) {
+                continue;
+            }
+
+            const user = await this.userRepo.ensureUser(member);
+
+            newMembers.push(user);
+        }
+
+        if (!group) {
+            group = await this.groupRepo.ensureGroup(message.chat);
+            group.members = [];
+        }
+
+        await this.groupRepo.addMembers(group, newMembers);
     }
 
     @Event("left_chat_member")
@@ -62,11 +81,8 @@ export class GroupController extends BaseController<GroupController> {
     }
 
     @Event(["group_chat_created", "supergroup_chat_created"])
-    async onGroupCreated({ message, reply, telegram }: MessageHandlerContext) {
-        const { id: groupId, title } = message.chat;
-        const inviterId = message.from.id;
-
-        await this.groupRepo.ensureGroup(groupId, title ?? "", inviterId, -1);
+    async onGroupCreated({ message }: MessageHandlerContext) {
+        await this.groupRepo.ensureGroup(message.chat);
     }
     @Event("migrate_to_chat_id")
     async onGroupMigration({ message }: MessageHandlerContext) {

@@ -16,52 +16,81 @@ function createController() {
 }
 
 describe("GroupController", () => {
-    it("When bot leaves a actived group", async () => {
+    test("When the bot joins a group", async () => {
         const ctx = createMockedContext();
         Object.assign(ctx, {
             message: {
                 ...ctx.message,
                 chat: {
-                    id: -114514,
+                    id: -191919,
+                    title: "下北沢讨论区2",
                     type: "supergroup",
                 },
-                left_chat_member: botService.info,
+                new_chat_members: [{
+                    id: 123,
+                    is_bot: true,
+                    first_name: "Bot",
+                }],
             },
         });
 
-        const controller = createController();
-        await controller.onMemberLeft(ctx);
-
         const groupRepo = getRepository(Group);
-        const group = await groupRepo.findOneOrFail(-114514);
+        await expect(groupRepo.findOneOrFail(-191919)).rejects.toThrow();
 
-        expect(group.active).toBeFalsy();
+        const controller = createController();
+        await controller.onNewMemberEnter(ctx);
+
+        await expect(groupRepo.findOneOrFail(-191919)).resolves.not.toBeNull();
     });
-    it("When the creator leaves one of his/her groups", async () => {
+    test("When the user joins a group", async () => {
         const ctx = createMockedContext();
         Object.assign(ctx, {
             message: {
                 ...ctx.message,
                 chat: {
-                    id: -114514,
+                    id: -1919,
                     type: "supergroup",
                 },
-                left_chat_member: {
-                    id: 8101,
-                },
+                new_chat_members: [{
+                    id: 8000,
+                    is_bot: false,
+                    first_name: "一般通过爷",
+                }],
             },
         });
 
         const controller = createController();
-        await controller.onMemberLeft(ctx);
+        await controller.onNewMemberEnter(ctx);
 
         const groupRepo = getRepository(Group);
-        const group = await groupRepo.findOneOrFail(-114514);
+        const group = await groupRepo.findOneOrFail(-1919, { relations: ["members"] });
 
-        expect(group.active).toBeFalsy();
+        expect(group.members.find(m => Number(m.id) === 8000)).not.toBeUndefined();
     });
+    test("When a user creates a group with bot invited", async () => {
+        const ctx = createMockedContext();
+        Object.assign(ctx, {
+            message: {
+                ...ctx.message,
+                chat: {
+                    id: -1111,
+                    title: "新群",
+                    type: "group",
+                },
+                from: [{
+                    id: 8000,
+                    is_bot: false,
+                    first_name: "一般通过爷",
+                }],
+                group_chat_created: true,
+            },
+        });
 
-    test("When a user enter a group", () => {
+        const controller = createController();
+        await controller.onGroupCreated(ctx);
 
+        const groupRepo = getRepository(Group);
+
+        expect(groupRepo.findOneOrFail(-1111)).resolves.not.toBeNull();
     });
 });
