@@ -91,7 +91,7 @@ joinGroup:
 
 kick:
   wrongFormat: Wrong format，please input `/kick [@username] [mins]`
-  notUser: Sorry, he/she/.. haven't sync account
+  notUser: Sorry, he/she/.. haven't synced account
   loading: kicking...
   success: Success! (until ${format})
   error: Fail!
