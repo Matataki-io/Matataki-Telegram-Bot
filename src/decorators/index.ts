@@ -9,6 +9,7 @@ export * from "./JsonColumn";
 export * from "./PrivateChatOnly";
 export * from "./RequireMatatakiAccount";
 export * from "./RequireMintedMinetoken";
+export * from "./RequirePermissions";
 export * from "./Repository";
 export * from "./Service";
 export * from "./Scheduler";
