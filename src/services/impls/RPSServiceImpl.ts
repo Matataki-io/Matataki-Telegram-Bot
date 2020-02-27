@@ -198,7 +198,7 @@ export class RPSServiceImpl implements IRPSService {
         }
     }
     async showHand(ctx: MessageHandlerContext, id: number, remote: number): Promise<void> {
-        let match = ctx.match.input.match(/^rps_show(?:@[\w_]+)?\s+(\d*\.?\d*)\s+(\w+)/);
+        let match = ctx.match!.input.match(/^rps_show(?:@[\w_]+)?\s+(\d*\.?\d*)\s+(\w+)/);
         match = checkNotNull(match, '格式错误');
         if(!id) id = Number(match[1]);
         const game = _.find(this.games, ({ _id }) => id === _id);
@@ -206,7 +206,7 @@ export class RPSServiceImpl implements IRPSService {
             if(game && game.status === 'ready'){
                 game.joinUsers.forEach(user => {
                     if(user.id === remote){
-                        user.rpsStatu = Number(match[2]);
+                        user.rpsStatu = Number(match![2]);
                     }
                 });
                 var ended = true;
