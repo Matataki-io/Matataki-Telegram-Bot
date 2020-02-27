@@ -6,6 +6,7 @@ import { Web3ServiceImpl } from "./Web3ServiceImpl";
 import { RedEnvelopeServiceImpl } from "./RedEnvelopeServiceImpl";
 import { DiceServiceImpl } from "./DiceServiceImpl";
 import { I18nServiceImpl } from "./I18nServiceImpl";
+import { RPSServiceImpl } from "./RPSServiceImpl";
 import { MiddlewareServiceImpl } from "./MiddlewareServiceImpl";
 
 export const serviceImplementations = [
@@ -16,6 +17,7 @@ export const serviceImplementations = [
     Web3ServiceImpl,
     RedEnvelopeServiceImpl,
     DiceServiceImpl,
+    RPSServiceImpl,
     I18nServiceImpl,
     MiddlewareServiceImpl,
 ];
