@@ -8,16 +8,23 @@ describe("UserRepository", () => {
     it("ensureUser", async () => {
         const repo = getRepository(User);
 
-        let user = await repo.findOne(-1);
+        const telegramUser = {
+            id: -1,
+            username: "newuser",
+            is_bot: false,
+            first_name: "New",
+        };
+
+        let user = await repo.findOne(telegramUser.id);
         expect(user).toBeUndefined();
 
         const stub = new UserRepositoryStub();
-        await stub.ensureUser(-1, "newuser");
+        await stub.ensureUser(telegramUser);
 
-        user = await repo.findOne(-1);
+        user = await repo.findOne(telegramUser.id);
         expect(user).not.toBeUndefined();
-        expect(user!.id).toBe(-1);
-        expect(user!.username).toBe("newuser");
+        expect(Number(user!.id)).toBe(telegramUser.id);
+        expect(user!.username).toBe(telegramUser.username);
     });
     it("setUsername", async () => {
         const repo = getRepository(User);

@@ -1,7 +1,9 @@
+import { Chat } from "telegraf/typings/telegram-types";
+
 import { Group, User } from "#/entities";
 
 export interface IGroupRepository {
-    ensureGroup(id: number, title: string, creatorId: number, tokenId: number): Promise<Group>;
+    ensureGroup(telegramChat: Chat): Promise<Group>;
     getGroup(id: number, includeInactive?: boolean): Promise<Group>;
     getGroupOrDefault(id: number, includeInactive?: boolean): Promise<Group | undefined>;
     getGroupsOfCreator(creatorId: number): Promise<Group[]>;
