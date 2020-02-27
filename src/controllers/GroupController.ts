@@ -417,7 +417,7 @@ export class GroupController extends BaseController<GroupController> {
 
         const info = await this.matatakiService.getAssociatedInfo(sender);
         if (!info.user) {
-            await reply(i18n.t("status.notUser"));
+            await reply(i18n.t("joinGroup.notUser"));
             return true;
         }
 

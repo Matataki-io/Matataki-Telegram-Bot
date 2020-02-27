@@ -35,7 +35,7 @@ help:
   otherQuestions: 👉我有别的问题
 
 status:
-  notUser: 抱歉，您没有在 瞬Matataki 绑定该 Telegram 帐号
+  notUser: 尚未绑定 瞬Matataki 账户
   notToken: 您在 瞬Matataki 尚未发行 Fan票
   notJoined: "*您尚未加入 Fan票 群*"
   joinedGroups: "*您已加入 ${joinedGroups} 个 Fan票 群*"
@@ -82,6 +82,7 @@ expel:
 
 joinGroup:
   iAmTheOwner: 您是该群群主：
+  notUser: 抱歉，您没有在 瞬Matataki 绑定该 Telegram 帐号 
   insufficientToken: |-
     `抱歉，您持有的 Fan票 不满足群 ${title} 的条件：
     要求 ${name}(${symbol}) >= ${groupRequirement}`
