@@ -28,5 +28,7 @@ jobs:
       run: yarn
     - name: Run ESLint
       run: npm run lint
+    - name: Run type checking
+      run: npm run ts:check
     - name: Run Test
       run: npm test
