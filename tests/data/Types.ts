@@ -20,6 +20,12 @@ export type TelegramUser = {
     username?: string,
     matatakiAccount?: MatatakiAccount,
 };
+
+export type FanGroupMinetokenRequirement = {
+    minetoken: Minetoken,
+    amount: number,
+};
+
 export type TelegramGroupMember = {
     user: TelegramUser,
     status: "creator" | "administrator" | "member" | "kicked" | "restrict" | "left",
@@ -29,4 +35,5 @@ export type TelegramGroup = {
     isSupergroup: boolean,
     title: string,
     members: Array<TelegramGroupMember>,
+    minetokenRequirement?: Array<FanGroupMinetokenRequirement>,
 };
