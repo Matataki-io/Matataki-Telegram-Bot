@@ -5,6 +5,9 @@ import { AxiosInstance } from "axios";
 import { MessageHandlerContext } from "#/definitions";
 import { MetadataKeys, Injections } from "#/constants";
 import { MatatakiServiceStub } from "./stubs/services/MatatakiServiceStub";
+import { I18nServiceImpl } from "#/services/impls/I18nServiceImpl";
+
+const service = new I18nServiceImpl();
 
 function createMockedAsyncFunction() {
     return jest.fn(() => Promise.resolve());
@@ -23,6 +26,7 @@ export function createMockedContext(): MessageHandlerContext {
         telegram: {
             sendMessage: createMockedAsyncFunction(),
         },
+        i18n: service.getDefaultContext("zh-hans"),
     });
 
     Reflect.defineMetadata(MetadataKeys.Context, {

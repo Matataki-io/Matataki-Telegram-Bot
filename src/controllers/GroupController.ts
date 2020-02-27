@@ -2,7 +2,7 @@ import { inject } from "inversify";
 import { Extra, Markup } from "telegraf";
 import { User as TelegramUser } from "telegraf/typings/telegram-types";
 
-import { Controller, Command, InjectRepository, Event, GroupOnly, PrivateChatOnly, RequireMatatakiAccount, SenderMatatakiInfo, RequireMintedMinetoken } from "#/decorators";
+import { Controller, Command, InjectRepository, Event, GroupOnly, PrivateChatOnly, RequireMatatakiAccount, InjectSenderMatatakiInfo, RequireMintedMinetoken } from "#/decorators";
 import { MessageHandlerContext, AssociatedInfo } from "#/definitions";
 import { Group, User } from "#/entities";
 import { Injections, LogCategories } from "#/constants";
@@ -28,7 +28,7 @@ export class GroupController extends BaseController<GroupController> {
 
     @Command("mygroups", { ignorePrefix: true })
     @RequireMintedMinetoken()
-    async listMyGroups({ message, reply, telegram, i18n }: MessageHandlerContext, @SenderMatatakiInfo() senderInfo: Required<AssociatedInfo>) {
+    async listMyGroups({ message, reply, telegram, i18n }: MessageHandlerContext, @InjectSenderMatatakiInfo() senderInfo: Required<AssociatedInfo>) {
         const groups = await this.groupRepo.getGroupsOfCreator(message.from.id);
 
         if (groups.length === 0) {
@@ -121,7 +121,7 @@ export class GroupController extends BaseController<GroupController> {
 
     @Command("set", { ignorePrefix: true })
     @RequireMintedMinetoken()
-    async setGroupRequirement({ message, reply, telegram, i18n }: MessageHandlerContext, @SenderMatatakiInfo() senderInfo: Required<AssociatedInfo>) {
+    async setGroupRequirement({ message, reply, telegram, i18n }: MessageHandlerContext, @InjectSenderMatatakiInfo() senderInfo: Required<AssociatedInfo>) {
         const match = /^\/set\s+-?(\d+)\s+(\d+.?\d*)/.exec(message.text);
         if (!match || match.length < 3) {
             return reply(i18n.t("set.wrongFormat"));
@@ -176,7 +176,7 @@ export class GroupController extends BaseController<GroupController> {
     @Command("join", { ignorePrefix: true })
     @PrivateChatOnly()
     @RequireMatatakiAccount()
-    async joinGroup({ message, reply, telegram, i18n }: MessageHandlerContext, @SenderMatatakiInfo() info: AssociatedInfo) {
+    async joinGroup({ message, reply, telegram, i18n }: MessageHandlerContext, @InjectSenderMatatakiInfo() info: AssociatedInfo) {
         const sender = message.from.id;
         const groups = await this.groupRepo.getGroupsExceptMyToken(info.minetoken?.id);
 

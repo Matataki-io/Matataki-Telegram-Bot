@@ -1,5 +1,13 @@
 import { ParameterTypes } from "#/constants";
 
-export type ParameterInfo = {
-    type: ParameterTypes,
+type GeneralParameterInfo = {
+    type: ParameterTypes.SenderMatatakiInfo,
 }
+
+export type RegexMatchGroupParameterInfo = {
+    type: ParameterTypes.RegexMatchGroup,
+    groupIndex: number,
+    converter?: (input: string) => any,
+}
+
+export type ParameterInfo = GeneralParameterInfo | RegexMatchGroupParameterInfo;
