@@ -60,4 +60,8 @@ describe("GroupController", () => {
 
         expect(group.active).toBeFalsy();
     });
+
+    test("When a user enter a group", () => {
+
+    });
 });
