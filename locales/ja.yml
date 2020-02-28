@@ -2,13 +2,13 @@ lang: 日本語
 
 error:
   usernameNotSynced: すいません，お振込先がデータベースにアカウントを同期していませんです。
-  matatakiAccountAbsent: すいません，対象アカウントがまだ瞬MatatakiにTelegramアカウントをバインドしていませんです。
+  matatakiAccountAbsent: すいません，対象アカウントがまだ瞬Matatakiに Telegramアカウントをバインドしていませんです。
 
 transfer:
   common: |-
     送金人：[${senderUsername}](${senderUrl}) 
     お振込先：[${receiverUsername}](${receiverUrl})　
-    振込む金額：${amount} ${symbol}
+    振込む額：${amount} ${symbol}
   started: "振り込み中..."
   successful: "*振り込む成功しました*"
   failed: "*振り込む失敗しました*"
@@ -35,69 +35,69 @@ help:
   otherQuestions: 👉他に質問があります
 
 status:
-  notUser: 尚未绑定 瞬Matataki 账户
-  notToken: 您在 瞬Matataki 尚未发行 Fan票
-  notJoined: "*您尚未加入 Fan票 群*"
-  joinedGroups: "*您已加入 ${joinedGroups} 个 Fan票 群*"
-  notCreatedGroups: "*您尚未建立 Fan票 群*"
-  createdGroups: "*您已建立 ${createdGroups} 个 Fan票 群*"
-  seeMore: 输入 /join 查看更多可以加入的 Fan票 群
+  notUser: 瞬Matatakiアカウントをバインドしていません
+  notToken: あなたはまだ 瞬Matataki にファンチケットを発行していません
+  notJoined: "*あなたは一つ ファンチケットグループ でも参加しませでした*"　
+  joinedGroups: "*あなたは ${joinedGroups}つ のファンチケットグループを参加しました*"　
+  notCreatedGroups: "*あなたはまだ ファンチケットグループ を作りませんでした*"　
+  createdGroups: "*あなたはすでに ${createdGroups}つ のファンチケットグループを作りました*"　
+  seeMore: /join を入力して 参加できるのファンチケットグループを探します
 
 mygroups:
   reply: |-
-    群组 ID：${id}
-    名字：${title}
-    Fan 票：${symbol}
-    最低要求：${amount}
-  needAdmin: 查询前请将 Fan票 群中的粉丝群助手设置为管理员
+    グループ ID：${id}
+    グループ 名：${title}
+    ファンチケット：${symbol}
+    最小要額：${amount}
+  needAdmin: お問い合わせの前に ファンチケット グループ のファンベースアシスタントをグループ管理者として設定してください
 
 rule:
-  notFanGroups: 该群还不是 Fan 票粉丝群
-  addCondition: 该群目前要求 ${symbol} ≥ ${amount}
-  noConditions: 该群目前没有 ${symbol} 要求
+  notFanGroups: このグループはまだ ファンベース ではありません
+  addCondition: このグループは　${symbol} ≥ ${amount} の量を要請します
+  noConditions: このグループは　${symbol} の要請がありません
 
 set:
-  wrongFormat: 格式不对，请输入 `/set [group_id] [amount]`
-  noGroupFound: 没有找到该群
-  retired: 您是此群群主但是已经退群了
-  needAdmin: 请把本机器人设置为此群的管理员并设置邀请用户权限
+  wrongFormat: 間違ったフォーマットです， `/set [group_id] [amount]` を入力してください
+  noGroupFound: そのグループ が見つかりませんでした
+  retired: あなたはグループマスターてしたが、すでにグループから離れました
+  needAdmin: このBOTをグループのグループ管理者として設定して、そしてアカウントを招待することできるように設定してください
   reply: |-
-    当前群规则已修改为：
-    群组 ID：${groupId}
-    名字：${title}
-    Fan 票：${symbol}
-    最低要求：${amount}
+    このグループのルールが変わりました：
+    グループ ID：${groupId}
+    グループ 名：${title}
+    ファンチケット：${symbol}
+    最小要額：${amount}
 
 join:
   insufficientToken: |-
-    抱歉，您持有的 Fan票 不足以加入别的群
-    输入 /status 查看已经加入的 Fan票 群
-  noRules: 暂无规则
-  remainingGroups: "*您现在还可以加入 ${joinableGroupCount} 个 Fan票 群*"
-  joinedGroups: 输入 /status 查看已经加入的 Fan票 群
+    すいません，あなたが持っているのファンチケットの額が ほかのグループを参加できません
+    /status を入力する 参加したのファンチケットグループを見ます
+  noRules: ルールがいません
+  remainingGroups: "*あなたはまだ ${joinableGroupCount}つ ファンチケットグループに参加できます*"
+  joinedGroups: /status を入力する 参加したのファンチケットグループを見ます
 
 expel:
-  notUser: 抱歉，您现在没有绑定 瞬Matataki，现已被移出
-  insufficientToken: 抱歉，您现在的 Fan 票不满足群 ${title} 的条件，现已被移出
+  notUser: すいません，あなたはまだマタタキサイドに Telegramアカウントをバインドしていません、今追放します
+  insufficientToken: すいません，您现在的 Fan 票不满足群 ${title} 的条件，今追放します
 
 joinGroup:
-  iAmTheOwner: 您是该群群主：
-  notUser: 抱歉，您没有在 瞬Matataki 绑定该 Telegram 帐号 
+  iAmTheOwner: あなたはグループマスターです：
+  notUser: すいません，あなたはまだマタタキサイドに Telegramアカウントをバインドしていません
   insufficientToken: |-
-    `抱歉，您持有的 Fan票 不满足群 ${title} 的条件：
-    要求 ${name}(${symbol}) >= ${groupRequirement}`
-  joined: 您已经是该 Fan票 群群员：
-  canJoin: 您现在可以进入该群：
+    `すいません，あなたが持っているのファンチケットの額が ファンチケットグループ ${title} の参加最小要額に届きません：
+    参加最小要額 ${name}(${symbol}) >= ${groupRequirement}`
+  joined: あなたはこのファンチケットグループのメンバーです：
+  canJoin: あなたはこのグループに参加できます：
 
 kick:
-  wrongFormat: 格式不对，请输入 `/kick [@用户名] [放逐分钟数]`
-  notUser: 抱歉，对方还没有同步用户名到数据库里
-  loading: 放逐中...
-  success: 放逐成功 (放逐至 ${format})
-  error: 放逐失败！
+  wrongFormat: 間違ったフォーマットです， `/kick [@アカウント名] [追放時間数字（xxx分）]` を入力してください
+  notUser: すいません，追放対象がデータベースにアカウントを同期していませんです。
+  loading: アカウント追放中...
+  success: アカウントを追放成功しました (いまから ${format}まで追放します)
+  error: アカウントを追放失敗です！
 
 ban:
-  wrongFormat: 格式不对，请输入 `/ban [@用户名] [禁言分钟数]`
-  loading: 禁言中...
-  success: 禁言成功 (禁言至 ${format})
-  error: 禁言失败！
+  wrongFormat: 間違ったフォーマットです， `/ban [@アカウント名] [数字（xxx分）]`　
+  loading: 発言禁止中...
+  success: 発言を禁止成功しました (いまから ${format}まで発言を禁止)
+  error: 発言を禁止失敗です！
