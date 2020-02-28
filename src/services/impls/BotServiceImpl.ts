@@ -103,7 +103,7 @@ export class BotServiceImpl implements IBotService {
             const { startPayload } = ctx as any;
 
             const userRepo = container.getNamed<IUserRepository>(Injections.Repository, User.name);
-            await userRepo.ensureUser(message!.from!.id, message!.from!.username);
+            await userRepo.ensureUser(message!.from!);
 
             do {
                 if (!startPayload) {
