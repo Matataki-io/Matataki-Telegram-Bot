@@ -161,9 +161,9 @@ export class WalletController extends BaseController<WalletController> {
 
         let commonMessage = i18n.t("transfer.common", {
             senderUsername: senderInfo.user.name,
-            senderUrl: `${this.matatakiService.urlPrefix}/user/${senderInfo.user.id}`,
+            senderUrl: `${this.matatakiService.urlPrefix}user/${senderInfo.user.id}`,
             receiverUsername: targetName,
-            receiverUrl: `${this.matatakiService.urlPrefix}/user/${userId}`,
+            receiverUrl: `${this.matatakiService.urlPrefix}user/${userId}`,
             amount, symbol,
         });
         const transactionMessage = await replyWithMarkdown(`${i18n.t("transfer.started")}\n\n${commonMessage}`, { disable_web_page_preview: true });
