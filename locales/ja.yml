@@ -37,10 +37,10 @@ help:
 status:
   notUser: 瞬Matatakiアカウントをバインドしていません
   notToken: あなたはまだ 瞬Matataki にファンチケットを発行していません
-  notJoined: "*あなたは一つ ファンチケットグループ でも参加しませでした*"　
-  joinedGroups: "*あなたは ${joinedGroups}つ のファンチケットグループを参加しました*"　
-  notCreatedGroups: "*あなたはまだ ファンチケットグループ を作りませんでした*"　
-  createdGroups: "*あなたはすでに ${createdGroups}つ のファンチケットグループを作りました*"　
+  notJoined: あなたは一つ ファンチケットグループ でも参加しませでした
+  joinedGroups: あなたは ${joinedGroups}つ のファンチケットグループを参加しました
+  notCreatedGroups: あなたはまだ ファンチケットグループ を作りませんでした
+  createdGroups: あなたはすでに ${createdGroups}つ のファンチケットグループを作りました
   seeMore: /join を入力して 参加できるのファンチケットグループを探します
 
 mygroups:
