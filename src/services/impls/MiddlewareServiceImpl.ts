@@ -49,9 +49,6 @@ export class MiddlewareServiceImpl implements IMiddlewareService {
             const actions = Reflect.getMetadata(MetadataKeys.ActionNames, constructor) as ActionHandlerInfo[] ?? [];
 
             for (const { name, methodName, ignorePrefix } of commands) {
-                const handler: MessageHandler = prototype[methodName];
-                console.assert(handler instanceof Function, `${constructor.name}.${methodName} must be a function of type MessageHandlerContext`);
-
                 const commandName = prefix === "/" || ignorePrefix ? name : (prefix + name);
 
                 const ownerController = commandMapping.get(commandName);
@@ -65,16 +62,10 @@ export class MiddlewareServiceImpl implements IMiddlewareService {
             }
 
             for (const { name, methodName } of events) {
-                const handler: MessageHandler = prototype[methodName];
-                console.assert(handler instanceof Function, `${constructor.name}.${methodName} must be a function of type MessageHandlerContext`);
-
                 bot.on(name, this.handlerFactory(constructor.name, methodName));
             }
 
             for (const { name, methodName } of actions) {
-                const handler: MessageHandler = prototype[methodName];
-                console.assert(handler instanceof Function, `${constructor.name}.${methodName} must be a function of type MessageHandlerContext`);
-
                 bot.action(name, this.handlerFactory(constructor.name, methodName));
             }
         }
