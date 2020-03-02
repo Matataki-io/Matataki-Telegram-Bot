@@ -184,16 +184,18 @@ describe("MiddlewareService", () => {
         });
 
         describe("Action with regex", () => {
-            test("Matched", async () => {
-                const func = jest.fn();
+            const func = jest.fn();
 
-                @Controller("a")
-                class TestController extends BaseController<TestController> {
-                    @Action(/test:(\w+)/)
-                    test({}: ContextMessageUpdate, @InjectRegexMatchGroup(1) arg: string) {
-                        func(arg);
-                    }
+            @Controller("a")
+            class TestController extends BaseController<TestController> {
+                @Action(/test:(\w+)/)
+                test({}: ContextMessageUpdate, @InjectRegexMatchGroup(1) arg: string) {
+                    func(arg);
                 }
+            }
+
+            test("Matched", async () => {
+                func.mockReset();
 
                 const bot = createBotInstance([TestController]);
 
@@ -215,15 +217,7 @@ describe("MiddlewareService", () => {
                 expect(func).toBeCalledWith("abc");
             });
             test("Not matched", async () => {
-                const func = jest.fn();
-
-                @Controller("a")
-                class TestController extends BaseController<TestController> {
-                    @Action(/test:(\w+)/)
-                    test({}: ContextMessageUpdate, @InjectRegexMatchGroup(1) arg: string) {
-                        func(arg);
-                    }
-                }
+                func.mockReset();
 
                 const bot = createBotInstance([TestController]);
 
