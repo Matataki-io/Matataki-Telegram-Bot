@@ -17,14 +17,4 @@ describe("@Controller", () => {
             }
         }).toThrowError("Cannot apply @Controller decorator multiple times");
     });
-    test("Should use unique controller prefix", () => {
-        expect(() => {
-            @Controller("test")
-            class A extends BaseController<A> {
-            }
-            @Controller("test")
-            class B extends BaseController<B> {
-            }
-        }).toThrowError("Controller prefix 'test' has been defined");
-    });
 });

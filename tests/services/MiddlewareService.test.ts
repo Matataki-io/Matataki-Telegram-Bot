@@ -20,6 +20,19 @@ function createBotInstance(controllers: Array<ControllerConstructor>) {
 }
 
 describe("MiddlewareService", () => {
+    test("Should use unique controller prefix", () => {
+        expect(() => {
+            @Controller("test")
+            class AController extends BaseController<AController> {
+            }
+            @Controller("test")
+            class BController extends BaseController<BController> {
+            }
+
+            createBotInstance([AController, BController]);
+        }).toThrowError("Controller prefix 'test' has been defined");
+    });
+
     describe("Command", () => {
         test("Simple bot command", async () => {
             const func = jest.fn();

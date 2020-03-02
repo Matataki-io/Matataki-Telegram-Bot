@@ -39,11 +39,18 @@ export class MiddlewareServiceImpl implements IMiddlewareService {
             this.container.bind(Injections.Controller).to(constructor).whenTargetNamed(name);
         }
 
+        const controllerPrefixes = new Set<string>();
         const commandMapping = new Map<string, ControllerConstructor>();
 
         for (const constructor of constructors) {
             const { prototype } = constructor;
+
             const prefix = Reflect.getMetadata(MetadataKeys.ControllerPrefix, constructor);
+            if (controllerPrefixes.has(prefix)) {
+                throw new Error(`Controller prefix '${prefix}' has been defined`);
+            }
+            controllerPrefixes.add(prefix);
+
             const commands = Reflect.getMetadata(MetadataKeys.CommandNames, constructor) as CommandHandlerInfo[] ?? [];
             const events = Reflect.getMetadata(MetadataKeys.EventNames, constructor) as EventHandlerInfo[] ?? [];
             const actions = Reflect.getMetadata(MetadataKeys.ActionNames, constructor) as ActionHandlerInfo[] ?? [];
