@@ -20,57 +20,97 @@ function createBotInstance(controllers: Array<ControllerConstructor>) {
 }
 
 describe("MiddlewareService", () => {
-    test("Simple bot command", async () => {
-        const func = jest.fn();
+    describe("Command", () => {
+        test("Simple bot command", async () => {
+            const func = jest.fn();
 
-        @Controller("a")
-        class TestController extends BaseController<TestController> {
-            @Command("test")
-            test() {
-                func();
+            @Controller("a")
+            class TestController extends BaseController<TestController> {
+                @Command("test")
+                test() {
+                    func();
+                }
             }
-        }
 
-        const bot = createBotInstance([TestController]);
+            const bot = createBotInstance([TestController]);
 
-        await bot.handleUpdate({
-            update_id: 1,
-            message: {
-                message_id: 1,
-                date: 1,
-                chat: {
-                    id: 1,
-                    type: "private",
+            await bot.handleUpdate({
+                update_id: 1,
+                message: {
+                    message_id: 1,
+                    date: 1,
+                    chat: {
+                        id: 1,
+                        type: "private",
+                    },
+                    from: {
+                        id: 1,
+                        is_bot: false,
+                        first_name: "testuser",
+                    },
+                    text: "/atest",
+                    entities: [{
+                        type: "bot_command",
+                        offset: 0,
+                        length: 6,
+                    }],
                 },
-                from: {
-                    id: 1,
-                    is_bot: false,
-                    first_name: "testuser",
-                },
-                text: "/atest",
-                entities: [{
-                    type: "bot_command",
-                    offset: 0,
-                    length: 6,
-                }],
-            },
+            });
+
+            expect(func).toBeCalledTimes(1);
         });
+        test("Simple bot command without controller prefix", async () => {
+            const func = jest.fn();
 
-        expect(func).toBeCalledTimes(1);
-    });
-    test("Ban multiple handlers for a command in multiple controllers", () => {
-        @Controller("a")
-        class AController extends BaseController<AController> {
-            @Command("test", { ignorePrefix: true })
-            test() { }
-        }
-        @Controller("b")
-        class BController extends BaseController<BController> {
-            @Command("test", { ignorePrefix: true })
-            test() { }
-        }
+            @Controller("a")
+            class TestController extends BaseController<TestController> {
+                @Command("test", { ignorePrefix: true })
+                test() {
+                    func();
+                }
+            }
 
-        expect(() => createBotInstance([AController, BController])).toThrowError("Command 'test' is registered by other controller");
+            const bot = createBotInstance([TestController]);
+
+            await bot.handleUpdate({
+                update_id: 1,
+                message: {
+                    message_id: 1,
+                    date: 1,
+                    chat: {
+                        id: 1,
+                        type: "private",
+                    },
+                    from: {
+                        id: 1,
+                        is_bot: false,
+                        first_name: "testuser",
+                    },
+                    text: "/test",
+                    entities: [{
+                        type: "bot_command",
+                        offset: 0,
+                        length: 6,
+                    }],
+                },
+            });
+
+            expect(func).toBeCalledTimes(1);
+        });
+        test("Ban multiple handlers for a command in multiple controllers", () => {
+            @Controller("a")
+            class AController extends BaseController<AController> {
+                @Command("test", { ignorePrefix: true })
+                test() { }
+            }
+            @Controller("b")
+            class BController extends BaseController<BController> {
+                @Command("test", { ignorePrefix: true })
+                test() { }
+            }
+
+            expect(() => createBotInstance([AController, BController])).toThrowError("Command 'test' is registered by other controller");
+        });
     });
 
     test("Simple event", async () => {
