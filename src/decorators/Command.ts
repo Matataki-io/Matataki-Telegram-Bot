@@ -41,7 +41,7 @@ function Command(name: string,
         const commands = Reflect.getMetadata(MetadataKeys.CommandNames, target.constructor) as CommandHandlerInfo[];
 
         if (commands.find(info => info.methodName === methodName)) {
-            throw new Error("No multiple @Command");
+            throw new Error("Cannot apply @Command decorator multiple times");
         }
 
         commands.push({

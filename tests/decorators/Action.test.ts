@@ -8,6 +8,6 @@ describe("@Action", () => {
                 @Action("multiple")
                 multiple() { }
             }
-        }).toThrowError("No multiple @Action");
+        }).toThrowError("Cannot apply @Action decorator multiple times");
     });
 });
