@@ -183,13 +183,17 @@ describe("MiddlewareService", () => {
             expect(func).toBeCalledTimes(1);
         });
 
-        describe("Action with regex", () => {
+        describe("Action with arguments", () => {
             const func = jest.fn();
 
             @Controller("a")
             class TestController extends BaseController<TestController> {
                 @Action(/test:(\w+)/)
                 test({}: ContextMessageUpdate, @InjectRegexMatchGroup(1) arg: string) {
+                    func(arg);
+                }
+                @Action(/test2:(\d+)/)
+                test2({}: ContextMessageUpdate, @InjectRegexMatchGroup(1, Number) arg: number) {
                     func(arg);
                 }
             }
@@ -237,37 +241,29 @@ describe("MiddlewareService", () => {
 
                 expect(func).toBeCalledTimes(0);
             });
-        });
 
-        test("Argument converter", async () => {
-            const func = jest.fn();
+            test("Argument converter", async () => {
+                func.mockReset();
 
-            @Controller("a")
-            class TestController extends BaseController<TestController> {
-                @Action(/test:(\d+)/)
-                test({}: ContextMessageUpdate, @InjectRegexMatchGroup(1, Number) arg: number) {
-                    func(arg);
-                }
-            }
+                const bot = createBotInstance([TestController]);
 
-            const bot = createBotInstance([TestController]);
-
-            await bot.handleUpdate({
-                update_id: 1,
-                callback_query: {
-                    id: "blahblahblah",
-                    from: {
-                        id: 1,
-                        is_bot: false,
-                        first_name: "testuser",
+                await bot.handleUpdate({
+                    update_id: 1,
+                    callback_query: {
+                        id: "blahblahblah",
+                        from: {
+                            id: 1,
+                            is_bot: false,
+                            first_name: "testuser",
+                        },
+                        chat_instance: "blahblahblah",
+                        data: "test2:114514",
                     },
-                    chat_instance: "blahblahblah",
-                    data: "test:114514",
-                },
-            });
+                });
 
-            expect(func).toBeCalledTimes(1);
-            expect(func).toBeCalledWith(114514);
+                expect(func).toBeCalledTimes(1);
+                expect(func).toBeCalledWith(114514);
+            });
         });
     });
 });
