@@ -4,7 +4,7 @@ import { inject, Container } from "inversify";
 import { Injections, MetadataKeys } from "#/constants";
 import { ControllerConstructor } from "#/controllers";
 import { Service } from "#/decorators";
-import { CommandHandlerInfo, EventHandlerInfo, ActionHandlerInfo, MessageHandler, ControllerMethodContext, MessageHandlerContext } from "#/definitions";
+import { CommandHandlerInfo, EventHandlerInfo, ActionHandlerInfo, MessageHandler, ControllerMethodContext, MessageHandlerContext, I18nContext } from "#/definitions";
 import { IMiddlewareService } from "#/services";
 
 @Service(Injections.MiddlewareService)
@@ -51,57 +51,135 @@ export class MiddlewareServiceImpl implements IMiddlewareService {
             }
             controllerPrefixes.add(prefix);
 
-            const commands = Reflect.getMetadata(MetadataKeys.CommandNames, constructor) as CommandHandlerInfo[] ?? [];
-            const events = Reflect.getMetadata(MetadataKeys.EventNames, constructor) as EventHandlerInfo[] ?? [];
-            const actions = Reflect.getMetadata(MetadataKeys.ActionNames, constructor) as ActionHandlerInfo[] ?? [];
+            const commands = Reflect.getMetadata(MetadataKeys.CommandNames, constructor) as Map<string, Map<string, CommandHandlerInfo>> | undefined;
+            if (commands) {
+                for (const [name, methods] of commands) {
+                    const commandName = prefix + name;
 
-            for (const { name, methodName, ignorePrefix } of commands) {
-                const commandName = prefix === "/" || ignorePrefix ? name : (prefix + name);
+                    const ownerController = commandMapping.get(commandName);
+                    if (ownerController && ownerController !== constructor) {
+                        throw new Error(`Command '${commandName}' is registered by other controller`);
+                    }
+                    commandMapping.set(commandName, constructor);
 
-                const ownerController = commandMapping.get(commandName);
-                if (ownerController && ownerController !== constructor) {
-                    throw new Error(`Command '${commandName}' is registered by other controller`);
+                    let argumentFilters: Map<string, string> | undefined;
+                    let fallbackMethodName: string | undefined;
+                    let errorMessage: string | ((i18n: I18nContext) => string) | undefined;
+
+                    for (const [methodName, info] of methods) {
+                        if (!info.argumentRegex) {
+                            if (fallbackMethodName) {
+                                throw new Error(`Only one method can be applied @Command("${name}") without argument regex`);
+                            }
+
+                            fallbackMethodName = methodName;
+                            continue;
+                        }
+
+                        if (!argumentFilters) {
+                            argumentFilters = new Map<string, string>();
+                        }
+
+                        if (argumentFilters.has(info.argumentRegex.source)) {
+                            throw new Error();
+                        }
+
+                        argumentFilters.set(info.argumentRegex.source, methodName);
+
+                        if (info.errorMessage) {
+                            errorMessage = info.errorMessage;
+                        }
+                    }
+
+                    if (errorMessage && argumentFilters && (fallbackMethodName || argumentFilters.size > 1)) {
+                        throw Error("");
+                    }
+
+                    if (!argumentFilters) {
+                        if (!fallbackMethodName) {
+                            throw new Error("FallbackMethodName cannot be undefined here");
+                        }
+
+                        bot.command(commandName, this.handlerFactory(constructor.name, fallbackMethodName));
+                        continue;
+                    }
+
+                    bot.command(commandName, this.commandHandlerFactory(constructor.name, argumentFilters, fallbackMethodName, errorMessage));
                 }
-
-                commandMapping.set(commandName, constructor);
-
-                bot.command(commandName, this.handlerFactory(constructor.name, methodName));
             }
 
+            const events = Reflect.getMetadata(MetadataKeys.EventNames, constructor) as Array<EventHandlerInfo> ?? [];
             for (const { name, methodName } of events) {
                 bot.on(name, this.handlerFactory(constructor.name, methodName));
             }
 
+            const actions = Reflect.getMetadata(MetadataKeys.ActionNames, constructor) as Array<ActionHandlerInfo> ?? [];
             for (const { name, methodName } of actions) {
                 bot.action(name, this.handlerFactory(constructor.name, methodName));
             }
         }
     }
+    private createController(ctx: ContextMessageUpdate, controllerName: string) {
+        const context = Reflect.getMetadata(MetadataKeys.Context, ctx) as ControllerMethodContext;
 
-    private handlerFactory(controllerName: string, methodName: string) {
+        context.container.bind<ControllerMethodContext>(Injections.Context).toConstantValue(context);
+
+        return context.container.getNamed<any>(Injections.Controller, controllerName);
+    }
+    private commandHandlerFactory(controllerName: string, argumentFilters: Map<string, string>, fallbackMethodName?: string, errorMessage?: string | ((i18n: I18nContext) => string)) {
         return (ctx: ContextMessageUpdate) => {
-            const { message, callbackQuery, from } = ctx;
+            const controller = this.createController(ctx, controllerName);
 
-            if (!message && !callbackQuery) {
-                throw new Error("What happended?");
-            }
-            if (!from) {
-                throw new Error("What happended?");
+            const commandEntity = ctx.message!.entities!.find(entity => entity.type === "bot_command" && entity.offset == 0);
+            if (!commandEntity) {
+                throw new Error();
             }
 
-            const context = Reflect.getMetadata(MetadataKeys.Context, ctx) as ControllerMethodContext;
+            let handler: MessageHandler | undefined;
 
-            context.container.bind<ControllerMethodContext>(Injections.Context).toConstantValue(context);
+            for (const [regexString, methodName] of argumentFilters) {
+                const regex = new RegExp("\\s+" + regexString);
 
-            const controller = context.container.getNamed<any>(Injections.Controller, controllerName);
-            const handler = controller[methodName] as MessageHandler;
+                const match = regex.exec(ctx.message!.text!.substr(commandEntity.length));
+                if (!match) {
+                    continue;
+                }
+
+                ctx.match = match;
+                handler = controller[methodName];
+            }
+
+            if (!handler && fallbackMethodName) {
+                handler = controller[fallbackMethodName];
+            }
+
+            if (!handler) {
+
+
+                throw new Error();
+            }
 
             const result = handler.call(controller, ctx as MessageHandlerContext);
+
             if (result instanceof Promise) {
                 return result;
             }
 
             return undefined;
-        }
+        };
+    }
+    private handlerFactory(controllerName: string, methodName: string) {
+        return (ctx: ContextMessageUpdate) => {
+            const controller = this.createController(ctx, controllerName);
+
+            const handler = controller[methodName] as MessageHandler;
+            const result = handler.call(controller, ctx as MessageHandlerContext);
+
+            if (result instanceof Promise) {
+                return result;
+            }
+
+            return undefined;
+        };
     }
 }
