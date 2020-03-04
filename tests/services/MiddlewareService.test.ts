@@ -3,7 +3,7 @@ import "reflect-metadata";
 import { TelegrafConstructor, ContextMessageUpdate } from "telegraf";
 import { Container } from "inversify";
 
-import { Command, Controller, Event, Action, InjectRegexMatchGroup } from "#/decorators";
+import { Command, Controller, Event, Action, InjectRegexMatchGroup, GlobalAlias } from "#/decorators";
 import { ControllerConstructor, BaseController } from "#/controllers";
 import { MiddlewareServiceImpl } from "#/services/impls/MiddlewareServiceImpl";
 
@@ -98,6 +98,7 @@ describe("MiddlewareService", () => {
             const func = jest.fn();
 
             @Controller("a")
+            @GlobalAlias("test", "test")
             class TestController extends BaseController<TestController> {
                 @Command("test", { ignorePrefix: true })
                 test() {
@@ -134,11 +135,13 @@ describe("MiddlewareService", () => {
         });
         test("Ban multiple handlers for a command in multiple controllers", () => {
             @Controller("a")
+            @GlobalAlias("test", "test")
             class AController extends BaseController<AController> {
                 @Command("test", { ignorePrefix: true })
                 test() { }
             }
             @Controller("b")
+            @GlobalAlias("test", "test")
             class BController extends BaseController<BController> {
                 @Command("test", { ignorePrefix: true })
                 test() { }

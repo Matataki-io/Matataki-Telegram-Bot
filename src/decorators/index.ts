@@ -2,6 +2,7 @@ export * from "./Action";
 export * from "./Command";
 export * from "./Controller";
 export * from "./Event";
+export * from "./GlobalAlias";
 export * from "./GroupOnly";
 export * from "./InjectRegexMatchGroup";
 export * from "./InjectSenderMatatakiInfo";

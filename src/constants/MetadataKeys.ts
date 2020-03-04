@@ -8,4 +8,5 @@ export const MetadataKeys = {
     EventNames: Symbol.for("EventNamesMetadata"),
     ActionNames: Symbol.for("ActionNamesMetadata"),
     Parameters: Symbol.for("ParametersMetadata"),
+    GlobalAlias: Symbol.for("GlobalAliasMetadata"),
 }

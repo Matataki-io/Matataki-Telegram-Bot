@@ -1,10 +1,10 @@
 import { ContextMessageUpdate, Composer } from "telegraf";
 import { inject, Container } from "inversify";
 
-import { Injections, MetadataKeys } from "#/constants";
+import { Injections, MetadataKeys, ParameterTypes } from "#/constants";
 import { ControllerConstructor } from "#/controllers";
 import { Service } from "#/decorators";
-import { CommandHandlerInfo, EventHandlerInfo, ActionHandlerInfo, MessageHandler, ControllerMethodContext, MessageHandlerContext, I18nContext } from "#/definitions";
+import { CommandHandlerInfo, EventHandlerInfo, ActionHandlerInfo, MessageHandler, ControllerMethodContext, MessageHandlerContext, I18nContext, ParameterInfo } from "#/definitions";
 import { IMiddlewareService } from "#/services";
 
 @Service(Injections.MiddlewareService)
@@ -40,11 +40,9 @@ export class MiddlewareServiceImpl implements IMiddlewareService {
         }
 
         const controllerPrefixes = new Set<string>();
-        const commandMapping = new Map<string, ControllerConstructor>();
+        const globalCommands = new Set<string>();
 
         for (const constructor of constructors) {
-            const { prototype } = constructor;
-
             const prefix = Reflect.getMetadata(MetadataKeys.ControllerPrefix, constructor);
             if (controllerPrefixes.has(prefix)) {
                 throw new Error(`Controller prefix '${prefix}' has been defined`);
@@ -53,14 +51,24 @@ export class MiddlewareServiceImpl implements IMiddlewareService {
 
             const commands = Reflect.getMetadata(MetadataKeys.CommandNames, constructor) as Map<string, Map<string, CommandHandlerInfo>> | undefined;
             if (commands) {
-                for (const [name, methods] of commands) {
-                    const commandName = prefix + name;
+                const aliasMap = Reflect.getMetadata(MetadataKeys.GlobalAlias, constructor) as Map<string, string>;
 
-                    const ownerController = commandMapping.get(commandName);
-                    if (ownerController && ownerController !== constructor) {
-                        throw new Error(`Command '${commandName}' is registered by other controller`);
+                for (const [name, methods] of commands) {
+                    const commands = [prefix + name];
+
+                    let alias: string | undefined;
+                    if (aliasMap) {
+                        alias = aliasMap.get(name);
+
+                        if (alias) {
+                            if (globalCommands.has(alias)) {
+                                throw new Error(`Command '${alias}' is registered by other controller`);
+                            }
+
+                            globalCommands.add(alias);
+                            commands.push(alias);
+                        }
                     }
-                    commandMapping.set(commandName, constructor);
 
                     let argumentFilters: Map<string, string> | undefined;
                     let fallbackMethodName: string | undefined;
@@ -100,11 +108,11 @@ export class MiddlewareServiceImpl implements IMiddlewareService {
                             throw new Error("FallbackMethodName cannot be undefined here");
                         }
 
-                        bot.command(commandName, this.handlerFactory(constructor.name, fallbackMethodName));
+                        bot.command(commands, this.handlerFactory(constructor.name, fallbackMethodName));
                         continue;
                     }
 
-                    bot.command(commandName, this.commandHandlerFactory(constructor.name, argumentFilters, fallbackMethodName, errorMessage));
+                    bot.command(commands, this.commandHandlerFactory(constructor.name, argumentFilters, fallbackMethodName, errorMessage));
                 }
             }
 
