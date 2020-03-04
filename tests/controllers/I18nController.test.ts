@@ -72,7 +72,7 @@ describe("I18nService", () => {
             });
 
             const controller = createController();
-            await controller.switchLanguage(ctx, "");
+            await controller.switchLanguage(ctx, language);
 
             expect(ctx.answerCbQuery).toBeCalledTimes(1);
             expect(ctx.reply).toBeCalledTimes(1);
