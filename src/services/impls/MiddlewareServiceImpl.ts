@@ -134,6 +134,33 @@ export class MiddlewareServiceImpl implements IMiddlewareService {
 
         return context.container.getNamed<any>(Injections.Controller, controllerName);
     }
+    private generateArguments(controller: any, methodName: string, ctx: ContextMessageUpdate) {
+        const result = [];
+
+        const methodMap = Reflect.getMetadata(MetadataKeys.Parameters, controller.constructor) as Map<string, Map<number, ParameterInfo>> | undefined;
+        if (methodMap) {
+            const parameters = methodMap.get(methodName);
+            if (parameters) {
+                for (const [parameterIndex, info] of parameters) {
+                    switch (info.type) {
+                        case ParameterTypes.RegexMatchGroup:
+                            const { groupIndex, converter } = info;
+
+                            let value = ctx.match![groupIndex];
+
+                            if (converter) {
+                                value = converter(value);
+                            }
+
+                            result[parameterIndex - 1] = value;
+                            break;
+                    }
+                }
+            }
+        }
+
+        return result;
+    }
     private commandHandlerFactory(controllerName: string, argumentFilters: Map<string, string>, fallbackMethodName?: string, errorMessage?: string | ((i18n: I18nContext) => string)) {
         return (ctx: ContextMessageUpdate) => {
             const controller = this.createController(ctx, controllerName);
@@ -169,7 +196,7 @@ export class MiddlewareServiceImpl implements IMiddlewareService {
                 return ctx.replyWithMarkdown(errorMessage!);
             }
 
-            const result = handler.call(controller, ctx as MessageHandlerContext);
+            const result = handler.call(controller, ctx as MessageHandlerContext, ...this.generateArguments(controller, handler.name, ctx));
 
             if (result instanceof Promise) {
                 return result;
@@ -183,7 +210,7 @@ export class MiddlewareServiceImpl implements IMiddlewareService {
             const controller = this.createController(ctx, controllerName);
 
             const handler = controller[methodName] as MessageHandler;
-            const result = handler.call(controller, ctx as MessageHandlerContext);
+            const result = handler.call(controller, ctx as MessageHandlerContext, ...this.generateArguments(controller, methodName, ctx));
 
             if (result instanceof Promise) {
                 return result;

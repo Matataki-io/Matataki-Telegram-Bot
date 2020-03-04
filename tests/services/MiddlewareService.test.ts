@@ -281,6 +281,85 @@ describe("MiddlewareService", () => {
                 });
             });
         });
+
+        describe("Inject matched argument", () => {
+            const func = jest.fn();
+
+            @Controller("a")
+            class TestController extends BaseController<TestController> {
+                @Command("test", /(\w+)/)
+                testA({}: ContextMessageUpdate, @InjectRegexMatchGroup(1) arg: string) {
+                    func(arg);
+                }
+                @Command("test2", /(\d+)/)
+                testB({}: ContextMessageUpdate, @InjectRegexMatchGroup(1, Number) arg: number) {
+                    func(arg);
+                }
+            }
+
+            test("/atest abc123", async () => {
+                func.mockReset();
+
+                const bot = createBotInstance([TestController]);
+
+                await bot.handleUpdate({
+                    update_id: 1,
+                    message: {
+                        message_id: 1,
+                        date: 1,
+                        chat: {
+                            id: 1,
+                            type: "private",
+                        },
+                        from: {
+                            id: 1,
+                            is_bot: false,
+                            first_name: "testuser",
+                        },
+                        text: "/atest abc123",
+                        entities: [{
+                            type: "bot_command",
+                            offset: 0,
+                            length: 6,
+                        }],
+                    },
+                });
+
+                expect(func).toBeCalledTimes(1);
+                expect(func).toBeCalledWith("abc123");
+            });
+            test("/atest2 114514", async () => {
+                func.mockReset();
+
+                const bot = createBotInstance([TestController]);
+
+                await bot.handleUpdate({
+                    update_id: 1,
+                    message: {
+                        message_id: 1,
+                        date: 1,
+                        chat: {
+                            id: 1,
+                            type: "private",
+                        },
+                        from: {
+                            id: 1,
+                            is_bot: false,
+                            first_name: "testuser",
+                        },
+                        text: "/atest2 114514",
+                        entities: [{
+                            type: "bot_command",
+                            offset: 0,
+                            length: 7,
+                        }],
+                    },
+                });
+
+                expect(func).toBeCalledTimes(1);
+                expect(func).toBeCalledWith(114514);
+            });
+        });
     });
 
     test("Simple event", async () => {
