@@ -7,9 +7,17 @@ import { Command, Controller, Event, Action, InjectRegexMatchGroup } from "#/dec
 import { ControllerConstructor, BaseController } from "#/controllers";
 import { MiddlewareServiceImpl } from "#/services/impls/MiddlewareServiceImpl";
 
-function createBotInstance(controllers: Array<ControllerConstructor>) {
+function createBotInstance(controllers: Array<ControllerConstructor>, middleware?: (ctx: ContextMessageUpdate) => void) {
     const Telegraf = jest.requireActual("telegraf") as TelegrafConstructor;
     const bot = new Telegraf<ContextMessageUpdate>("TOKEN");
+
+    bot.use((ctx, next) => {
+        ctx.replyWithMarkdown = jest.fn();
+
+        if (middleware) middleware(ctx);
+
+        if (next) return next();
+    });
 
     const service = new MiddlewareServiceImpl(new Container({ skipBaseClassChecks: true }));
 
@@ -156,6 +164,15 @@ describe("MiddlewareService", () => {
                 testC({}: ContextMessageUpdate) {
                     func("C");
                 }
+
+                @Command("test2", /\w+/, "Bad format")
+                testD({}: ContextMessageUpdate) {
+                    func("D");
+                }
+                @Command("test3", /\w+/, () => "Bad format")
+                testE({}: ContextMessageUpdate) {
+                    func("E");
+                }
             }
 
             test.each`
@@ -194,6 +211,71 @@ describe("MiddlewareService", () => {
 
                 expect(func).toBeCalledTimes(1);
                 expect(func).toBeCalledWith(expected);
+            });
+
+            describe("Bad format", () => {
+                test("Type A", async () => {
+                    func.mockReset();
+
+                    let context: ContextMessageUpdate | undefined;
+                    const bot = createBotInstance([TestController], ctx => context = ctx);
+
+                    await bot.handleUpdate({
+                        update_id: 1,
+                        message: {
+                            message_id: 1,
+                            date: 1,
+                            chat: {
+                                id: 1,
+                                type: "private",
+                            },
+                            from: {
+                                id: 1,
+                                is_bot: false,
+                                first_name: "testuser",
+                            },
+                            text: "/atest2 !@#",
+                            entities: [{
+                                type: "bot_command",
+                                offset: 0,
+                                length: 7,
+                            }],
+                        },
+                    });
+
+                    expect(context!.replyWithMarkdown).toBeCalledWith("Bad format");
+                });
+                test("Type B", async () => {
+                    func.mockReset();
+
+                    let context: ContextMessageUpdate | undefined;
+                    const bot = createBotInstance([TestController], ctx => context = ctx);
+
+                    await bot.handleUpdate({
+                        update_id: 1,
+                        message: {
+                            message_id: 1,
+                            date: 1,
+                            chat: {
+                                id: 1,
+                                type: "private",
+                            },
+                            from: {
+                                id: 1,
+                                is_bot: false,
+                                first_name: "testuser",
+                            },
+                            text: "/atest3 !@#",
+                            entities: [{
+                                type: "bot_command",
+                                offset: 0,
+                                length: 7,
+                            }],
+                        },
+                    });
+
+                    expect(context!.replyWithMarkdown).toBeCalledWith("Bad format");
+                });
             });
         });
     });

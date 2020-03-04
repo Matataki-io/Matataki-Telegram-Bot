@@ -154,9 +154,11 @@ export class MiddlewareServiceImpl implements IMiddlewareService {
             }
 
             if (!handler) {
+                if (typeof errorMessage === "function") {
+                    return ctx.replyWithMarkdown(errorMessage(ctx.i18n));
+                }
 
-
-                throw new Error();
+                return ctx.replyWithMarkdown(errorMessage!);
             }
 
             const result = handler.call(controller, ctx as MessageHandlerContext);
