@@ -33,7 +33,7 @@ describe("GroupController", () => {
                 }],
             },
         });
-        (ctx.telegram.getChatAdministrators as jest.MockedFunction<typeof ctx.telegram.getChatAdministrators>).mockResolvedValue([
+        ctx.telegram.getChatAdministrators.mockResolvedValue([
             {
                 status: "creator",
                 user: {
