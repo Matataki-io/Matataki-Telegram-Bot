@@ -29,7 +29,10 @@ export function createMockedContext(): MockedMessageHandlerContext {
         },
         telegram: {
             sendMessage: createMockedAsyncFunction(),
+            getChat: jest.fn(),
             getChatAdministrators: jest.fn(),
+            getChatMembersCount: jest.fn(),
+            exportChatInviteLink: jest.fn(),
         },
         i18n: service.getDefaultContext("zh-hans"),
     });

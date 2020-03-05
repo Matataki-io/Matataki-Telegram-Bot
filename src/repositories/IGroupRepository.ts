@@ -6,7 +6,6 @@ export interface IGroupRepository {
     ensureGroup(telegramChat: Chat, creatorId: number): Promise<Group>;
     getGroup(id: number, includeInactive?: boolean): Promise<Group>;
     getGroupOrDefault(id: number, includeInactive?: boolean): Promise<Group | undefined>;
-    getGroupsOfCreator(creatorId: number): Promise<Group[]>;
     getGroups(): Promise<Group[]>;
     getGroupsExceptMyToken(tokenId?: number): Promise<Group[]>;
     addMembers(group: Group, members: User[]): Promise<void>;
@@ -19,4 +18,5 @@ export interface IGroupRepository {
     removeGroup(group: Group): Promise<void>;
 
     getJoinedGroups(id: number): Promise<Array<Group>>;
+    getGroupsOfCreator(creatorId: number): Promise<Group[]>;
 }

@@ -6,7 +6,7 @@ import { Chat } from "telegraf/typings/telegram-types";
 import { Group, User } from "#/entities";
 import { BaseRepository, IGroupRepository } from "#/repositories";
 
-const relationsOption = { relations: ["members"] };
+const relationsOption = { relations: ["members", "requirements"] };
 
 @Repository(Group)
 export class GroupRepositoryImpl extends BaseRepository<Group> implements IGroupRepository {
@@ -43,9 +43,6 @@ export class GroupRepositoryImpl extends BaseRepository<Group> implements IGroup
         const options = includeInactive ? relationsOption : { where: { active: true }, ...relationsOption };
 
         return this.repository.findOne(id, options);
-    }
-    getGroupsOfCreator(creatorId: number) {
-        return this.repository.find({ where: { creatorId }, ...relationsOption });
     }
 
     getGroups() {
@@ -124,5 +121,8 @@ export class GroupRepositoryImpl extends BaseRepository<Group> implements IGroup
             .innerJoin("group.members", "member")
             .where("member.id = :id", { id })
             .getMany();
+    }
+    getGroupsOfCreator(creatorId: number) {
+        return this.repository.find({ where: { creatorId }, ...relationsOption });
     }
 }

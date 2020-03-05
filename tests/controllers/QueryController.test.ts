@@ -46,6 +46,12 @@ describe("QueryController", () => {
                     },
                 },
             });
+            ctx.telegram.getChat.mockResolvedValue({
+                id: -1919,
+                title: "下北沢讨论区",
+                type: "supergroup",
+            });
+            ctx.telegram.exportChatInviteLink.mockResolvedValue("http://invitelink");
 
             const controller = createController();
             await controller.queryStatus(ctx);
@@ -54,7 +60,8 @@ describe("QueryController", () => {
             expect(ctx.replyWithMarkdown).toBeCalledWith(`瞬Matataki 昵称：[野獣先輩](http://MATATAKI/user/810)
 您在 瞬Matataki 尚未发行 Fan票
 
-*您尚未加入 Fan票 群*
+*您已加入 1 个 Fan票 群*
+/ [下北沢讨论区](http://invitelink) （暂无规则）
 
 *您尚未建立 Fan票 群*
 
@@ -70,17 +77,86 @@ describe("QueryController", () => {
                     },
                 },
             });
+            ctx.telegram.getChat.mockImplementation(chatId => {
+                switch (Number(chatId)) {
+                    case -1919:
+                        return Promise.resolve({
+                            id: -1919,
+                            title: "下北沢讨论区",
+                            type: "supergroup",
+                        });
+
+                    case -114514:
+                        return Promise.resolve({
+                            id: -114514,
+                            title: "野兽邸",
+                            type: "supergroup",
+                        });
+
+                    default: return Promise.reject();
+                };
+            });
+            ctx.telegram.getChatMembersCount.mockImplementation(chatId => {
+                switch (Number(chatId)) {
+                    case -1919:
+                        return Promise.resolve(5);
+
+                    case -114514:
+                        return Promise.resolve(3);
+
+                    default: return Promise.reject();
+                };
+            });
+            ctx.telegram.getChatAdministrators.mockImplementation(chatId => {
+                switch (Number(chatId)) {
+                    case -1919:
+                        return Promise.resolve([
+                            {
+                                status: "creator",
+                                user: {
+                                    id: 8101,
+                                    is_bot: false,
+                                    first_name: "李田所",
+                                },
+                            },
+                        ]);
+
+                    case -114514:
+                        return Promise.resolve([
+                            {
+                                status: "creator",
+                                user: {
+                                    id: 8101,
+                                    is_bot: false,
+                                    first_name: "李田所",
+                                },
+                            },
+                            {
+                                status: "administrator",
+                                user: {
+                                    id: 123,
+                                    is_bot: true,
+                                    first_name: "Matataki Fan票机器人",
+                                },
+                            },
+                        ]);
+
+                    default: return Promise.reject();
+                }
+            });
+            ctx.telegram.exportChatInviteLink.mockResolvedValue("http://invitelink");
 
             const controller = createController();
             await controller.queryStatus(ctx);
-;
+
             expect(ctx.replyWithMarkdown).toBeCalledTimes(1);
             expect(ctx.replyWithMarkdown).toBeCalledWith(`瞬Matataki 昵称：[李田所](http://MATATAKI/user/114514)
 Fan票 名称：[INM（银票）](http://MATATAKI/token/1919)
 
 *您尚未加入 Fan票 群*
 
-*您已建立 0 个 Fan票 群*
+*您已建立 1 个 Fan票 群*
+/ [野兽邸](http://invitelink) （INM ≥ 1145140）
 
 输入 /join 查看更多可以加入的 Fan票 群`, { "disable_web_page_preview": true });
         });
