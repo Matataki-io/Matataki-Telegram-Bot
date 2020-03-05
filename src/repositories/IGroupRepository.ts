@@ -4,8 +4,8 @@ import { Group, User } from "#/entities";
 
 export interface IGroupRepository {
     ensureGroup(telegramChat: Chat, creatorId: number): Promise<Group>;
-    getGroup(id: number, includeInactive?: boolean): Promise<Group>;
-    getGroupOrDefault(id: number, includeInactive?: boolean): Promise<Group | undefined>;
+    getGroup(id: number): Promise<Group>;
+    getGroupOrDefault(id: number): Promise<Group | undefined>;
     getGroups(): Promise<Group[]>;
     getGroupsExceptMyToken(tokenId?: number): Promise<Group[]>;
     addMembers(group: Group, members: User[]): Promise<void>;

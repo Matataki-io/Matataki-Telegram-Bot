@@ -4,9 +4,9 @@ import { User as TelegramUser } from "telegraf/typings/telegram-types";
 
 import { Controller, Command, InjectRepository, Event, GroupOnly, PrivateChatOnly, RequireMatatakiAccount, InjectSenderMatatakiInfo, RequireMintedMinetoken } from "#/decorators";
 import { MessageHandlerContext, AssociatedInfo } from "#/definitions";
-import { Group, User } from "#/entities";
+import { Group, User, FandomGroupRequirement } from "#/entities";
 import { Injections, LogCategories } from "#/constants";
-import { IUserRepository, IGroupRepository } from "#/repositories";
+import { IUserRepository, IGroupRepository, IFandomGroupRequirementRepository } from "#/repositories";
 import { IBotService, IMatatakiService, IWeb3Service, ILoggerService } from "#/services";
 
 import { BaseController } from ".";
@@ -19,6 +19,7 @@ export class GroupController extends BaseController<GroupController> {
     constructor(
         @InjectRepository(User) private userRepo: IUserRepository,
         @InjectRepository(Group) private groupRepo: IGroupRepository,
+        @InjectRepository(FandomGroupRequirement) private fandomGroupReqRepo: IFandomGroupRequirementRepository,
         @inject(Injections.BotService) private botService: IBotService,
         @inject(Injections.Web3Service) private web3Service: IWeb3Service,
         @inject(Injections.LoggerService) private loggerService: ILoggerService,
@@ -79,7 +80,18 @@ export class GroupController extends BaseController<GroupController> {
 
     @Event("left_chat_member")
     async onMemberLeft({ message, telegram }: MessageHandlerContext) {
+        const leftMember = message.left_chat_member!;
 
+        if (!leftMember.is_bot || leftMember.username !== this.botService.info.username) {
+            return;
+        }
+
+        const group = await this.groupRepo.getGroupOrDefault(message.chat.id);
+        if (!group || group.requirements.length === 0) {
+            return;
+        }
+
+        await this.fandomGroupReqRepo.removeAll(group);
     }
 
     @Event(["group_chat_created", "supergroup_chat_created"])

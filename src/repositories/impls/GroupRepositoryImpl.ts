@@ -34,15 +34,11 @@ export class GroupRepositoryImpl extends BaseRepository<Group> implements IGroup
         return group;
     }
 
-    getGroup(id: number, includeInactive?: boolean) {
-        const options = includeInactive ? relationsOption : { where: { active: true }, ...relationsOption };
-
-        return this.repository.findOneOrFail(id, options);
+    getGroup(id: number) {
+        return this.repository.findOneOrFail(id, relationsOption);
     }
     getGroupOrDefault(id: number, includeInactive?: boolean) {
-        const options = includeInactive ? relationsOption : { where: { active: true }, ...relationsOption };
-
-        return this.repository.findOne(id, options);
+        return this.repository.findOne(id, relationsOption);
     }
 
     getGroups() {

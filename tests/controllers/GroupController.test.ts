@@ -8,11 +8,12 @@ import { UserRepositoryStub } from "../stubs/repositories/UserRepositoryStub";
 import { GroupRepositoryStub } from "../stubs/repositories/GroupRepositoryStub";
 import { MatatakiServiceStub } from "../stubs/services/MatatakiServiceStub";
 import { BotServiceStub } from "../stubs/services/BotServiceStub";
+import { FandomGroupRequirementRepositoryStub } from "../stubs/repositories/FandomGroupRequirementRepositoryStub";
 
 const botService = new BotServiceStub();
 
 function createController() {
-    return new GroupController(new UserRepositoryStub(), new GroupRepositoryStub(), botService, null!, null!, new MatatakiServiceStub());
+    return new GroupController(new UserRepositoryStub(), new GroupRepositoryStub(), new FandomGroupRequirementRepositoryStub(), botService, null!, null!, new MatatakiServiceStub());
 }
 
 describe("GroupController", () => {
@@ -107,5 +108,39 @@ describe("GroupController", () => {
         const groupRepo = getRepository(Group);
 
         expect(groupRepo.findOneOrFail(-1111)).resolves.not.toBeNull();
+    });
+    test("When the bot leaves a fandom group", async () => {
+        const ctx = createMockedContext();
+        Object.assign(ctx, {
+            message: {
+                ...ctx.message,
+                chat: {
+                    id: -114514,
+                    title: "野兽邸",
+                    type: "supergroup",
+                },
+                from: {
+                    id: 123,
+                    is_bot: true,
+                    first_name: "Matataki Fan票机器人",
+                    username: "matataki_bot",
+                },
+                left_chat_member: {
+                    id: 123,
+                    is_bot: true,
+                    first_name: "Matataki Fan票机器人",
+                    username: "matataki_bot",
+                },
+            },
+        });
+
+        const controller = createController();
+        await controller.onMemberLeft(ctx);
+
+        const groupRepo = getRepository(Group);
+
+        const group = await groupRepo.findOneOrFail(-114514, { relations: ["requirements"] });
+
+        expect(group.requirements).toHaveLength(0);
     });
 });

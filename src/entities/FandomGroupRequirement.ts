@@ -1,5 +1,5 @@
 import { Entity, PrimaryColumn, ManyToOne, Column } from "typeorm";
-import { Group } from ".";
+import { Group } from "./Group";
 
 @Entity()
 export class FandomGroupRequirement {
