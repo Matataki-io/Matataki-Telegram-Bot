@@ -77,11 +77,11 @@ describe("GroupController", () => {
                     title: "新群",
                     type: "group",
                 },
-                from: [{
+                from: {
                     id: 8000,
                     is_bot: false,
                     first_name: "一般通过爷",
-                }],
+                },
                 group_chat_created: true,
             },
         });

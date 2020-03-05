@@ -68,7 +68,9 @@ export class GroupController extends BaseController<GroupController> {
         }
 
         if (!group) {
-            group = await this.groupRepo.ensureGroup(message.chat);
+            const creator = (await telegram.getChatAdministrators(message.chat.id)).find(m => m.status === "creator")!;
+
+            group = await this.groupRepo.ensureGroup(message.chat, creator.user.id);
             group.members = [];
         }
 
@@ -82,7 +84,7 @@ export class GroupController extends BaseController<GroupController> {
 
     @Event(["group_chat_created", "supergroup_chat_created"])
     async onGroupCreated({ message }: MessageHandlerContext) {
-        await this.groupRepo.ensureGroup(message.chat);
+        await this.groupRepo.ensureGroup(message.chat, message.from.id);
     }
     @Event("migrate_to_chat_id")
     async onGroupMigration({ message }: MessageHandlerContext) {

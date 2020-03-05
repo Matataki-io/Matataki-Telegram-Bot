@@ -14,20 +14,22 @@ export class GroupRepositoryImpl extends BaseRepository<Group> implements IGroup
         super(Group);
     }
 
-    async ensureGroup(telegramChat: Chat) {
+    async ensureGroup(telegramChat: Chat, creatorId: number) {
         if (telegramChat.type !== "group" && telegramChat.type !== "supergroup") {
             throw new Error("Expect a chat of type 'group'");
         }
 
         let group = await this.repository.findOne(telegramChat.id);
         if (!group) {
-            group = await this.repository.save(this.repository.create({
+            group = this.repository.create({
                 id: telegramChat.id,
                 title: telegramChat.title,
-            }));
-        }
+                creatorId,
+            });
 
-        await this.repository.save(group);
+            debugger;
+            await this.repository.save(group);
+        }
 
         return group;
     }

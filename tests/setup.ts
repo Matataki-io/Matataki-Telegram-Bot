@@ -49,7 +49,10 @@ async function initialize(conn: Connection) {
         });
 
         for (const member of members) {
-            if (member.status === "member" && !member.user.isBot) {
+            if (member.status === "creator") {
+                group.creatorId = member.user.id;
+            }
+            else if (member.status === "member" && !member.user.isBot) {
                 group.members.push(users.get(member.user.id)!);
             }
         }
