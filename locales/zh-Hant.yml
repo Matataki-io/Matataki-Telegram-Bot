@@ -1,0 +1,88 @@
+---
+lang: English
+error:
+  usernameNotSynced: Sorry, please input /syncusername before receive a transaction in telegram.
+  matatakiAccountAbsent: Sorry, please bind or login your telegram account with Matataki.
+transfer:
+  common: |-
+    From: [${senderUsername}](${senderUrl})
+    To: [${receiverUsername}](${receiverUrl})
+    Value: ${amount} ${symbol}
+  started: "Pending..."
+  successful: "*Success*"
+  failed: "*Failure*"
+  transactionDetail: Detail
+startReply: Thank you for using Matataki Fans, enter /help for more feature list 👉🏻[Introduction Document](https://www.matataki.io/p/1638)
+messageReply: I'm a Matataki robot, type /help for help
+help:
+  title: What do you want to know?
+  whoAreYou: '👉Who are you'
+  whatIsTheFanGroup: '👉What is the fan ticket group'
+  instruction: '👉Operation instructions'
+  joinFanGroup: '👉How to join fan ticket group'
+  createFanGroup: '👉How to create a fan ticket group'
+  deleteFanGroup: '👉How to delete fan ticket group'
+  videoTutorial: '👉Video tutorial (updating)'
+  redEnvelope: '👉How to use the red envelope function'
+  diceGames: '👉How to start Dice games'
+  transfer: '👉How to use the transfer function'
+  otherQuestions: '👉I have other questions'
+status:
+  notUser: Your Telegram account doesn't connect to Matataki.io
+  notToken: You didn't issue any Fan ticket at Matataki
+  notJoined: "*You didn't found any Fan ticket group*"
+  joinedGroups: "*You have joined ${joinedGroups}  Fan ticket group(s)*"
+  notCreatedGroups: "*You didn't create any Fan tickets group*"
+  createdGroups: "*You have created ${createdGroups} Fan tickets group(s)*"
+  seeMore: type '/join' to learn more Fan tickets groups you can join
+mygroups:
+  reply: |-
+    Group ID：${id}
+    Name：${title}
+    Fan tickets：${symbol}
+    Minimum required：${amount}
+  needAdmin: add Matataki-Bot as admin of this group before doing query
+rule:
+  notFanGroups: this group isn't a Fan tickets group
+  addCondition: this group require ${symbol} ≥ ${amount}
+  noConditions: this group doesn't have any requirement in ${symbol}
+set:
+  wrongFormat: Presentation Error ，type `/set [group_id] [amount]` please
+  noGroupFound: don't find any group
+  retired: before you left this group, you were the owner
+  needAdmin: add Matataki-Bot as admin and set invent permission
+  reply: |-
+    The rule of this group now:
+    Group ID：${id}
+    Name：${title}
+    Fan tickets：${symbol}
+    Minimum required：${amount}
+join:
+  insufficientToken: |-
+    Sorry, you can't join other group due to the number of Fan tickets you keep now
+    type '/status' to list goups you have joined
+  noRules: there's no rule now
+  remainingGroups: "*You can join ${joinableGroupCount} more Fan tickets group(s)*"
+  joinedGroups: type '/status' to list group(s) you have joined
+expel:
+  notUser: Sorry, you have been removed because of no connection to Matataki
+  insufficientToken: Sorry, you have been removed because don't meet the requirements of ${title}
+joinGroup:
+  iAmTheOwner: You are the Owner
+  notUser: Sorry, you don't connect this Telegram account at Matataki.io
+  insufficientToken: |-
+    `Sorry, you don't meet the requirements of ${title}
+    it requires ${name}(${symbol}) >= ${groupRequirement}`
+  joined: You have been a number of this group：
+  canJoin: You can join this group now：
+kick:
+  wrongFormat: Wrong format，please input `/kick [@username] [mins]`
+  notUser: Sorry, he/she/.. haven't synced account
+  loading: kicking...
+  success: Success! (until ${format})
+  error: Fail!
+ban:
+  wrongFormat: Wrong format，please input `/ban [@username] [mins]`
+  loading: Baning ...
+  success: Ban Success (Until ${format}).
+  error: Ban Failure！
