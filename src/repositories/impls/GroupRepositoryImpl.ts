@@ -115,4 +115,8 @@ export class GroupRepositoryImpl extends BaseRepository<Group> implements IGroup
     async removeGroup(group: Group) {
         await this.repository.delete(group);
     }
+
+    getJoinedGroups(id: number) {
+        return this.repository.createQueryBuilder("group").innerJoinAndSelect("group.members", "member").where("member.id = :id", { id }).getMany();
+    }
 }

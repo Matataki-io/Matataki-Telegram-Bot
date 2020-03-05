@@ -17,4 +17,6 @@ export interface IGroupRepository {
     changeGroupId(oldId: number, newId: number): Promise<void>;
     changeGroupTitle(group: Group, newTitle: string): Promise<void>;
     removeGroup(group: Group): Promise<void>;
+
+    getJoinedGroups(id: number): Promise<Array<Group>>;
 }

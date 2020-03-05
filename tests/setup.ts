@@ -24,7 +24,11 @@ async function initialize(conn: Connection) {
 
     const userRepo = conn.getRepository(User);
 
-    for (const { id, username } of telegramUserArray) {
+    for (const { id, username, isBot } of telegramUserArray) {
+        if (isBot) {
+            continue;
+        }
+
         const user = userRepo.create({
             id, username,
         });
@@ -43,7 +47,7 @@ async function initialize(conn: Connection) {
         });
 
         for (const member of members) {
-            if (member.status === "member") {
+            if (member.status === "member" && !member.user.isBot) {
                 group.members.push(users.get(member.user.id)!);
             }
         }

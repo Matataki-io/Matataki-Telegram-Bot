@@ -45,11 +45,11 @@ describe("UserRepository", () => {
 
             expect(id).toBe(2);
         });
-        it("Exists", async () => {
+        it("Not exist", async () => {
             const stub = new UserRepositoryStub();
             const id = await stub.getIdByUsername("newusername");
 
             expect(id).toBeNull();
         });
-    })
+    });
 });

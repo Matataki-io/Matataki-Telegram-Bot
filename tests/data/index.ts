@@ -42,7 +42,7 @@ export const matatakiAccounts = new Map<number, MatatakiAccount>(matatakiAccount
 export const telegramUserArray = <Array<TelegramUser>>[
     {
         id: 123,
-        is_bot: true,
+        isBot: true,
         username: "matataki_bot",
         nickname: "Matataki Fan票机器人",
     },
@@ -60,21 +60,25 @@ export const telegramUserArray = <Array<TelegramUser>>[
 
     {
         id: 8000,
+        isBot: false,
         nickname: "一般通过爷",
         matatakiAccount: matatakiAccounts.get(1000),
     },
     {
         id: 8101,
+        isBot: false,
         nickname: "李田所",
         matatakiAccount: matatakiAccounts.get(114514),
     },
     {
         id: 8102,
+        isBot: false,
         nickname: "野獣先輩",
         matatakiAccount: matatakiAccounts.get(810),
     },
     {
         id: 8103,
+        isBot: false,
         nickname: "远野",
         matatakiAccount: matatakiAccounts.get(811),
     },
@@ -116,6 +120,18 @@ export const telegramGroupArray = <Array<TelegramGroup>>[
             },
             {
                 user: telegramUsers.get(123),
+                status: "member",
+            },
+            {
+                user: telegramUsers.get(8000),
+                status: "member",
+            },
+            {
+                user: telegramUsers.get(8102),
+                status: "member",
+            },
+            {
+                user: telegramUsers.get(8103),
                 status: "member",
             },
         ],
