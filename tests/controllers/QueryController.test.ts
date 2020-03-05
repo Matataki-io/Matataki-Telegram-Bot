@@ -156,7 +156,7 @@ Fan票 名称：[INM（银票）](http://MATATAKI/token/1919)
 *您尚未加入 Fan票 群*
 
 *您已建立 1 个 Fan票 群*
-/ [野兽邸](http://invitelink) （INM ≥ 1145140）
+/ [野兽邸](http://invitelink) （INM ≥ 114.514）
 
 输入 /join 查看更多可以加入的 Fan票 群`, { "disable_web_page_preview": true });
         });
