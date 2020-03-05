@@ -21,6 +21,9 @@ type UserMinetokenBalance = {
 }
 
 type PublicMinetokenInfo = {
+    token: {
+        symbol: string,
+    },
     exchange: {
         price: number,
     },
@@ -206,6 +209,18 @@ export class MatatakiServiceImpl implements IMatatakiService {
             return data;
         } catch (e) {
             throw new Error("Failed to get matataki user info");
+        }
+    }
+
+    async getMinetokenSymbol(minetokenId: number) {
+        try {
+            const { data: { data } } = await this.axios.get<ApiResponse<PublicMinetokenInfo>>(`/minetoken/${minetokenId}`);
+
+            return data.token.symbol;
+        } catch (e) {
+            const { response } = e as AxiosError;
+
+            throw new Error("Failed to get minetoken symbol");
         }
     }
 }

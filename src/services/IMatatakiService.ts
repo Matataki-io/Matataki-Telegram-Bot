@@ -11,4 +11,5 @@ export interface IMatatakiService {
     transfer(from: number, to: number, symbol: string, amount: number): Promise<string>;
     getPrice(symbol: string): Promise<number>;
     getInfoByMatatakiId(matatakiId: number): Promise<MatatakiUserInfo>;
+    getMinetokenSymbol(minetokenId: number): Promise<string>;
 }
