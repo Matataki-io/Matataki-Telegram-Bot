@@ -11,6 +11,10 @@ export class Group {
     @Column({ type: "text" })
     title!: string;
 
+    @Column({ type: "bigint" })
+    @Index()
+    creatorId!: number | string;
+
     @ManyToMany(() => User, user => user.groups)
     members!: Array<User>;
 
