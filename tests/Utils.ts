@@ -25,6 +25,7 @@ export function createMockedContext(): MessageHandlerContext {
         },
         telegram: {
             sendMessage: createMockedAsyncFunction(),
+            getChatAdministrators: jest.fn(),
         },
         i18n: service.getDefaultContext("zh-hans"),
     });

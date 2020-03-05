@@ -33,6 +33,16 @@ describe("GroupController", () => {
                 }],
             },
         });
+        (ctx.telegram.getChatAdministrators as jest.MockedFunction<typeof ctx.telegram.getChatAdministrators>).mockResolvedValue([
+            {
+                status: "creator",
+                user: {
+                    id: 8101,
+                    is_bot: false,
+                    first_name: "李田所",
+                },
+            },
+        ]);
 
         const groupRepo = getRepository(Group);
         await expect(groupRepo.findOneOrFail(-191919)).rejects.toThrow();
@@ -41,6 +51,11 @@ describe("GroupController", () => {
         await controller.onNewMemberEnter(ctx);
 
         await expect(groupRepo.findOneOrFail(-191919)).resolves.not.toBeNull();
+
+        const group = await groupRepo.findOneOrFail(-191919);
+        expect(group.title).toBe("下北沢讨论区2");
+        expect(group.creatorId).toBe(8101);
+
     });
     test("When the user joins a group", async () => {
         const ctx = createMockedContext();
