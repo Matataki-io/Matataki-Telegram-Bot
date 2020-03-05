@@ -1,6 +1,7 @@
-import { Entity, PrimaryColumn, ManyToMany, Column, Index } from "typeorm";
+import { Entity, PrimaryColumn, ManyToMany, Column, Index, OneToMany } from "typeorm";
 
 import { User } from "./User";
+import { FandomGroupRequirement } from "./FandomGroupRequirement";
 
 @Entity()
 export class Group {
@@ -10,6 +11,9 @@ export class Group {
     @Column({ type: "text" })
     title!: string;
 
-    @ManyToMany(type => User, user => user.groups)
-    members!: User[];
+    @ManyToMany(() => User, user => user.groups)
+    members!: Array<User>;
+
+    @OneToMany(() => FandomGroupRequirement, requirement => requirement.group)
+    requirements!: Array<FandomGroupRequirement>;
 }
