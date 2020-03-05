@@ -35,5 +35,5 @@ export type TelegramGroup = {
     isSupergroup: boolean,
     title: string,
     members: Array<TelegramGroupMember>,
-    minetokenRequirement?: Array<FanGroupMinetokenRequirement>,
+    minetokenRequirements?: Array<FanGroupMinetokenRequirement>,
 };

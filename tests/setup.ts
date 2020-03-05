@@ -1,5 +1,5 @@
 import { createConnection, Connection } from "typeorm";
-import { entities, User, Group } from "#/entities";
+import { entities, User, Group, FandomGroupRequirement } from "#/entities";
 import { telegramUserArray, telegramGroupArray } from "./data";
 
 let conn: Connection;
@@ -38,6 +38,8 @@ async function initialize(conn: Connection) {
         users.set(id, user);
     }
 
+    const groups = new Map<number, Group>();
+
     const groupRepo = conn.getRepository(Group);
 
     for (const { id, title, members } of telegramGroupArray.values()) {
@@ -53,5 +55,26 @@ async function initialize(conn: Connection) {
         }
 
         await groupRepo.save(group);
+
+        groups.set(id, group);
+    }
+
+    const fgrRepo = conn.getRepository(FandomGroupRequirement);
+
+    for (const { id, minetokenRequirements } of telegramGroupArray.values()) {
+        if (!minetokenRequirements || minetokenRequirements.length === 0) {
+            continue;
+        }
+
+        for (const { minetoken, amount } of minetokenRequirements) {
+            const requirement = fgrRepo.create({
+                minetokenId: minetoken.id,
+                amount: amount * 10000,
+                amountCanEqual: true,
+                group: groups.get(id),
+            });
+
+            await fgrRepo.save(requirement);
+        }
     }
 }

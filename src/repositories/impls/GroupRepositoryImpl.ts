@@ -117,6 +117,10 @@ export class GroupRepositoryImpl extends BaseRepository<Group> implements IGroup
     }
 
     getJoinedGroups(id: number) {
-        return this.repository.createQueryBuilder("group").innerJoinAndSelect("group.members", "member").where("member.id = :id", { id }).getMany();
+        return this.repository.createQueryBuilder("group")
+            .leftJoinAndSelect("group.requirements", "requirement")
+            .innerJoin("group.members", "member")
+            .where("member.id = :id", { id })
+            .getMany();
     }
 }

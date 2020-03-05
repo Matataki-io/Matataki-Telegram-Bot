@@ -104,8 +104,8 @@ export const telegramGroupArray = <Array<TelegramGroup>>[
                 status: "member",
             },
         ],
-        minetokenRequirement: [{
-            minetoken: minetokenBySymbolMap.get("IMN"),
+        minetokenRequirements: [{
+            minetoken: minetokenBySymbolMap.get("INM"),
             amount: 114.514,
         }],
     },
