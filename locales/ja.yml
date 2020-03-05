@@ -1,48 +1,40 @@
+---
 lang: 日本語
-
 error:
   usernameNotSynced: すいません，お振込先がデータベースにアカウントを同期していませんです。
   matatakiAccountAbsent: すいません，対象アカウントがまだ瞬Matatakiに Telegramアカウントをバインドしていませんです。
-
 transfer:
   common: |-
-    送金人：[${senderUsername}](${senderUrl}) 
+    送金人：[${senderUsername}](${senderUrl})
     お振込先：[${receiverUsername}](${receiverUrl})　
     振込む額：${amount} ${symbol}
   started: "振り込み中..."
   successful: "*振り込む成功しました*"
   failed: "*振り込む失敗しました*"
   transactionDetail: 詳細
-
-startReply: |-
-  Matataki Fansをご利用いただきありがとうございます。/help と入力して機能リストをご覧ください
-  👉🏻[はじめに](https://www.matataki.io/p/1638)
-
+startReply: "Matataki Fansをご利用いただきありがとうございます。/help と入力して機能リストをご覧ください\n👉🏻[はじめに](https://www.matataki.io/p/1638)"
 messageReply: 私はマタタキのロボットです。/help に助けを求めてください。
-
 help:
   title: 何を知りたいですか？
-  whoAreYou: 👉あなたは誰ですか
-  whatIsTheFanGroup: 👉ファンチケットファンベースとは何ですか
-  instruction: 👉操作説明
-  joinFanGroup: 👉ファングループに参加するには
-  createFanGroup: 👉ファンチケットグループを作成するにはどうすればよいですか
-  deleteFanGroup: 👉ファンチケットグループを削除するにはどうすればよいですか
-  videoTutorial: 👉ビデオチュートリアル（更新中）
-  redEnvelope: 👉赤い封筒機能の使用方法
-  diceGames: 👉サイコロゲームを開始する方法は
-  transfer: 👉伝達関数の使用方法
-  otherQuestions: 👉他に質問があります
-
+  whoAreYou: '👉あなたは誰ですか'
+  whatIsTheFanGroup: '👉ファンチケットファンベースとは何ですか'
+  instruction: '👉操作説明'
+  joinFanGroup: '👉ファングループに参加するには'
+  createFanGroup: '👉ファンチケットグループを作成するにはどうすればよいですか'
+  deleteFanGroup: '👉ファンチケットグループを削除するにはどうすればよいですか'
+  videoTutorial: '👉ビデオチュートリアル（更新中）'
+  redEnvelope: '👉赤い封筒機能の使用方法'
+  diceGames: '👉サイコロゲームを開始する方法は'
+  transfer: '👉伝達関数の使用方法'
+  otherQuestions: '👉他に質問があります'
 status:
   notUser: 瞬Matatakiアカウントをバインドしていません
   notToken: あなたはまだ 瞬Matataki にファンチケットを発行していません
-  notJoined: あなたは一つ ファンチケットグループ でも参加しませでした
-  joinedGroups: あなたは ${joinedGroups}つ のファンチケットグループを参加しました
-  notCreatedGroups: あなたはまだ ファンチケットグループ を作りませんでした
-  createdGroups: あなたはすでに ${createdGroups}つ のファンチケットグループを作りました
+  notJoined: "あなたは一つ ファンチケットグループ でも参加しませでした"
+  joinedGroups: "あなたは ${joinedGroups}つ のファンチケットグループを参加しました"
+  notCreatedGroups: "あなたはまだ ファンチケットグループ を作りませんでした"
+  createdGroups: "あなたはすでに ${createdGroups}つ のファンチケットグループを作りました"
   seeMore: /join を入力して 参加できるのファンチケットグループを探します
-
 mygroups:
   reply: |-
     グループ ID：${id}
@@ -50,12 +42,10 @@ mygroups:
     ファンチケット：${symbol}
     最小要額：${amount}
   needAdmin: お問い合わせの前に ファンチケット グループ のファンベースアシスタントをグループ管理者として設定してください
-
 rule:
   notFanGroups: このグループはまだ ファンベース ではありません
   addCondition: このグループは　${symbol} ≥ ${amount} の量を要請します
   noConditions: このグループは　${symbol} の要請がありません
-
 set:
   wrongFormat: 間違ったフォーマットです， `/set [group_id] [amount]` を入力してください
   noGroupFound: そのグループ が見つかりませんでした
@@ -67,7 +57,6 @@ set:
     グループ 名：${title}
     ファンチケット：${symbol}
     最小要額：${amount}
-
 join:
   insufficientToken: |-
     すいません，あなたが持っているのファンチケットの額が ほかのグループを参加できません
@@ -75,11 +64,9 @@ join:
   noRules: ルールがいません
   remainingGroups: "*あなたはまだ ${joinableGroupCount}つ ファンチケットグループに参加できます*"
   joinedGroups: /status を入力する 参加したのファンチケットグループを見ます
-
 expel:
   notUser: すいません，あなたはまだマタタキサイドに Telegramアカウントをバインドしていません、今追放します
   insufficientToken: すいません，您现在的 Fan 票不满足群 ${title} 的条件，今追放します
-
 joinGroup:
   iAmTheOwner: あなたはグループマスターです：
   notUser: すいません，あなたはまだマタタキサイドに Telegramアカウントをバインドしていません
@@ -88,14 +75,12 @@ joinGroup:
     参加最小要額 ${name}(${symbol}) >= ${groupRequirement}`
   joined: あなたはこのファンチケットグループのメンバーです：
   canJoin: あなたはこのグループに参加できます：
-
 kick:
   wrongFormat: 間違ったフォーマットです， `/kick [@アカウント名] [追放時間数字（xxx分）]` を入力してください
   notUser: すいません，追放対象がデータベースにアカウントを同期していませんです。
   loading: アカウント追放中...
   success: アカウントを追放成功しました (いまから ${format}まで追放します)
   error: アカウントを追放失敗です！
-
 ban:
   wrongFormat: 間違ったフォーマットです， `/ban [@アカウント名] [数字（xxx分）]`　
   loading: 発言禁止中...
