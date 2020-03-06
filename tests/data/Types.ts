@@ -6,11 +6,17 @@ export type Minetoken = {
     price: number,
 };
 
+export type MinetokenBalance = {
+    minetoken: Minetoken,
+    amount: number,
+};
+
 export type MatatakiAccount = {
     id: number,
     name: string,
     walletAddress: string,
-    minetoken?: Minetoken,
+    mintedMinetoken?: Minetoken,
+    minetokens?: Array<MinetokenBalance>,
 };
 
 export type TelegramUser = {

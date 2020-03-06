@@ -56,7 +56,6 @@ describe("GroupController", () => {
         const group = await groupRepo.findOneOrFail(-191919);
         expect(group.title).toBe("下北沢讨论区2");
         expect(group.creatorId).toBe(8101);
-
     });
     test("When the user joins a group", async () => {
         const ctx = createMockedContext();
@@ -82,6 +81,35 @@ describe("GroupController", () => {
         const group = await groupRepo.findOneOrFail(-1919, { relations: ["members"] });
 
         expect(group.members.find(m => Number(m.id) === 8000)).not.toBeUndefined();
+        expect(group.members.find(m => Number(m.id) === 8102)).not.toBeUndefined();
+        expect(group.members.find(m => Number(m.id) === 8102)).not.toBeUndefined();
+    });
+    test("When the user joins a group but no enough minetoken", async () => {
+        const ctx = createMockedContext();
+        Object.assign(ctx, {
+            message: {
+                ...ctx.message,
+                chat: {
+                    id: -114514,
+                    type: "supergroup",
+                },
+                new_chat_members: [{
+                    id: 8000,
+                    is_bot: false,
+                    first_name: "一般通过爷",
+                }],
+            },
+        });
+
+        const controller = createController();
+        await controller.onNewMemberEnter(ctx);
+
+        const groupRepo = getRepository(Group);
+        const group = await groupRepo.findOneOrFail(-114514, { relations: ["members"] });
+
+        expect(group.members.find(m => Number(m.id) === 8000)).toBeUndefined();
+
+        expect(ctx.telegram.kickChatMember).toBeCalledTimes(1);
     });
     test("When a user creates a group with bot invited", async () => {
         const ctx = createMockedContext();

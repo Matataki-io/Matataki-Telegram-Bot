@@ -56,8 +56,7 @@ export class GroupController extends BaseController<GroupController> {
     async onNewMemberEnter({ message, telegram, i18n }: MessageHandlerContext) {
         let group = await this.groupRepo.getGroupOrDefault(message.chat.id);
 
-        const newMembers = new Array<User>();
-
+        const newMembers = new Set<User>();
         for (const member of message.new_chat_members ?? []) {
             if (member.is_bot) {
                 continue;
@@ -65,17 +64,46 @@ export class GroupController extends BaseController<GroupController> {
 
             const user = await this.userRepo.ensureUser(member);
 
-            newMembers.push(user);
+            newMembers.add(user);
         }
 
         if (!group) {
-            const creator = (await telegram.getChatAdministrators(message.chat.id)).find(m => m.status === "creator")!;
+            const creator = (await telegram.getChatAdministrators(message.chat.id)).find(m => m.status === "creator");
 
-            group = await this.groupRepo.ensureGroup(message.chat, creator.user.id);
+            group = await this.groupRepo.ensureGroup(message.chat, creator?.user.id ?? -1);
             group.members = [];
         }
 
-        await this.groupRepo.addMembers(group, newMembers);
+        if (group.requirements.length === 0) {
+            await this.groupRepo.addMembers(group, Array.from(newMembers));
+            return;
+        }
+
+        const results = await allPromiseSettled(Array.from(newMembers).map(async member => {
+            const matatakiInfo = await this.matatakiService.getAssociatedInfo(Number(member.id));
+
+            if (!matatakiInfo.user) {
+                throw new Error();
+            }
+
+            // TODO: Check minetoken balance
+
+            return member;
+        }));
+
+        newMembers.clear();
+
+        for (const result of results) {
+            if (result.status === "fulfilled") {
+                newMembers.add(result.value);
+            }
+
+            // TODO: How to handle rejected situation
+        }
+
+        if (newMembers.size > 0) {
+            await this.groupRepo.addMembers(group, Array.from(newMembers));
+        }
     }
 
     @Event("left_chat_member")

@@ -33,6 +33,7 @@ export function createMockedContext(): MockedMessageHandlerContext {
             getChatAdministrators: jest.fn(),
             getChatMembersCount: jest.fn(),
             exportChatInviteLink: jest.fn(),
+            kickChatMember: jest.fn(),
         },
         i18n: service.getDefaultContext("zh-hans"),
     });

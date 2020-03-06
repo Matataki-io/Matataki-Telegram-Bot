@@ -24,7 +24,13 @@ export const matatakiAccountArray = <Array<MatatakiAccount>>[
         id: 114514,
         name: "李田所",
         walletAddress: "0x114514",
-        minetoken: minetokens.get(1919),
+        mintedMinetoken: minetokens.get(1919),
+        minetokens: [
+            {
+                minetoken: minetokens.get(1919),
+                amount: 114514.1919,
+            },
+        ],
     },
     {
         id: 810,
@@ -35,6 +41,17 @@ export const matatakiAccountArray = <Array<MatatakiAccount>>[
         id: 811,
         name: "远野",
         walletAddress: "0x811",
+        minetokens: [
+            {
+                minetoken: minetokens.get(1919),
+                amount: 810,
+            },
+        ],
+    },
+    {
+        id: 8000,
+        name: "一般通过爷",
+        walletAddress: "0x8000",
     },
 ];
 export const matatakiAccounts = new Map<number, MatatakiAccount>(matatakiAccountArray.map(m => [m.id, m]));
