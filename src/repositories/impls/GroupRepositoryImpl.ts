@@ -6,7 +6,7 @@ import { Chat } from "telegraf/typings/telegram-types";
 import { Group, User } from "#/entities";
 import { BaseRepository, IGroupRepository } from "#/repositories";
 
-const relationsOption = { relations: ["members", "requirements"] };
+const relationsOption = { relations: ["members", "requirements", "requirements.group"] };
 
 @Repository(Group)
 export class GroupRepositoryImpl extends BaseRepository<Group> implements IGroupRepository {
