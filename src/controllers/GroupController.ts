@@ -82,7 +82,7 @@ export class GroupController extends BaseController<GroupController> {
     async onMemberLeft({ message, telegram }: MessageHandlerContext) {
         const leftMember = message.left_chat_member!;
 
-        if (!leftMember.is_bot || leftMember.username !== this.botService.info.username) {
+        if (!leftMember.is_bot || leftMember.id !== this.botService.info.id) {
             return;
         }
 
