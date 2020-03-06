@@ -13,6 +13,7 @@ export const minetokenArray = <Array<Minetoken>>[
 ];
 export const minetokens = new Map<number, Minetoken>(minetokenArray.map(m => [m.id, m]));
 export const minetokenBySymbolMap = new Map<string, Minetoken>(minetokenArray.map(m => [m.symbol, m]));
+export const minetokenByContractAddress = new Map<string, Minetoken>(minetokenArray.map(m => [m.contractAddress, m]));
 
 export const matatakiAccountArray = <Array<MatatakiAccount>>[
     {
@@ -55,6 +56,7 @@ export const matatakiAccountArray = <Array<MatatakiAccount>>[
     },
 ];
 export const matatakiAccounts = new Map<number, MatatakiAccount>(matatakiAccountArray.map(m => [m.id, m]));
+export const matatakiAccountByWalletAddress = new Map<string, MatatakiAccount>(matatakiAccountArray.map(m => [m.walletAddress, m]));
 
 export const telegramUserArray = <Array<TelegramUser>>[
     {

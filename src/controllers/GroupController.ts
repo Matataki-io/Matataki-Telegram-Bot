@@ -122,26 +122,42 @@ export class GroupController extends BaseController<GroupController> {
             return;
         }
 
-        const results = await allPromiseSettled(Array.from(newMembers).map(async member => {
+        const newMemberArray = Array.from(newMembers);
+        newMembers.clear();
+
+        const requirement = group.requirements[0];
+
+        const results = await allPromiseSettled(newMemberArray.map(async member => {
             const matatakiInfo = await this.matatakiService.getAssociatedInfo(Number(member.id));
 
             if (!matatakiInfo.user) {
                 throw new Error();
             }
 
-            // TODO: Check minetoken balance
+            const contractAddress = await this.matatakiService.getContractAddressOfMinetoken(requirement.minetokenId);
+            const walletAddress = await this.matatakiService.getEthWallet(Number(member.id));
+
+            const balance = await this.web3Service.getBalance(contractAddress, walletAddress);
+            console.log(balance)
+            if (balance < requirement.amount / 10000) {
+                await telegram.kickChatMember(message.chat.id, Number(member.id));
+
+                return null;
+            }
 
             return member;
         }));
 
-        newMembers.clear();
-
         for (const result of results) {
-            if (result.status === "fulfilled") {
-                newMembers.add(result.value);
+            if (result.status === "rejected") {
+                // TODO: How to handle rejected situation
+                console.log(result.reason)
+                continue;
             }
 
-            // TODO: How to handle rejected situation
+            if (result.value) {
+                newMembers.add(result.value);
+            }
         }
 
         if (newMembers.size > 0) {

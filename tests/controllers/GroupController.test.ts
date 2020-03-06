@@ -9,11 +9,13 @@ import { GroupRepositoryStub } from "../stubs/repositories/GroupRepositoryStub";
 import { MatatakiServiceStub } from "../stubs/services/MatatakiServiceStub";
 import { BotServiceStub } from "../stubs/services/BotServiceStub";
 import { FandomGroupRequirementRepositoryStub } from "../stubs/repositories/FandomGroupRequirementRepositoryStub";
+import { Web3ServiceStub } from "../stubs/services/Web3ServiceStub";
 
 const botService = new BotServiceStub();
 
 function createController() {
-    return new GroupController(new UserRepositoryStub(), new GroupRepositoryStub(), new FandomGroupRequirementRepositoryStub(), botService, null!, null!, new MatatakiServiceStub());
+    return new GroupController(new UserRepositoryStub(), new GroupRepositoryStub(), new FandomGroupRequirementRepositoryStub(),
+        botService, new Web3ServiceStub(), null!, new MatatakiServiceStub());
 }
 
 describe("GroupController", () => {

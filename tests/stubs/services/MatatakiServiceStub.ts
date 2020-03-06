@@ -37,6 +37,13 @@ export class MatatakiServiceStub extends MatatakiServiceStubBase {
                     },
                 },
                 {
+                    request: { url: "/_internal_bot/account/8000/ethWallet" },
+                    response: {
+                        status: 200,
+                        data: { code: 0, data: { public_key: "0x1000" }},
+                    },
+                },
+                {
                     request: { url: "/_internal_bot/minetoken/114514/contractAddress" },
                     response: {
                         status: 200,
@@ -48,6 +55,13 @@ export class MatatakiServiceStub extends MatatakiServiceStubBase {
                     response: {
                         status: 404,
                         data: { code: 1 },
+                    },
+                },
+                {
+                    request: { url: "/_internal_bot/minetoken/1919/contractAddress" },
+                    response: {
+                        status: 200,
+                        data: { code: 0, data: { contractAddress: "0x1145141919810" }},
                     },
                 },
                 {
@@ -84,6 +98,18 @@ export class MatatakiServiceStub extends MatatakiServiceStubBase {
                     response: {
                         status: 200,
                         data: { code: 0, data: { }},
+                    },
+                },
+                {
+                    request: { url: "/_internal_bot/account/8000/info" },
+                    response: {
+                        status: 200,
+                        data: { code: 0, data: {
+                            user: {
+                                id: 1000,
+                                name: "一般通过爷",
+                            },
+                        }},
                     },
                 },
                 {
