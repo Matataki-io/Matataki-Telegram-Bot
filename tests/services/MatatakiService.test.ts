@@ -32,4 +32,12 @@ describe("Matataki Service", () => {
         expect(service.mockedAxios.get).toBeCalledTimes(1);
         expect(service.mockedAxios.get).toBeCalledWith("/_internal_bot/minetoken/0/contractAddress");
     });
+    test("Responded a minetoken symbol by id", async () => {
+        const service = new MatatakiServiceStub();
+
+        await expect(service.getMinetokenSymbol(1919)).resolves.toBe("INM");
+
+        expect(service.mockedAxios.get).toBeCalledTimes(1);
+        expect(service.mockedAxios.get).toBeCalledWith("/minetoken/1919");
+    });
 });

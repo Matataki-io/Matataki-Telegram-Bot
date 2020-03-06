@@ -126,7 +126,12 @@ export class MatatakiServiceStub extends MatatakiServiceStubBase {
                         data: {
                             code: 0,
                             data: {
-                                exchange: { price: 11.4514 },
+                                token: {
+                                    symbol: "INM",
+                                },
+                                exchange: {
+                                    price: 11.4514,
+                                },
                             },
                         },
                     },
