@@ -137,9 +137,9 @@ export class GroupController extends BaseController<GroupController> {
             const contractAddress = await this.matatakiService.getContractAddressOfMinetoken(requirement.minetokenId);
             const walletAddress = await this.matatakiService.getEthWallet(Number(member.id));
 
-            const balance = await this.web3Service.getBalance(contractAddress, walletAddress);
+            const balance = await this.web3Service.getBalance(contractAddress, walletAddress) * 10000;
             console.log(balance)
-            if (balance < requirement.amount / 10000) {
+            if (balance < requirement.amount) {
                 await telegram.kickChatMember(message.chat.id, Number(member.id));
 
                 return null;
@@ -151,7 +151,6 @@ export class GroupController extends BaseController<GroupController> {
         for (const result of results) {
             if (result.status === "rejected") {
                 // TODO: How to handle rejected situation
-                console.log(result.reason)
                 continue;
             }
 
