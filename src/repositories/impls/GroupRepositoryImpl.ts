@@ -90,9 +90,6 @@ export class GroupRepositoryImpl extends BaseRepository<Group> implements IGroup
     async setActive(group: Group, active: boolean) {
     }
 
-    async setRequirement(group: Group, tokenAmount: number) {
-    }
-
     async changeGroupId(oldId: number, newId: number) {
         const group = await this.repository.findOneOrFail(oldId, relationsOption);
         group.id = newId;

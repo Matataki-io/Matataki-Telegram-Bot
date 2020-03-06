@@ -2,7 +2,7 @@ import { inject } from "inversify";
 import { Extra, Markup } from "telegraf";
 import { User as TelegramUser } from "telegraf/typings/telegram-types";
 
-import { Controller, Command, InjectRepository, Event, GroupOnly, PrivateChatOnly, RequireMatatakiAccount, InjectSenderMatatakiInfo, RequireMintedMinetoken } from "#/decorators";
+import { Controller, Command, InjectRepository, Event, GroupOnly, PrivateChatOnly, RequireMatatakiAccount, InjectSenderMatatakiInfo, RequireMintedMinetoken, InjectRegexMatchGroup } from "#/decorators";
 import { MessageHandlerContext, AssociatedInfo } from "#/definitions";
 import { Group, User, FandomGroupRequirement } from "#/entities";
 import { Injections, LogCategories } from "#/constants";
@@ -39,10 +39,52 @@ export class GroupController extends BaseController<GroupController> {
 
     }
 
-    @Command("set", { ignorePrefix: true })
+    @Command("set", /-?(\d+)\s+(\d+.?\d*)/, ({ t }) => t("command.set.badFormat"))
     @RequireMintedMinetoken()
-    async setGroupRequirement({ message, reply, telegram, i18n }: MessageHandlerContext, @InjectSenderMatatakiInfo() senderInfo: Required<AssociatedInfo>) {
+    async setGroupRequirement({ message, reply, telegram, i18n }: MessageHandlerContext,
+        @InjectSenderMatatakiInfo() senderInfo: Required<AssociatedInfo>,
+        @InjectRegexMatchGroup(1, input => -Number(input)) groupId: number,
+        @InjectRegexMatchGroup(2, input => Number(input) * 10000) amount: number) {
+        const groups = await this.groupRepo.getGroupsOfCreator(message.from.id);
+        const group = groups.find(group => Number(group.id) === groupId);
 
+        if (!group) {
+            await reply(i18n.t("set.noGroupFound"));
+            return;
+        }
+
+        const administrators = await telegram.getChatAdministrators(groupId);
+        let hasCreator = false;
+        let hasMe = false;
+        for (const admin of administrators) {
+            if (admin.status === "creator") {
+                hasCreator = true;
+                continue;
+            }
+
+            if (admin.user.id === this.botService.info.id) {
+                hasMe = admin.can_invite_users ?? false;
+            }
+        }
+        if (!hasCreator) {
+            await reply(i18n.t("set.retired"));
+            return;
+        }
+        if (!hasMe) {
+            await reply(i18n.t("set.needAdmin"));
+            return;
+        }
+
+        await this.fandomGroupReqRepo.set(group, senderInfo.minetoken.id, amount);
+
+        await reply("OK");
+
+        await telegram.sendMessage(groupId, i18n.t("set.reply", {
+            groupId,
+            title: group.title,
+            symbol: senderInfo.minetoken.symbol,
+            amount
+        }));
     }
 
     @Command("join", { ignorePrefix: true })
@@ -72,6 +114,7 @@ export class GroupController extends BaseController<GroupController> {
 
             group = await this.groupRepo.ensureGroup(message.chat, creator?.user.id ?? -1);
             group.members = [];
+            group.requirements = [];
         }
 
         if (group.requirements.length === 0) {

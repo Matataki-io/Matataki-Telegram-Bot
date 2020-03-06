@@ -171,4 +171,56 @@ describe("GroupController", () => {
 
         expect(group.requirements).toHaveLength(0);
     });
+
+    test("When the creator set new requirement", async () => {
+        const ctx = createMockedContext();
+        Object.assign(ctx, {
+            message: {
+                ...ctx.message,
+                chat: {
+                    id: -114514,
+                    title: "野兽邸",
+                    type: "supergroup",
+                },
+                from: {
+                    id: 8101,
+                    is_bot: false,
+                    first_name: "李田所",
+                },
+            },
+        });
+        ctx.telegram.getChatAdministrators.mockResolvedValue([
+            {
+                status: "creator",
+                user: {
+                    id: 8101,
+                    is_bot: false,
+                    first_name: "李田所",
+                },
+            },
+            {
+                status: "administrator",
+                user: {
+                    id: 123,
+                    is_bot: true,
+                    first_name: "Matataki Fan票机器人",
+                },
+                can_invite_users: true,
+            },
+        ]);
+
+        const controller = createController();
+        await controller.setGroupRequirement(ctx, null!, -114514, 19190000);
+
+        const groupRepo = getRepository(Group);
+
+        const group = await groupRepo.findOneOrFail(-114514, { relations: ["requirements"] });
+
+        expect(group.requirements).toHaveLength(1);
+
+        const requirement = group.requirements[0];
+        expect(requirement.minetokenId).toBe(1919);
+        expect(requirement.amount).toBe(19190000);
+        expect(requirement.amountCanEqual).toBe(true);
+    });
 });
