@@ -106,40 +106,40 @@ redEnvelope:
   help: |-
     send Red Packet:/fahongbao <FanTicket> <Amount> <Quantity> [<Description>]
     send Red Packet with random amount:/sfahongbao <FanTicket> <Amount> <Quantity> [<Description>]
-  errorFormat:Wrong command format.
-  nonPositiveQuantity:Quantity couldn't be negative or zero.
-  noUser:Telegram needs to bind with Matataki Account.
-  insuffMoney:Insufficent money.
-  tooLessAmount:Too less Amount.
-  cantGetUserInfo:Couldn't get Matataki user info.
-  success:${userName} sends a red packet, click button to get it.
-  instruction:If you register a account at www.matataki.io and then bind your Telegram to your account, you will have chances to grab our welfare.
-  resend:Resend
-  grab:Grab
-  finished:${userName}'s red packet is now empty.
-  grabbed:[${grabber} grabbed ${sender}'s ${description} red packet，${amount} ${unit}](https://rinkeby.etherscan.io/tx/${txHash})
-  trying:${userName} is trying to grab the red packet
+  errorFormat: Wrong command format.
+  nonPositiveQuantity: Quantity couldn't be negative or zero.
+  noUser: Telegram needs to bind with Matataki Account.
+  insuffMoney: Insufficent money.
+  tooLessAmount: Too less Amount.
+  cantGetUserInfo: Couldn't get Matataki user info.
+  success: ${userName} sends a red packet, click button to get it.
+  instruction: If you register a account at www.matataki.io and then bind your Telegram to your account, you will have chances to grab our welfare.
+  resend: Resend
+  grab: Grab
+  finished: ${userName}'s red packet is now empty.
+  grabbed: "[${grabber} grabbed ${sender}'s ${description} red packet，${amount} ${unit}](https://rinkeby.etherscan.io/tx/${txHash})"
+  trying: ${userName} is trying to grab the red packet
 
 dice:
   help: |-
     开始一局游戏:/new_game <赌注> <赌注单位>
     注意:只有发送者能够开局或者流局
-  errorFormat:错误的指令格式。
-  noUser:尚未绑定 瞬Matataki 账户
-  cantGetUserInfo:Matataki用户信息获取失败
-  positiveAmount:金额必须为正数
-  insuffMoney:您的账户余额不足以支付赌注
+  errorFormat: 错误的指令格式。
+  noUser: 尚未绑定 瞬Matataki 账户
+  cantGetUserInfo: Matataki用户信息获取失败
+  positiveAmount: 金额必须为正数
+  insuffMoney: 您的账户余额不足以支付赌注
   gameTitle: |-
     ${userName}的掷骰子游戏   赌注:${amount} ${unit}
     <i>注意：只有游戏的发起者可以选择开局或者流局</i>
-  winner:胜者是${userName},点数为${rollPoint}
-  waiting:${n}名玩家已准备,等待更多的玩家加入......
-  noWinner:没有胜利者
-  draw:流局
-  end:已结束
-  resend:重新发送
-  join:加入
-  start:开局
-  settlement:结算记录
-  settleSuccess:结算成功
-  settleFail:结算失败
+  winner: 胜者是${userName},点数为${rollPoint}
+  waiting: ${n}名玩家已准备,等待更多的玩家加入......
+  noWinner: 没有胜利者
+  draw: 流局
+  end: 已结束
+  resend: 重新发送
+  join: 加入
+  start: 开局
+  settlement: 结算记录
+  settleSuccess: 结算成功
+  settleFail: 结算失败
