@@ -101,3 +101,45 @@ ban:
   loading: 禁言中...
   success: 禁言成功 (禁言至 ${format})
   error: 禁言失败！
+
+redEnvelope:
+  help: |-
+    发红包:/fahongbao <Fan票符号> <总红包金额> <红包数量> [<描述>]
+    发随机红包:/sfahongbao <Fan票符号> <总红包金额> <红包数量> [<描述>]
+  errorFormat:错误的指令格式。
+  nonPositiveQuantity:数量不能为0或者负哦。
+  noUser:尚未绑定 瞬Matataki 账户
+  insuffMoney:您的金额不足哦。
+  tooLessAmount:红包金额过小哦
+  cantGetUserInfo:Matataki用户信息获取失败
+  success:${userName}发了红包，快来抢吧!
+  instruction:前往 www.matataki.io 注册并绑定此TG账号即可参与抢红包啦！
+  resend:继续发送
+  grab:抢
+  finished:${userName}的红包已经被抢完
+  grabbed:[${grabber}抢到了${sender}的一个${description}红包，价值${amount} ${unit}](https://rinkeby.etherscan.io/tx/${txHash})
+  trying:${userName}正在尝试抢红包
+
+dice:
+  help: |-
+    开始一局游戏:/new_game <赌注> <赌注单位>
+    注意:只有发送者能够开局或者流局
+  errorFormat:错误的指令格式。
+  noUser:尚未绑定 瞬Matataki 账户
+  cantGetUserInfo:Matataki用户信息获取失败
+  positiveAmount:金额必须为正数
+  insuffMoney:您的账户余额不足以支付赌注
+  gameTitle: |-
+    ${userName}的掷骰子游戏   赌注:${amount} ${unit}
+    <i>注意：只有游戏的发起者可以选择开局或者流局</i>
+  winner:胜者是${userName},点数为${rollPoint}
+  waiting:${n}名玩家已准备,等待更多的玩家加入......
+  noWinner:没有胜利者
+  draw:流局
+  end:已结束
+  resend:重新发送
+  join:加入
+  start:开局
+  settlement:结算记录
+  settleSuccess:结算成功
+  settleFail:结算失败

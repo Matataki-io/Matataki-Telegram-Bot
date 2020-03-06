@@ -25,24 +25,28 @@ type Game = {
 const getWinner = (joinUsers: GameUser[]) =>
     _.maxBy(joinUsers, ({ rollPoint }) => rollPoint);
 const Msgs = {
-    insuffMoney: "您的账户余额不足以支付赌注",
-    gameTitle: ({ args: { amount, unit }, sender: { name } }: Game) =>
-        [`${name}的掷骰子游戏   赌注:${amount / 10000} ${unit}`,
-            `<i>注意：只有游戏的发起者可以选择开局或者流局</i>`
-        ].join('\n'),
+    gameTitle: (ctx: MessageHandlerContext, { args: { amount, unit }, sender: { name } }: Game) =>
+        ctx.i18n.t('dice.gameTitle', {
+            userName: name,
+            amount: amount / 10000,
+            unit
+        }),
     renderUser: ({ name, id, rollPoint }: GameUser, status: GameStatus) =>
         status === 'end' ?
             `<u>${name} ${rollPoint}</u>` :
             `<u>${name}</u>`,
-    renderWinner: (winner: GameUser) =>
-        `胜者是${winner.name},点数为${winner.rollPoint}`,
-    renderFooter: ({ status, joinUsers}: Game) =>
+    renderWinner: (ctx: MessageHandlerContext, winner: GameUser) =>
+        ctx.i18n.t('dice.winner', {
+            userName: winner.name,
+            rollPoint: winner.rollPoint
+        }),
+    renderFooter: (ctx: MessageHandlerContext, { status, joinUsers }: Game) =>
         status === 'room' ?
-            `${joinUsers.length}名玩家已准备,等待更多的玩家加入......` :
+            ctx.i18n.t('dice.waiting', { n: joinUsers.length }):
             status === 'draw' ?
-                `流局` :
-                `已结束, ${((winner) => winner ? Msgs.renderWinner(winner)
-                    : `没有胜利者`)(getWinner(joinUsers)) }`
+                ctx.i18n.t('dice.draw') :
+                `${ctx.i18n.t('dice.end')}, ${((winner) => winner ? Msgs.renderWinner(ctx, winner)
+                    : ctx.i18n.t('dice.noWinner'))(getWinner(joinUsers)) }`
 };
 @Service(Injections.DiceService)
 export class DiceServiceImpl implements IDiceService {
@@ -73,16 +77,16 @@ export class DiceServiceImpl implements IDiceService {
     }
 
     async renderGame(ctx: MessageHandlerContext, game: Game, modified = true) {
-        const gameTitle = Msgs.gameTitle(game);
+        const gameTitle = Msgs.gameTitle(ctx, game);
         const userTexts = game.joinUsers.map(
             _.partial(Msgs.renderUser, _, game.status)).join('\n');
-        const footer = Msgs.renderFooter(game);
+        const footer = Msgs.renderFooter(ctx, game);
         const messages = [gameTitle, userTexts, footer].join('\n');
         const replyMarkup = game.status === 'room' ? Markup.inlineKeyboard([
-            [Markup.callbackButton("加入", `dice_join ${game._id}`),
-                Markup.callbackButton("继续发送", `dice_resend ${game._id}`),
-                Markup.callbackButton("开局", `dice_roll ${game._id}`),
-                Markup.callbackButton("流局", `dice_close ${game._id}`)]
+            [Markup.callbackButton(ctx.i18n.t('dice.join'), `dice_join ${game._id}`),
+                Markup.callbackButton(ctx.i18n.t('dice.resend'), `dice_resend ${game._id}`),
+                Markup.callbackButton(ctx.i18n.t('dice.start'), `dice_roll ${game._id}`),
+                Markup.callbackButton(ctx.i18n.t('dice.draw'), `dice_close ${game._id}`)]
         ]) : undefined;
         if (modified) {
             const { chatId, messageId } = game.msgCtx;
@@ -108,7 +112,7 @@ export class DiceServiceImpl implements IDiceService {
     async joinGame(ctx: MessageHandlerContext, joiner: MatatakiUser, id: number) {
         const enoughMoney = async (user: MatatakiUser, game: Game) => {
             const money = await this.getBalance(user, game.args.unit);
-            check(money >= game.args.amount, Msgs.insuffMoney);
+            check(money >= game.args.amount, ctx.i18n.t('dice.insuffMoney'));
         };
         const game = _.find(this.games, ({ _id }) => _id === id);
         if (game) {
@@ -139,7 +143,7 @@ export class DiceServiceImpl implements IDiceService {
     }
     private async processTransfers(ctx: MessageHandlerContext, game: Game) {
         const winner = getWinner(game.joinUsers);
-        let messages = '结算记录:\n';
+        let messages = `${ctx.i18n.t('dice.settlement')}:\n`;
         let bonus = 0;
         if (winner) {
             for (const { name, id } of game.joinUsers) {
@@ -148,11 +152,11 @@ export class DiceServiceImpl implements IDiceService {
                         const txHash = await this.matatakiService.transfer(
                             id, winner.id, game.args.unit, game.args.amount);
                         messages += `<a href="https://rinkeby.etherscan.io/tx/${txHash}">\
-结算成功:${name} -${game.args.amount / 10000} ${game.args.unit} </a>\n`;
+${ctx.i18n.t('dice.settleSuccess')}:${name} -${game.args.amount / 10000} ${game.args.unit} </a>\n`;
                         bonus += game.args.amount;
                     }
                 }catch(err) {
-                    messages += `结算失败\n`;
+                    messages += `${ctx.i18n.t('dice.settleFail')}\n`;
                 }
             }
             messages += `${winner.name} +${bonus/10000} ${game.args.unit}`;
