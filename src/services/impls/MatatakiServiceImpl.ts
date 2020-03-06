@@ -192,7 +192,7 @@ export class MatatakiServiceImpl implements IMatatakiService {
         }
     }
 
-    private async getMinetokenIdFromSymbol(symbol: string) {
+    async getMinetokenIdFromSymbol(symbol: string) {
         try {
             const { data: { data: { id } } } = await this.axios.get<ApiResponse<MinetokenInfo>>(`/token/symbol/${symbol}`);
 

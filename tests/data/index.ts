@@ -87,6 +87,7 @@ export const telegramUserArray = <Array<TelegramUser>>[
         id: 8101,
         isBot: false,
         nickname: "李田所",
+        username: "tadorokokouji",
         matatakiAccount: matatakiAccounts.get(114514),
     },
     {

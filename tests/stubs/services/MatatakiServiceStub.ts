@@ -1,7 +1,4 @@
 import { AxiosInstance } from "axios";
-
-import { AssociatedInfo, MinetokenInfo, MatatakiUserInfo } from "#/definitions";
-import { IMatatakiService } from "#/services";
 import { MatatakiServiceImpl } from "#/services/impls/MatatakiServiceImpl";
 import { createMockedAxios } from "../../Utils";
 
@@ -41,6 +38,13 @@ export class MatatakiServiceStub extends MatatakiServiceStubBase {
                     response: {
                         status: 200,
                         data: { code: 0, data: { public_key: "0x1000" }},
+                    },
+                },
+                {
+                    request: { url: "/_internal_bot/account/8101/ethWallet" },
+                    response: {
+                        status: 200,
+                        data: { code: 0, data: { public_key: "0x114514" }},
                     },
                 },
                 {
@@ -134,6 +138,28 @@ export class MatatakiServiceStub extends MatatakiServiceStubBase {
                                 },
                             },
                         },
+                    },
+                },
+                {
+                    request: { url: "/_internal_bot/minetoken/114514/INM/balance" },
+                    response: {
+                        status: 200,
+                        data: { code: 0, data: {
+                            balance: 1145141919,
+                            decimals: 4,
+                        }},
+                    },
+                },
+                {
+                    request: { url: "/_internal_bot/minetokens" },
+                    response: {
+                        status: 200,
+                        data: { code: 0, data: [{
+                            id: 1919,
+                            name: "银票",
+                            symbol: "INM",
+                            contract_address: "0x1145141919810",
+                        }]},
                     },
                 },
             ],

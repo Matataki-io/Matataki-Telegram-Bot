@@ -1,7 +1,7 @@
 import { inject } from "inversify";
 
 import { Injections } from "#/constants";
-import { Controller, Command, InjectRepository, InjectSenderMatatakiInfo } from "#/decorators";
+import { Controller, Command, InjectRepository, InjectSenderMatatakiInfo, InjectRegexMatchGroup, GlobalAlias } from "#/decorators";
 import { MessageHandlerContext, AssociatedInfo } from "#/definitions";
 import { User } from "#/entities";
 import { IUserRepository } from "#/repositories";
@@ -13,6 +13,7 @@ import { Extra, Markup } from "telegraf";
 import { RequireMatatakiAccount } from "#/decorators/RequireMatatakiAccount";
 
 @Controller("wallet")
+@GlobalAlias("query", "query")
 export class WalletController extends BaseController<WalletController> {
     constructor(
         @inject(Injections.MatatakiService) private matatakiService: IMatatakiService,
@@ -21,56 +22,43 @@ export class WalletController extends BaseController<WalletController> {
         super();
     }
 
-    @Command("query", { ignorePrefix: true })
-    async queryToken(ctx: MessageHandlerContext) {
-        const { message, replyWithMarkdown } = ctx;
-        const { text } = message;
+    @Command("query", /(\d+)\s+(\w+)/)
+    async queryMatatakiAccountTokenById({ reply, message }: MessageHandlerContext,
+        @InjectRegexMatchGroup(1, Number) matatakiId: number,
+        @InjectRegexMatchGroup(2, input => input.toUpperCase()) symbol: string) {
+        const balance = await this.matatakiService.getUserMinetoken(matatakiId, symbol);
 
-        const match = /^\/query(?:@[\w_]+)?\s+(\d+|@[\w_]{5,32})\s+(\w+)/.exec(text);
-        if (match && match.length === 3) {
-            const target = match[1];
-            let userId: number;
-            if (target.startsWith("@")) {
-                const targetId = await this.userRepo.getIdByUsername(target.slice(1));
-                if (!targetId) {
-                    await replyWithMarkdown("抱歉，对方还没有同步用户名到数据库里", {
-                        reply_to_message_id: message.chat.type !== "private" ? message.message_id : undefined,
-                    });
-                    return;
-                }
-
-                const targetInfo = await this.matatakiService.getAssociatedInfo(targetId);
-                if (!targetInfo.user) {
-                    await replyWithMarkdown("抱歉，目标帐号没有在 瞬Matataki 绑定 Telegram 帐号", {
-                        reply_to_message_id: message.chat.type !== "private" ? message.message_id : undefined,
-                    });
-                    return;
-                }
-
-                userId = targetInfo.user.id;
-            } else {
-                userId = Number(match[1]);
-            }
-
-            const symbol = match[2].toUpperCase();
-
-            await this.queryUserToken(ctx, userId, symbol);
-            return;
-        }
-
-        if (/^\/query(?:@[\w_]+)?\s*$/) {
-            await this.queryMyTokens(ctx);
-            return;
-        }
-
-        await replyWithMarkdown("格式不对，暂时只接受 `/query` 和 `/query [Matataki UID/@Telegram 用户名] [Fan票 符号]`", {
+        await reply(`${balance} ${symbol}`, {
             reply_to_message_id: message.chat.type !== "private" ? message.message_id : undefined,
         });
     }
-    private async queryMyTokens({ message, replyWithMarkdown }: MessageHandlerContext) {
-        const id = message.from.id;
-        const info = await this.matatakiService.getAssociatedInfo(id);
 
+    @Command("query", /@([\w_]{5,32})\s+(\w+)/)
+    async queryMatatakiAccountTokenByUsername({ reply, message }: MessageHandlerContext,
+        @InjectRegexMatchGroup(1) username: string,
+        @InjectRegexMatchGroup(2, input => input.toUpperCase()) symbol: string) {
+        const targetId = await this.userRepo.getIdByUsername(username);
+        if (!targetId) {
+            await reply("抱歉，对方还没有同步用户名到数据库里", {
+                reply_to_message_id: message.chat.type !== "private" ? message.message_id : undefined,
+            });
+            return;
+        }
+
+        const minetokenId = await this.matatakiService.getMinetokenIdFromSymbol(symbol);
+        const contractAddress = await this.matatakiService.getContractAddressOfMinetoken(minetokenId);
+        const walletAddress = await this.matatakiService.getEthWallet(targetId);
+        console.log(contractAddress, walletAddress)
+        const balance = await this.web3Service.getBalance(contractAddress, walletAddress);
+
+        await reply(`${balance} ${symbol}`, {
+            reply_to_message_id: message.chat.type !== "private" ? message.message_id : undefined,
+        });
+    }
+
+    @Command("query", /$/)
+    @RequireMatatakiAccount()
+    async queryMyTokens({ message, replyWithMarkdown }: MessageHandlerContext, @InjectSenderMatatakiInfo() info: AssociatedInfo) {
         const array = new Array<string>();
 
         if (!info.user) {
@@ -112,10 +100,10 @@ export class WalletController extends BaseController<WalletController> {
             reply_to_message_id: message.chat.type !== "private" ? message.message_id : undefined,
         });
     }
-    private async queryUserToken({ message, reply }: MessageHandlerContext, userId: number, symbol: string) {
-        const balance = await this.matatakiService.getUserMinetoken(userId, symbol);
 
-        await reply(`${balance} ${symbol}`, {
+    @Command("query")
+    async queryToken({ message, replyWithMarkdown }: MessageHandlerContext) {
+        await replyWithMarkdown("格式不对，暂时只接受 `/query` 和 `/query [Matataki UID/@Telegram 用户名] [Fan票 符号]`", {
             reply_to_message_id: message.chat.type !== "private" ? message.message_id : undefined,
         });
     }
