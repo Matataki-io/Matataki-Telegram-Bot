@@ -155,11 +155,11 @@ describe("MiddlewareService", () => {
 
             @Controller("a")
             class TestController extends BaseController<TestController> {
-                @Command("test", /(\w+)/)
+                @Command("test", /(\d+)/)
                 testA({}: ContextMessageUpdate) {
                     func("A");
                 }
-                @Command("test", /(\d+)/)
+                @Command("test", /(\w+)/)
                 testB({}: ContextMessageUpdate) {
                     func("B");
                 }
@@ -180,11 +180,11 @@ describe("MiddlewareService", () => {
 
             test.each`
             arg      | expected
-            ${"abc"} | ${"A"}
-            ${"123"} | ${"B"}
+            ${"123"} | ${"A"}
+            ${"abc"} | ${"B"}
             ${"!@#"} | ${"C"}
             ${""} | ${"C"}
-            `("'$arg' -> '$expected'", async ({ arg, expected }) => {
+            `("/atest $arg -> '$expected'", async ({ arg, expected }) => {
                 func.mockReset();
 
                 const bot = createBotInstance([TestController]);
@@ -358,6 +358,151 @@ describe("MiddlewareService", () => {
 
                 expect(func).toBeCalledTimes(1);
                 expect(func).toBeCalledWith(114514);
+            });
+        });
+
+        describe("Command without argument", () => {
+            const func = jest.fn();
+
+            @Controller("a")
+            class TestController extends BaseController<TestController> {
+                @Command("test", /\w+/)
+                testA({}: ContextMessageUpdate) {
+                    func(1);
+                }
+                @Command("test", /$/)
+                testB({}: ContextMessageUpdate) {
+                    func(2);
+                }
+                @Command("test")
+                testC({}: ContextMessageUpdate) {
+                    func(3);
+                }
+            }
+
+            test("/atest abc123", async () => {
+                func.mockReset();
+
+                const bot = createBotInstance([TestController]);
+
+                await bot.handleUpdate({
+                    update_id: 1,
+                    message: {
+                        message_id: 1,
+                        date: 1,
+                        chat: {
+                            id: 1,
+                            type: "private",
+                        },
+                        from: {
+                            id: 1,
+                            is_bot: false,
+                            first_name: "testuser",
+                        },
+                        text: "/atest abc123",
+                        entities: [{
+                            type: "bot_command",
+                            offset: 0,
+                            length: 6,
+                        }],
+                    },
+                });
+
+                expect(func).toBeCalledTimes(1);
+                expect(func).toBeCalledWith(1);
+            });
+            test("/atest", async () => {
+                func.mockReset();
+
+                const bot = createBotInstance([TestController]);
+
+                await bot.handleUpdate({
+                    update_id: 1,
+                    message: {
+                        message_id: 1,
+                        date: 1,
+                        chat: {
+                            id: 1,
+                            type: "private",
+                        },
+                        from: {
+                            id: 1,
+                            is_bot: false,
+                            first_name: "testuser",
+                        },
+                        text: "/atest",
+                        entities: [{
+                            type: "bot_command",
+                            offset: 0,
+                            length: 6,
+                        }],
+                    },
+                });
+
+                expect(func).toBeCalledTimes(1);
+                expect(func).toBeCalledWith(2);
+            });
+            test("/atest       ", async () => {
+                func.mockReset();
+
+                const bot = createBotInstance([TestController]);
+
+                await bot.handleUpdate({
+                    update_id: 1,
+                    message: {
+                        message_id: 1,
+                        date: 1,
+                        chat: {
+                            id: 1,
+                            type: "private",
+                        },
+                        from: {
+                            id: 1,
+                            is_bot: false,
+                            first_name: "testuser",
+                        },
+                        text: "/atest       ",
+                        entities: [{
+                            type: "bot_command",
+                            offset: 0,
+                            length: 6,
+                        }],
+                    },
+                });
+
+                expect(func).toBeCalledTimes(1);
+                expect(func).toBeCalledWith(2);
+            });
+            test("/atest !@#@$@", async () => {
+                func.mockReset();
+
+                const bot = createBotInstance([TestController]);
+
+                await bot.handleUpdate({
+                    update_id: 1,
+                    message: {
+                        message_id: 1,
+                        date: 1,
+                        chat: {
+                            id: 1,
+                            type: "private",
+                        },
+                        from: {
+                            id: 1,
+                            is_bot: false,
+                            first_name: "testuser",
+                        },
+                        text: "/atest !@#@$@",
+                        entities: [{
+                            type: "bot_command",
+                            offset: 0,
+                            length: 6,
+                        }],
+                    },
+                });
+
+                expect(func).toBeCalledTimes(1);
+                expect(func).toBeCalledWith(3);
             });
         });
     });

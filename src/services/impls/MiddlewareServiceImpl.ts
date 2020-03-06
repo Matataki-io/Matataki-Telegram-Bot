@@ -173,15 +173,14 @@ export class MiddlewareServiceImpl implements IMiddlewareService {
             let handler: MessageHandler | undefined;
 
             for (const [regexString, methodName] of argumentFilters) {
-                const regex = new RegExp("\\s+" + regexString);
-
+                const regex = new RegExp("^" + (regexString !== "$" ? "\\s+" + regexString : "\\s*$"));
                 const match = regex.exec(ctx.message!.text!.substr(commandEntity.length));
-                if (!match) {
-                    continue;
-                }
 
-                ctx.match = match;
-                handler = controller[methodName];
+                if (match) {
+                    ctx.match = match;
+                    handler = controller[methodName];
+                    break;
+                }
             }
 
             if (!handler && fallbackMethodName) {
