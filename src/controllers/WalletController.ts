@@ -39,7 +39,7 @@ export class WalletController extends BaseController<WalletController> {
         @InjectRegexMatchGroup(2, input => input.toUpperCase()) symbol: string) {
         const targetId = await this.userRepo.getIdByUsername(username);
         if (!targetId) {
-            await reply(i18n.t("usernameNotSynced"), {
+            await reply(i18n.t("error.usernameNotSynced"), {
                 reply_to_message_id: message.chat.type !== "private" ? message.message_id : undefined,
             });
             return;
@@ -48,7 +48,7 @@ export class WalletController extends BaseController<WalletController> {
         const minetokenId = await this.matatakiService.getMinetokenIdFromSymbol(symbol);
         const contractAddress = await this.matatakiService.getContractAddressOfMinetoken(minetokenId);
         const walletAddress = await this.matatakiService.getEthWallet(targetId);
-        console.log(contractAddress, walletAddress)
+
         const balance = await this.web3Service.getBalance(contractAddress, walletAddress);
 
         await reply(`${balance} ${symbol}`, {
@@ -58,19 +58,19 @@ export class WalletController extends BaseController<WalletController> {
 
     @Command("query", /$/)
     @RequireMatatakiAccount()
-    async queryMyTokens({ message, replyWithMarkdown }: MessageHandlerContext, @InjectSenderMatatakiInfo() info: AssociatedInfo) {
+    async queryMyTokens({ message, replyWithMarkdown, i18n }: MessageHandlerContext, @InjectSenderMatatakiInfo() info: AssociatedInfo) {
         const array = new Array<string>();
 
         if (!info.user) {
-            array.push("尚未绑定 瞬Matataki 账户");
+            array.push(i18n.t("common.associatedMatatakiAccount.no"));
         } else {
-            array.push(`瞬Matataki 昵称：[${info.user.name}](${this.matatakiService.urlPrefix}user/${info.user.id})`);
+            array.push(i18n.t("common.associatedMatatakiAccount.yes"));
         }
 
         if (!info.minetoken) {
-            array.push("您在 瞬Matataki 尚未发行 Fan票");
+            array.push(i18n.t("common.mintedMinetoken.no"));
         } else {
-            array.push(`Fan票 名称：[${info.minetoken.symbol}（${info.minetoken.name}）](${this.matatakiService.urlPrefix}token/${info.minetoken.id})`);
+            array.push(i18n.t("common.mintedMinetoken.yes"));
         }
 
         if (info.user) {
@@ -88,7 +88,7 @@ export class WalletController extends BaseController<WalletController> {
                 return `[${token.name}（${token.symbol}）](${this.matatakiService.urlPrefix}token/${token.id})： ${balance}`;
             })));
 
-            array.push(`*您当前持有 ${balances.length} 种 Fan票*`);
+            array.push(i18n.t("wallet.query.minetoken.header"));
 
             for (const item of balances) {
                 array.push(item);
@@ -147,26 +147,26 @@ export class WalletController extends BaseController<WalletController> {
         const symbol = match[2];
         const amount = Number(match[3]);
 
-        let commonMessage = i18n.t("transfer.common", {
+        let commonMessage = i18n.t("wallet.transfer.common", {
             senderUsername: senderInfo.user.name,
             senderUrl: `${this.matatakiService.urlPrefix}user/${senderInfo.user.id}`,
             receiverUsername: targetName,
             receiverUrl: `${this.matatakiService.urlPrefix}user/${userId}`,
             amount, symbol,
         });
-        const transactionMessage = await replyWithMarkdown(`${i18n.t("transfer.started")}\n\n${commonMessage}`, { disable_web_page_preview: true });
+        const transactionMessage = await replyWithMarkdown(`${i18n.t("wallet.transfer.started")}\n\n${commonMessage}`, { disable_web_page_preview: true });
 
         let finalMessage, replyMarkup;
         try {
             const tx_hash = await this.matatakiService.transfer(senderInfo.user.id, userId, symbol, amount);
 
-            finalMessage = `${i18n.t("transfer.successful")}\n\n${commonMessage}`;
+            finalMessage = `${i18n.t("wallet.transfer.successful")}\n\n${commonMessage}`;
 
             replyMarkup = Markup.inlineKeyboard([
-                [Markup.urlButton(i18n.t("transfer.transactionDetail"), `https://rinkeby.etherscan.io/tx/${tx_hash}`)]
+                [Markup.urlButton(i18n.t("wallet.transfer.transactionDetail"), `https://rinkeby.etherscan.io/tx/${tx_hash}`)]
             ]);
         } catch {
-            finalMessage = `${i18n.t("transfer.failed")}\n\n${commonMessage}`;
+            finalMessage = `${i18n.t("wallet.transfer.failed")}\n\n${commonMessage}`;
         }
 
         await telegram.editMessageText(message.chat.id, transactionMessage.message_id, undefined, finalMessage, {

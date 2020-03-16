@@ -6,9 +6,19 @@ error:
   matatakiAccountAbsent: Sorry, please bind or login your telegram account with Matataki.
   minetokenNotFound:
 
+common:
+  associatedMatatakiAccount:
+    no:
+    yes:
+  mintedMinetoken:
+    no:
+    yes:
+
 wallet:
   query:
     badFormat:
+    minetoken:
+      header:
   transfer:
     badFormat:
     common: |-
@@ -29,12 +39,6 @@ query:
     badFormat:
     response:
   status:
-    associatedMatatakiAccount:
-      no:
-      yes:
-    mintedMinetoken:
-      no:
-      yes:
     joinedGroup:
       header:
     myGroup:

@@ -30,15 +30,15 @@ export class QueryController extends BaseController<QueryController> {
         const array = new Array<string>();
 
         if (!info.user) {
-            array.push(i18n.t("query.status.associatedMatatakiAccount.no"));
+            array.push(i18n.t("common.associatedMatatakiAccount.no"));
         } else {
-            array.push(i18n.t("query.status.associatedMatatakiAccount.yes"));
+            array.push(i18n.t("common.associatedMatatakiAccount.yes"));
         }
 
         if (!info.minetoken) {
-            array.push(i18n.t("query.status.mintedMinetoken.no"));
+            array.push(i18n.t("common.mintedMinetoken.no"));
         } else {
-            array.push(i18n.t("query.status.mintedMinetoken.yes"));
+            array.push(i18n.t("common.mintedMinetoken.yes"));
         }
 
         if (info.user) {
