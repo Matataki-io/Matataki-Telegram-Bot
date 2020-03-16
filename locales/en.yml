@@ -32,3 +32,114 @@ help:
   diceGames: 👉How to start Dice games
   transfer: 👉How to use the transfer function
   otherQuestions: 👉I have other questions
+
+
+status:
+  notUser: Your Telegram account doesn't connect to Matataki.io
+  notToken: You didn't issue any Fan ticket at Matataki 
+  notJoined: "*You didn't found any Fan ticket group*"
+  joinedGroups: "*You have joined ${joinedGroups}  Fan ticket group(s)*"
+  notCreatedGroups: "*You didn't create any Fan tickets group*"
+  createdGroups: "*You have created ${createdGroups} Fan tickets group(s)*"
+  seeMore: type '/join' to learn more Fan tickets groups you can join
+
+mygroups:
+  reply: |-
+    Group ID：${id}
+    Name：${title}
+    Fan tickets：${symbol}
+    Minimum required：${amount}
+  needAdmin: add Matataki-Bot as admin of this group before doing query
+
+rule:
+  notFanGroups: this group isn't a Fan tickets group
+  addCondition: this group require ${symbol} ≥ ${amount}
+  noConditions: this group doesn't have any requirement in ${symbol}
+
+set:
+  wrongFormat: Presentation Error ，type `/set [group_id] [amount]` please
+  noGroupFound: don't find any group
+  retired: before you left this group, you were the owner
+  needAdmin: add Matataki-Bot as admin and set invent permission
+  reply: |-
+    The rule of this group now:
+    Group ID：${id}
+    Name：${title}
+    Fan tickets：${symbol}
+    Minimum required：${amount}
+
+join:
+  insufficientToken: |-
+    Sorry, you can't join other group due to the number of Fan tickets you keep now
+    type '/status' to list goups you have joined
+  noRules: there's no rule now
+  remainingGroups: "*You can join ${joinableGroupCount} more Fan tickets group(s)*"
+  joinedGroups: type '/status' to list group(s) you have joined
+
+expel:
+  notUser: Sorry, you have been removed because of no connection to Matataki
+  insufficientToken: Sorry, you have been removed because don't meet the requirements of ${title}
+
+joinGroup:
+  iAmTheOwner: You are the Owner
+  notUser: Sorry, you don't connect this Telegram account at Matataki.io
+  insufficientToken: |-
+    `Sorry, you don't meet the requirements of ${title}
+    it requires ${name}(${symbol}) >= ${groupRequirement}`
+  joined: You have been a number of this group：
+  canJoin: You can join this group now：
+
+kick:
+  wrongFormat: Wrong format，please input `/kick [@username] [mins]`
+  notUser: Sorry, he/she/.. haven't synced account
+  loading: kicking...
+  success: Success! (until ${format})
+  error: Fail!
+
+ban:
+  wrongFormat: Wrong format，please input `/ban [@username] [mins]`
+  loading: Baning ...
+  success: Ban Success (Until ${format}).
+  error: Ban Failure！
+
+redEnvelope:
+  help: |-
+    send Red Packet:/fahongbao <FanTicket> <Amount> <Quantity> [<Description>]
+    send Red Packet with random amount:/sfahongbao <FanTicket> <Amount> <Quantity> [<Description>]
+  errorFormat: Wrong command format.
+  nonPositiveQuantity: Quantity couldn't be negative or zero.
+  noUser: Telegram needs to bind with Matataki Account.
+  insuffMoney: Insufficent money.
+  tooLessAmount: Too less Amount.
+  cantGetUserInfo: Couldn't get Matataki user info.
+  success: ${userName} sends a red packet, click button to get it.
+  instruction: If you register a account at www.matataki.io and then bind your Telegram to your account, you will have chances to grab our welfare.
+  resend: Resend
+  grab: Grab
+  finished: ${userName}'s red packet is now empty.
+  grabbed: "[${grabber} grabbed ${sender}'s ${description} red packet，${amount} ${unit}](https://rinkeby.etherscan.io/tx/${txHash})"
+  trying: ${userName} is trying to grab the red packet
+
+dice:
+  help: |-
+    开始一局游戏:/new_game <赌注> <赌注单位>
+    注意:只有发送者能够开局或者流局
+  errorFormat: 错误的指令格式。
+  noUser: 尚未绑定 瞬Matataki 账户
+  cantGetUserInfo: Matataki用户信息获取失败
+  positiveAmount: 金额必须为正数
+  insuffMoney: 您的账户余额不足以支付赌注
+  gameTitle: |-
+    ${userName}的掷骰子游戏   赌注:${amount} ${unit}
+    <i>注意：只有游戏的发起者可以选择开局或者流局</i>
+  winner: 胜者是${userName},点数为${rollPoint}
+  waiting: ${n}名玩家已准备,等待更多的玩家加入......
+  noWinner: 没有胜利者
+  draw: 流局
+  end: 已结束
+  resend: 重新发送
+  join: 加入
+  start: 开局
+  settlement: 结算记录
+  settleSuccess: 结算成功
+  settleFail: 结算失败

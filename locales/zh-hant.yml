@@ -33,3 +33,113 @@ help:
   diceGames: 👉如何開啟Dice小遊戲
   transfer: 👉如何使用轉賬功能
   otherQuestions: 👉我有別的問題
+
+status:
+  notUser: 尚未绑定 瞬Matataki 账户
+  notToken: 您在 瞬Matataki 尚未发行 Fan票
+  notJoined: "*您尚未加入 Fan票 群*"
+  joinedGroups: "*您已加入 ${joinedGroups} 个 Fan票 群*"
+  notCreatedGroups: "*您尚未建立 Fan票 群*"
+  createdGroups: "*您已建立 ${createdGroups} 个 Fan票 群*"
+  seeMore: 输入 /join 查看更多可以加入的 Fan票 群
+
+mygroups:
+  reply: |-
+    群组 ID：${id}
+    名字：${title}
+    Fan 票：${symbol}
+    最低要求：${amount}
+  needAdmin: 查询前请将 Fan票 群中的粉丝群助手设置为管理员
+
+rule:
+  notFanGroups: 该群还不是 Fan 票粉丝群
+  addCondition: 该群目前要求 ${symbol} ≥ ${amount}
+  noConditions: 该群目前没有 ${symbol} 要求
+
+set:
+  wrongFormat: 格式不对，请输入 `/set [group_id] [amount]`
+  noGroupFound: 没有找到该群
+  retired: 您是此群群主但是已经退群了
+  needAdmin: 请把本机器人设置为此群的管理员并设置邀请用户权限
+  reply: |-
+    当前群规则已修改为：
+    群组 ID：${groupId}
+    名字：${title}
+    Fan 票：${symbol}
+    最低要求：${amount}
+
+join:
+  insufficientToken: |-
+    抱歉，您持有的 Fan票 不足以加入别的群
+    输入 /status 查看已经加入的 Fan票 群
+  noRules: 暂无规则
+  remainingGroups: "*您现在还可以加入 ${joinableGroupCount} 个 Fan票 群*"
+  joinedGroups: 输入 /status 查看已经加入的 Fan票 群
+
+expel:
+  notUser: 抱歉，您现在没有绑定 瞬Matataki，现已被移出
+  insufficientToken: 抱歉，您现在的 Fan 票不满足群 ${title} 的条件，现已被移出
+
+joinGroup:
+  iAmTheOwner: 您是该群群主：
+  notUser: 抱歉，您没有在 瞬Matataki 绑定该 Telegram 帐号 
+  insufficientToken: |-
+    `抱歉，您持有的 Fan票 不满足群 ${title} 的条件：
+    要求 ${name}(${symbol}) >= ${groupRequirement}`
+  joined: 您已经是该 Fan票 群群员：
+  canJoin: 您现在可以进入该群：
+
+kick:
+  wrongFormat: 格式不对，请输入 `/kick [@用户名] [放逐分钟数]`
+  notUser: 抱歉，对方还没有同步用户名到数据库里
+  loading: 放逐中...
+  success: 放逐成功 (放逐至 ${format})
+  error: 放逐失败！
+
+ban:
+  wrongFormat: 格式不对，请输入 `/ban [@用户名] [禁言分钟数]`
+  loading: 禁言中...
+  success: 禁言成功 (禁言至 ${format})
+  error: 禁言失败！
+
+redEnvelope:
+  help: |-
+    发红包:/fahongbao <Fan票符号> <总红包金额> <红包数量> [<描述>]
+    发随机红包:/sfahongbao <Fan票符号> <总红包金额> <红包数量> [<描述>]
+  errorFormat: 错误的指令格式。
+  nonPositiveQuantity: 数量不能为0或者负哦。
+  noUser: 尚未绑定 瞬Matataki 账户
+  insuffMoney: 您的金额不足哦。
+  tooLessAmount: 红包金额过小哦
+  cantGetUserInfo: Matataki用户信息获取失败
+  success: ${userName}发了红包，快来抢吧!
+  instruction: 前往 www.matataki.io 注册并绑定此TG账号即可参与抢红包啦！
+  resend: 继续发送
+  grab: 抢
+  finished: ${userName}的红包已经被抢完
+  grabbed: "[${grabber}抢到了${sender}的一个${description}红包，价值${amount} ${unit}](https://rinkeby.etherscan.io/tx/${txHash})"
+  trying: ${userName}正在尝试抢红包
+
+dice:
+  help: |-
+    开始一局游戏:/new_game <赌注> <赌注单位>
+    注意:只有发送者能够开局或者流局
+  errorFormat: 错误的指令格式。
+  noUser: 尚未绑定 瞬Matataki 账户
+  cantGetUserInfo: Matataki用户信息获取失败
+  positiveAmount: 金额必须为正数
+  insuffMoney: 您的账户余额不足以支付赌注
+  gameTitle: |-
+    ${userName}的掷骰子游戏   赌注:${amount} ${unit}
+    <i>注意：只有游戏的发起者可以选择开局或者流局</i>
+  winner: 胜者是${userName},点数为${rollPoint}
+  waiting: ${n}名玩家已准备,等待更多的玩家加入......
+  noWinner: 没有胜利者
+  draw: 流局
+  end: 已结束
+  resend: 重新发送
+  join: 加入
+  start: 开局
+  settlement: 结算记录
+  settleSuccess: 结算成功
+  settleFail: 结算失败

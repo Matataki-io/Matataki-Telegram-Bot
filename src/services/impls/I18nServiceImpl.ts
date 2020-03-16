@@ -64,7 +64,9 @@ export class I18nServiceImpl implements II18nService {
             }
 
             const content = fs.readFileSync(path.resolve(this.directory, filename), "utf8");
+            console.log('loading ' + filename);
             const document = yaml.safeLoad(content);
+            console.log(filename + 'has loaded.');
             if (!document) {
                 continue;
             }
