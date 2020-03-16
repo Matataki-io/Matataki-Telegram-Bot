@@ -64,9 +64,7 @@ export class I18nServiceImpl implements II18nService {
             }
 
             const content = fs.readFileSync(path.resolve(this.directory, filename), "utf8");
-            console.log('loading ' + filename);
             const document = yaml.safeLoad(content);
-            console.log(filename + 'has loaded.');
             if (!document) {
                 continue;
             }
@@ -206,6 +204,11 @@ function compileDocument(document: LocaleYamlDocument): LocaleTemplates {
 
         if (typeof value !== "object") {
             throw new Error("Only support string or keys value");
+        }
+
+        if (value === null) {
+            result.set(key, () => key);
+            continue;
         }
 
         result.set(key, compileDocument(value));
