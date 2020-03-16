@@ -34,12 +34,12 @@ export class WalletController extends BaseController<WalletController> {
     }
 
     @Command("query", /@([\w_]{5,32})\s+(\w+)/)
-    async queryMatatakiAccountTokenByUsername({ reply, message }: MessageHandlerContext,
+    async queryMatatakiAccountTokenByUsername({ reply, message, i18n }: MessageHandlerContext,
         @InjectRegexMatchGroup(1) username: string,
         @InjectRegexMatchGroup(2, input => input.toUpperCase()) symbol: string) {
         const targetId = await this.userRepo.getIdByUsername(username);
         if (!targetId) {
-            await reply("抱歉，对方还没有同步用户名到数据库里", {
+            await reply(i18n.t("usernameNotSynced"), {
                 reply_to_message_id: message.chat.type !== "private" ? message.message_id : undefined,
             });
             return;
@@ -102,8 +102,8 @@ export class WalletController extends BaseController<WalletController> {
     }
 
     @Command("query")
-    async queryToken({ message, replyWithMarkdown }: MessageHandlerContext) {
-        await replyWithMarkdown("格式不对，暂时只接受 `/query` 和 `/query [Matataki UID/@Telegram 用户名] [Fan票 符号]`", {
+    async queryToken({ message, replyWithMarkdown, i18n }: MessageHandlerContext) {
+        await replyWithMarkdown(i18n.t("wallet.query.badFormat"), {
             reply_to_message_id: message.chat.type !== "private" ? message.message_id : undefined,
         });
     }
@@ -113,7 +113,7 @@ export class WalletController extends BaseController<WalletController> {
     async transfer({ message, replyWithMarkdown, telegram, i18n }: MessageHandlerContext, @InjectSenderMatatakiInfo() senderInfo: Required<Omit<AssociatedInfo, "minetoken">>) {
         const match = /^\/transfer(?:@[\w_]+)?\s+(\d+|@[\w_]{5,32})\s+(\w+)\s+(\d+.?\d*)/.exec(message.text);
         if (!match || match.length < 4) {
-            await replyWithMarkdown("格式不对，请输入 `/transfer [Matataki UID/@Telegram 用户名] [symbol] [amount]`");
+            await replyWithMarkdown(i18n.t("wallet.transfer.badFormat"));
             return;
         }
 

@@ -4,17 +4,22 @@ error:
   usernameNotSynced: Sorry, please input /syncusername before receive a transaction in telegram.
   matatakiAccountAbsent: Sorry, please bind or login your telegram account with Matataki.
 
-transfer:
-  common: |-
-    From: [${senderUsername}](${senderUrl})
-    To: [${receiverUsername}](${receiverUrl})
-    Value: ${amount} ${symbol}
-  started: "Pending..."
-  successful: "*Success*"
-  failed: "*Failure*"
-  transactionDetail: Detail
+wallet:
+  query:
+    badFormat:
+  transfer:
+    badFormat:
+    common: |-
+      From: [${senderUsername}](${senderUrl})
+      To: [${receiverUsername}](${receiverUrl})
+      Value: ${amount} ${symbol}
+    started: "Pending..."
+    successful: "*Success*"
+    failed: "*Failure*"
+    transactionDetail: Detail
 
-startReply: Thank you for using Matataki Fans, enter /help for more feature list 
+
+startReply: Thank you for using Matataki Fans, enter /help for more feature list
     👉🏻[Introduction Document](https://www.matataki.io/p/1638)
 
 messageReply: I'm a Matataki robot, type /help for help
@@ -36,7 +41,7 @@ help:
 
 status:
   notUser: Your Telegram account doesn't connect to Matataki.io
-  notToken: You didn't issue any Fan ticket at Matataki 
+  notToken: You didn't issue any Fan ticket at Matataki
   notJoined: "*You didn't found any Fan ticket group*"
   joinedGroups: "*You have joined ${joinedGroups}  Fan ticket group(s)*"
   notCreatedGroups: "*You didn't create any Fan tickets group*"
