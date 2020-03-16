@@ -2,6 +2,7 @@ lang: English
 
 error:
   usernameNotSynced: Sorry, please input /syncusername before receive a transaction in telegram.
+  usernameNotFound:
   matatakiAccountAbsent: Sorry, please bind or login your telegram account with Matataki.
   minetokenNotFound:
 
@@ -39,6 +40,18 @@ query:
     myGroup:
       header:
     tip:
+
+group:
+  setRequirement:
+    badFormat:
+    groupNotFound:
+    creatorLeft:
+    botNotAdmin:
+    notification:
+  banMember:
+    started:
+    success:
+    failure:
 
 startReply: Thank you for using Matataki Fans, enter /help for more feature list
     👉🏻[Introduction Document](https://www.matataki.io/p/1638)

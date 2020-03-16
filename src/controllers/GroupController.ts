@@ -39,7 +39,7 @@ export class GroupController extends BaseController<GroupController> {
 
     }
 
-    @Command("set", /-?(\d+)\s+(\d+.?\d*)/, ({ t }) => t("command.set.badFormat"))
+    @Command("set", /-?(\d+)\s+(\d+.?\d*)/, ({ t }) => t("group.setRequirement.badFormat"))
     @RequireMintedMinetoken()
     async setGroupRequirement({ message, reply, telegram, i18n }: MessageHandlerContext,
         @InjectSenderMatatakiInfo() senderInfo: Required<AssociatedInfo>,
@@ -49,7 +49,7 @@ export class GroupController extends BaseController<GroupController> {
         const group = groups.find(group => Number(group.id) === groupId);
 
         if (!group) {
-            await reply(i18n.t("set.noGroupFound"));
+            await reply(i18n.t("group.setRequirement.groupNotFound"));
             return;
         }
 
@@ -67,11 +67,11 @@ export class GroupController extends BaseController<GroupController> {
             }
         }
         if (!hasCreator) {
-            await reply(i18n.t("set.retired"));
+            await reply(i18n.t("group.setRequirement.creatorLeft"));
             return;
         }
         if (!hasMe) {
-            await reply(i18n.t("set.needAdmin"));
+            await reply(i18n.t("group.setRequirement.botNotAdmin"));
             return;
         }
 
@@ -79,7 +79,7 @@ export class GroupController extends BaseController<GroupController> {
 
         await reply("OK");
 
-        await telegram.sendMessage(groupId, i18n.t("set.reply", {
+        await telegram.sendMessage(groupId, i18n.t("group.setRequirement.notification", {
             groupId,
             title: group.title,
             symbol: senderInfo.minetoken.symbol,
@@ -208,51 +208,24 @@ export class GroupController extends BaseController<GroupController> {
         return false;
     }
 
-    @Command("kick", { ignorePrefix: true })
+    @Command("kick", /@([\w_]{5,32})\s+(\d+)/, ({ t }) => t("group.kickMember.badFormat"))
     @GroupOnly()
-    async kickMember({ message, replyWithMarkdown, telegram, i18n }: MessageHandlerContext) {
+    async kickMember({ message, replyWithMarkdown, telegram, i18n }: MessageHandlerContext,
+        @InjectRegexMatchGroup(1) target: string,
+        @InjectRegexMatchGroup(2, Number) time: number
+    ) {
         const { chat } = message;
 
-        const match = /^\/kick(?:@[\w_]+)?\s+@([\w_]{5,32})\s+(\d+)/.exec(message.text);
-        if (!match || match.length < 3) {
-            await replyWithMarkdown(i18n.t("kick.wrongFormat"));
-            return;
-        }
-
-        /*
-        const sender = message.from.id;
-        const senderInfo = await this.matatakiService.getAssociatedInfo(sender);
-        if (!senderInfo.user) {
-            await replyWithMarkdown("抱歉，您没有在 瞬Matataki 绑定该 Telegram 帐号");
-            return;
-        }*/
-
-        const target = match[1];
         const targetId = await this.userRepo.getIdByUsername(target);
         if (!targetId) {
-            await replyWithMarkdown(i18n.t("kick.notUser"));
+            await replyWithMarkdown(i18n.t("error.usernameNotFound"));
             return;
         }
 
-        // const group = await this.groupRepo.getGroup(chat.id);
-
-        /*const creatorInfo = await this.matatakiService.getAssociatedInfo(Number(group.creatorId));
-        if (!creatorInfo.user) {
-            await replyWithMarkdown("抱歉，目标帐号没有在 瞬Matataki 绑定 Telegram 帐号");
-            return;
-        }*/
-
-        // const symbol = creatorInfo.minetoken!.symbol;
-        const transactionMessage = await replyWithMarkdown(i18n.t("kick.loading"));
+        const transactionMessage = await replyWithMarkdown(i18n.t("group.kickMember.started"));
 
         let finalMessage;
         try {
-            /*
-            if (message.from.id !== Number(group.creatorId)) {
-                await this.matatakiService.transfer(senderInfo.user.id, creatorInfo.user.id, symbol, 10000);
-            }*/
-
-            const time = Number(match[2]);
             const untilDateTimestamp = Math.round(Date.now() / 1000) + time * 60;
 
             // @ts-ignore
@@ -261,63 +234,36 @@ export class GroupController extends BaseController<GroupController> {
 
             const untilDate = moment.unix(untilDateTimestamp);
 
-            finalMessage = i18n.t("kick.success", {
+            finalMessage = i18n.t("group.kickMember.success", {
                 format: untilDate.format("lll")
             });
         } catch {
             replyWithMarkdown(targetId.toString());
             replyWithMarkdown(chat.id.toString());
-            finalMessage = i18n.t("kick.error");
+            finalMessage = i18n.t("group.kickMember.failure");
         }
 
         await telegram.editMessageText(chat.id, transactionMessage.message_id, undefined, finalMessage);
     }
 
-    @Command("ban", { ignorePrefix: true })
+    @Command("ban", /@([\w_]{5,32})\s+(\d+)/, ({ t }) => t("group.banMember.badFormat"))
     @GroupOnly()
-    async banMember({ message, replyWithMarkdown, telegram, i18n }: MessageHandlerContext) {
+    async banMember({ message, replyWithMarkdown, telegram, i18n }: MessageHandlerContext,
+        @InjectRegexMatchGroup(1) target: string,
+        @InjectRegexMatchGroup(2, Number) time: number
+    ) {
         const { chat } = message;
 
-        const match = /^\/ban(?:@[\w_]+)?\s+@([\w_]{5,32})\s+(\d+)/.exec(message.text);
-        if (!match || match.length < 3) {
-            await replyWithMarkdown(i18n.t("ban.wrongFormat"));
-            return;
-        }
-
-        /*
-        const sender = message.from.id;
-        const senderInfo = await this.matatakiService.getAssociatedInfo(sender);
-        if (!senderInfo.user) {
-            await replyWithMarkdown("抱歉，您没有在 瞬Matataki 绑定该 Telegram 帐号");
-            return;
-        }*/
-
-        const target = match[1];
         const targetId = await this.userRepo.getIdByUsername(target);
         if (!targetId) {
-            await replyWithMarkdown(i18n.t("kick.notUser"));
+            await replyWithMarkdown(i18n.t("error.usernameNotFound"));
             return;
         }
 
-        // const group = await this.groupRepo.getGroup(chat.id);
-
-        /*const creatorInfo = await this.matatakiService.getAssociatedInfo(Number(group.creatorId));
-        if (!creatorInfo.user) {
-            await replyWithMarkdown("抱歉，目标帐号没有在 瞬Matataki 绑定 Telegram 帐号");
-            return;
-        }*/
-
-        // const symbol = creatorInfo.minetoken!.symbol;
-        const transactionMessage = await replyWithMarkdown(i18n.t("ban.loading"));
+        const transactionMessage = await replyWithMarkdown(i18n.t("group.banMember.started"));
 
         let finalMessage;
         try {
-            /*
-            if (message.from.id !== Number(group.creatorId)) {
-                await this.matatakiService.transfer(senderInfo.user.id, creatorInfo.user.id, symbol, 10000);
-            }*/
-
-            const time = Number(match[2]);
             const untilDateTimestamp = Math.round(Date.now() / 1000) + time * 60;
 
             await telegram.restrictChatMember(chat.id, targetId, {
@@ -330,11 +276,11 @@ export class GroupController extends BaseController<GroupController> {
 
             const untilDate = moment.unix(untilDateTimestamp);
 
-            finalMessage = i18n.t("ban.success", {
+            finalMessage = i18n.t("group.banMember.success", {
                 format: untilDate.format("lll")
             });
         } catch {
-            finalMessage = i18n.t("ban.error");
+            finalMessage = i18n.t("group.banMember.failure");
         }
 
         await telegram.editMessageText(chat.id, transactionMessage.message_id, undefined, finalMessage);
