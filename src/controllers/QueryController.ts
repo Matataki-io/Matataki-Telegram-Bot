@@ -72,7 +72,7 @@ export class QueryController extends BaseController<QueryController> {
                     const isFandomGroup = group.requirements.length > 0;
                     const requiredAmount = isFandomGroup ? group.requirements[0].amount : -1;
 
-                    return `/ [${info.title ?? info.id}](${inviteLink}) （${requiredAmount > 0 ? `${symbolMap.get(group.requirements[0].minetokenId)} ≥ ${requiredAmount / 10000}` : "暂无规则"}）`;
+                    return `/ [${info.title ?? info.id}](${inviteLink}) （${requiredAmount > 0 ? `${symbolMap.get(group.requirements[0].minetokenId)} ≥ ${requiredAmount / 10000}` : i18n.t("query.status.groupNoRule")}）`;
                 }));
 
                 for (const result of results) {
@@ -125,7 +125,7 @@ export class QueryController extends BaseController<QueryController> {
                         return null;
                     }
 
-                    return `/ [${groupInfo.title ?? groupInfo.id}](${inviteLink}) （${requiredAmount > 0 ? `${info.minetoken!.symbol} ≥ ${requiredAmount / 10000}` : "暂无规则"}）`;
+                    return `/ [${groupInfo.title ?? groupInfo.id}](${inviteLink}) （${requiredAmount > 0 ? `${info.minetoken!.symbol} ≥ ${requiredAmount / 10000}` : i18n.t("query.status.groupNoRule")}）`;
                 }));
 
                 for (const result of results) {

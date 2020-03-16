@@ -122,22 +122,22 @@ export class BotServiceImpl implements IBotService {
                 }
             } while (false);
 
-            ctx.telegram.sendMessage(ctx.chat!.id, i18n.t("startReply"), { parse_mode: 'Markdown', disable_web_page_preview: true });
+            ctx.telegram.sendMessage(ctx.chat!.id, i18n.t("bot.start"), { parse_mode: 'Markdown', disable_web_page_preview: true });
         });
         this.bot.help(ctx => {
             const { i18n } = ctx;
-            ctx.replyWithMarkdown(i18n.t("help.title"), Markup.inlineKeyboard([
-                [Markup.callbackButton(i18n.t("help.whoAreYou"), "help1")],
-                [Markup.callbackButton(i18n.t("help.whatIsTheFanGroup"), "help2")],
-                [Markup.callbackButton(i18n.t("help.instruction"), "help3")],
-                [Markup.callbackButton(i18n.t("help.joinFanGroup"), "help4")],
-                [Markup.callbackButton(i18n.t("help.createFanGroup"), "help5")],
-                [Markup.callbackButton(i18n.t("help.deleteFanGroup"), "help6")],
-                [Markup.callbackButton(i18n.t("help.videoTutorial"), "help7")],
-                [Markup.callbackButton(i18n.t("help.redEnvelope"), "help8")],
-                [Markup.callbackButton(i18n.t("help.diceGames"), "help11")],
-                [Markup.callbackButton(i18n.t("help.transfer"), "help9")],
-                [Markup.callbackButton(i18n.t("help.otherQuestions"), "help10")],
+            ctx.replyWithMarkdown(i18n.t("bot.help.header"), Markup.inlineKeyboard([
+                [Markup.callbackButton(i18n.t("bot.help.introduction.title"), "help1")],
+                [Markup.callbackButton(i18n.t("bot.help.fandomTicketIntroduction.title"), "help2")],
+                [Markup.callbackButton(i18n.t("bot.help.command.title"), "help3")],
+                [Markup.callbackButton(i18n.t("bot.help.howToJoinFandomGroup.title"), "help4")],
+                [Markup.callbackButton(i18n.t("bot.help.howToCreateFandomGroup.title"), "help5")],
+                [Markup.callbackButton(i18n.t("bot.help.howToRemoveFandomGroup.title"), "help6")],
+                [Markup.callbackButton(i18n.t("bot.help.videoTutorial.title"), "help7")],
+                [Markup.callbackButton(i18n.t("bot.help.redEnvelope.title"), "help8")],
+                [Markup.callbackButton(i18n.t("bot.help.dice.title"), "help11")],
+                [Markup.callbackButton(i18n.t("bot.help.transfer.title"), "help9")],
+                [Markup.callbackButton(i18n.t("bot.help.otherQuestion.title"), "help10")],
             ]).extra());
         });
 
@@ -153,7 +153,7 @@ export class BotServiceImpl implements IBotService {
                 return;
             }
 
-            ctx.reply(i18n.t("messageReply"));
+            ctx.reply(i18n.t("bot.defaultReply"));
         });
     }
 

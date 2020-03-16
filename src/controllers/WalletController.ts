@@ -141,7 +141,7 @@ export class WalletController extends BaseController<WalletController> {
 
         const targetInfo = await this.matatakiService.getAssociatedInfo(targetId);
         if (!targetInfo.user) {
-            await replyWithMarkdown(i18n.t("error.matatakiAccountAbsent"));
+            await replyWithMarkdown(i18n.t("error.requireMatatakiAccount"));
             return;
         }
 

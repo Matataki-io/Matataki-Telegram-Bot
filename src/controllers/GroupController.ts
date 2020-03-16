@@ -30,13 +30,92 @@ export class GroupController extends BaseController<GroupController> {
     @Command("mygroups", { ignorePrefix: true })
     @RequireMintedMinetoken()
     async listMyGroups({ message, reply, telegram, i18n }: MessageHandlerContext, @InjectSenderMatatakiInfo() senderInfo: Required<AssociatedInfo>) {
+        const groups = await this.groupRepo.getGroupsOfCreator(message.from.id);
 
+        if (groups.length === 0) {
+            await reply(i18n.t("group.mygroups.noAnyGroup"));
+            return;
+        }
+
+        const array = new Array<string>();
+        const results = (await allPromiseSettled(groups.map(async group => {
+            const groupId = Number(group.id);
+            const groupInfo = await telegram.getChat(groupId);
+
+            const memberCount = await telegram.getChatMembersCount(groupId);
+            if (memberCount === 1) {
+                return null;
+            }
+
+            const admins = await telegram.getChatAdministrators(groupId);
+            let hasCreator = false;
+            let hasMe = false;
+            for (const admin of admins) {
+                if (admin.status === "creator") {
+                    hasCreator = true;
+                    continue;
+                }
+
+                if (admin.user.id === this.botService.info.id) {
+                    hasMe = true;
+                }
+            }
+            if (!hasCreator || !hasMe) {
+                return null;
+            }
+
+            return i18n.t("group.mygroups.groupInfo", {
+                id: group.id,
+                title: groupInfo.title,
+                symbol: senderInfo.minetoken.symbol,
+                amount: group.requirements.length > 0 ? group.requirements[0].amount : i18n.t("group.mygroups.noAnyRule"),
+            });
+        })));
+
+        for (const result of results) {
+            if (result.status === "rejected") {
+                continue;
+            }
+
+            if (result.value) {
+                array.push(result.value);
+            }
+        }
+
+        let content = array.length === 0 ? i18n.t("group.mygroups.noAny") : array.join("\n=====================\n");
+
+        content += `
+
+` + i18n.t("group.mygroups.tip");
+
+        await reply(content);
     }
 
     @Command("rule", { ignorePrefix: true })
     @GroupOnly()
     async getCurrentGroupRules({ message, reply, i18n }: MessageHandlerContext) {
+        const group = await this.groupRepo.getGroupOrDefault(message.chat.id);
+        if (!group) {
+            await reply(i18n.t("error.notFandomGroup"));
+            return;
+        }
 
+        const info = await this.matatakiService.getAssociatedInfo(Number(group.creatorId));
+
+        if (!info.minetoken) {
+            throw new Error("Impossible situation");
+        }
+
+        if (group.requirements.length > 0) {
+            await reply(i18n.t("group.rule.minetokenRequirement", {
+                symbol: info.minetoken.symbol,
+                amount: group.requirements[0].amount
+            }));
+        } else {
+            await reply(i18n.t("group.rule.noRequirement", {
+                symbol: info.minetoken.symbol
+            }));
+        }
     }
 
     @Command("set", /-?(\d+)\s+(\d+.?\d*)/, ({ t }) => t("group.setRequirement.badFormat"))
@@ -91,7 +170,6 @@ export class GroupController extends BaseController<GroupController> {
     @PrivateChatOnly()
     @RequireMatatakiAccount()
     async joinGroup({ message, reply, telegram, i18n }: MessageHandlerContext, @InjectSenderMatatakiInfo() info: AssociatedInfo) {
-
     }
 
     @Event("new_chat_members")
