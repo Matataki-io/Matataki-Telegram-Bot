@@ -3,6 +3,7 @@ lang: English
 error:
   usernameNotSynced: Sorry, please input /syncusername before receive a transaction in telegram.
   matatakiAccountAbsent: Sorry, please bind or login your telegram account with Matataki.
+  minetokenNotFound:
 
 wallet:
   query:
@@ -18,6 +19,26 @@ wallet:
     failed: "*Failure*"
     transactionDetail: Detail
 
+sync:
+  username:
+    noUsername:
+
+query:
+  price:
+    badFormat:
+    response:
+  status:
+    associatedMatatakiAccount:
+      no:
+      yes:
+    mintedMinetoken:
+      no:
+      yes:
+    joinedGroup:
+      header:
+    myGroup:
+      header:
+    tip:
 
 startReply: Thank you for using Matataki Fans, enter /help for more feature list
     👉🏻[Introduction Document](https://www.matataki.io/p/1638)
@@ -39,14 +60,6 @@ help:
   otherQuestions: 👉I have other questions
 
 
-status:
-  notUser: Your Telegram account doesn't connect to Matataki.io
-  notToken: You didn't issue any Fan ticket at Matataki
-  notJoined: "*You didn't found any Fan ticket group*"
-  joinedGroups: "*You have joined ${joinedGroups}  Fan ticket group(s)*"
-  notCreatedGroups: "*You didn't create any Fan tickets group*"
-  createdGroups: "*You have created ${createdGroups} Fan tickets group(s)*"
-  seeMore: type '/join' to learn more Fan tickets groups you can join
 
 mygroups:
   reply: |-

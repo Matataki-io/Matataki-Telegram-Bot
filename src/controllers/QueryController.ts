@@ -1,6 +1,6 @@
 import { inject } from "inversify";
 
-import { Controller, Command, InjectRepository, GlobalAlias } from "#/decorators";
+import { Controller, Command, InjectRepository, GlobalAlias, InjectRegexMatchGroup } from "#/decorators";
 import { MessageHandlerContext } from "#/definitions";
 import { Injections, LogCategories } from "#/constants";
 import { User, Group } from "#/entities";
@@ -30,15 +30,15 @@ export class QueryController extends BaseController<QueryController> {
         const array = new Array<string>();
 
         if (!info.user) {
-            array.push(i18n.t("status.notUser"));
+            array.push(i18n.t("query.status.associatedMatatakiAccount.no"));
         } else {
-            array.push(`瞬Matataki 昵称：[${info.user.name}](${this.matatakiService.urlPrefix}/user/${info.user.id})`);
+            array.push(i18n.t("query.status.associatedMatatakiAccount.yes"));
         }
 
         if (!info.minetoken) {
-            array.push(i18n.t("status.notToken"));
+            array.push(i18n.t("query.status.mintedMinetoken.no"));
         } else {
-            array.push(`Fan票 名称：[${info.minetoken.symbol}（${info.minetoken.name}）](${this.matatakiService.urlPrefix}/token/${info.minetoken.id})`);
+            array.push(i18n.t("query.status.mintedMinetoken.yes"));
         }
 
         if (info.user) {
@@ -47,7 +47,7 @@ export class QueryController extends BaseController<QueryController> {
             const joinedGroupsArray = new Array<string>();
 
             if (joinedGroup.length === 0) {
-                joinedGroupsArray.push(i18n.t("status.notJoined"));
+                joinedGroupsArray.push(i18n.t("query.status.joinedGroup.header"));
             } else {
                 const symbolMap = new Map<number, string>();
                 for (const group of joinedGroup) {
@@ -84,7 +84,7 @@ export class QueryController extends BaseController<QueryController> {
                     joinedGroupsArray.push(result.value);
                 }
 
-                joinedGroupsArray.unshift(i18n.t("status.joinedGroups", {
+                joinedGroupsArray.unshift(i18n.t("query.status.joinedGroup.header", {
                     joinedGroups: joinedGroupsArray.length
                 }));
             }
@@ -93,7 +93,7 @@ export class QueryController extends BaseController<QueryController> {
 
             const myGroups = await this.groupRepo.getGroupsOfCreator(id);
             if (myGroups.length === 0) {
-                createdGroupsArray.push(i18n.t("status.notCreatedGroups"));
+                createdGroupsArray.push(i18n.t("query.status.myGroup.header"));
             } else {
                 const results = await allPromiseSettled(myGroups.map(async group => {
                     const groupId = Number(group.id);
@@ -139,7 +139,7 @@ export class QueryController extends BaseController<QueryController> {
                     }
                 }
 
-                createdGroupsArray.unshift(i18n.t("status.createdGroups", {
+                createdGroupsArray.unshift(i18n.t("query.status.myGroup.header", {
                     createdGroups: createdGroupsArray.length
                 }));
             }
@@ -151,7 +151,7 @@ export class QueryController extends BaseController<QueryController> {
         }
 
         array.push("");
-        array.push(i18n.t("status.seeMore"));
+        array.push(i18n.t("query.status.tip"));
 
         await replyWithMarkdown(array.join("\n"), {
             disable_web_page_preview: true,
@@ -159,28 +159,20 @@ export class QueryController extends BaseController<QueryController> {
         });
     }
 
-    @Command("price")
-    async queryPrice({ message, reply, replyWithMarkdown }: MessageHandlerContext) {
-        const match = /^\/price(?:@[\w_]+)?\s+(\w+)/.exec(message.text);
-        if (!match || match.length < 2) {
-            await replyWithMarkdown("格式不对，请输入 `/price [symbol]`", {
-                reply_to_message_id: message.chat.type !== "private" ? message.message_id : undefined,
-            });
-            return;
-        }
-
-        const symbol = match[1].toUpperCase();
-
+    @Command("price", /(\w+)/, ({ t }) => t("query.price.badFormat"))
+    async queryPrice({ message, reply, replyWithMarkdown, i18n }: MessageHandlerContext,
+        @InjectRegexMatchGroup(1, input => input.toUpperCase()) symbol: string
+    ) {
         try {
             const price = await this.matatakiService.getPrice(symbol);
 
-            await replyWithMarkdown(`当前价格：${price} CNY`, {
+            await replyWithMarkdown(i18n.t("query.price.response", { price }), {
                 reply_to_message_id: message.chat.type !== "private" ? message.message_id : undefined,
             });
         } catch (e) {
             if (e instanceof Error) {
                 if (e.message === "Failed to get minetoken id") {
-                    await reply("抱歉，不存在这样的 Fan票", {
+                    await reply(i18n.t("error.minetokenNotFound"), {
                         reply_to_message_id: message.chat.type !== "private" ? message.message_id : undefined,
                     });
                     return;
