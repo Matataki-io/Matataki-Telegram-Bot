@@ -29,16 +29,20 @@ type Transfer = {
 };
 
 const Msgs = {
-    grabMessage: ({ grabber, amount, txHash, envelope, status }: Transfer) =>
-        status ?
-            `[${grabber.name}抢到了${envelope.sender.name}的一个${envelope.args.description}红包`
-      + `, 价值 ${amount / 10000} ${envelope.args.unit}]`
-      + `(https://rinkeby.etherscan.io/tx/${txHash})`
-            : `${grabber.name}正在尝试抢红包`
+    grabMessage: (ctx: MessageHandlerContext, { grabber, amount, txHash, envelope, status }: Transfer) =>
+        status ? ctx.i18n.t('redEnvelope.grabbed', {
+            grabber: grabber.name,
+            sender: envelope.sender.name,
+            description: envelope.args.description,
+            amount: amount / 10000,
+            unit: envelope.args.unit
+        }) : ctx.i18n.t('redEnvelope.trying', {
+            userName: grabber.name
+        })
     ,
     successMessage:
-    (userName: string) => userName +
-      "发了红包，快来抢吧!",
+        (ctx: MessageHandlerContext, userName: string) =>
+            ctx.i18n.t('redEnvelope.success', {userName})
 };
 
 function isEmptyEnvelope({ args: { quantity }, takenUsers }: Envelope) {
@@ -117,16 +121,18 @@ export class RedEnvelopeServiceImpl implements IRedEnvelopeService {
     }
     private async renderEnvelope(ctx: MessageHandlerContext, e: Envelope
         , modified = true) {
-        const grabMessages = e.takenUsers.map((transfer) => Msgs.grabMessage(transfer));
-        let messages = [Msgs.successMessage(e.sender.name),
+        const grabMessages = e.takenUsers.map((transfer) => Msgs.grabMessage(ctx, transfer));
+        let messages = [Msgs.successMessage(ctx, e.sender.name),
             ...grabMessages].join('\n').replace('_', '\\_');
         const empty = isEmptyEnvelope(e);
         if (empty) {
-            messages += `\n${e.sender.name}的红包已经被抢完`;
+            messages += '\n' + ctx.i18n.t('redEnvelope.finished', {
+                userName: e.sender.name
+            });
         }
         const replyMarkup = Markup.inlineKeyboard([
-            [Markup.callbackButton("抢", `hongbao ${e._id}`),
-                Markup.callbackButton("继续发送", `hongbao_resend ${e._id}`)]
+            [Markup.callbackButton(ctx.i18n.t('redEnvelope.grab'), `hongbao ${e._id}`),
+                Markup.callbackButton(ctx.i18n.t('redEnvelope.resend'), `hongbao_resend ${e._id}`)]
         ]);
         if (modified) {
             const { msgCtx } = e;

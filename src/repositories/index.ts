@@ -10,3 +10,4 @@ export abstract class BaseRepository<T> {
 
 export * from "./IUserRepository";
 export * from "./IGroupRepository";
+export * from "./IFandomGroupRequirementRepository";

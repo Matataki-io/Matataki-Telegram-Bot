@@ -1,4 +1,4 @@
-import Telegraf from "telegraf";
+import Telegraf, { Telegram } from "telegraf";
 import { Container } from "inversify";
 import { AxiosInstance } from "axios";
 
@@ -13,7 +13,11 @@ function createMockedAsyncFunction() {
     return jest.fn(() => Promise.resolve());
 }
 
-export function createMockedContext(): MessageHandlerContext {
+export interface MockedMessageHandlerContext extends MessageHandlerContext {
+    telegram: jest.Mocked<Telegram>
+}
+
+export function createMockedContext(): MockedMessageHandlerContext {
     // @ts-ignore
     const result = new Telegraf.Context();
 
@@ -25,6 +29,11 @@ export function createMockedContext(): MessageHandlerContext {
         },
         telegram: {
             sendMessage: createMockedAsyncFunction(),
+            getChat: jest.fn(),
+            getChatAdministrators: jest.fn(),
+            getChatMembersCount: jest.fn(),
+            exportChatInviteLink: jest.fn(),
+            kickChatMember: jest.fn(),
         },
         i18n: service.getDefaultContext("zh-hans"),
     });
@@ -34,7 +43,7 @@ export function createMockedContext(): MessageHandlerContext {
         container: createContainer(),
     }, result);
 
-    return result as MessageHandlerContext;
+    return result as MockedMessageHandlerContext;
 };
 
 function createContainer() {

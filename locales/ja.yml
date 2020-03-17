@@ -114,6 +114,7 @@ bot:
     otherQuestion:
       title: '👉I have other questions'
       content:
+
 redEnvelope:
   help: |-
     send Red Packet:/fahongbao <FanTicket> <Amount> <Quantity> [<Description>]
@@ -131,6 +132,7 @@ redEnvelope:
   finished: '${userName}''s red packet is now empty.'
   grabbed: "[${grabber} grabbed ${sender}'s ${description} red packet，${amount} ${unit}](https://rinkeby.etherscan.io/tx/${txHash})"
   trying: '${userName} is trying to grab the red packet'
+
 dice:
   help: |-
     开始一局游戏:/new_game <赌注> <赌注单位>

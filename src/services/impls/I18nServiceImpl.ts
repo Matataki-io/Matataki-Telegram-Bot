@@ -4,7 +4,7 @@ import { Script } from "vm";
 
 import * as yaml from "js-yaml";
 import { unmanaged } from "inversify";
-import { Middleware, ContextMessageUpdate } from "telegraf";
+import { Middleware, ContextMessageUpdate, Composer } from "telegraf";
 const languageTagRegex = require("ietf-language-tag-regex") as () => RegExp;
 import { getPluralRulesForCardinals, getPluralFormForCardinal } from "plural-rules";
 import { getRepository, Not } from "typeorm";
@@ -90,7 +90,7 @@ export class I18nServiceImpl implements II18nService {
     }
 
     middleware<T extends ContextMessageUpdate>(): Middleware<T> {
-        return async (ctx: T, next?: () => any) => {
+        return Composer.mount(["message", "callback_query"], async (ctx: T, next?: () => any) => {
             const from = ctx.message?.from ?? ctx.callbackQuery?.from;
             if (!from) {
                 throw new Error("What happened");
@@ -109,7 +109,7 @@ export class I18nServiceImpl implements II18nService {
             if (next) await next();
 
             this.userLanguage.set(from.id, i18nContext.language);
-        }
+        });
     }
 
     getDefaultContext(language: string) {
@@ -204,6 +204,11 @@ function compileDocument(document: LocaleYamlDocument): LocaleTemplates {
 
         if (typeof value !== "object") {
             throw new Error("Only support string or keys value");
+        }
+
+        if (value === null) {
+            result.set(key, () => key);
+            continue;
         }
 
         result.set(key, compileDocument(value));

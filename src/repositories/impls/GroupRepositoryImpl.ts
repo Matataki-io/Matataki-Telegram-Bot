@@ -1,10 +1,12 @@
 import { Not } from "typeorm";
 
 import { Repository } from "#/decorators";
+import { Chat } from "telegraf/typings/telegram-types";
+
 import { Group, User } from "#/entities";
 import { BaseRepository, IGroupRepository } from "#/repositories";
 
-const relationsOption = { relations: ["members"] };
+const relationsOption = { relations: ["members", "requirements", "requirements.group"] };
 
 @Repository(Group)
 export class GroupRepositoryImpl extends BaseRepository<Group> implements IGroupRepository {
@@ -12,35 +14,31 @@ export class GroupRepositoryImpl extends BaseRepository<Group> implements IGroup
         super(Group);
     }
 
-    async ensureGroup(id: number, title: string, creatorId: number, tokenId: number) {
-        let group = await this.repository.findOne(id);
-        if (!group) {
-            group = this.repository.create();
-            group.id = id;
-            group.title = title;
-            group.creatorId = creatorId;
-            group.tokenId = tokenId;
-            group.requirement = {};
-            group.active = false;
+    async ensureGroup(telegramChat: Chat, creatorId: number) {
+        if (telegramChat.type !== "group" && telegramChat.type !== "supergroup") {
+            throw new Error("Expect a chat of type 'group'");
         }
 
-        await this.repository.save(group);
+        let group = await this.repository.findOne(telegramChat.id);
+        if (!group) {
+            group = this.repository.create({
+                id: telegramChat.id,
+                title: telegramChat.title,
+                creatorId,
+            });
+
+            debugger;
+            await this.repository.save(group);
+        }
 
         return group;
     }
 
-    getGroup(id: number, includeInactive?: boolean) {
-        const options = includeInactive ? relationsOption : { where: { active: true }, ...relationsOption };
-
-        return this.repository.findOneOrFail(id, options);
+    getGroup(id: number) {
+        return this.repository.findOneOrFail(id, relationsOption);
     }
     getGroupOrDefault(id: number, includeInactive?: boolean) {
-        const options = includeInactive ? relationsOption : { where: { active: true }, ...relationsOption };
-
-        return this.repository.findOne(id, options);
-    }
-    getGroupsOfCreator(creatorId: number) {
-        return this.repository.find({ where: { creatorId }, ...relationsOption });
+        return this.repository.findOne(id, relationsOption);
     }
 
     getGroups() {
@@ -90,25 +88,6 @@ export class GroupRepositoryImpl extends BaseRepository<Group> implements IGroup
     }
 
     async setActive(group: Group, active: boolean) {
-        group.active = active;
-
-        if (!active) {
-            group.requirement = {};
-        }
-
-        await this.repository.save(group);
-    }
-
-    async setRequirement(group: Group, tokenAmount: number) {
-        group.requirement = {
-            minetoken: {
-                amount: tokenAmount,
-                canEqual: true,
-            },
-        }
-        group.active = true;
-
-        await this.repository.save(group);
     }
 
     async changeGroupId(oldId: number, newId: number) {
@@ -127,5 +106,16 @@ export class GroupRepositoryImpl extends BaseRepository<Group> implements IGroup
 
     async removeGroup(group: Group) {
         await this.repository.delete(group);
+    }
+
+    getJoinedGroups(id: number) {
+        return this.repository.createQueryBuilder("group")
+            .leftJoinAndSelect("group.requirements", "requirement")
+            .innerJoin("group.members", "member")
+            .where("member.id = :id", { id })
+            .getMany();
+    }
+    getGroupsOfCreator(creatorId: number) {
+        return this.repository.find({ where: { creatorId }, ...relationsOption });
     }
 }

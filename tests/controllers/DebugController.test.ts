@@ -351,5 +351,5 @@ describe("DebugController", () => {
             expect(ctx.reply).toBeCalledTimes(1);
             expect(ctx.reply).toBeCalledWith(i18nService.t(language, "lang"));
         });
-    })
+    });
 });

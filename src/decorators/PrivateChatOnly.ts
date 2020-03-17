@@ -10,7 +10,7 @@ export function PrivateChatOnly(): MethodDecorator {
             const { chat } = ctx.message;
 
             if (chat.type !== "private") {
-                await ctx.reply("该命令仅限和机器人私聊里使用");
+                await ctx.reply(ctx.i18n.t("error.privateChatOnly"));
                 return;
             }
 

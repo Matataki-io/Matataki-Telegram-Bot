@@ -7,16 +7,7 @@ import { IMatatakiService } from "../services";
 import { MatatakiUser, Arguments, IDiceService } from "#/services/IDiceService";
 import _ from 'lodash';
 import { asyncReplaceErr, checkNotNull, checkWith } from "../utils";
-const Msgs = {
-    helpMessage: [
-        "开始一局游戏:/new_game <赌注> <赌注单位>",
-        "注意:只有发送者能够开局或者流局"].join("\n"),
-    rollMessage: (x: number) => `点数为${x}`,
-    errorMessage: "错误的指令格式。",
-    noUserMessage: "尚未绑定 瞬Matataki 账户",
-    cantGetUserInfo: "Matataki用户信息获取失败",
-    postiveAmount: "金额必须为正数",
-}
+
 
 @Controller('Dice')
 export class DiceController extends BaseController<DiceController>{
@@ -28,7 +19,7 @@ export class DiceController extends BaseController<DiceController>{
     async dice(ctx: MessageHandlerContext) {
 
         try {
-            const args = this.parseDiceArguments(ctx.message.text);
+            const args = this.parseDiceArguments(ctx, ctx.message.text);
             const sender = await this.getMatatakiUser(ctx);
             const _id = this.diceService.registerGame(args, sender,
                 {
@@ -37,7 +28,7 @@ export class DiceController extends BaseController<DiceController>{
                 });
             await this.diceService.resendGame(ctx, _id);
         } catch (err) {
-            await ctx.reply([err.message, Msgs.helpMessage]
+            await ctx.reply([err.message, ctx.i18n.t('dice.help')]
                 .join('\n'));
         }
     }
@@ -66,12 +57,12 @@ export class DiceController extends BaseController<DiceController>{
             await this.diceService.closeGame(ctx, _id, user.id);
         });
     }
-    private parseDiceArguments(txt: string): Arguments {
+    private parseDiceArguments(ctx: MessageHandlerContext, txt: string): Arguments {
         let match = txt.match(/^\/new_game(?:@[\w_]+)?\s+(\d*\.?\d*)\s+(\w+)/);
-        match = checkNotNull(match, Msgs.errorMessage);
+        match = checkNotNull(match, ctx.i18n.t('dice.errorFormat'));
         return {
             amount: checkWith(Number(match[1]) * 10000,
-                (x) => x > 0, Msgs.postiveAmount),
+                (x) => x > 0, ctx.i18n.t('dice.positiveAmount')),
             unit: match[2].toUpperCase()
         }
     }
@@ -80,8 +71,8 @@ export class DiceController extends BaseController<DiceController>{
         const tgid = ctx.callbackQuery ? ctx.callbackQuery.from.id :
             ctx.message.from.id;
         const info = await asyncReplaceErr(this.matatakiService.getAssociatedInfo(tgid),
-            Msgs.cantGetUserInfo);
-        const user = checkNotNull(info.user, Msgs.noUserMessage);
+            ctx.i18n.t('dice.cantGetUserInfo'));
+        const user = checkNotNull(info.user, ctx.i18n.t('dice.noUser'));
         return { name: this.getTgName(ctx), id: user.id };
     }
     private getTgName(ctx: MessageHandlerContext): string {
@@ -92,7 +83,7 @@ export class DiceController extends BaseController<DiceController>{
     }
     private parseCbArg(text: string): number {
         let match = text.match(/[\w_]+\s(.+)/);
-        match = checkNotNull(match, "redEnvelope : callback arg parse fail");
+        match = checkNotNull(match, "dice : callback arg parse fail");
         return Number(match[1]);
     }
 
@@ -104,7 +95,7 @@ export class DiceController extends BaseController<DiceController>{
                 const id = this.parseCbArg(cb.data);
                 await f(id);
             } catch (err) {
-                await ctx.reply([err.message, Msgs.helpMessage]
+                await ctx.reply([err.message, ctx.i18n.t('dice.help')]
                     .join('\n'));
             }
         }

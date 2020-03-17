@@ -32,4 +32,25 @@ describe("Matataki Service", () => {
         expect(service.mockedAxios.get).toBeCalledTimes(1);
         expect(service.mockedAxios.get).toBeCalledWith("/_internal_bot/minetoken/0/contractAddress");
     });
+    test("Responded a minetoken symbol by id", async () => {
+        const service = new MatatakiServiceStub();
+
+        await expect(service.getMinetokenSymbol(1919)).resolves.toBe("INM");
+
+        expect(service.mockedAxios.get).toBeCalledTimes(1);
+        expect(service.mockedAxios.get).toBeCalledWith("/minetoken/1919");
+    });
+    test("Responded all minetokens", async () => {
+        const service = new MatatakiServiceStub();
+
+        await expect(service.getAllMinetokens()).resolves.toEqual([{
+            id: 1919,
+            name: "银票",
+            symbol: "INM",
+            contract_address: "0x1145141919810",
+        }]);
+
+        expect(service.mockedAxios.get).toBeCalledTimes(1);
+        expect(service.mockedAxios.get).toBeCalledWith("/_internal_bot/minetokens");
+    });
 });
