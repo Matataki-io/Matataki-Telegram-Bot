@@ -1,7 +1,7 @@
 ---
-lang: 日本語
+lang: 繁體中文
 error:
-  usernameNotSynced: すいません，お振込先がデータベースにアカウントを同期していませんです。
+  usernameNotSynced: 抱歉，對方還沒有同步用戶名到數據庫裡
   usernameNotFound: Sorry, I can't find a user with this username.
   requireMatatakiAccount: Sorry, please bind or login your telegram account with Matataki.
   minetokenNotFound: Sorry, there is no such a minetoken.
@@ -114,7 +114,6 @@ bot:
     otherQuestion:
       title: '👉I have other questions'
       content:
-
 redEnvelope:
   help: |-
     send Red Packet:/fahongbao <FanTicket> <Amount> <Quantity> [<Description>]
@@ -132,7 +131,6 @@ redEnvelope:
   finished: '${userName}''s red packet is now empty.'
   grabbed: "[${grabber} grabbed ${sender}'s ${description} red packet，${amount} ${unit}](https://rinkeby.etherscan.io/tx/${txHash})"
   trying: '${userName} is trying to grab the red packet'
-
 dice:
   help: |-
     开始一局游戏:/new_game <赌注> <赌注单位>
