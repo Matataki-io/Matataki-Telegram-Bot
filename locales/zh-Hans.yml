@@ -8,7 +8,7 @@ error:
   notFandomGroup: 抱歉，这不是一个 Fan 票群
   groupChatOnly: 抱歉，该功能仅在群聊里使用
   privateChatOnly: 抱歉，该功能仅在私聊里使用
-  requireMintedMinetoken: Sorry, you should have minted a minetoken on Matataki.
+  requireMintedMinetoken: 抱歉，您需要在瞬 Matataki 上发行 Fan 票
 common:
   associatedMatatakiAccount:
     no: 没有绑定 Matataki
@@ -18,101 +18,101 @@ common:
     yes: "Fan票 名称：[${symbol} (${minetokenName})](${minetokenPageUrl})"
 wallet:
   query:
-    badFormat: Only `/query [Matataki UID] [Token Symbol]` or `/query @[Telegram username] [Token Symbol]` is acceptable.
+    badFormat: 格式不对，暂时只接受 `/query` 和 `/query [Matataki UID/@Telegram 用户名] [Fan票 符号]`
     minetoken:
-      header: You have balance(s) of ${count} minetoken(s)
+      header: 您现在持有 ${count} 种 Fan 票
   transfer:
-    badFormat: Only `/transfer [Matataki UID] [Token Symbol] [Amount]` or `/transfer @[Telegram username] [Token Symbol] [Amount]` is acceptable.
+    badFormat: 格式不对，请输入 `/transfer [Matataki UID/@Telegram 用户名] [symbol] [amount]`
     common: |-
-      From: [${senderUsername}](${senderUrl})
-      To: [${receiverUsername}](${receiverUrl})
-      Value: ${amount} ${symbol}
-    started: "Pending..."
-    successful: "*Success*"
-    failed: "*Failure*"
-    transactionDetail: Detail
+      转账方：[${senderUsername}](${senderUrl})
+      被转账方：[${receiverUsername}](${receiverUrl})
+      转账数目：${amount} ${symbol}
+    started: "转账交易进行中..."
+    successful: "*转账成功*"
+    failed: "*转账失败*"
+    transactionDetail: 交易详情
 sync:
   username:
-    noUsername: Sorry, please set a username to your Telegram account in Telegram settings.
+    noUsername: 抱歉，请在 Telegram 设置里设置帐号的用户名
 query:
   price:
-    badFormat: Only `/query [Token Symbol]` is acceptable.
-    response: "Current price: ${price} CNY"
+    badFormat: 格式不对，请输入 `/query [Fan 票符号]`
+    response: "当前价格：${price} CNY"
   status:
     joinedGroup:
-      yes: You've joined ${count} fandom group(s)
-      no: You haven't joined any fandom group
+      yes: 你已加入 ${count} 个 Fan 票群
+      no: 您尚未加入 Fan票 群
     myGroup:
-      yes: You've created ${count} fandom group(s)
-      no: You haven't created any fandom group
-    groupNoRule: No Rule
-    tip: Send /join to show what fandom group you can join
+      yes: 您已建立 ${count} 个 Fan票 群
+      no: 您尚未建立 Fan票 群
+    groupNoRule: 没有规则
+    tip: 输入 /join 查看更多可以加入的 Fan票 群
 group:
   rule:
-    minetokenRequirement: This group requires ${symbol} ≥ ${amount}
-    noRequirement: This group doesn't have any requirement with ${symbol}
+    minetokenRequirement: 该群目前要求 ${symbol} ≥ ${amount}
+    noRequirement: 该群目前没有 ${symbol} 要求
   setRequirement:
-    badFormat: Only `/set [Group ID] [Amount]` is acceptable.
-    groupNotFound: Sorry, I can't find such a group.
-    creatorLeft: The group creator has left the group.
-    botNotAdmin: The bot is not a administrator in the group.
-    notification: Current group has been set a new rule
+    badFormat: 格式错误，请输入 `/set [群组 ID] [数量]`
+    groupNotFound: 抱歉，没有找到该群组
+    creatorLeft: 该群群主不在群里
+    botNotAdmin: 机器人没有被设置成该群管理员
+    notification: 当前群组已设置新的规则
   kickMember:
-    badFormat: Only `/kick @[Telegram username] [Time]` is acceptable.
-    started: Kicking...
-    success: Kicked
-    failure: Failed to kick
+    badFormat: 格式错误，请输入 `/kick @[Telegram 用户名] [时间]`
+    started: 放逐中...
+    success: 放逐成功
+    failure: 放逐失败
   banMember:
-    badFormat: Only `/ban @[Telegram username] [Time]` is acceptable.
-    started: Banning...
-    success: Banned
-    failure: Failed to ban
+    badFormat: 格式错误，请输入 `/ban@[Telegram 用户名] [时间]`
+    started: 禁言中……
+    success: 禁言成功
+    failure: 禁言失败
   mygroups:
     noAnyGroup:
     groupInfo: |-
-      Group ID：${id}
-      Name：${title}
-      Fan tickets：${symbol}
-      Minimum required：${amount}
-    noAnyRule: No Rule
-    tip: Promote Matataki bot as admin before listing your fandom group(s)
+      群组 ID：${id}
+      名字：${title}
+      Fan 票：${symbol}
+      最低要求：${amount}
+    noAnyRule: 没有规则
+    tip: 查询前请将 Fan票 群中的粉丝群助手设置为管理员
 bot:
-  start: Thank you for using Matataki bot, you can send /help for help 👉🏻[Introduction](https://www.matataki.io/p/1638)
-  defaultReply: I'm a Matataki bot, you can send /help for help
+  start: "感谢您使用 Matataki 粉丝群助手，输入 /help 查看更多功能列表\n👉🏻[介绍文档](https://www.matataki.io/p/1638)"
+  defaultReply: 我是 Matataki 机器人，输入 /help 可获得帮助信息
   help:
-    header: What do you want to know?
+    header: 您想了解什么？
     introduction:
-      title: '👉Who are you'
+      title: '👉你是谁'
       content:
     fandomTicketIntroduction:
-      title: '👉What is the fan ticket group'
+      title: '👉Fan票 粉丝群是什么'
       content:
     command:
-      title: '👉Operation instructions'
+      title: '👉操作指令说明'
       content:
     howToJoinFandomGroup:
-      title: '👉How to join fan ticket group'
+      title: '👉如何加入 Fan票 群'
       content:
     howToCreateFandomGroup:
-      title: '👉How to create a fan ticket group'
+      title: '👉如何创建 Fan票 群'
       content:
     howToRemoveFandomGroup:
-      title: '👉How to delete fan ticket group'
+      title: '👉如何删除 Fan票 群'
       content:
     videoTutorial:
-      title: '👉Video tutorial (updating)'
+      title: '👉视频教程(更新中)'
       content:
     redEnvelope:
-      title: '👉How to use the red envelope function'
+      title: '👉如何使用红包功能'
       content:
     dice:
-      title: '👉How to start Dice game'
+      title: '👉如何开启Dice小游戏'
       content:
     transfer:
-      title: '👉How to use the transfer function'
+      title: '👉如何使用转账功能'
       content:
     otherQuestion:
-      title: '👉I have other questions'
+      title: '👉我有别的问题'
       content:
 redEnvelope:
   help: |-
