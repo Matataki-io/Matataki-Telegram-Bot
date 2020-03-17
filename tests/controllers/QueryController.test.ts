@@ -163,9 +163,9 @@ Fan票 名称：[INM（银票）](http://MATATAKI/token/1919)
     });
 
     describe("/price", () => {
-        async function assertSuccessfulSession(ctx: MessageHandlerContext) {
+        async function assertSuccessfulSession(ctx: MessageHandlerContext, symbol: string) {
             const controller = createController();
-            await controller.queryPrice(ctx);
+            await controller.queryPrice(ctx, symbol);
 
             expect(ctx.reply).toBeCalledTimes(0);
             expect(ctx.replyWithMarkdown).toBeCalledTimes(1);
@@ -180,37 +180,7 @@ Fan票 名称：[INM（银票）](http://MATATAKI/token/1919)
                     text: "/price INM",
                 },
             });
-            await assertSuccessfulSession(ctx);
-        });
-        it("Price of INM (Lowercase)", async () => {
-            const ctx = createMockedContext();
-            Object.assign(ctx, {
-                message: {
-                    ...ctx.message,
-                    text: "/price inm",
-                },
-            });
-            await assertSuccessfulSession(ctx);
-        });
-        it("Price of INM (Mixed)", async () => {
-            const ctx = createMockedContext();
-            Object.assign(ctx, {
-                message: {
-                    ...ctx.message,
-                    text: "/price iNM",
-                },
-            });
-            await assertSuccessfulSession(ctx);
-        });
-        it("Price of INM (With whitespaces)", async () => {
-            const ctx = createMockedContext();
-            Object.assign(ctx, {
-                message: {
-                    ...ctx.message,
-                    text: "/price   INM   ",
-                },
-            });
-            await assertSuccessfulSession(ctx);
+            await assertSuccessfulSession(ctx, "INM");
         });
 
         it("Price of invalid symbol", async () => {
@@ -223,7 +193,7 @@ Fan票 名称：[INM（银票）](http://MATATAKI/token/1919)
             });
 
             const controller = createController();
-            await controller.queryPrice(ctx);
+            await controller.queryPrice(ctx, "NOTFOUND");
 
             expect(ctx.replyWithMarkdown).toBeCalledTimes(0);
             expect(ctx.reply).toBeCalledTimes(1);
@@ -240,7 +210,7 @@ Fan票 名称：[INM（银票）](http://MATATAKI/token/1919)
             });
 
             const controller = createController();
-            await controller.queryPrice(ctx);
+            await controller.queryPrice(ctx, "!@#");
 
             expect(ctx.reply).toBeCalledTimes(0);
             expect(ctx.replyWithMarkdown).toBeCalledTimes(1);
