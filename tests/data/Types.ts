@@ -6,11 +6,17 @@ export type Minetoken = {
     price: number,
 };
 
+export type MinetokenBalance = {
+    minetoken: Minetoken,
+    amount: number,
+};
+
 export type MatatakiAccount = {
     id: number,
     name: string,
     walletAddress: string,
-    minetoken?: Minetoken,
+    mintedMinetoken?: Minetoken,
+    minetokens?: Array<MinetokenBalance>,
 };
 
 export type TelegramUser = {
@@ -20,6 +26,12 @@ export type TelegramUser = {
     username?: string,
     matatakiAccount?: MatatakiAccount,
 };
+
+export type FanGroupMinetokenRequirement = {
+    minetoken: Minetoken,
+    amount: number,
+};
+
 export type TelegramGroupMember = {
     user: TelegramUser,
     status: "creator" | "administrator" | "member" | "kicked" | "restrict" | "left",
@@ -29,4 +41,5 @@ export type TelegramGroup = {
     isSupergroup: boolean,
     title: string,
     members: Array<TelegramGroupMember>,
+    minetokenRequirements?: Array<FanGroupMinetokenRequirement>,
 };

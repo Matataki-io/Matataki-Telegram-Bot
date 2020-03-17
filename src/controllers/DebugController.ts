@@ -1,4 +1,4 @@
-import { Controller, Command, GroupOnly, PrivateChatOnly, RequireMatatakiAccount, RequireMintedMinetoken, InjectSenderMatatakiInfo } from "#/decorators";
+import { Controller, Command, GroupOnly, PrivateChatOnly, RequireMatatakiAccount, RequireMintedMinetoken, InjectSenderMatatakiInfo, RequirePermissions } from "#/decorators";
 import { MessageHandlerContext, AssociatedInfo } from "#/definitions";
 import { BaseController } from ".";
 
@@ -57,5 +57,11 @@ export class DebugController extends BaseController<DebugController> {
     @Command("i18n")
     i18n({ reply, i18n }: MessageHandlerContext) {
         return reply(i18n.t("lang"));
+    }
+
+    @Command("permission")
+    @RequirePermissions("can_restrict_members")
+    permission({ reply }: MessageHandlerContext) {
+        return reply("Ok");
     }
 }

@@ -1,8 +1,7 @@
-import { Entity, PrimaryColumn, ManyToMany, Column, Index } from "typeorm";
+import { Entity, PrimaryColumn, ManyToMany, Column, Index, OneToMany } from "typeorm";
 
 import { User } from "./User";
-import { JsonColumn } from "#/decorators";
-import { GroupRequirement } from "#/definitions";
+import { FandomGroupRequirement } from "./FandomGroupRequirement";
 
 @Entity()
 export class Group {
@@ -13,19 +12,12 @@ export class Group {
     title!: string;
 
     @Column({ type: "bigint" })
-    @Index({ where: "active" })
+    @Index()
     creatorId!: number | string;
 
-    @Column({ type: "boolean" })
-    active!: boolean;
+    @ManyToMany(() => User, user => user.groups)
+    members!: Array<User>;
 
-    @Column({ type: "int" })
-    @Index({ where: "active" })
-    tokenId!: number;
-
-    @JsonColumn()
-    requirement!: GroupRequirement;
-
-    @ManyToMany(type => User, user => user.groups)
-    members!: User[];
+    @OneToMany(() => FandomGroupRequirement, requirement => requirement.group)
+    requirements!: Array<FandomGroupRequirement>;
 }

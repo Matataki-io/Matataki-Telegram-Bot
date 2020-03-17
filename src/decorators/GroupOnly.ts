@@ -10,7 +10,7 @@ export function GroupOnly(): MethodDecorator {
             const { chat } = ctx.message;
 
             if (chat.type !== "group" && chat.type !== "supergroup") {
-                await ctx.reply("该命令仅限群聊里使用");
+                await ctx.reply(ctx.i18n.t("error.groupChatOnly"));
                 return;
             }
 

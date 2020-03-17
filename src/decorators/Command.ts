@@ -35,18 +35,22 @@ function Command(name: string,
         }
 
         if (!Reflect.hasMetadata(MetadataKeys.CommandNames, target.constructor)) {
-            Reflect.defineMetadata(MetadataKeys.CommandNames, [], target.constructor);
+            Reflect.defineMetadata(MetadataKeys.CommandNames, new Map<string, Map<string, CommandHandlerInfo>>(), target.constructor);
         }
 
-        const commands = Reflect.getMetadata(MetadataKeys.CommandNames, target.constructor) as CommandHandlerInfo[];
+        const commands = Reflect.getMetadata(MetadataKeys.CommandNames, target.constructor) as Map<string, Map<string, CommandHandlerInfo>>;
 
-        if (commands.find(info => info.methodName === methodName)) {
-            throw new Error("No multiple @Command");
+        let methods = commands.get(name);
+        if (!methods) {
+            methods = new Map<string, CommandHandlerInfo>();
+            commands.set(name, methods);
         }
 
-        commands.push({
-            name,
-            methodName,
+        if (methods.has(methodName)) {
+            throw new Error("Cannot apply @Command decorator multiple times");
+        }
+
+        methods.set(methodName, {
             argumentRegex,
             errorMessage,
             ignorePrefix: options?.ignorePrefix ?? false,

@@ -1,6 +1,6 @@
 import { inject } from "inversify";
 
-import { Controller, Command, InjectRepository } from "#/decorators";
+import { Controller, Command, InjectRepository, GlobalAlias, InjectRegexMatchGroup } from "#/decorators";
 import { MessageHandlerContext } from "#/definitions";
 import { Injections, LogCategories } from "#/constants";
 import { User, Group } from "#/entities";
@@ -11,6 +11,8 @@ import { allPromiseSettled } from "#/utils";
 import { BaseController } from ".";
 
 @Controller("query")
+@GlobalAlias("status", "status")
+@GlobalAlias("price", "price")
 export class QueryController extends BaseController<QueryController> {
     constructor(@inject(Injections.MatatakiService) private matatakiService: IMatatakiService,
         @InjectRepository(User) private userRepo: IUserRepository,
@@ -20,7 +22,7 @@ export class QueryController extends BaseController<QueryController> {
         super();
     }
 
-    @Command("status", { ignorePrefix: true })
+    @Command("status")
     async queryStatus({ message, replyWithMarkdown, telegram, i18n }: MessageHandlerContext) {
         const id = message.from.id;
         const info = await this.matatakiService.getAssociatedInfo(id);
@@ -28,42 +30,49 @@ export class QueryController extends BaseController<QueryController> {
         const array = new Array<string>();
 
         if (!info.user) {
-            array.push(i18n.t("status.notUser"));
+            array.push(i18n.t("common.associatedMatatakiAccount.no"));
         } else {
-            array.push(`瞬Matataki 昵称：[${info.user.name}](${this.matatakiService.urlPrefix}/user/${info.user.id})`);
+            array.push(i18n.t("common.associatedMatatakiAccount.yes"));
         }
 
         if (!info.minetoken) {
-            array.push(i18n.t("status.notToken"));
+            array.push(i18n.t("common.mintedMinetoken.no"));
         } else {
-            array.push(`Fan票 名称：[${info.minetoken.symbol}（${info.minetoken.name}）](${this.matatakiService.urlPrefix}/token/${info.minetoken.id})`);
+            array.push(i18n.t("common.mintedMinetoken.yes"));
         }
 
         if (info.user) {
-            const user = await this.userRepo.getUser(id);
+            const joinedGroup = await this.groupRepo.getJoinedGroups(id);
 
             const joinedGroupsArray = new Array<string>();
 
-            if (!user || user.groups.length === 0) {
-                joinedGroupsArray.push(i18n.t("status.notJoined"));
+            if (joinedGroup.length === 0) {
+                joinedGroupsArray.push(i18n.t("query.status.joinedGroup.no"));
             } else {
                 const symbolMap = new Map<number, string>();
-                for (const group of user.groups) {
-                    if (symbolMap.has(group.tokenId)) {
+                for (const group of joinedGroup) {
+                    if (group.requirements.length === 0 || symbolMap.has(group.requirements[0].minetokenId)) {
                         continue;
                     }
 
-                    const info = await this.matatakiService.getAssociatedInfo(Number(group.creatorId));
+                    const minetokenId = group.requirements[0].minetokenId;
+                    if (symbolMap.has(minetokenId)) {
+                        continue;
+                    }
 
-                    symbolMap.set(group.tokenId, info.minetoken!.symbol);
+                    const symbol = await this.matatakiService.getMinetokenSymbol(minetokenId);
+
+                    symbolMap.set(minetokenId, symbol);
                 }
 
-                const results = await allPromiseSettled(user.groups.map(async group => {
+                const results = await allPromiseSettled(joinedGroup.map(async group => {
                     const info = await telegram.getChat(Number(group.id));
                     const inviteLink = info.invite_link ?? await telegram.exportChatInviteLink(group.id);
-                    const requiredAmount = group.requirement.minetoken?.amount ?? 0;
 
-                    return `/ [${info.title ?? info.id}](${inviteLink}) （${requiredAmount > 0 ? `${symbolMap.get(group.tokenId)} ≥ ${requiredAmount}` : "暂无规则"}）`;
+                    const isFandomGroup = group.requirements.length > 0;
+                    const requiredAmount = isFandomGroup ? group.requirements[0].amount : -1;
+
+                    return `/ [${info.title ?? info.id}](${inviteLink}) （${requiredAmount > 0 ? `${symbolMap.get(group.requirements[0].minetokenId)} ≥ ${requiredAmount / 10000}` : i18n.t("query.status.groupNoRule")}）`;
                 }));
 
                 for (const result of results) {
@@ -75,7 +84,7 @@ export class QueryController extends BaseController<QueryController> {
                     joinedGroupsArray.push(result.value);
                 }
 
-                joinedGroupsArray.unshift(i18n.t("status.joinedGroups", {
+                joinedGroupsArray.unshift(i18n.t("query.status.joinedGroup.yes", {
                     joinedGroups: joinedGroupsArray.length
                 }));
             }
@@ -84,17 +93,15 @@ export class QueryController extends BaseController<QueryController> {
 
             const myGroups = await this.groupRepo.getGroupsOfCreator(id);
             if (myGroups.length === 0) {
-                createdGroupsArray.push(i18n.t("status.notCreatedGroups"));
+                createdGroupsArray.push(i18n.t("query.status.myGroup.no"));
             } else {
                 const results = await allPromiseSettled(myGroups.map(async group => {
-                    if (!group.active) {
-                        return null;
-                    }
-
                     const groupId = Number(group.id);
                     const groupInfo = await telegram.getChat(groupId);
                     const inviteLink = groupInfo.invite_link ?? await telegram.exportChatInviteLink(group.id);
-                    const requiredAmount = group.requirement.minetoken?.amount ?? 0;
+
+                    const isFandomGroup = group.requirements.length > 0;
+                    const requiredAmount = isFandomGroup ? group.requirements[0].amount : -1;
 
                     const memberCount = await telegram.getChatMembersCount(groupId);
                     if (memberCount === 1) {
@@ -118,7 +125,7 @@ export class QueryController extends BaseController<QueryController> {
                         return null;
                     }
 
-                    return `/ [${groupInfo.title ?? groupInfo.id}](${inviteLink}) （${requiredAmount > 0 ? `${info.minetoken!.symbol} ≥ ${requiredAmount}` : "暂无规则"}）`;
+                    return `/ [${groupInfo.title ?? groupInfo.id}](${inviteLink}) （${requiredAmount > 0 ? `${info.minetoken!.symbol} ≥ ${requiredAmount / 10000}` : i18n.t("query.status.groupNoRule")}）`;
                 }));
 
                 for (const result of results) {
@@ -132,7 +139,7 @@ export class QueryController extends BaseController<QueryController> {
                     }
                 }
 
-                createdGroupsArray.unshift(i18n.t("status.createdGroups", {
+                createdGroupsArray.unshift(i18n.t("query.status.myGroup.yes", {
                     createdGroups: createdGroupsArray.length
                 }));
             }
@@ -144,7 +151,7 @@ export class QueryController extends BaseController<QueryController> {
         }
 
         array.push("");
-        array.push(i18n.t("status.seeMore"));
+        array.push(i18n.t("query.status.tip"));
 
         await replyWithMarkdown(array.join("\n"), {
             disable_web_page_preview: true,
@@ -152,28 +159,20 @@ export class QueryController extends BaseController<QueryController> {
         });
     }
 
-    @Command("price", { ignorePrefix: true })
-    async queryPrice({ message, reply, replyWithMarkdown }: MessageHandlerContext) {
-        const match = /^\/price(?:@[\w_]+)?\s+(\w+)/.exec(message.text);
-        if (!match || match.length < 2) {
-            await replyWithMarkdown("格式不对，请输入 `/price [symbol]`", {
-                reply_to_message_id: message.chat.type !== "private" ? message.message_id : undefined,
-            });
-            return;
-        }
-
-        const symbol = match[1].toUpperCase();
-
+    @Command("price", /(\w+)/, ({ t }) => t("query.price.badFormat"))
+    async queryPrice({ message, reply, replyWithMarkdown, i18n }: MessageHandlerContext,
+        @InjectRegexMatchGroup(1, input => input.toUpperCase()) symbol: string
+    ) {
         try {
             const price = await this.matatakiService.getPrice(symbol);
 
-            await replyWithMarkdown(`当前价格：${price} CNY`, {
+            await replyWithMarkdown(i18n.t("query.price.response", { price }), {
                 reply_to_message_id: message.chat.type !== "private" ? message.message_id : undefined,
             });
         } catch (e) {
             if (e instanceof Error) {
                 if (e.message === "Failed to get minetoken id") {
-                    await reply("抱歉，不存在这样的 Fan票", {
+                    await reply(i18n.t("error.minetokenNotFound"), {
                         reply_to_message_id: message.chat.type !== "private" ? message.message_id : undefined,
                     });
                     return;

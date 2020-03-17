@@ -34,7 +34,7 @@ export function RequireMatatakiAccount(): MethodDecorator {
 
             const info = await matatakiService.getAssociatedInfo(ctx.message.from.id);
             if (!info.user) {
-                await ctx.reply("抱歉，您没有在 瞬Matataki 绑定该 Telegram 帐号");
+                await ctx.reply(ctx.i18n.t("error.requireMatatakiAccount"));
                 return;
             }
 

@@ -14,10 +14,10 @@ export class SyncController extends BaseController<SyncController> {
     }
 
     @Command("username")
-    async syncUsername({ message, reply }: MessageHandlerContext) {
+    async syncUsername({ message, reply, i18n }: MessageHandlerContext) {
         const { id, username } = message.from;
         if (!username) {
-            await reply("抱歉，您还没有设置 Telegram 帐号用户名", {
+            await reply(i18n.t("sync.username.noUsername"), {
                 reply_to_message_id: message.chat.type !== "private" ? message.message_id : undefined,
             });
             return;

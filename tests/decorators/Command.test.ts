@@ -8,6 +8,6 @@ describe("@Command", () => {
                 @Command("multiple")
                 multiple() { }
             }
-        }).toThrowError("No multiple @Command");
+        }).toThrowError("Cannot apply @Command decorator multiple times");
     });
 });

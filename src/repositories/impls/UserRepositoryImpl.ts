@@ -1,3 +1,5 @@
+import { User as TelegramUser } from "telegraf/typings/telegram-types";
+
 import { Repository } from "#/decorators";
 import { User } from "#/entities";
 import { BaseRepository, IUserRepository } from "#/repositories";
@@ -8,17 +10,19 @@ export class UserRepositoryImpl extends BaseRepository<User> implements IUserRep
         super(User);
     }
 
-    async ensureUser(id: number, username?: string) {
-        let user = await this.repository.findOne(id);
-        if (user) {
-            return user;
+    async ensureUser(telegramUser: TelegramUser): Promise<User> {
+        if (telegramUser.is_bot) {
+            throw new Error("Expect a non-bot telegram user");
         }
 
-        user = this.repository.create();
-        user.id = id.toString();
-        user.username = username ?? null;
-
-        await this.repository.save(user);
+        let user = await this.repository.findOne(telegramUser.id);
+        if (!user) {
+            user = await this.repository.save(this.repository.create({
+                id: telegramUser.id,
+                username: telegramUser.username,
+                language: telegramUser.language_code,
+            }));
+        }
 
         return user;
     }
@@ -32,7 +36,12 @@ export class UserRepositoryImpl extends BaseRepository<User> implements IUserRep
     }
 
     async setUsername(id: number, username: string): Promise<void> {
-        const user = await this.ensureUser(id);
+        const user = await this.ensureUser({
+            id,
+            username,
+            is_bot: false,
+            first_name: "",
+        });
 
         user.username = username;
 
