@@ -2,29 +2,29 @@ lang: English
 
 error:
   usernameNotSynced: Sorry, please input /syncusername before receive a transaction in telegram.
-  usernameNotFound:
+  usernameNotFound: Sorry, I can't find a user with this username.
   requireMatatakiAccount: Sorry, please bind or login your telegram account with Matataki.
-  minetokenNotFound:
-  notFandomGroup:
-  groupChatOnly:
-  privateChatOnly:
-  requireMintedMinetoken:
+  minetokenNotFound: Sorry, there is no such a minetoken.
+  notFandomGroup: Sorry, this is not a fandom group.
+  groupChatOnly: Sorry, it's only available in a group chat.
+  privateChatOnly: Sorry, it's only available in a private chat.
+  requireMintedMinetoken: Sorry, you should have minted a minetoken on Matataki.
 
 common:
   associatedMatatakiAccount:
-    no:
-    yes:
+    no: No connection with Matataki
+    yes: "Matataki account: [${matatakiUsername}](${matatakiUserPageUrl})"
   mintedMinetoken:
-    no:
-    yes:
+    no: No minetoken minted on Matataki
+    yes: "Minetoken: [${symbol} (${minetokenName})](${minetokenPageUrl})"
 
 wallet:
   query:
-    badFormat:
+    badFormat: Only `/query [Matataki UID] [Token Symbol]` or `/query @[Telegram username] [Token Symbol]` is acceptable.
     minetoken:
-      header:
+      header: You have balance(s) of ${count} minetoken(s)
   transfer:
-    badFormat:
+    badFormat: Only `/transfer [Matataki UID] [Token Symbol] [Amount]` or `/transfer @[Telegram username] [Token Symbol] [Amount]` is acceptable.
     common: |-
       From: [${senderUsername}](${senderUrl})
       To: [${receiverUsername}](${receiverUrl})
@@ -36,44 +36,56 @@ wallet:
 
 sync:
   username:
-    noUsername:
+    noUsername: Sorry, please set a username to your Telegram account in Telegram settings.
 
 query:
   price:
-    badFormat:
-    response:
+    badFormat: Only `/query [Token Symbol]` is acceptable.
+    response: "Current price: ${price} CNY"
   status:
     joinedGroup:
-      header:
+      yes: You've joined ${count} fandom group(s)
+      no: You haven't joined any fandom group
     myGroup:
-      header:
-    groupNoRule:
-    tip:
+      yes: You've created ${count} fandom group(s)
+      no: You haven't created any fandom group
+    groupNoRule: No Rule
+    tip: Send /join to show what fandom group you can join
 
 group:
   rule:
-    minetokenRequirement: this group require ${symbol} ≥ ${amount}
-    noRequirement: this group doesn't have any requirement in ${symbol}
+    minetokenRequirement: This group requires ${symbol} ≥ ${amount}
+    noRequirement: This group doesn't have any requirement with ${symbol}
   setRequirement:
-    badFormat:
-    groupNotFound:
-    creatorLeft:
-    botNotAdmin:
-    notification:
+    badFormat: Only `/set [Group ID] [Amount]` is acceptable.
+    groupNotFound: Sorry, I can't find such a group.
+    creatorLeft: The group creator has left the group.
+    botNotAdmin: The bot is not a administrator in the group.
+    notification: Current group has been set a new rule
+  kickMember:
+    badFormat: Only `/kick @[Telegram username] [Time]` is acceptable.
+    started: Kicking...
+    success: Kicked
+    failure: Failed to kick
   banMember:
-    started:
-    success:
-    failure:
+    badFormat: Only `/ban @[Telegram username] [Time]` is acceptable.
+    started: Banning...
+    success: Banned
+    failure: Failed to ban
   mygroups:
     noAnyGroup:
-    groupInfo:
-    noAnyRule:
-    tip:
+    groupInfo: |-
+      Group ID：${id}
+      Name：${title}
+      Fan tickets：${symbol}
+      Minimum required：${amount}
+    noAnyRule: No Rule
+    tip: Promote Matataki bot as admin before listing your fandom group(s)
 
 bot:
-  start: Thank you for using Matataki Fans, enter /help for more feature list
-    👉🏻[Introduction Document](https://www.matataki.io/p/1638)
-  defaultReply: I'm a Matataki bot, type /help for help
+  start: Thank you for using Matataki bot, you can send /help for help
+    👉🏻[Introduction](https://www.matataki.io/p/1638)
+  defaultReply: I'm a Matataki bot, you can send /help for help
   help:
     header: What do you want to know?
     introduction:

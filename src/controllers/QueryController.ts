@@ -47,7 +47,7 @@ export class QueryController extends BaseController<QueryController> {
             const joinedGroupsArray = new Array<string>();
 
             if (joinedGroup.length === 0) {
-                joinedGroupsArray.push(i18n.t("query.status.joinedGroup.header"));
+                joinedGroupsArray.push(i18n.t("query.status.joinedGroup.no"));
             } else {
                 const symbolMap = new Map<number, string>();
                 for (const group of joinedGroup) {
@@ -84,7 +84,7 @@ export class QueryController extends BaseController<QueryController> {
                     joinedGroupsArray.push(result.value);
                 }
 
-                joinedGroupsArray.unshift(i18n.t("query.status.joinedGroup.header", {
+                joinedGroupsArray.unshift(i18n.t("query.status.joinedGroup.yes", {
                     joinedGroups: joinedGroupsArray.length
                 }));
             }
@@ -93,7 +93,7 @@ export class QueryController extends BaseController<QueryController> {
 
             const myGroups = await this.groupRepo.getGroupsOfCreator(id);
             if (myGroups.length === 0) {
-                createdGroupsArray.push(i18n.t("query.status.myGroup.header"));
+                createdGroupsArray.push(i18n.t("query.status.myGroup.no"));
             } else {
                 const results = await allPromiseSettled(myGroups.map(async group => {
                     const groupId = Number(group.id);
@@ -139,7 +139,7 @@ export class QueryController extends BaseController<QueryController> {
                     }
                 }
 
-                createdGroupsArray.unshift(i18n.t("query.status.myGroup.header", {
+                createdGroupsArray.unshift(i18n.t("query.status.myGroup.yes", {
                     createdGroups: createdGroupsArray.length
                 }));
             }
