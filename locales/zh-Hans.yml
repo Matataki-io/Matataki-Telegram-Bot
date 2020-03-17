@@ -2,20 +2,20 @@
 lang: 简体中文
 error:
   usernameNotSynced: 抱歉，对方还没有同步用户名到数据库里
-  usernameNotFound: Sorry, I can't find a user with this username.
-  requireMatatakiAccount: Sorry, please bind or login your telegram account with Matataki.
-  minetokenNotFound: Sorry, there is no such a minetoken.
-  notFandomGroup: Sorry, this is not a fandom group.
-  groupChatOnly: Sorry, it's only available in a group chat.
-  privateChatOnly: Sorry, it's only available in a private chat.
+  usernameNotFound: 抱歉，没有找到这个用户名的帐号
+  requireMatatakiAccount: 抱歉，您还没有在 瞬Matataki 绑定 Telegram 帐号
+  minetokenNotFound: 抱歉，没有这样的 Fan 票
+  notFandomGroup: 抱歉，这不是一个 Fan 票群
+  groupChatOnly: 抱歉，该功能仅在群聊里使用
+  privateChatOnly: 抱歉，该功能仅在私聊里使用
   requireMintedMinetoken: Sorry, you should have minted a minetoken on Matataki.
 common:
   associatedMatatakiAccount:
-    no: No connection with Matataki
-    yes: "Matataki account: [${matatakiUsername}](${matatakiUserPageUrl})"
+    no: 没有绑定 Matataki
+    yes: "瞬Matataki 昵称： [${matatakiUsername}](${matatakiUserPageUrl})"
   mintedMinetoken:
-    no: No minetoken minted on Matataki
-    yes: "Minetoken: [${symbol} (${minetokenName})](${minetokenPageUrl})"
+    no: 没有发行 Fan 票
+    yes: "Fan票 名称：[${symbol} (${minetokenName})](${minetokenPageUrl})"
 wallet:
   query:
     badFormat: Only `/query [Matataki UID] [Token Symbol]` or `/query @[Telegram username] [Token Symbol]` is acceptable.
