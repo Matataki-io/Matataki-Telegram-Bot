@@ -38,6 +38,8 @@ function RequirePermissions(permissions: Permissions | Array<Permissions>): Meth
 
             return decoratedMethod.call(this, ctx, ...args);
         };
+
+        Object.defineProperty(descriptor.value, "name", { value: methodName });
     };
 }
 

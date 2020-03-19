@@ -44,5 +44,7 @@ export function RequireMatatakiAccount(): MethodDecorator {
 
             return decoratedMethod.call(this, ctx, ...args);
         };
+
+        Object.defineProperty(descriptor.value, "name", { value: methodName });
     };
 }
