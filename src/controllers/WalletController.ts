@@ -114,8 +114,8 @@ export class WalletController extends BaseController<WalletController> {
     @RequireMatatakiAccount()
     async transferByMatatakiId(ctx: MessageHandlerContext,
         @InjectRegexMatchGroup(1, Number) userId: number,
-        @InjectRegexMatchGroup(2, Number) amount: number,
-        @InjectRegexMatchGroup(3, input => input.toUpperCase()) symbol: string,
+        @InjectRegexMatchGroup(2, input => input.toUpperCase()) symbol: string,
+        @InjectRegexMatchGroup(3, Number) amount: number,
         @InjectSenderMatatakiInfo() senderInfo: Required<Omit<AssociatedInfo, "minetoken">>
     ) {
         const receiverInfo = await this.matatakiService.getInfoByMatatakiId(userId);
@@ -127,8 +127,8 @@ export class WalletController extends BaseController<WalletController> {
     @RequireMatatakiAccount()
     async transferByTelegramUsername(ctx: MessageHandlerContext,
         @InjectRegexMatchGroup(1) username: string,
-        @InjectRegexMatchGroup(2, Number) amount: number,
-        @InjectRegexMatchGroup(3, input => input.toUpperCase()) symbol: string,
+        @InjectRegexMatchGroup(2, input => input.toUpperCase()) symbol: string,
+        @InjectRegexMatchGroup(3, Number) amount: number,
         @InjectSenderMatatakiInfo() senderInfo: Required<Omit<AssociatedInfo, "minetoken">>
     ) {
         const { replyWithMarkdown, i18n } = ctx;

@@ -1,4 +1,4 @@
 export type MatatakiUserInfo = {
     username: string,
-    nickname: string,
+    nickname: string | null,
 };

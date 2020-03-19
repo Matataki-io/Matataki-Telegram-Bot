@@ -32,13 +32,20 @@ export class QueryController extends BaseController<QueryController> {
         if (!info.user) {
             array.push(i18n.t("common.associatedMatatakiAccount.no"));
         } else {
-            array.push(i18n.t("common.associatedMatatakiAccount.yes"));
+            array.push(i18n.t("common.associatedMatatakiAccount.yes", {
+                matatakiUsername: info.user.name,
+                matatakiUserPageUrl: `${this.matatakiService.urlPrefix}/user/${info.user.id}`,
+            }));
         }
 
         if (!info.minetoken) {
             array.push(i18n.t("common.mintedMinetoken.no"));
         } else {
-            array.push(i18n.t("common.mintedMinetoken.yes"));
+            array.push(i18n.t("common.mintedMinetoken.yes", {
+                symbol: info.minetoken.symbol,
+                minetokenName: info.minetoken.name,
+                minetokenPageUrl: `${this.matatakiService.urlPrefix}/token/${info.minetoken.id}`,
+            }));
         }
 
         if (info.user) {
