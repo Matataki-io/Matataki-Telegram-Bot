@@ -206,6 +206,10 @@ export class MatatakiServiceImpl implements IMatatakiService {
         try {
             const { data: { data } } = await this.axios.get<ApiResponse<MatatakiUserInfo>>(`/user/${matatakiId}`);
 
+            if (data.nickname === "") {
+                data.nickname = null;
+            }
+
             return data;
         } catch (e) {
             throw new Error("Failed to get matataki user info");
