@@ -1,11 +1,11 @@
 import { inject } from "inversify";
 
 import { Controller, Command, InjectRepository, GlobalAlias, InjectRegexMatchGroup } from "#/decorators";
-import { MessageHandlerContext } from "#/definitions";
+import { MessageHandlerContext, UserInfo } from "#/definitions";
 import { Injections, LogCategories } from "#/constants";
 import { User, Group } from "#/entities";
 import { IUserRepository, IGroupRepository } from "#/repositories";
-import { IMatatakiService, IBotService, ILoggerService } from "#/services";
+import { IMatatakiService, IBotService, ILoggerService, IBackendApiService } from "#/services";
 import { allPromiseSettled } from "#/utils";
 
 import { BaseController } from ".";
@@ -14,7 +14,8 @@ import { BaseController } from ".";
 @GlobalAlias("status", "status")
 @GlobalAlias("price", "price")
 export class QueryController extends BaseController<QueryController> {
-    constructor(@inject(Injections.MatatakiService) private matatakiService: IMatatakiService,
+    constructor(@inject(Injections.BackendApiService) private backendService: IBackendApiService,
+        @inject(Injections.MatatakiService) private matatakiService: IMatatakiService,
         @InjectRepository(User) private userRepo: IUserRepository,
         @InjectRepository(Group) private groupRepo: IGroupRepository,
         @inject(Injections.LoggerService) private loggerService: ILoggerService,
@@ -25,30 +26,32 @@ export class QueryController extends BaseController<QueryController> {
     @Command("status")
     async queryStatus({ message, replyWithMarkdown, telegram, i18n }: MessageHandlerContext) {
         const id = message.from.id;
-        const info = await this.matatakiService.getAssociatedInfo(id);
-
         const array = new Array<string>();
 
-        if (!info.user) {
-            array.push(i18n.t("common.associatedMatatakiAccount.no"));
-        } else {
+        let user: UserInfo | undefined;
+
+        try {
+            user = await this.backendService.getUserByTelegramId(id);
+
             array.push(i18n.t("common.associatedMatatakiAccount.yes", {
-                matatakiUsername: info.user.name,
-                matatakiUserPageUrl: `${this.matatakiService.urlPrefix}/user/${info.user.id}`,
+                matatakiUsername: user.name,
+                matatakiUserPageUrl: `${this.matatakiService.urlPrefix}/user/${user.id}`,
             }));
+        } catch {
+            array.push(i18n.t("common.associatedMatatakiAccount.no"));
         }
 
-        if (!info.minetoken) {
+        if (!user || user.issuedTokens.length === 0) {
             array.push(i18n.t("common.mintedMinetoken.no"));
         } else {
             array.push(i18n.t("common.mintedMinetoken.yes", {
-                symbol: info.minetoken.symbol,
-                minetokenName: info.minetoken.name,
-                minetokenPageUrl: `${this.matatakiService.urlPrefix}/token/${info.minetoken.id}`,
+                symbol: user.issuedTokens[0].symbol,
+                minetokenName: user.issuedTokens[0].name,
+                minetokenPageUrl: `${this.matatakiService.urlPrefix}/token/${user.issuedTokens[0].id}`,
             }));
         }
 
-        if (info.user) {
+        if (user) {
             const joinedGroup = await this.groupRepo.getJoinedGroups(id);
 
             const joinedGroupsArray = new Array<string>();
@@ -67,7 +70,7 @@ export class QueryController extends BaseController<QueryController> {
                         continue;
                     }
 
-                    const symbol = await this.matatakiService.getMinetokenSymbol(minetokenId);
+                    const { symbol } = await this.backendService.getToken(minetokenId);
 
                     symbolMap.set(minetokenId, symbol);
                 }
@@ -92,7 +95,7 @@ export class QueryController extends BaseController<QueryController> {
                 }
 
                 joinedGroupsArray.unshift(i18n.t("query.status.joinedGroup.yes", {
-                    joinedGroups: joinedGroupsArray.length
+                    count: joinedGroupsArray.length
                 }));
             }
 
@@ -132,7 +135,7 @@ export class QueryController extends BaseController<QueryController> {
                         return null;
                     }
 
-                    return `/ [${groupInfo.title ?? groupInfo.id}](${inviteLink}) （${requiredAmount > 0 ? `${info.minetoken!.symbol} ≥ ${requiredAmount / 10000}` : i18n.t("query.status.groupNoRule")}）`;
+                    return `/ [${groupInfo.title ?? groupInfo.id}](${inviteLink}) （${requiredAmount > 0 ? `${user!.issuedTokens[0].symbol} ≥ ${requiredAmount / 10000}` : i18n.t("query.status.groupNoRule")}）`;
                 }));
 
                 for (const result of results) {
@@ -147,7 +150,7 @@ export class QueryController extends BaseController<QueryController> {
                 }
 
                 createdGroupsArray.unshift(i18n.t("query.status.myGroup.yes", {
-                    createdGroups: createdGroupsArray.length
+                    count: createdGroupsArray.length
                 }));
             }
 

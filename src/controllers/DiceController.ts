@@ -3,7 +3,7 @@ import { Controller, Command, Action } from "../decorators";
 import { MessageHandlerContext } from "../definitions";
 import { inject } from "inversify";
 import { Injections } from "../constants";
-import { IMatatakiService } from "../services";
+import { IBackendApiService } from "../services";
 import { MatatakiUser, Arguments, IDiceService } from "#/services/IDiceService";
 import _ from 'lodash';
 import { asyncReplaceErr, checkNotNull, checkWith } from "../utils";
@@ -11,7 +11,7 @@ import { asyncReplaceErr, checkNotNull, checkWith } from "../utils";
 
 @Controller('Dice')
 export class DiceController extends BaseController<DiceController>{
-    constructor(@inject(Injections.MatatakiService) private matatakiService: IMatatakiService,
+    constructor(@inject(Injections.BackendApiService) private backendService: IBackendApiService,
         @inject(Injections.DiceService) private diceService: IDiceService) {
         super();
     }
@@ -70,9 +70,9 @@ export class DiceController extends BaseController<DiceController>{
     Promise<MatatakiUser> {
         const tgid = ctx.callbackQuery ? ctx.callbackQuery.from.id :
             ctx.message.from.id;
-        const info = await asyncReplaceErr(this.matatakiService.getAssociatedInfo(tgid),
+        const info = await asyncReplaceErr(this.backendService.getUserByTelegramId(tgid),
             ctx.i18n.t('dice.cantGetUserInfo'));
-        const user = checkNotNull(info.user, ctx.i18n.t('dice.noUser'));
+        const user = checkNotNull(info, ctx.i18n.t('dice.noUser'));
         return { name: this.getTgName(ctx), id: user.id };
     }
     private getTgName(ctx: MessageHandlerContext): string {

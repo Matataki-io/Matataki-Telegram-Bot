@@ -15,4 +15,5 @@ export const Injections = {
     RPSService: Symbol.for("RPSService"),
     I18nService: Symbol.for("I18nService"),
     MiddlewareService: Symbol.for("MiddlewareService"),
+    BackendApiService: Symbol.for("BackendApiService"),
 };

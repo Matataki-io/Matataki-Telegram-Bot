@@ -1,8 +1,12 @@
-import { Controller, Command, GroupOnly, PrivateChatOnly, RequireMatatakiAccount, RequireMintedMinetoken, InjectSenderMatatakiInfo, RequirePermissions } from "#/decorators";
-import { MessageHandlerContext, AssociatedInfo } from "#/definitions";
+import { Controller, Command, GroupOnly, PrivateChatOnly, RequireMatatakiAccount, RequireMintedMinetoken, InjectSenderMatatakiInfo, RequirePermissions, GlobalAlias } from "#/decorators";
+import { MessageHandlerContext, UserInfo } from "#/definitions";
 import { BaseController } from ".";
+import { inject } from "inversify";
+import { Injections } from "#/constants";
+import { IBackendApiService } from "#/services";
 
 @Controller("debug")
+@GlobalAlias("ping", "ping")
 export class DebugController extends BaseController<DebugController> {
     @Command("ping", { ignorePrefix: true })
     async ping({ message, reply }: MessageHandlerContext) {
@@ -33,8 +37,7 @@ export class DebugController extends BaseController<DebugController> {
 
     @Command("requirematataki")
     @RequireMatatakiAccount()
-    requireMatatakiAccount({ reply }: MessageHandlerContext, @InjectSenderMatatakiInfo() senderInfo: Required<Omit<AssociatedInfo, "minetoken">>) {
-        const { user } = senderInfo;
+    requireMatatakiAccount({ reply }: MessageHandlerContext, @InjectSenderMatatakiInfo() user: UserInfo) {
         return reply(`${user.id}:${user.name}`);
     }
     @Command("requirematataki2")
@@ -44,9 +47,8 @@ export class DebugController extends BaseController<DebugController> {
     }
     @Command("requiremintedminetoken")
     @RequireMintedMinetoken()
-    requireMintedMinetoken({ reply }: MessageHandlerContext, @InjectSenderMatatakiInfo() senderInfo: Required<AssociatedInfo>) {
-        const { user, minetoken } = senderInfo;
-        return reply(`${user.id}:${user.name} w/ ${minetoken.id}:${minetoken.name}(${minetoken.symbol})`);
+    requireMintedMinetoken({ reply }: MessageHandlerContext, @InjectSenderMatatakiInfo() user: UserInfo) {
+        return reply(`${user.id}:${user.name} w/ ${user.issuedTokens[0].id}:${user.issuedTokens[0].name}(${user.issuedTokens[0].symbol})`);
     }
     @Command("requiremintedminetoken2")
     @RequireMintedMinetoken()

@@ -2,10 +2,10 @@ import { inject } from "inversify";
 
 import { Injections } from "#/constants";
 import { Controller, Command, InjectRepository, InjectSenderMatatakiInfo, InjectRegexMatchGroup, GlobalAlias } from "#/decorators";
-import { MessageHandlerContext, AssociatedInfo } from "#/definitions";
+import { MessageHandlerContext, UserInfo } from "#/definitions";
 import { User } from "#/entities";
 import { IUserRepository } from "#/repositories";
-import { IMatatakiService, IWeb3Service } from "#/services";
+import { IMatatakiService, IWeb3Service, IBackendApiService } from "#/services";
 import { filterNotNull } from "#/utils";
 
 import { BaseController } from ".";
@@ -18,6 +18,7 @@ import { RequireMatatakiAccount } from "#/decorators/RequireMatatakiAccount";
 export class WalletController extends BaseController<WalletController> {
     constructor(
         @inject(Injections.MatatakiService) private matatakiService: IMatatakiService,
+        @inject(Injections.BackendApiService) private backendService: IBackendApiService,
         @inject(Injections.Web3Service) private web3Service: IWeb3Service,
         @InjectRepository(User) private userRepo: IUserRepository) {
         super();
@@ -27,7 +28,10 @@ export class WalletController extends BaseController<WalletController> {
     async queryMatatakiAccountTokenById({ reply, message }: MessageHandlerContext,
         @InjectRegexMatchGroup(1, Number) matatakiId: number,
         @InjectRegexMatchGroup(2, input => input.toUpperCase()) symbol: string) {
-        const balance = await this.matatakiService.getUserMinetoken(matatakiId, symbol);
+        const { contractAddress } = await this.backendService.getToken(symbol);
+        const { walletAddress } = await this.backendService.getUser(matatakiId);
+
+        const balance = await this.web3Service.getBalance(contractAddress, walletAddress);
 
         await reply(`${balance} ${symbol}`, {
             reply_to_message_id: message.chat.type !== "private" ? message.message_id : undefined,
@@ -46,9 +50,8 @@ export class WalletController extends BaseController<WalletController> {
             return;
         }
 
-        const minetokenId = await this.matatakiService.getMinetokenIdFromSymbol(symbol);
-        const contractAddress = await this.matatakiService.getContractAddressOfMinetoken(minetokenId);
-        const walletAddress = await this.matatakiService.getEthWallet(targetId);
+        const { contractAddress } = await this.backendService.getToken(symbol);
+        const { walletAddress } = await this.backendService.getUserByTelegramId(targetId);
 
         const balance = await this.web3Service.getBalance(contractAddress, walletAddress);
 
@@ -59,41 +62,42 @@ export class WalletController extends BaseController<WalletController> {
 
     @Command("query", /$/)
     @RequireMatatakiAccount()
-    async queryMyTokens({ message, replyWithMarkdown, i18n }: MessageHandlerContext, @InjectSenderMatatakiInfo() info: AssociatedInfo) {
+    async queryMyTokens({ message, replyWithMarkdown, i18n }: MessageHandlerContext, @InjectSenderMatatakiInfo() user: UserInfo) {
         const array = new Array<string>();
 
-        if (!info.user) {
-            array.push(i18n.t("common.associatedMatatakiAccount.no"));
-        } else {
-            array.push(i18n.t("common.associatedMatatakiAccount.yes"));
-        }
+        array.push(i18n.t("common.associatedMatatakiAccount.yes", {
+            matatakiUsername: user.name,
+            matatakiUserPageUrl: `${this.matatakiService.urlPrefix}/user/${user.id}`,
+        }));
 
-        if (!info.minetoken) {
+        if (user.issuedTokens.length === 0) {
             array.push(i18n.t("common.mintedMinetoken.no"));
         } else {
-            array.push(i18n.t("common.mintedMinetoken.yes"));
+            array.push(i18n.t("common.mintedMinetoken.yes", {
+                symbol: user.issuedTokens[0].symbol,
+                minetokenName: user.issuedTokens[0].name,
+                minetokenPageUrl: `${this.matatakiService.urlPrefix}/token/${user.issuedTokens[0].id}`,
+            }));
         }
 
-        if (info.user) {
-            array.push("");
+        array.push("");
 
-            const wallet = await this.matatakiService.getEthWallet(message.from.id);
-            const minetokens = await this.matatakiService.getAllMinetokens();
+        const { walletAddress } = await this.backendService.getUserByTelegramId(message.from.id);
+        const minetokens = await this.backendService.getTokens();
 
-            const balances = filterNotNull(await Promise.all(minetokens.map(async token => {
-                const balance = await this.web3Service.getBalance(token.contract_address, wallet);
-                if (balance <= 0) {
-                    return null;
-                }
-
-                return `[${token.name}（${token.symbol}）](${this.matatakiService.urlPrefix}token/${token.id})： ${balance}`;
-            })));
-
-            array.push(i18n.t("wallet.query.minetoken.header"));
-
-            for (const item of balances) {
-                array.push(item);
+        const balances = filterNotNull(await Promise.all(minetokens.map(async token => {
+            const balance = await this.web3Service.getBalance(token.contractAddress, walletAddress);
+            if (balance <= 0) {
+                return null;
             }
+
+            return `[${token.name}（${token.symbol}）](${this.matatakiService.urlPrefix}/token/${token.id})： ${balance}`;
+        })));
+
+        array.push(i18n.t("wallet.query.minetoken.header", { count: balances.length }));
+
+        for (const item of balances) {
+            array.push(item);
         }
 
         await replyWithMarkdown(array.join("\n"), {
@@ -116,12 +120,19 @@ export class WalletController extends BaseController<WalletController> {
         @InjectRegexMatchGroup(1, Number) userId: number,
         @InjectRegexMatchGroup(2, input => input.toUpperCase()) symbol: string,
         @InjectRegexMatchGroup(3, Number) amount: number,
-        @InjectSenderMatatakiInfo() senderInfo: Required<Omit<AssociatedInfo, "minetoken">>
+        @InjectSenderMatatakiInfo() user: UserInfo
     ) {
-        const receiverInfo = await this.matatakiService.getInfoByMatatakiId(userId);
-        const receiverUsername = receiverInfo.nickname ?? receiverInfo.username;
+        const { replyWithMarkdown, i18n } = ctx;
 
-        await this.transferCore(ctx, senderInfo.user.id, senderInfo.user.name, userId, receiverUsername, amount, symbol);
+        const receiverInfo = await this.backendService.getUser(userId);
+        if (!receiverInfo) {
+            await replyWithMarkdown(i18n.t("error.matatakiAccountNotFound"));
+            return;
+        }
+
+        const receiverUsername = receiverInfo.name;
+
+        await this.transferCore(ctx, user.id, user.name, userId, receiverUsername, amount, symbol);
     }
     @Command("transfer", /@([\w_]{5,32})\s+(\w+)\s+(\d+.?\d*)/)
     @RequireMatatakiAccount()
@@ -129,7 +140,7 @@ export class WalletController extends BaseController<WalletController> {
         @InjectRegexMatchGroup(1) username: string,
         @InjectRegexMatchGroup(2, input => input.toUpperCase()) symbol: string,
         @InjectRegexMatchGroup(3, Number) amount: number,
-        @InjectSenderMatatakiInfo() senderInfo: Required<Omit<AssociatedInfo, "minetoken">>
+        @InjectSenderMatatakiInfo() user: UserInfo
     ) {
         const { replyWithMarkdown, i18n } = ctx;
 
@@ -139,13 +150,13 @@ export class WalletController extends BaseController<WalletController> {
             return;
         }
 
-        const targetInfo = await this.matatakiService.getAssociatedInfo(targetId);
-        if (!targetInfo.user) {
+        const targetUser = await this.backendService.getUserByTelegramId(targetId);
+        if (!targetUser) {
             await replyWithMarkdown(i18n.t("error.requireMatatakiAccount"));
             return;
         }
 
-        await this.transferCore(ctx, senderInfo.user.id, senderInfo.user.name, targetInfo.user.id, targetInfo.user.name, amount, symbol);
+        await this.transferCore(ctx, user.id, user.name, targetUser.id, targetUser.name, amount, symbol);
     }
     private async transferCore({ message, replyWithMarkdown, telegram, i18n }: MessageHandlerContext,
         senderUserId: number,
@@ -157,9 +168,9 @@ export class WalletController extends BaseController<WalletController> {
     ) {
         let commonMessage = i18n.t("wallet.transfer.common", {
             senderUsername,
-            senderUrl: `${this.matatakiService.urlPrefix}user/${senderUserId}`,
+            senderUrl: `${this.matatakiService.urlPrefix}/user/${senderUserId}`,
             receiverUsername,
-            receiverUrl: `${this.matatakiService.urlPrefix}user/${receiverUserId}`,
+            receiverUrl: `${this.matatakiService.urlPrefix}/user/${receiverUserId}`,
             amount, symbol,
         });
         const transactionMessage = await replyWithMarkdown(`${i18n.t("wallet.transfer.started")}\n\n${commonMessage}`, { disable_web_page_preview: true });

@@ -1,5 +1,5 @@
 export * from "./ActionHandlerInfo";
-export * from "./AssociatedInfo";
+export * from "./BackendTypes";
 export * from "./CommandHandlerInfo";
 export * from "./ControllerMethodContext";
 export * from "./EventHandlerInfo";

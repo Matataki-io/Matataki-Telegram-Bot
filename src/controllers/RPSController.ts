@@ -1,9 +1,9 @@
 import { BaseController } from "./BaseController";
-import { Controller, Command, Action } from "../decorators";
+import { Controller, Command, Action, GlobalAlias } from "../decorators";
 import { MessageHandlerContext } from "../definitions";
 import { inject } from "inversify";
 import { Injections } from "../constants";
-import { IMatatakiService } from "../services";
+import { IBackendApiService } from "../services";
 import { MatatakiUser, Arguments, IRPSService } from "#/services/IRPSService";
 import _ from 'lodash';
 import { asyncReplaceErr, checkNotNull, checkWith } from "../utils";
@@ -18,8 +18,9 @@ const Msgs = {
 }
 
 @Controller('RPS')
+@GlobalAlias("new_rps_game", "new_rps_game")
 export class RPSController extends BaseController<RPSController>{
-    constructor(@inject(Injections.MatatakiService) private matatakiService: IMatatakiService,
+    constructor(@inject(Injections.BackendApiService) private backendService: IBackendApiService,
         @inject(Injections.RPSService) private rpsService: IRPSService) {
         super();
     }
@@ -74,9 +75,9 @@ export class RPSController extends BaseController<RPSController>{
     Promise<MatatakiUser> {
         const tgid = ctx.callbackQuery ? ctx.callbackQuery.from.id :
             ctx.message.from.id;
-        const info = await asyncReplaceErr(this.matatakiService.getAssociatedInfo(tgid),
+        const info = await asyncReplaceErr(this.backendService.getUserByTelegramId(tgid),
             Msgs.cantGetUserInfo);
-        const user = checkNotNull(info.user, Msgs.noUserMessage);
+        const user = checkNotNull(info, Msgs.noUserMessage);
         return { name: this.getTgName(ctx), id: user.id };
     }
     private getTgName(ctx: MessageHandlerContext): string {
