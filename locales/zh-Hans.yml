@@ -83,37 +83,37 @@ bot:
     header: 您想了解什么？
     introduction:
       title: '👉你是谁'
-      content:
+      content: "👉*你是谁*\n\n我是 Fan票 粉丝群助手，您也可以叫我 小Fan~\n我会帮助您创建或加入 Fan票 粉丝群\n有什么不明白的问题就请输入 /help 查看帮助吧\n如有其他问题请在 瞬Matataki 的[官方 TG 群](https://t.me/smartsignature_io)询问"
     fandomTicketIntroduction:
       title: '👉Fan票 粉丝群是什么'
-      content:
+      content: "👉*Fan票 粉丝群是什么*\n\n是以持有特定 Fan票 数量为判断依据，并且自动审核入群+自动踢群的 Telegram 群组。\n想要了解更多信息请阅读[介绍文档](https://www.matataki.io/p/1638)"
     command:
       title: '👉操作指令说明'
-      content:
+      content: "👉*操作指令说明*\n\n您在与 Matataki 粉丝群助手对话时可以使用以下指令\n您也可以点击输入框边的\"/\"按钮查看全部指令\n\n/start： 开始引导\n/help： 查看帮助\n/status： 查询您的所有状态信息（创建的 Fan票、创建的群组、已加入的群组）\n/join： 查询您还未加入的 Fan票 群信息\n/mygroups： 查询您建立的 Fan票 粉丝群组信息（群 ID、群名称、Fan票 名、群规则）\n/set： 设置群规则，输入 `/set [群组ID] [参数]` 即可设置群规则（参数代表至少持有您的Fan票数量），例如 `/set -1234565 100` 就是设置 123456 这个群的入群条件为 ≥100\n/rule： 查询当前群组的群规则\n/query： 不带参数的时候为查询个人持有的 Fan 票余额；而输入 `/query [目标帐号] [Fan票符号]` 可查询指定用户的指定 Fan票 余额，目标帐号可以为 Matataki UID 或者 @ 后接 Telegram 帐号用户名，例如 `/query 123 ABC` 就是查询 Matataki ID 123 帐号的 ABC Fan票 余额；而 `/query @someone ABC` 就是查询 Telegram 的 `@someone` 所绑定的 Matataki 帐号的 ABC Fan票 余额\n/price： 查询 Fan票 价格，格式为 `/price [Fan票符号]`\n/transfer： Fan票 转账，输入 `/transfer [目标帐号] [Fan票符号] [数量]` 可给指定用户转账指定数量的指定 Fan票，目标帐号可以为 Matataki UID 或者 @ 后接 Telegram 帐号用户名，例如 `/transfer 123 ABC 100` 就是给 Matataki ID 123 帐号转账 100 个 ABC；而 `/transfer @someone ABC 100` 就是给 Telegram 的 `@someone` 所绑定的 Matataki 帐号转账 100 个 ABC\n/fahongbao： 发红包，格式为 `/fahongbao [Fan票符号] [总红包金额] [红包数量] [描述（可选）]`\n/sfahongbao： 发随机红包，格式为 `/sfahongbao [Fan票符号] [总红包金额] [红包数量] [描述（可选）]`\n/new\\\\_game：开始一局Dice游戏,格式为 `/new\\\\_game [赌注金额] [赌注单位]`\n/syncusername： 同步 Telegram 帐号用户名，用作转账和查询时的目标\n\n[如何调戏 Fan票 粉丝群助手视频教程](https://www.bilibili.com/video/av82477411)"
     howToJoinFandomGroup:
       title: '👉如何加入 Fan票 群'
-      content:
+      content: "👉*如何加入 Fan票 群*\n\n您可以在 Fan票 的详情中查看到全部群组的加群入口。\n\n具体的操作方式为：\n1️⃣ 进入 Fan票 页面：https://www.matataki.io/token\n2️⃣ 进入其中一个 Fan票 的详情页\n3️⃣ 查看侧边栏中有没有显示群组信息。如果有群组请根据引导提示操作入群。\n\n你也可以与我对话输入 /join，即可看到全部可以加入的群组\n\n[视频教程](https://www.bilibili.com/video/av82487218)"
     howToCreateFandomGroup:
       title: '👉如何创建 Fan票 群'
-      content:
+      content: "👉*如何创建 Fan票 群*\n\n❗此功能仅向已经发行过 Fan票 的用户开放，其他用户暂不支持建立 Fan票 群\n❗如果希望发行 Fan票，请先填写并提交[表单](https://wj.qq.com/s2/5208015/8e5d/)\n\n操作步骤：\n1️⃣ 在 瞬Matataki 上登录后[绑定 Telegram 账号](${url_prefix}/setting/account)\n2️⃣ 在 TG 中搜索 @${username_escaped} 并添加为好友，或点击此[链接](https://t.me/${username}?start)\n3️⃣ 在 TG 中新建一个 Group，并将 @${username_escaped} 邀请入群\n4️⃣ 在群组中将 @${username_escaped} 设置为群管理员\n5️⃣ 设置 @${username_escaped} 的管理员权限：先关闭邀请权限并保存，然后再打开邀请权限（操作此步骤之后群组将会自动升级为超级群）\n6️⃣ 与 @${username_escaped} 私聊，输入 `/mygroups` 查询自己创建的群组并记录下刚才群组的 ID 信息\n7️⃣ 与 @${username_escaped} 私聊，输入 `/set [群组ID] [参数]` 即可设置群规则（参数代表至少持有您的 Fan票 数量），例如 `/set 1234565 100` 就是设置 123456 这个群的入群条件为 ≥100\n\n👨‍👩‍👦‍👦完成以上 7 步操作即可完成 Fan票 群建立\n已经建立的 Fan票 群组将会显示在 Fan票 详情页中\n如有其他问题请在 瞬Matataki 的[官方 TG 群](https://t.me/smartsignature_io)询问\n\n[视频教程](https://www.bilibili.com/video/av82492702)"
     howToRemoveFandomGroup:
       title: '👉如何删除 Fan票 群'
-      content:
+      content: "👉*如何删除 Fan票 群*\n\n❗Fan票 群一旦删除之后将不会在 Matataki 中继续展示\n❗在任何情况下，群主都请勿直接退群\n\n操作步骤\n1️⃣ 进入需要删除的 Fan票 群\n2️⃣ 取消 @${username_escaped} 的管理员权限\n\n完成上述的操作后此群会成为普通 TG 群组\n\n[视频教程](https://www.bilibili.com/video/av82585384)"
     videoTutorial:
       title: '👉视频教程(更新中)'
-      content:
+      content: "👉*视频教程*\n\n教程会跟随新功能发布会不定期更新\n[如何加入 Fan票 粉丝群](https://www.bilibili.com/video/av82487218)\n[如何创建 Fan票 粉丝群](https://www.bilibili.com/video/av82492702)\n[如何删除 Fan票 粉丝群](https://www.bilibili.com/video/av82585384)\n[如何调戏 Fan票 粉丝群助手](https://www.bilibili.com/video/av82477411)"
     redEnvelope:
       title: '👉如何使用红包功能'
-      content:
+      content: "👉*如何使用红包功能*\n\n*发红包*\n可以输入 /fahongbao 发普通红包或者输入 /sfahongbao 发随机红包\n后面接的命令参数均为 `[Fan票符号] [总红包金额] [红包数量] [描述（可选）]`，参数间用空格相连"
     dice:
       title: '👉如何开启Dice小游戏'
-      content:
+      content: "如何开启一局Dice\n使用/new_game命令：/new_game [赌注金额] [赌注单位]\n例如：/new_game 0.1 DAO\n加入游戏\n开启游戏后，其他人可以选择加入游戏，只有房主才能选择开局或者流局\n\n开局\n所有房间内的人获取一个从1到99的随机数，最大的那个人是胜者，如果有两个或以上人都是最大点数，\n那么第一个加入房间的人是胜者，胜者将获得该房间内的所有赌注\n\n流局\n放弃这局游戏，所有赌注全部归还"
     transfer:
       title: '👉如何使用转账功能'
-      content:
+      content: "👉*如何使用转账功能*\n\n可以输入 `/transfer [转账目标] [Fan票符号] [数量]` 给目标转账指定数量的 Fan票，转账目标可以为 Matataki UID 或者 @ 后接 Telegram 帐号用户名（需要对方有执行 /syncusername）"
     otherQuestion:
       title: '👉我有别的问题'
-      content:
+      content: "👉*我有别的问题*\n\n如有其他问题请在 瞬Matataki 的[官方 TG 群](https://t.me/smartsignature_io)询问"
 redEnvelope:
   help: |-
     send Red Packet:/fahongbao <FanTicket> <Amount> <Quantity> [<Description>]
