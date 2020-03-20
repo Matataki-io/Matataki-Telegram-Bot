@@ -31,7 +31,7 @@ export class QueryController extends BaseController<QueryController> {
         let user: UserInfo | undefined;
 
         try {
-            user = await this.backendService.getUser(id);
+            user = await this.backendService.getUserByTelegramId(id);
 
             array.push(i18n.t("common.associatedMatatakiAccount.yes", {
                 matatakiUsername: user.name,
@@ -95,7 +95,7 @@ export class QueryController extends BaseController<QueryController> {
                 }
 
                 joinedGroupsArray.unshift(i18n.t("query.status.joinedGroup.yes", {
-                    joinedGroups: joinedGroupsArray.length
+                    count: joinedGroupsArray.length
                 }));
             }
 
@@ -150,7 +150,7 @@ export class QueryController extends BaseController<QueryController> {
                 }
 
                 createdGroupsArray.unshift(i18n.t("query.status.myGroup.yes", {
-                    createdGroups: createdGroupsArray.length
+                    count: createdGroupsArray.length
                 }));
             }
 

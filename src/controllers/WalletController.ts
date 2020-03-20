@@ -94,7 +94,7 @@ export class WalletController extends BaseController<WalletController> {
             return `[${token.name}（${token.symbol}）](${this.matatakiService.urlPrefix}token/${token.id})： ${balance}`;
         })));
 
-        array.push(i18n.t("wallet.query.minetoken.header"));
+        array.push(i18n.t("wallet.query.minetoken.header", { count: balances.length }));
 
         for (const item of balances) {
             array.push(item);
@@ -150,7 +150,7 @@ export class WalletController extends BaseController<WalletController> {
             return;
         }
 
-        const targetUser = await this.backendService.getUser(targetId);
+        const targetUser = await this.backendService.getUserByTelegramId(targetId);
         if (!targetUser) {
             await replyWithMarkdown(i18n.t("error.requireMatatakiAccount"));
             return;

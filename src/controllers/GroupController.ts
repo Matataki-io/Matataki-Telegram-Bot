@@ -206,7 +206,7 @@ export class GroupController extends BaseController<GroupController> {
 
         const results = await allPromiseSettled(newMemberArray.map(async member => {
             const { contractAddress } = await this.backendService.getToken(requirement.minetokenId);
-            const { walletAddress } = await this.backendService.getUser(Number(member.id));
+            const { walletAddress } = await this.backendService.getUserByTelegramId(Number(member.id));
 
             const balance = await this.web3Service.getBalance(contractAddress, walletAddress) * 10000;
             console.log(balance)
