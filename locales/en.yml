@@ -90,37 +90,37 @@ bot:
     header: What do you want to know?
     introduction:
       title: 👉Who are you
-      content:
+      content: introduction
     fandomTicketIntroduction:
       title: 👉What is the fan ticket group
-      content:
+      content: fandomTicketIntroduction
     command:
       title: 👉Operation instructions
-      content:
+      content: command
     howToJoinFandomGroup:
       title: 👉How to join fan ticket group
-      content:
+      content: howToJoinFandomGroup
     howToCreateFandomGroup:
       title: 👉How to create a fan ticket group
-      content:
+      content: howToCreateFandomGroup
     howToRemoveFandomGroup:
       title: 👉How to delete fan ticket group
-      content:
+      content: howToRemoveFandomGroup
     videoTutorial:
       title: 👉Video tutorial (updating)
-      content:
+      content: videoTutorial
     redEnvelope:
       title: 👉How to use the red envelope function
-      content:
+      content: redEnvelope
     dice:
       title: 👉How to start Dice game
-      content:
+      content: dice
     transfer:
       title: 👉How to use the transfer function
-      content:
+      content: transfer
     otherQuestion:
       title: 👉I have other questions
-      content:
+      content: otherQuestion
 
 redEnvelope:
   help: |-
