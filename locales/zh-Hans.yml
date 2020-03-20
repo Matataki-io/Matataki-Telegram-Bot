@@ -126,8 +126,8 @@ redEnvelope:
   cantGetUserInfo: Couldn't get Matataki user info.
   success: '${userName} sends a red packet, click button to get it.'
   instruction: If you register a account at www.matataki.io and then bind your Telegram to your account, you will have chances to grab our welfare.
-  resend: Resend
-  grab: Grab
+  resend: 重新发送
+  grab: 领取
   finished: '${userName}''s red packet is now empty.'
   grabbed: "[${grabber} grabbed ${sender}'s ${description} red packet，${amount} ${unit}](https://rinkeby.etherscan.io/tx/${txHash})"
   trying: '${userName} is trying to grab the red packet'
