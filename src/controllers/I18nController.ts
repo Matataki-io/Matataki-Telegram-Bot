@@ -2,7 +2,7 @@ import { inject } from "inversify";
 import { Markup } from "telegraf";
 
 import { BaseController } from ".";
-import { Controller, Command, Action, PrivateChatOnly, InjectRepository, InjectRegexMatchGroup } from "#/decorators";
+import { Controller, Command, Action, PrivateChatOnly, InjectRepository, InjectRegexMatchGroup, GlobalAlias } from "#/decorators";
 import { MessageHandlerContext } from "#/definitions";
 import { Injections } from "#/constants";
 import { User } from "#/entities";
@@ -10,6 +10,7 @@ import { IUserRepository } from "#/repositories";
 import { II18nService } from "#/services";
 
 @Controller("i18n")
+@GlobalAlias("setlang", "setlang")
 export class I18nController extends BaseController<I18nController> {
     constructor(@inject(Injections.I18nService) private i18nService: II18nService,
         @InjectRepository(User) private userRepo: IUserRepository) {

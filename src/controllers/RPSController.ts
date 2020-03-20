@@ -1,5 +1,5 @@
 import { BaseController } from "./BaseController";
-import { Controller, Command, Action } from "../decorators";
+import { Controller, Command, Action, GlobalAlias } from "../decorators";
 import { MessageHandlerContext } from "../definitions";
 import { inject } from "inversify";
 import { Injections } from "../constants";
@@ -18,6 +18,7 @@ const Msgs = {
 }
 
 @Controller('RPS')
+@GlobalAlias("new_rps_game", "new_rps_game")
 export class RPSController extends BaseController<RPSController>{
     constructor(@inject(Injections.BackendApiService) private backendService: IBackendApiService,
         @inject(Injections.RPSService) private rpsService: IRPSService) {

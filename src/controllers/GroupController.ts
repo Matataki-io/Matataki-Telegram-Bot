@@ -2,7 +2,7 @@ import { inject } from "inversify";
 import { Extra, Markup } from "telegraf";
 import { User as TelegramUser } from "telegraf/typings/telegram-types";
 
-import { Controller, Command, InjectRepository, Event, GroupOnly, PrivateChatOnly, RequireMatatakiAccount, InjectSenderMatatakiInfo, RequireMintedMinetoken, InjectRegexMatchGroup } from "#/decorators";
+import { Controller, Command, InjectRepository, Event, GroupOnly, PrivateChatOnly, RequireMatatakiAccount, InjectSenderMatatakiInfo, RequireMintedMinetoken, InjectRegexMatchGroup, GlobalAlias } from "#/decorators";
 import { MessageHandlerContext, UserInfo } from "#/definitions";
 import { Group, User, FandomGroupRequirement } from "#/entities";
 import { Injections, LogCategories } from "#/constants";
@@ -15,6 +15,10 @@ import { allPromiseSettled } from "#/utils";
 import moment = require("moment");
 
 @Controller("group")
+@GlobalAlias("mygroups", "mygroups")
+@GlobalAlias("rule", "rule")
+@GlobalAlias("set", "set")
+@GlobalAlias("join", "join")
 export class GroupController extends BaseController<GroupController> {
     constructor(
         @InjectRepository(User) private userRepo: IUserRepository,

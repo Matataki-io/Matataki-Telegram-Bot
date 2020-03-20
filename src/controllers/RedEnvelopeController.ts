@@ -1,5 +1,5 @@
 import { BaseController } from '.';
-import { Controller, Command, Action } from '#/decorators';
+import { Controller, Command, Action, GlobalAlias } from '#/decorators';
 import { MessageHandlerContext } from '#/definitions';
 import { inject } from 'inversify';
 import { Injections } from '#/constants';
@@ -11,6 +11,8 @@ import { Markup } from 'telegraf';
 
 
 @Controller("RedEnvelope")
+@GlobalAlias("fahongbao", "fahongbao")
+@GlobalAlias("sfahongbao", "sfahongbao")
 export class RedEnvelopeController extends BaseController<RedEnvelopeController>{
     constructor(@inject(Injections.BackendApiService) private backendService: IBackendApiService,
         @inject(Injections.Web3Service) private web3Service: IWeb3Service,

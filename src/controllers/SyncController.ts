@@ -1,6 +1,6 @@
 import { inject } from "inversify";
 
-import { Controller, Command, InjectRepository } from "#/decorators";
+import { Controller, Command, InjectRepository, GlobalAlias } from "#/decorators";
 import { MessageHandlerContext } from "#/definitions";
 import { User } from "#/entities";
 import { IUserRepository } from "#/repositories";
@@ -8,6 +8,7 @@ import { IUserRepository } from "#/repositories";
 import { BaseController } from ".";
 
 @Controller("sync")
+@GlobalAlias("username", "username")
 export class SyncController extends BaseController<SyncController> {
     constructor(@InjectRepository(User) private userRepo: IUserRepository) {
         super();

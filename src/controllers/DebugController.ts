@@ -1,4 +1,4 @@
-import { Controller, Command, GroupOnly, PrivateChatOnly, RequireMatatakiAccount, RequireMintedMinetoken, InjectSenderMatatakiInfo, RequirePermissions } from "#/decorators";
+import { Controller, Command, GroupOnly, PrivateChatOnly, RequireMatatakiAccount, RequireMintedMinetoken, InjectSenderMatatakiInfo, RequirePermissions, GlobalAlias } from "#/decorators";
 import { MessageHandlerContext, UserInfo } from "#/definitions";
 import { BaseController } from ".";
 import { inject } from "inversify";
@@ -6,6 +6,7 @@ import { Injections } from "#/constants";
 import { IBackendApiService } from "#/services";
 
 @Controller("debug")
+@GlobalAlias("ping", "ping")
 export class DebugController extends BaseController<DebugController> {
     @Command("ping", { ignorePrefix: true })
     async ping({ message, reply }: MessageHandlerContext) {
