@@ -1,7 +1,7 @@
 ---
-lang: Русский
+lang: 繁體中文
 error:
-  usernameNotSynced: Извините, собеседник не синхронизировал имя пользователя с базой данных
+  usernameNotSynced: 抱歉，對方還沒有同步用戶名到數據庫裡
   usernameNotFound: Sorry, I can't find a user with this username.
   requireMatatakiAccount: Sorry, please bind or login your telegram account with Matataki.
   minetokenNotFound: Sorry, there is no such a minetoken.
