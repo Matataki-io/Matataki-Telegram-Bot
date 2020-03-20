@@ -1,6 +1,9 @@
 import { Controller, Command, GroupOnly, PrivateChatOnly, RequireMatatakiAccount, RequireMintedMinetoken, InjectSenderMatatakiInfo, RequirePermissions } from "#/decorators";
-import { MessageHandlerContext, AssociatedInfo } from "#/definitions";
+import { MessageHandlerContext, UserInfo } from "#/definitions";
 import { BaseController } from ".";
+import { inject } from "inversify";
+import { Injections } from "#/constants";
+import { IBackendApiService } from "#/services";
 
 @Controller("debug")
 export class DebugController extends BaseController<DebugController> {
@@ -33,8 +36,7 @@ export class DebugController extends BaseController<DebugController> {
 
     @Command("requirematataki")
     @RequireMatatakiAccount()
-    requireMatatakiAccount({ reply }: MessageHandlerContext, @InjectSenderMatatakiInfo() senderInfo: Required<Omit<AssociatedInfo, "minetoken">>) {
-        const { user } = senderInfo;
+    requireMatatakiAccount({ reply }: MessageHandlerContext, @InjectSenderMatatakiInfo() user: UserInfo) {
         return reply(`${user.id}:${user.name}`);
     }
     @Command("requirematataki2")
@@ -44,9 +46,8 @@ export class DebugController extends BaseController<DebugController> {
     }
     @Command("requiremintedminetoken")
     @RequireMintedMinetoken()
-    requireMintedMinetoken({ reply }: MessageHandlerContext, @InjectSenderMatatakiInfo() senderInfo: Required<AssociatedInfo>) {
-        const { user, minetoken } = senderInfo;
-        return reply(`${user.id}:${user.name} w/ ${minetoken.id}:${minetoken.name}(${minetoken.symbol})`);
+    requireMintedMinetoken({ reply }: MessageHandlerContext, @InjectSenderMatatakiInfo() user: UserInfo) {
+        return reply(`${user.id}:${user.name} w/ ${user.issuedTokens[0].id}:${user.issuedTokens[0].name}(${user.issuedTokens[0].symbol})`);
     }
     @Command("requiremintedminetoken2")
     @RequireMintedMinetoken()
@@ -63,5 +64,12 @@ export class DebugController extends BaseController<DebugController> {
     @RequirePermissions("can_restrict_members")
     permission({ reply }: MessageHandlerContext) {
         return reply("Ok");
+    }
+
+    constructor(@inject(Injections.BackendApiService) private backend: IBackendApiService) { super(); }
+
+    @Command("backend")
+    async bb({ reply }: MessageHandlerContext) {
+        await reply(JSON.stringify(await this.backend.getToken(14)));
     }
 }

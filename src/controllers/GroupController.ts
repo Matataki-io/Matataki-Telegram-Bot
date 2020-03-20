@@ -3,11 +3,11 @@ import { Extra, Markup } from "telegraf";
 import { User as TelegramUser } from "telegraf/typings/telegram-types";
 
 import { Controller, Command, InjectRepository, Event, GroupOnly, PrivateChatOnly, RequireMatatakiAccount, InjectSenderMatatakiInfo, RequireMintedMinetoken, InjectRegexMatchGroup } from "#/decorators";
-import { MessageHandlerContext, AssociatedInfo } from "#/definitions";
+import { MessageHandlerContext, UserInfo } from "#/definitions";
 import { Group, User, FandomGroupRequirement } from "#/entities";
 import { Injections, LogCategories } from "#/constants";
 import { IUserRepository, IGroupRepository, IFandomGroupRequirementRepository } from "#/repositories";
-import { IBotService, IMatatakiService, IWeb3Service, ILoggerService } from "#/services";
+import { IBotService, IWeb3Service, ILoggerService, IBackendApiService } from "#/services";
 
 import { BaseController } from ".";
 import { table } from "table";
@@ -23,13 +23,13 @@ export class GroupController extends BaseController<GroupController> {
         @inject(Injections.BotService) private botService: IBotService,
         @inject(Injections.Web3Service) private web3Service: IWeb3Service,
         @inject(Injections.LoggerService) private loggerService: ILoggerService,
-        @inject(Injections.MatatakiService) private matatakiService: IMatatakiService) {
+        @inject(Injections.BackendApiService) private backendService: IBackendApiService) {
         super();
     }
 
     @Command("mygroups", { ignorePrefix: true })
     @RequireMintedMinetoken()
-    async listMyGroups({ message, reply, telegram, i18n }: MessageHandlerContext, @InjectSenderMatatakiInfo() senderInfo: Required<AssociatedInfo>) {
+    async listMyGroups({ message, reply, telegram, i18n }: MessageHandlerContext, @InjectSenderMatatakiInfo() user: UserInfo) {
         const groups = await this.groupRepo.getGroupsOfCreator(message.from.id);
 
         if (groups.length === 0) {
@@ -67,7 +67,7 @@ export class GroupController extends BaseController<GroupController> {
             return i18n.t("group.mygroups.groupInfo", {
                 id: group.id,
                 title: groupInfo.title,
-                symbol: senderInfo.minetoken.symbol,
+                symbol: user.issuedTokens[0].symbol,
                 amount: group.requirements.length > 0 ? group.requirements[0].amount : i18n.t("group.mygroups.noAnyRule"),
             });
         })));
@@ -100,20 +100,19 @@ export class GroupController extends BaseController<GroupController> {
             return;
         }
 
-        const info = await this.matatakiService.getAssociatedInfo(Number(group.creatorId));
-
-        if (!info.minetoken) {
+        const user = await this.backendService.getUserByTelegramId(Number(group.creatorId));
+        if (user.issuedTokens.length === 0) {
             throw new Error("Impossible situation");
         }
 
         if (group.requirements.length > 0) {
             await reply(i18n.t("group.rule.minetokenRequirement", {
-                symbol: info.minetoken.symbol,
+                symbol: user.issuedTokens[0].symbol,
                 amount: group.requirements[0].amount
             }));
         } else {
             await reply(i18n.t("group.rule.noRequirement", {
-                symbol: info.minetoken.symbol
+                symbol: user.issuedTokens[0].symbol
             }));
         }
     }
@@ -121,7 +120,7 @@ export class GroupController extends BaseController<GroupController> {
     @Command("set", /-?(\d+)\s+(\d+.?\d*)/, ({ t }) => t("group.setRequirement.badFormat"))
     @RequireMintedMinetoken()
     async setGroupRequirement({ message, reply, telegram, i18n }: MessageHandlerContext,
-        @InjectSenderMatatakiInfo() senderInfo: Required<AssociatedInfo>,
+        @InjectSenderMatatakiInfo() user: UserInfo,
         @InjectRegexMatchGroup(1, input => -Number(input)) groupId: number,
         @InjectRegexMatchGroup(2, input => Number(input) * 10000) amount: number) {
         const groups = await this.groupRepo.getGroupsOfCreator(message.from.id);
@@ -154,14 +153,14 @@ export class GroupController extends BaseController<GroupController> {
             return;
         }
 
-        await this.fandomGroupReqRepo.set(group, senderInfo.minetoken.id, amount);
+        await this.fandomGroupReqRepo.set(group, user.issuedTokens[0].id, amount);
 
         await reply("OK");
 
         await telegram.sendMessage(groupId, i18n.t("group.setRequirement.notification", {
             groupId,
             title: group.title,
-            symbol: senderInfo.minetoken.symbol,
+            symbol: user.issuedTokens[0].symbol,
             amount
         }));
     }
@@ -169,7 +168,7 @@ export class GroupController extends BaseController<GroupController> {
     @Command("join", { ignorePrefix: true })
     @PrivateChatOnly()
     @RequireMatatakiAccount()
-    async joinGroup({ message, reply, telegram, i18n }: MessageHandlerContext, @InjectSenderMatatakiInfo() info: AssociatedInfo) {
+    async joinGroup({ message, reply, telegram, i18n }: MessageHandlerContext, @InjectSenderMatatakiInfo() info: UserInfo) {
     }
 
     @Event("new_chat_members")
@@ -206,14 +205,8 @@ export class GroupController extends BaseController<GroupController> {
         const requirement = group.requirements[0];
 
         const results = await allPromiseSettled(newMemberArray.map(async member => {
-            const matatakiInfo = await this.matatakiService.getAssociatedInfo(Number(member.id));
-
-            if (!matatakiInfo.user) {
-                throw new Error();
-            }
-
-            const contractAddress = await this.matatakiService.getContractAddressOfMinetoken(requirement.minetokenId);
-            const walletAddress = await this.matatakiService.getEthWallet(Number(member.id));
+            const { contractAddress } = await this.backendService.getToken(requirement.minetokenId);
+            const { walletAddress } = await this.backendService.getUser(Number(member.id));
 
             const balance = await this.web3Service.getBalance(contractAddress, walletAddress) * 10000;
             console.log(balance)

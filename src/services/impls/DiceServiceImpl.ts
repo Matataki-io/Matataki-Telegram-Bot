@@ -1,4 +1,4 @@
-import { IDiceService } from "#/services";
+import { IDiceService, IBackendApiService, IWeb3Service } from "#/services";
 import {
     Arguments, MatatakiUser, MessageContext
 } from "#/services/IDiceService";
@@ -52,7 +52,10 @@ const Msgs = {
 export class DiceServiceImpl implements IDiceService {
     private counter: number = 0;
     private games: Game[] = [];
-    constructor(@inject(Injections.MatatakiService) private matatakiService: IMatatakiService) {
+
+    constructor(@inject(Injections.MatatakiService) private matatakiService: IMatatakiService,
+        @inject(Injections.BackendApiService) private backendService: IBackendApiService,
+        @inject(Injections.Web3Service) private web3Service: IWeb3Service) {
 
     }
     removeEmptyGames() {
@@ -164,7 +167,9 @@ ${ctx.i18n.t('dice.settleSuccess')}:${name} -${game.args.amount / 10000} ${game.
         }
     }
     private async getBalance(user: MatatakiUser, tokenSymbol: string): Promise<number> {
-        const balance = await this.matatakiService.getUserMinetoken(user.id, tokenSymbol);
+        const { walletAddress } = await this.backendService.getUser(user.id);
+        const { contractAddress } = await this.backendService.getToken(tokenSymbol);
+        const balance = await this.web3Service.getBalance(contractAddress, walletAddress);
         return balance * 10000;
     }
 

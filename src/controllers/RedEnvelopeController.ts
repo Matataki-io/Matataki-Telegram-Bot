@@ -3,7 +3,7 @@ import { Controller, Command, Action } from '#/decorators';
 import { MessageHandlerContext } from '#/definitions';
 import { inject } from 'inversify';
 import { Injections } from '#/constants';
-import { IMatatakiService, IRedEnvelopeService } from '#/services';
+import { IRedEnvelopeService, IBackendApiService, IWeb3Service } from '#/services';
 import _ from 'lodash';
 import { check, checkNotNull, asyncReplaceErr, checkWith } from '#/utils';
 import { Arguments, MessageContext, MatatakiUser } from '#/services/IRedEnvelopeService';
@@ -12,7 +12,8 @@ import { Markup } from 'telegraf';
 
 @Controller("RedEnvelope")
 export class RedEnvelopeController extends BaseController<RedEnvelopeController>{
-    constructor(@inject(Injections.MatatakiService) private matatakiService: IMatatakiService,
+    constructor(@inject(Injections.BackendApiService) private backendService: IBackendApiService,
+        @inject(Injections.Web3Service) private web3Service: IWeb3Service,
         @inject(Injections.RedEnvelopeService) private redEnvelopService: IRedEnvelopeService
     ) {
         super();
@@ -119,9 +120,9 @@ export class RedEnvelopeController extends BaseController<RedEnvelopeController>
     Promise<{ name: string, id: number }> {
         const tgid = ctx.callbackQuery ? ctx.callbackQuery.from.id :
             ctx.message.from.id;
-        const info = await asyncReplaceErr(this.matatakiService.getAssociatedInfo(tgid),
+        const info = await asyncReplaceErr(this.backendService.getUserByTelegramId(tgid),
             ctx.i18n.t('redEnvelope.cantGetUserInfo'));
-        const user = checkNotNull(info.user, ctx.i18n.t('redEnvelope.noUser'));
+        const user = checkNotNull(info, ctx.i18n.t('redEnvelope.noUser'));
         return { name: this.getTgName(ctx), id: user.id };
     }
     private getTgName(ctx: MessageHandlerContext): string {
@@ -131,7 +132,9 @@ export class RedEnvelopeController extends BaseController<RedEnvelopeController>
       (from.last_name ? from.last_name : '');
     };
     private async getBalance(user: MatatakiUser, tokenSymbol: string): Promise<number> {
-        const balance = await this.matatakiService.getUserMinetoken(user.id, tokenSymbol);
+        const { walletAddress } = await this.backendService.getUser(user.id);
+        const { contractAddress } = await this.backendService.getToken(tokenSymbol);
+        const balance = await this.web3Service.getBalance(contractAddress, walletAddress);
         return balance * 10000;
     }
     private parseCbArg(text: string): number {

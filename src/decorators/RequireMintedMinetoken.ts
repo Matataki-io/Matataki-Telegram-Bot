@@ -1,6 +1,6 @@
 import { MessageHandlerContext, ParameterInfo, ControllerMethodContext } from "#/definitions";
 import { MetadataKeys, Injections, ParameterTypes } from "#/constants";
-import { IMatatakiService } from "#/services";
+import { IBackendApiService } from "#/services";
 
 type HandlerFunc = (ctx: MessageHandlerContext, ...args: any[]) => any;
 
@@ -30,19 +30,24 @@ export function RequireMintedMinetoken(): MethodDecorator {
 
         descriptor.value = async function (ctx: MessageHandlerContext, ...args: any[]) {
             const context = Reflect.getMetadata(MetadataKeys.Context, ctx) as ControllerMethodContext;
-            const matatakiService = context.container.get<IMatatakiService>(Injections.MatatakiService);
+            const backendService = context.container.get<IBackendApiService>(Injections.BackendApiService);
 
-            const info = await matatakiService.getAssociatedInfo(ctx.message.from.id);
-            if (!info.user || !info.minetoken) {
-                await ctx.reply(ctx.i18n.t("error.requireMintedMinetoken"));
+            try {
+                const user = await backendService.getUserByTelegramId(ctx.message.from.id);
+
+                if (user.issuedTokens.length === 0) {
+                    throw new Error();
+                }
+
+                if (index !== -1) {
+                    args[index - 1] = user;
+                }
+
+                return decoratedMethod.call(this, ctx, ...args);
+            } catch {
+                await ctx.reply(ctx.i18n.t("error.requireMatatakiAccount"));
                 return;
             }
-
-            if (index !== -1) {
-                args[index - 1] = info;
-            }
-
-            return decoratedMethod.call(this, ctx, ...args);
         };
 
         Object.defineProperty(descriptor.value, "name", { value: methodName });
