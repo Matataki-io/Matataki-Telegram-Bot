@@ -15,7 +15,7 @@ const botService = new BotServiceStub();
 
 function createController() {
     return new GroupController(new UserRepositoryStub(), new GroupRepositoryStub(), new FandomGroupRequirementRepositoryStub(),
-        botService, new Web3ServiceStub(), null!, new MatatakiServiceStub());
+        botService, new Web3ServiceStub(), null!, null!);
 }
 
 describe("GroupController", () => {
