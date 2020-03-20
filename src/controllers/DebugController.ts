@@ -66,11 +66,4 @@ export class DebugController extends BaseController<DebugController> {
     permission({ reply }: MessageHandlerContext) {
         return reply("Ok");
     }
-
-    constructor(@inject(Injections.BackendApiService) private backend: IBackendApiService) { super(); }
-
-    @Command("backend")
-    async bb({ reply }: MessageHandlerContext) {
-        await reply(JSON.stringify(await this.backend.getToken(14)));
-    }
 }

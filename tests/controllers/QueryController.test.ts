@@ -11,7 +11,7 @@ import { BotServiceStub } from "../stubs/services/BotServiceStub";
 const matatakiService = new MatatakiServiceStub();
 
 function createController() {
-    return new QueryController(matatakiService, new UserRepositoryStub(), new GroupRepositoryStub(), new LoggerServiceStub(), new BotServiceStub());
+    return new QueryController(null!, matatakiService, new UserRepositoryStub(), new GroupRepositoryStub(), new LoggerServiceStub(), new BotServiceStub());
 }
 
 describe("QueryController", () => {

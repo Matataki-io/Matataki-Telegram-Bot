@@ -5,7 +5,7 @@ import { Web3ServiceStub } from "../stubs/services/Web3ServiceStub";
 import { UserRepositoryStub } from "../stubs/repositories/UserRepositoryStub";
 
 function createController() {
-    return new WalletController(new MatatakiServiceStub(), new Web3ServiceStub(), new UserRepositoryStub());
+    return new WalletController(new MatatakiServiceStub(), null!, new Web3ServiceStub(), new UserRepositoryStub());
 }
 
 describe("WalletControll", () => {

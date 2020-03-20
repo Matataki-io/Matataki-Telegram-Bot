@@ -17,7 +17,7 @@ export class MatatakiServiceStub extends MatatakiServiceStubBase {
     }
 
     constructor() {
-        super(createMockedAxios({
+        super(null!, createMockedAxios({
             get: [
                 {
                     request: { url: "/_internal_bot/account/114514/ethWallet" },
