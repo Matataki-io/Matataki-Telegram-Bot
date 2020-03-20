@@ -42,7 +42,10 @@ export class HelpController extends BaseController<HelpController> {
         const url_prefix = process.env.MATATAKI_URLPREFIX!;
 
         await ctx.answerCbQuery();
-        await ctx.telegram.sendMessage(ctx.chat!.id, ctx.i18n.t("bot.help.howToCreateFandomGroup.content"), { parse_mode: 'Markdown', disable_web_page_preview: true });
+        await ctx.telegram.sendMessage(ctx.chat!.id, ctx.i18n.t("bot.help.howToCreateFandomGroup.content", {
+            username_escaped,
+            url_prefix,
+        }), { parse_mode: 'Markdown', disable_web_page_preview: true });
     }
 
     @Action("help6")
@@ -50,7 +53,9 @@ export class HelpController extends BaseController<HelpController> {
         const username_escaped = this.botService.info.username!.replace(/_/g, "\\_");
 
         await ctx.answerCbQuery();
-        await ctx.telegram.sendMessage(ctx.chat!.id, ctx.i18n.t("bot.help.howToRemoveFandomGroup.content"), { parse_mode: 'Markdown', disable_web_page_preview: true });
+        await ctx.telegram.sendMessage(ctx.chat!.id, ctx.i18n.t("bot.help.howToRemoveFandomGroup.content", {
+            username_escaped,
+        }), { parse_mode: 'Markdown', disable_web_page_preview: true });
     }
 
     @Action("help7")
