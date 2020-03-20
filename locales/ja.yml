@@ -5,16 +5,16 @@ error:
   usernameNotFound: 申し訳ございません、該当ユーザーが見つかりませんでした。
   requireMatatakiAccount: 申し訳ございません、只今お客さまの Telegram アカンウトはバインドしません。バインド操作に実行して、または Telegramを登録してください。
   minetokenNotFound: ごめんなさい、そのようなファンチケットがありません。
-  notFandomGroup: Sorry, this is not a fandom group.
-  groupChatOnly: Sorry, it's only available in a group chat.
-  privateChatOnly: Sorry, it's only available in a private chat.
-  requireMintedMinetoken: Sorry, you should have minted a minetoken on Matataki.
+  notFandomGroup: ごめんなさい、これはファンチケットグループではありません。
+  groupChatOnly: ごめんなさい、該当機能はグループ限定機能です。
+  privateChatOnly: ごめんなさい、該当機能はプライベートチャット限定機能です。
+  requireMintedMinetoken: ごめんなさい、「瞬き」でファンチケットを発行しください。
 common:
   associatedMatatakiAccount:
-    no: No connection with Matataki
-    yes: "Matataki account: [${matatakiUsername}](${matatakiUserPageUrl})"
+    no: '「瞬き」アカンウトとリンクはないのです。'
+    yes: "「瞬き」アカンウトニックネーム」:${matatakiUsername}](${matatakiUserPageUrl})"
   mintedMinetoken:
-    no: No minetoken minted on Matataki
+    no: ファンチケットが発行しない。
     yes: "Minetoken: [${symbol} (${minetokenName})](${minetokenPageUrl})"
 wallet:
   query:
