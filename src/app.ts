@@ -21,6 +21,8 @@ import fs from "fs";
         "MATATAKI_APIURLPREFIX",
         "MATATAKI_ACCESS_TOKEN",
         "MATATAKI_TRANSFER_API_ACCESS_TOKEN",
+        "BACKEND_URLPREFIX",
+        "BACKEND_ACCESS_TOKEN",
     ];
 
     const missedEnvironmentVariables = requiredEnvironmentVariables.filter(envVar => typeof process.env[envVar] !== "string");
