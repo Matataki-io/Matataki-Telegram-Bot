@@ -2,9 +2,9 @@
 lang: 日本語
 error:
   usernameNotSynced: すいません，お振込先がデータベースにアカウントを同期していませんです。
-  usernameNotFound: Sorry, I can't find a user with this username.
-  requireMatatakiAccount: Sorry, please bind or login your telegram account with Matataki.
-  minetokenNotFound: Sorry, there is no such a minetoken.
+  usernameNotFound: 申し訳ございません、該当ユーザーが見つかりませんでした。
+  requireMatatakiAccount: 申し訳ございません、只今お客さまの Telegram アカンウトはバインドしません。バインド操作に実行して、または Telegramを登録してください。
+  minetokenNotFound: ごめんなさい、そのようなファンチケットがありません。
   notFandomGroup: Sorry, this is not a fandom group.
   groupChatOnly: Sorry, it's only available in a group chat.
   privateChatOnly: Sorry, it's only available in a private chat.
