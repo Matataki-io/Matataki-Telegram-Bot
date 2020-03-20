@@ -91,7 +91,7 @@ export class WalletController extends BaseController<WalletController> {
                 return null;
             }
 
-            return `[${token.name}（${token.symbol}）](${this.matatakiService.urlPrefix}token/${token.id})： ${balance}`;
+            return `[${token.name}（${token.symbol}）](${this.matatakiService.urlPrefix}/token/${token.id})： ${balance}`;
         })));
 
         array.push(i18n.t("wallet.query.minetoken.header", { count: balances.length }));
@@ -168,9 +168,9 @@ export class WalletController extends BaseController<WalletController> {
     ) {
         let commonMessage = i18n.t("wallet.transfer.common", {
             senderUsername,
-            senderUrl: `${this.matatakiService.urlPrefix}user/${senderUserId}`,
+            senderUrl: `${this.matatakiService.urlPrefix}/user/${senderUserId}`,
             receiverUsername,
-            receiverUrl: `${this.matatakiService.urlPrefix}user/${receiverUserId}`,
+            receiverUrl: `${this.matatakiService.urlPrefix}/user/${receiverUserId}`,
             amount, symbol,
         });
         const transactionMessage = await replyWithMarkdown(`${i18n.t("wallet.transfer.started")}\n\n${commonMessage}`, { disable_web_page_preview: true });

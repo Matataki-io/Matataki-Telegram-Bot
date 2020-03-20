@@ -27,6 +27,10 @@ export class MatatakiServiceImpl implements IMatatakiService {
     protected axiosForTransfer: AxiosInstance;
 
     public get urlPrefix() {
+        if (process.env.MATATAKI_URLPREFIX!.endsWith("/")) {
+            process.env.MATATAKI_URLPREFIX = process.env.MATATAKI_URLPREFIX!.substr(0, process.env.MATATAKI_URLPREFIX!.length - 1);
+        }
+
         return process.env.MATATAKI_URLPREFIX!;
     }
 
