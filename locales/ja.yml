@@ -147,10 +147,10 @@ dice:
   waiting: '${n}名玩家已准备,等待更多的玩家加入......'
   noWinner: 没有胜利者
   draw: 流局
-  end: 已结束
-  resend: 重新发送
-  join: 加入
-  start: 开局
-  settlement: 结算记录
-  settleSuccess: 结算成功
-  settleFail: 结算失败
+  end: 終わり
+  resend: 再送する
+  join: 入る
+  start: スタート
+  settlement: 決済
+  settleSuccess: 決済成功しました
+  settleFail: 決済失敗しました
