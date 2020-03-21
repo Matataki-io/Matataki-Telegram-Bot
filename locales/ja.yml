@@ -58,79 +58,79 @@ group:
     botNotAdmin: ボットはグループの管理者ではありません。
     notification: 現在のグループには新しいルールが設定されています
   kickMember:
-    badFormat: Only `/kick @[Telegram username] [Time]` is acceptable.
-    started: Kicking...
-    success: Kicked
-    failure: Failed to kick
+    badFormat: '`/kick @[Telegram username] [Time]` のみが受け入れられます。'
+    started: アカウント追放中...
+    success: 追放されました
+    failure: 追放できませんでした
   banMember:
-    badFormat: Only `/ban @[Telegram username] [Time]` is acceptable.
-    started: Banning...
-    success: Banned
-    failure: Failed to ban
+    badFormat: '`/ban @[Telegram username] [Time]` のみが受け入れられます。'
+    started: 禁止しています...
+    success: 禁止された
+    failure: 禁止できませんでした
   mygroups:
     noAnyGroup:
     groupInfo: |-
-      Group ID：${id}
-      Name：${title}
-      Fan tickets：${symbol}
-      Minimum required：${amount}
-    noAnyRule: No Rule
-    tip: Promote Matataki bot as admin before listing your fandom group(s)
+      グループ ID：${id}
+      グループ 名：${title}
+      ファンチケット：${symbol}
+      最小要額：${amount}
+    noAnyRule: ルールなし
+    tip: ファンダムグループをリストする前に、マタタキボットを管理者として設置する
 bot:
-  start: Thank you for using Matataki bot, you can send /help for help 👉🏻[Introduction](https://www.matataki.io/p/1638)
-  defaultReply: I'm a Matataki bot, you can send /help for help
+  start: Matatakiボットをご利用いただきありがとうございます。/help を送信してヘルプへ 👉🏻[Introduction](https://www.matataki.io/p/1638)
+  defaultReply: 私はマタタキのロボットです。/help を送信で助けを求めてください。
   help:
-    header: What do you want to know?
+    header: 何を知りたいですか？
     introduction:
-      title: '👉Who are you'
-      content: introduction
+      title: '👉あなたは誰ですか'
+      content: 紹介
     fandomTicketIntroduction:
-      title: '👉What is the fan ticket group'
+      title: '👉ファンチケットグループとは何ですか'
       content: fandomTicketIntroduction
     command:
-      title: '👉Operation instructions'
+      title: '👉操作説明'
       content: command
     howToJoinFandomGroup:
-      title: '👉How to join fan ticket group'
+      title: '👉どうファンチケットグループに参加するのですか'
       content: howToJoinFandomGroup
     howToCreateFandomGroup:
-      title: '👉How to create a fan ticket group'
+      title: '👉ファンチケットグループを作成するにはどうすればよいですか'
       content: howToCreateFandomGroup
     howToRemoveFandomGroup:
-      title: '👉How to delete fan ticket group'
+      title: '👉ファンチケットグループを削除するにはどうすればよいですか'
       content: howToRemoveFandomGroup
     videoTutorial:
-      title: '👉Video tutorial (updating)'
+      title: '👉ビデオチュートリアル（更新中）'
       content: videoTutorial
     redEnvelope:
-      title: '👉How to use the red envelope function'
+      title: '👉赤のパケット機能の使用方法'
       content: redEnvelope
     dice:
-      title: '👉How to start Dice game'
+      title: '👉サイコロゲームを開始する方法は'
       content: dice
     transfer:
-      title: '👉How to use the transfer function'
+      title: '👉伝達関数の使用方法'
       content: transfer
     otherQuestion:
-      title: '👉I have other questions'
+      title: '👉他に質問があります'
       content: otherQuestion
 redEnvelope:
   help: |-
-    send Red Packet:/fahongbao <FanTicket> <Amount> <Quantity> [<Description>]
-    send Red Packet with random amount:/sfahongbao <FanTicket> <Amount> <Quantity> [<Description>]
-  errorFormat: Wrong command format.
-  nonPositiveQuantity: Quantity couldn't be negative or zero.
-  noUser: Telegram needs to bind with Matataki Account.
-  insuffMoney: Insufficent money.
-  tooLessAmount: Too less Amount.
-  cantGetUserInfo: Couldn't get Matataki user info.
-  success: '${userName} sends a red packet, click button to get it.'
-  instruction: If you register a account at www.matataki.io and then bind your Telegram to your account, you will have chances to grab our welfare.
-  resend: Resend
-  grab: Grab
-  finished: '${userName}''s red packet is now empty.'
-  grabbed: "[${grabber} grabbed ${sender}'s ${description} red packet，${amount} ${unit}](https://rinkeby.etherscan.io/tx/${txHash})"
-  trying: '${userName} is trying to grab the red packet'
+    赤いパケットを送信：/fahongbao <FanTicket> <Amount> <Quantity> [<Description>]
+    ランダムな量の赤いパケットを送信します：/sfahongbao <FanTicket> <Amount> <Quantity> [<Description>]
+  errorFormat: 間違ったコマンド形式。
+  nonPositiveQuantity: 数量を負またはゼロにすることはできません。
+  noUser: 電報は、マタタキアカウントにバインドする必要があります。
+  insuffMoney: お金が足りません。
+  tooLessAmount: 金額少なすぎる。
+  cantGetUserInfo: Matatakiユーザー情報を取得できませんでした。
+  success: '${userName} が赤いパケットを送信した、ボタンをクリックして取得します。'
+  instruction: www.matataki.ioでアカウントを登録し、Telegramをアカウントにバインドすると、福利厚生をつかむことができます。
+  resend: 再送信
+  grab: つかむ
+  finished: '${userName} の赤いパケットは今空になりました。'
+  grabbed: "[${grabber} は ${sender} の ${description} 赤いパケットをつかみました、${amount} ${unit}](https://rinkeby.etherscan.io/tx/${txHash})"
+  trying: "${userName} が赤いパケットをつかもうとしています\n"
 dice:
   help: |-
     开始一局游戏:/new_game <赌注> <赌注单位>
