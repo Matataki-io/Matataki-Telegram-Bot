@@ -116,21 +116,21 @@ bot:
       content: "👉*我有别的问题*\n\n如有其他问题请在 瞬Matataki 的[官方 TG 群](https://t.me/smartsignature_io)询问"
 redEnvelope:
   help: |-
-    send Red Packet:/fahongbao <FanTicket> <Amount> <Quantity> [<Description>]
-    send Red Packet with random amount:/sfahongbao <FanTicket> <Amount> <Quantity> [<Description>]
-  errorFormat: Wrong command format.
-  nonPositiveQuantity: Quantity couldn't be negative or zero.
-  noUser: Telegram needs to bind with Matataki Account.
-  insuffMoney: Insufficent money.
-  tooLessAmount: Too less Amount.
-  cantGetUserInfo: Couldn't get Matataki user info.
-  success: '${userName} sends a red packet, click button to get it.'
-  instruction: If you register a account at www.matataki.io and then bind your Telegram to your account, you will have chances to grab our welfare.
+    发送红包：/fahongbao <Fan票> <金额> <数量> [<描述>]
+    发送随机数量的红包：/sfahongbao <Fan票> <金额> <数量> [<描述>]
+  errorFormat: 错误的命令格式。
+  nonPositiveQuantity: 数量不能为负或0.
+  noUser: 电报需要绑定Matataki帐户。
+  insuffMoney: 金额不足。
+  tooLessAmount: 余额不够。
+  cantGetUserInfo: 无法获取Matataki用户信息。
+  success: '${userName} 发送一个红包，请单击按钮获取它。'
+  instruction: 如果您在www.matataki.io上注册了一个帐户，然后将电报绑定到您的帐户，则您将有机会获得我们的福利。
   resend: 重新发送
   grab: 领取
-  finished: '${userName}''s red packet is now empty.'
-  grabbed: "[${grabber} grabbed ${sender}'s ${description} red packet，${amount} ${unit}](https://rinkeby.etherscan.io/tx/${txHash})"
-  trying: '${userName} is trying to grab the red packet'
+  finished: '${userName} 的红包目前为空。'
+  grabbed: "[${grabber} 抢了 ${sender} 的 ${description} 红包，${amount} ${unit}](https://rinkeby.etherscan.io/tx/${txHash})"
+  trying: '${userName} 正准备抢红包。'
 dice:
   help: |-
     开始一局游戏:/new_game <赌注> <赌注单位>
