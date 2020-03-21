@@ -18,45 +18,45 @@ common:
     yes: "Minetoken: [${symbol} (${minetokenName})](${minetokenPageUrl})"
 wallet:
   query:
-    badFormat: Only `/query [Matataki UID] [Token Symbol]` or `/query @[Telegram username] [Token Symbol]` is acceptable.
+    badFormat: '`/query [Matataki UID] [Token Symbol]` または `/query @[Telegram username] [Token Symbol]` のみが許容されます。'
     minetoken:
-      header: You have balance(s) of ${count} minetoken(s)
+      header: '${count} minetoken(s) の残高があります'
   transfer:
-    badFormat: Only `/transfer [Matataki UID] [Token Symbol] [Amount]` or `/transfer @[Telegram username] [Token Symbol] [Amount]` is acceptable.
+    badFormat: '`/transfer [Matataki UID] [Token Symbol] [Amount]` または `/transfer @[Telegram username] [Token Symbol] [Amount]` のみが許容されます。'
     common: |-
-      From: [${senderUsername}](${senderUrl})
-      To: [${receiverUsername}](${receiverUrl})
-      Value: ${amount} ${symbol}
-    started: "Pending..."
-    successful: "*Success*"
-    failed: "*Failure*"
-    transactionDetail: Detail
+      送金人：[${senderUsername}](${senderUrl})
+      お振込先：[${receiverUsername}](${receiverUrl})　
+      振込む額：${amount} ${symbol}
+    started: "振り込み中..."
+    successful: "*振り込む成功しました*"
+    failed: "*振り込む失敗しました*"
+    transactionDetail: 詳細
 sync:
   username:
-    noUsername: Sorry, please set a username to your Telegram account in Telegram settings.
+    noUsername: 申し訳ありませんが、Telegram設定でTelegramアカウントにユーザー名を設定してください。
 query:
   price:
-    badFormat: Only `/query [Token Symbol]` is acceptable.
-    response: "Current price: ${price} CNY"
+    badFormat: '`/query [Token Symbol]` のみが受け入れられます。'
+    response: "現在の価格： ${price} CNY"
   status:
     joinedGroup:
-      yes: You've joined ${count} fandom group(s)
-      no: You haven't joined any fandom group
+      yes: '${count} ファンダムグループに参加しました'
+      no: ファンダムグループに参加していません
     myGroup:
-      yes: You've created ${count} fandom group(s)
-      no: You haven't created any fandom group
-    groupNoRule: No Rule
-    tip: Send /join to show what fandom group you can join
+      yes: '${count} ファンダムグループを作成しました'
+      no: ファンダムグループを作成していません
+    groupNoRule: ルールなし
+    tip: /join を送信して、参加できるファンダムグループを示します
 group:
   rule:
-    minetokenRequirement: This group requires ${symbol} ≥ ${amount}
-    noRequirement: This group doesn't have any requirement with ${symbol}
+    minetokenRequirement: このグループには、 ${symbol} ≥ ${amount} が必要です
+    noRequirement: このグループは　${symbol} の要請がありません
   setRequirement:
-    badFormat: Only `/set [Group ID] [Amount]` is acceptable.
-    groupNotFound: Sorry, I can't find such a group.
-    creatorLeft: The group creator has left the group.
-    botNotAdmin: The bot is not a administrator in the group.
-    notification: Current group has been set a new rule
+    badFormat: '`/set [Group ID] [Amount]` のみが受け入れられます。'
+    groupNotFound: 申し訳ありませんが、そのようなグループは見つかりません。
+    creatorLeft: グループの作成者がグループを脱退しました。
+    botNotAdmin: ボットはグループの管理者ではありません。
+    notification: 現在のグループには新しいルールが設定されています
   kickMember:
     badFormat: Only `/kick @[Telegram username] [Time]` is acceptable.
     started: Kicking...
