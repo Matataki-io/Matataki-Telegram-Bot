@@ -14,7 +14,7 @@ export class AddFandomGroupRequirementTable1583391289338 implements MigrationInt
         await queryRunner.query(`DROP INDEX "${schema}"."group_creatorId_idx"`, undefined);
         await queryRunner.query(`DROP INDEX "${schema}"."group_tokenId_idx"`, undefined);
         await queryRunner.query(`CREATE TABLE "${schema}"."fandom_group_requirement" ("minetokenId" integer NOT NULL, "amount" bigint NOT NULL, "amountCanEqual" boolean NOT NULL, "groupId" bigint NOT NULL, CONSTRAINT "fandom_group_requirement_pkey" PRIMARY KEY ("minetokenId", "groupId"))`, undefined);
-        await queryRunner.query(`INSERT INTO "${schema}"."fandom_group_requirement" SELECT "group"."tokenId", ("group".requirement->'minetoken'->'amount')::int * 10000, ("group".requirement->'minetoken'->'canEqual')::boolean, "group".id FROM "${schema}"."group" WHERE "group".active AND "group".requirement != '{}'`, undefined);
+        await queryRunner.query(`INSERT INTO "${schema}"."fandom_group_requirement" SELECT "group"."tokenId", ("group".requirement->'minetoken'->'amount')::bigint * 10000, ("group".requirement->'minetoken'->'canEqual')::boolean, "group".id FROM "${schema}"."group" WHERE "group".active AND "group".requirement != '{}'`, undefined);
         await queryRunner.query(`ALTER TABLE "${schema}"."group" DROP COLUMN "active"`, undefined);
         await queryRunner.query(`ALTER TABLE "${schema}"."group" DROP COLUMN "tokenId"`, undefined);
         await queryRunner.query(`ALTER TABLE "${schema}"."group" DROP COLUMN "requirement"`, undefined);
