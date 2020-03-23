@@ -2,135 +2,135 @@
 lang: 日本語
 error:
   usernameNotSynced: すいません，お振込先がデータベースにアカウントを同期していませんです。
-  usernameNotFound: Sorry, I can't find a user with this username.
-  requireMatatakiAccount: Sorry, please bind or login your telegram account with Matataki.
-  minetokenNotFound: Sorry, there is no such a minetoken.
-  notFandomGroup: Sorry, this is not a fandom group.
-  groupChatOnly: Sorry, it's only available in a group chat.
-  privateChatOnly: Sorry, it's only available in a private chat.
-  requireMintedMinetoken: Sorry, you should have minted a minetoken on Matataki.
+  usernameNotFound: 申し訳ございません、該当ユーザーが見つかりませんでした。
+  requireMatatakiAccount: 申し訳ございません、只今お客さまの Telegram アカンウトはバインドしません。バインド操作に実行して、または Telegramを登録してください。
+  minetokenNotFound: ごめんなさい、そのようなファンチケットがありません。
+  notFandomGroup: ごめんなさい、これはファンチケットグループではありません。
+  groupChatOnly: ごめんなさい、該当機能はグループ限定機能です。
+  privateChatOnly: ごめんなさい、該当機能はプライベートチャット限定機能です。
+  requireMintedMinetoken: ごめんなさい、「瞬き」でファンチケットを発行しください。
 common:
   associatedMatatakiAccount:
-    no: No connection with Matataki
-    yes: "Matataki account: [${matatakiUsername}](${matatakiUserPageUrl})"
+    no: '「瞬き」アカンウトとリンクはないのです。'
+    yes: "「瞬き」アカンウトニックネーム」:${matatakiUsername}](${matatakiUserPageUrl})"
   mintedMinetoken:
-    no: No minetoken minted on Matataki
+    no: ファンチケットが発行しない。
     yes: "Minetoken: [${symbol} (${minetokenName})](${minetokenPageUrl})"
 wallet:
   query:
-    badFormat: Only `/query [Matataki UID] [Token Symbol]` or `/query @[Telegram username] [Token Symbol]` is acceptable.
+    badFormat: '`/query [Matataki UID] [Token Symbol]` または `/query @[Telegram username] [Token Symbol]` のみが許容されます。'
     minetoken:
-      header: You have balance(s) of ${count} minetoken(s)
+      header: '${count} minetoken(s) の残高があります'
   transfer:
-    badFormat: Only `/transfer [Matataki UID] [Token Symbol] [Amount]` or `/transfer @[Telegram username] [Token Symbol] [Amount]` is acceptable.
+    badFormat: '`/transfer [Matataki UID] [Token Symbol] [Amount]` または `/transfer @[Telegram username] [Token Symbol] [Amount]` のみが許容されます。'
     common: |-
-      From: [${senderUsername}](${senderUrl})
-      To: [${receiverUsername}](${receiverUrl})
-      Value: ${amount} ${symbol}
-    started: "Pending..."
-    successful: "*Success*"
-    failed: "*Failure*"
-    transactionDetail: Detail
+      送金人：[${senderUsername}](${senderUrl})
+      お振込先：[${receiverUsername}](${receiverUrl})　
+      振込む額：${amount} ${symbol}
+    started: "振り込み中..."
+    successful: "*振り込む成功しました*"
+    failed: "*振り込む失敗しました*"
+    transactionDetail: 詳細
 sync:
   username:
-    noUsername: Sorry, please set a username to your Telegram account in Telegram settings.
+    noUsername: 申し訳ありませんが、Telegram設定でTelegramアカウントにユーザー名を設定してください。
 query:
   price:
-    badFormat: Only `/query [Token Symbol]` is acceptable.
-    response: "Current price: ${price} CNY"
+    badFormat: '`/query [Token Symbol]` のみが受け入れられます。'
+    response: "現在の価格： ${price} CNY"
   status:
     joinedGroup:
-      yes: You've joined ${count} fandom group(s)
-      no: You haven't joined any fandom group
+      yes: '${count} ファンダムグループに参加しました'
+      no: ファンダムグループに参加していません
     myGroup:
-      yes: You've created ${count} fandom group(s)
-      no: You haven't created any fandom group
-    groupNoRule: No Rule
-    tip: Send /join to show what fandom group you can join
+      yes: '${count} ファンダムグループを作成しました'
+      no: ファンダムグループを作成していません
+    groupNoRule: ルールなし
+    tip: /join を送信して、参加できるファンダムグループを示します
 group:
   rule:
-    minetokenRequirement: This group requires ${symbol} ≥ ${amount}
-    noRequirement: This group doesn't have any requirement with ${symbol}
+    minetokenRequirement: このグループには、 ${symbol} ≥ ${amount} が必要です
+    noRequirement: このグループは　${symbol} の要請がありません
   setRequirement:
-    badFormat: Only `/set [Group ID] [Amount]` is acceptable.
-    groupNotFound: Sorry, I can't find such a group.
-    creatorLeft: The group creator has left the group.
-    botNotAdmin: The bot is not a administrator in the group.
-    notification: Current group has been set a new rule
+    badFormat: '`/set [Group ID] [Amount]` のみが受け入れられます。'
+    groupNotFound: 申し訳ありませんが、そのようなグループは見つかりません。
+    creatorLeft: グループの作成者がグループを脱退しました。
+    botNotAdmin: ボットはグループの管理者ではありません。
+    notification: 現在のグループには新しいルールが設定されています
   kickMember:
-    badFormat: Only `/kick @[Telegram username] [Time]` is acceptable.
-    started: Kicking...
-    success: Kicked
-    failure: Failed to kick
+    badFormat: '`/kick @[Telegram username] [Time]` のみが受け入れられます。'
+    started: アカウント追放中...
+    success: 追放されました
+    failure: 追放できませんでした
   banMember:
-    badFormat: Only `/ban @[Telegram username] [Time]` is acceptable.
-    started: Banning...
-    success: Banned
-    failure: Failed to ban
+    badFormat: '`/ban @[Telegram username] [Time]` のみが受け入れられます。'
+    started: 禁止しています...
+    success: 禁止された
+    failure: 禁止できませんでした
   mygroups:
     noAnyGroup:
     groupInfo: |-
-      Group ID：${id}
-      Name：${title}
-      Fan tickets：${symbol}
-      Minimum required：${amount}
-    noAnyRule: No Rule
-    tip: Promote Matataki bot as admin before listing your fandom group(s)
+      グループ ID：${id}
+      グループ 名：${title}
+      ファンチケット：${symbol}
+      最小要額：${amount}
+    noAnyRule: ルールなし
+    tip: ファンダムグループをリストする前に、マタタキボットを管理者として設置する
 bot:
-  start: Thank you for using Matataki bot, you can send /help for help 👉🏻[Introduction](https://www.matataki.io/p/1638)
-  defaultReply: I'm a Matataki bot, you can send /help for help
+  start: Matatakiボットをご利用いただきありがとうございます。/help を送信してヘルプへ 👉🏻[Introduction](https://www.matataki.io/p/1638)
+  defaultReply: 私はマタタキのロボットです。/help を送信で助けを求めてください。
   help:
-    header: What do you want to know?
+    header: 何を知りたいですか？
     introduction:
-      title: '👉Who are you'
-      content: introduction
+      title: '👉あなたは誰ですか'
+      content: 紹介
     fandomTicketIntroduction:
-      title: '👉What is the fan ticket group'
+      title: '👉ファンチケットグループとは何ですか'
       content: fandomTicketIntroduction
     command:
-      title: '👉Operation instructions'
+      title: '👉操作説明'
       content: command
     howToJoinFandomGroup:
-      title: '👉How to join fan ticket group'
+      title: '👉どうファンチケットグループに参加するのですか'
       content: howToJoinFandomGroup
     howToCreateFandomGroup:
-      title: '👉How to create a fan ticket group'
+      title: '👉ファンチケットグループを作成するにはどうすればよいですか'
       content: howToCreateFandomGroup
     howToRemoveFandomGroup:
-      title: '👉How to delete fan ticket group'
+      title: '👉ファンチケットグループを削除するにはどうすればよいですか'
       content: howToRemoveFandomGroup
     videoTutorial:
-      title: '👉Video tutorial (updating)'
+      title: '👉ビデオチュートリアル（更新中）'
       content: videoTutorial
     redEnvelope:
-      title: '👉How to use the red envelope function'
+      title: '👉赤のパケット機能の使用方法'
       content: redEnvelope
     dice:
-      title: '👉How to start Dice game'
+      title: '👉サイコロゲームを開始する方法は'
       content: dice
     transfer:
-      title: '👉How to use the transfer function'
+      title: '👉伝達関数の使用方法'
       content: transfer
     otherQuestion:
-      title: '👉I have other questions'
+      title: '👉他に質問があります'
       content: otherQuestion
 redEnvelope:
   help: |-
-    send Red Packet:/fahongbao <FanTicket> <Amount> <Quantity> [<Description>]
-    send Red Packet with random amount:/sfahongbao <FanTicket> <Amount> <Quantity> [<Description>]
-  errorFormat: Wrong command format.
-  nonPositiveQuantity: Quantity couldn't be negative or zero.
-  noUser: Telegram needs to bind with Matataki Account.
-  insuffMoney: Insufficent money.
-  tooLessAmount: Too less Amount.
-  cantGetUserInfo: Couldn't get Matataki user info.
-  success: '${userName} sends a red packet, click button to get it.'
-  instruction: If you register a account at www.matataki.io and then bind your Telegram to your account, you will have chances to grab our welfare.
-  resend: Resend
-  grab: Grab
-  finished: '${userName}''s red packet is now empty.'
-  grabbed: "[${grabber} grabbed ${sender}'s ${description} red packet，${amount} ${unit}](https://rinkeby.etherscan.io/tx/${txHash})"
-  trying: '${userName} is trying to grab the red packet'
+    赤いパケットを送信：/fahongbao <FanTicket> <Amount> <Quantity> [<Description>]
+    ランダムな量の赤いパケットを送信します：/sfahongbao <FanTicket> <Amount> <Quantity> [<Description>]
+  errorFormat: 間違ったコマンド形式。
+  nonPositiveQuantity: 数量を負またはゼロにすることはできません。
+  noUser: 電報は、マタタキアカウントにバインドする必要があります。
+  insuffMoney: お金が足りません。
+  tooLessAmount: 金額少なすぎる。
+  cantGetUserInfo: Matatakiユーザー情報を取得できませんでした。
+  success: '${userName} が赤いパケットを送信した、ボタンをクリックして取得します。'
+  instruction: www.matataki.ioでアカウントを登録し、Telegramをアカウントにバインドすると、福利厚生をつかむことができます。
+  resend: 再送信
+  grab: つかむ
+  finished: '${userName} の赤いパケットは今空になりました。'
+  grabbed: "[${grabber} は ${sender} の ${description} 赤いパケットをつかみました、${amount} ${unit}](https://rinkeby.etherscan.io/tx/${txHash})"
+  trying: "${userName} が赤いパケットをつかもうとしています\n"
 dice:
   help: |-
     开始一局游戏:/new_game <赌注> <赌注单位>
@@ -147,10 +147,10 @@ dice:
   waiting: '${n}名玩家已准备,等待更多的玩家加入......'
   noWinner: 没有胜利者
   draw: 流局
-  end: 已结束
-  resend: 重新发送
-  join: 加入
-  start: 开局
-  settlement: 结算记录
-  settleSuccess: 结算成功
-  settleFail: 结算失败
+  end: 終わり
+  resend: 再送する
+  join: 入る
+  start: スタート
+  settlement: 決済
+  settleSuccess: 決済成功しました
+  settleFail: 決済失敗しました
