@@ -1,0 +1,151 @@
+lang: lang
+
+error:
+  usernameNotSynced: error.usernameNotSynced
+  usernameNotFound: error.usernameNotFound
+  requireMatatakiAccount: error.requireMatatakiAccount
+  minetokenNotFound: error.minetokenNotFound
+  notFandomGroup: error.notFandomGroup
+  groupChatOnly: error.groupChatOnly
+  privateChatOnly: error.privateChatOnly
+  requireMintedMinetoken: error.requireMintedMinetoken
+
+common:
+  associatedMatatakiAccount:
+    no: common.associatedMatatakiAccount.no
+    yes: common.associatedMatatakiAccount.yes
+  mintedMinetoken:
+    no: common.mintedMinetoken.no
+    yes: common.mintedMinetoken.yes
+
+wallet:
+  query:
+    badFormat: wallet.query.badFormat
+    minetoken:
+      header: wallet.query.minetoken.header
+  transfer:
+    badFormat: wallet.transfer.badFormat
+    common: wallet.transfer.common
+    started: wallet.transfer.started
+    successful: wallet.transfer.successful
+    failed: wallet.transfer.failed
+    transactionDetail: wallet.transfer.transactionDetail
+
+sync:
+  username:
+    noUsername: sync.username.noUsername
+
+query:
+  price:
+    badFormat: query.price.badFormat
+    response: query.price.response
+  status:
+    joinedGroup:
+      yes: query.status.joinedGroup.yes
+      no: query.status.joinedGroup.no
+    myGroup:
+      yes: query.status.myGroup.yes
+      no: query.status.myGroup.no
+    groupNoRule: query.status.groupNoRule
+    tip: query.status.tip
+
+group:
+  rule:
+    minetokenRequirement: group.rule.minetokenRequirement
+    noRequirement: group.rule.noRequirement
+  setRequirement:
+    badFormat: group.setRequirement.badFormat
+    groupNotFound: group.setRequirement.groupNotFound
+    creatorLeft: group.setRequirement.creatorLeft
+    botNotAdmin: group.setRequirement.botNotAdmin
+    notification: group.setRequirement.notification
+  kickMember:
+    badFormat: group.kickMember.badFormat
+    started: group.kickMember.started
+    success: group.kickMember.success
+    failure: group.kickMember.failure
+  banMember:
+    badFormat: group.banMember.badFormat
+    started: group.banMember.started
+    success: group.banMember.success
+    failure: group.banMember.failure
+  mygroups:
+    noAnyGroup: group.mygroups.noAnyGroup
+    groupInfo: group.mygroups.groupInfo
+    noAnyRule: group.mygroups.noAnyRule
+    tip: group.mygroups.tip
+
+bot:
+  start: bot.start
+  defaultReply: bot.defaultReply
+  help:
+    header: bot.help.header
+    introduction:
+      title: bot.help.introduction.title
+      content: bot.help.introduction.content
+    fandomTicketIntroduction:
+      title: bot.help.fandomTicketIntroduction.title
+      content: bot.help.fandomTicketIntroduction.content
+    command:
+      title: bot.help.command.title
+      content: bot.help.command.content
+    howToJoinFandomGroup:
+      title: bot.help.howToJoinFandomGroup.title
+      content: bot.help.howToJoinFandomGroup.content
+    howToCreateFandomGroup:
+      title: bot.help.howToCreateFandomGroup.title
+      content: bot.help.howToCreateFandomGroup.content
+    howToRemoveFandomGroup:
+      title: bot.help.howToRemoveFandomGroup.title
+      content: bot.help.howToRemoveFandomGroup.content
+    videoTutorial:
+      title: bot.help.videoTutorial.title
+      content: bot.help.videoTutorial.content
+    redEnvelope:
+      title: bot.help.redEnvelope.title
+      content: bot.help.redEnvelope.content
+    dice:
+      title: bot.help.dice.title
+      content: bot.help.dice.content
+    transfer:
+      title: bot.help.transfer.title
+      content: bot.help.transfer.content
+    otherQuestion:
+      title: bot.help.otherQuestion.title
+      content: bot.help.otherQuestion.content
+
+redEnvelope:
+  help: redEnvelope.help
+  errorFormat: redEnvelope.errorFormat
+  nonPositiveQuantity: redEnvelope.nonPositiveQuantity
+  noUser: redEnvelope.noUser
+  insuffMoney: redEnvelope.insuffMoney
+  tooLessAmount: redEnvelope.tooLessAmount
+  cantGetUserInfo: redEnvelope.cantGetUserInfo
+  success: redEnvelope.success
+  instruction: redEnvelope.instruction
+  resend: redEnvelope.resend
+  grab: redEnvelope.grab
+  finished: redEnvelope.finished
+  grabbed: redEnvelope.grabbed
+  trying: redEnvelope.trying
+
+dice:
+  help: dice.help
+  errorFormat: dice.errorFormat
+  noUser: dice.noUser
+  cantGetUserInfo: dice.cantGetUserInfo
+  positiveAmount: dice.positiveAmount
+  insuffMoney: dice.insuffMoney
+  gameTitle: dice.gameTitle
+  winner: dice.winner
+  waiting: dice.waiting
+  noWinner: dice.noWinner
+  draw: dice.draw
+  end: dice.end
+  resend: dice.resend
+  join: dice.join
+  start: dice.start
+  settlement: dice.settlement
+  settleSuccess: dice.settleSuccess
+  settleFail: dice.settleFail

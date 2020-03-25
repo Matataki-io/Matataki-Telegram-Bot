@@ -59,7 +59,7 @@ export class I18nServiceImpl implements II18nService {
             }
 
             const language = path.basename(filename, extension).toLowerCase();
-            if (!languageTagRegex().test(language)) {
+            if (language === "base" || !languageTagRegex().test(language)) {
                 continue;
             }
 
