@@ -1,30 +1,40 @@
 name: Deploy Docs
 
-on: [push]
+on:
+  push:
+    branches: [ master ]
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
+    env:
+      CI: true
 
     strategy:
       matrix:
         node-version: [12.x]
 
     steps:
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@v2
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
+    - name: Get yarn cache directory path
+      id: yarn-cache-dir-path
+      run: echo "::set-output name=dir::$(yarn cache dir)"
+    - uses: actions/cache@v1
+      id: yarn-cache
+      with:
+        path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+        key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-yarn-
+    - name: Install packages
+      run: yarn
     - name: Build VuePress
-      run: |
-        yarn
-        yarn run docs:build
-      env:
-        CI: true
+      run: yarn run docs:build
     - name: install Firebase CLI tools and deploy hosting
-      run: |
-        yarn run docs:deploy
+      run: yarn run docs:deploy
       env:
         FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
