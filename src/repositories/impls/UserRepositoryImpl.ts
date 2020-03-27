@@ -36,16 +36,7 @@ export class UserRepositoryImpl extends BaseRepository<User> implements IUserRep
     }
 
     async setUsername(id: number, username: string): Promise<void> {
-        const user = await this.ensureUser({
-            id,
-            username,
-            is_bot: false,
-            first_name: "",
-        });
-
-        user.username = username;
-
-        await this.repository.save(user);
+        await this.repository.update(id, { username });
     }
     async getIdByUsername(username: string): Promise<number | null> {
         const user = await this.repository.findOne({ where: { username }});
@@ -57,8 +48,6 @@ export class UserRepositoryImpl extends BaseRepository<User> implements IUserRep
     }
 
     async setUserLanguage(user: User, language: string) {
-        user.language = language;
-
-        await this.repository.save(user);
+        await this.repository.update(user.id, { language });
     }
 }
