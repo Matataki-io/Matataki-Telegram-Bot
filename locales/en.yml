@@ -1,0 +1,143 @@
+---
+lang: English
+error:
+  usernameNotSynced: Sorry, please input /syncusername before receive a transaction in telegram.
+  usernameNotFound: Sorry, I can't find a user with this username.
+  requireMatatakiAccount: Sorry, please bind or login your telegram account with Matataki.
+  minetokenNotFound: Sorry, there is no such a minetoken.
+  notFandomGroup: Sorry, this is not a fandom group.
+  groupChatOnly: Sorry, it's only available in a group chat.
+  privateChatOnly: Sorry, it's only available in a private chat.
+  requireMintedMinetoken: Sorry, you should have minted a minetoken on Matataki.
+common:
+  associatedMatatakiAccount:
+    no: No connection with Matataki
+    yes: 'Matataki account: [${matatakiUsername}](${matatakiUserPageUrl})'
+  mintedMinetoken:
+    no: No minetoken minted on Matataki
+    yes: 'Minetoken: [${symbol} (${minetokenName})](${minetokenPageUrl})'
+wallet:
+  query:
+    badFormat: Only `/query [Matataki UID] [Token Symbol]` or `/query @[Telegram username] [Token Symbol]` is acceptable.
+    minetoken:
+      header: You have balance(s) of ${count} minetoken(s)
+  transfer:
+    badFormat: Only `/transfer [Matataki UID] [Token Symbol] [Amount]` or `/transfer @[Telegram username] [Token Symbol] [Amount]` is acceptable.
+    common: "From: [${senderUsername}](${senderUrl})\nTo: [${receiverUsername}](${receiverUrl})\nValue: ${amount} ${symbol}"
+    started: Pending...
+    successful: '*Success*'
+    failed: '*Failure*'
+    transactionDetail: Detail
+sync:
+  username:
+    noUsername: Sorry, please set a username to your Telegram account in Telegram settings.
+query:
+  price:
+    badFormat: Only `/query [Token Symbol]` is acceptable.
+    response: 'Current price: ${price} CNY'
+  status:
+    joinedGroup:
+      yes: You've joined ${count} fandom group(s)
+      no: You haven't joined any fandom group
+    myGroup:
+      yes: You've created ${count} fandom group(s)
+      no: You haven't created any fandom group
+    groupNoRule: No Rule
+    tip: Send /join to show what fandom group you can join
+group:
+  rule:
+    minetokenRequirement: This group requires ${symbol} ≥ ${amount}
+    noRequirement: This group doesn't have any requirement with ${symbol}
+  setRequirement:
+    badFormat: Only `/set [Group ID] [Amount]` is acceptable.
+    groupNotFound: Sorry, I can't find such a group.
+    creatorLeft: The group creator has left the group.
+    botNotAdmin: The bot is not a administrator in the group.
+    notification: Current group has been set a new rule
+  kickMember:
+    badFormat: Only `/kick @[Telegram username] [Time]` is acceptable.
+    started: Kicking...
+    success: Kicked
+    failure: Failed to kick
+  banMember:
+    badFormat: Only `/ban @[Telegram username] [Time]` is acceptable.
+    started: Banning...
+    success: Banned
+    failure: Failed to ban
+  mygroups:
+    noAnyGroup: Sorry, you haven't created any group
+    groupInfo: "Group ID：${id}\nName：${title}\nFan tickets：${symbol}\nMinimum required：${amount}"
+    noAnyRule: No Rule
+    tip: Promote Matataki bot as admin before listing your fandom group(s)
+bot:
+  start: Thank you for using Matataki bot, you can send /help for help 👉🏻[Introduction](https://www.matataki.io/p/1638)
+  defaultReply: I'm a Matataki bot, you can send /help for help
+  help:
+    header: What do you want to know?
+    introduction:
+      title: '👉Who are you'
+      content: "👉*Who are you?*\n\nI'm the helper of fan ticket group. You could call me little Fan.\nI could help you create or join a fan ticket group.\nInput /help to view help.\nWelcome to join our [official Telegram group](https://t.me/smartsignature_io) if you have other problems"
+    fandomTicketIntroduction:
+      title: '👉What is the fan ticket group'
+      content: "👉*What is fan ticket group?*\n\nIt is a Telegram group whereby you would be allowed to join or be removed according the amount (number) of your fan tickets.\nWelcome to read [our introduction](https://www.matataki.io/p/1638), if you would like to learn more"
+    command:
+      title: '👉Operation instructions'
+      content: "👉*Manual of Commands*\n\nYou could have dialogs with Matataki Fan Group Helper using the commands as follows\nClick the \"/\" button next to the inputbox to list all commands.\n\n/start: start\n/help: view help\n/status: query your status (created fan tickets, create groups, joined groups)\n/join: query fan ticket groups that you doesn't join\n/mygroups: query the info of fan ticket group you created (group Id, group name, fan ticket name, group rules)\n/set: set up a rule for a group, input `/set [group Id] [parameter]` to set up such a rule (the parameter means the threshold number of fan tickets), for example, `/set -123456 100` means allow only people possessing ≥100 your fan tickets to join your group\n/rule: query the rule of the current group\n/query: query the balances of all your fan tickets without parameters, input `/query [target account] [fan ticket symbol]` to query the target account's balance of fan tickets, the target account could be Matataki Uid or @ next to a Telegram account, for example, `/query 123 Abc` means querying the balance of Abc fan ticket owned by a Matataki user with the account of 123, `/query @someone Abc` means querying the balance of Abc fan ticket owned by a Matataki user who binds his/her Matataki account to a Telegram account `someone`\n/price: query the price of certain fan ticket, input `/price [fan ticket symbol]`\n/transfer: transfer fan ticket to someone, input `transfer [target account] [fan ticket symbol] [number]` to transfer the number of the fan ticket to the target account (which could be a Matataki Uid or @ next to a Telegram account), for example, `/transfer 123 Abc 100` means transferring 100 Abc fan tickets to a Matataki user with the account of 123, `transfer @someone Abc 100` means trasfeering 100 Abc fan tickets to a Matataki user who binds his/her Matataki account to a Telegram Account `someone`\n/fahongbao: give somebody a red envelope (which contains some fan tickets as a gift), input `/fahongbao [fan ticket symbol] [amount of fan tickets] [number of red envelopes, each of which would be given to an individual person] [description (optional)]`\n/sfahongbao: give somebody a random red envelope (which contains random amount of fan tickets as a gift), input `/sfahongbao [fan ticket symbol] [amount of fan tickets] [number of gifts, each of which would be given to an individual person] [description (optional)]`\n/new\\\\\\\\_game: start a new Dice game, input `/new\\\\\\\\_game [bet amount] [fan ticket symbol]`\n/syncusername: synchronize Telegram account with Matataki user account \n\n[Video Tutorial for the use of the Fan Ticket Group Helper](https://www.bilibili.com/video/av82477411)"
+    howToJoinFandomGroup:
+      title: '👉How to join fan ticket group'
+      content: "👉*How to join a fan ticket group?*\n\nYou could see the entrances of all groups in the details of the fan tickets you own\n\nProcedures:\n1️⃣ Visit the page of fan tickets：https://www.matataki.io/token\n2️⃣ Click one fan ticket to open its tickets \n3️⃣ View the sidebar to see any guidance about groups, and join the corresponding group according the guidance if it exits.\n\nYou may input /join to list all available groups.\n\n[Video Tutorial](https://www.bilibili.com/video/av82487218)"
+    howToCreateFandomGroup:
+      title: '👉How to create a fan ticket group'
+      content: "👉*How to create a fan ticket group*\n\n❗The function is available to users who have issued their fan tickets. Users who haven't issued their fan tickets are not allowed to create a fan ticket group\n❗Fill in the [form](https://wj.qq.com/s2/5208015/8e5d/) if you would like to issue your fan tickets\n\nProcedures：\n1️⃣ Log in to Matataki and then [bind your Matataki account to your Telegram account](${url_prefix}/setting/account)\n2️⃣ Add @${username_escaped} to your contacts in Telegram, or click [here](https://t.me/${username}?start)\n3️⃣ Create a new group in Telegram, and then invite @${username_escaped} to your group\n4️⃣ Set @${username_escaped} as an admin in your group\n5️⃣ Tips for setting @${username_escaped} as an admin: disable the permission of invitation, save, and then enable the same permission (the group will be upgraded to a super group)\n6️⃣ Send `/mygroups` to @${username_escaped} in order to query the Id of the group you created\n7️⃣ Send `/set [group Id] [parameter]` to @${username_escaped} in order to set up rules, where the parameter sets a threshold number of fan tickets, for example, `set 1234565 100` means admitting only people possessing ≥100 fan tickets to the group\n\n👨‍👩‍👦‍👦Congratulations! You have created your fan ticket group.\nAll created fan ticket groups will be listed in the details of the fan ticket you issued.\nWelcome to ask your questions in our [official Telegram Group](https://t.me/smartsignature_io) if you have any questions.\n\n[Video Tutorials](https://www.bilibili.com/video/av82492702)"
+    howToRemoveFandomGroup:
+      title: '👉How to delete fan ticket group'
+      content: "❗Any fan ticket group will no longer be listed in Matataki\n❗The owner of the group Shall Not exit the group in any cases\n\nProcedures\n1️⃣ Open the fan ticket group that is to be deleted\n2️⃣ Revoke the admin permission of @${username_escaped} \n\nThe group would no longer be a super group\n\n[Video Tutorial](https://www.bilibili.com/video/av82585384)"
+    videoTutorial:
+      title: '👉Video tutorial (updating)'
+      content: "👉*Video Tutorials*\n\nOur tutorials will be aperiodically updated with new functions\n[How to join a fan ticket group](https://www.bilibili.com/video/av82487218)\n[How to create a fan ticket group](https://www.bilibili.com/video/av82492702)\n[How to delete a fan ticket group](https://www.bilibili.com/video/av82585384)\n[How to use the Fan Ticket Group Helper](https://www.bilibili.com/video/av82477411)"
+    redEnvelope:
+      title: '👉How to use the red envelope function'
+      content: "👉*How to send red envelopes*\n\n*Send red envelops*\nInput /fahongbao to send somebody a red envelop (which contains some fan tickets as a gift). Input /sfahongbao to send random envelops (which contains random number of fan tickets as a gift)\nBoth commands (/fahongbao and /sfahongbao) share the same parameters: `[fan ticket symbol] [total amount of fan tickets] [amount of red envelops] [descriptions (optional)]`, a space is placed between every two adjacent parameters"
+    dice:
+      title: '👉How to start Dice game'
+      content: "how to start a Dice game\n/new game [amount of bet] [symbol of the fan ticket as the bet], for example, /new_game 0.1 Dao\n\nJoin a Dice game\nWhen you start a new game, others could join your games at will, but only you could open or cancel the game.\n\nOpen the game\nEach member who joined the game will be assigned a random number between 1 and 99. The one who had the maximum number is the winner. If more than one member had the same maximum number, the winner is the member who join the game earlier. The winner will obtain all the bet.\n\nCancel the game\nIf you cancel the game, all the bet will be returned to you"
+    transfer:
+      title: '👉How to use the transfer function'
+      content: "👉*How to transfer fan tickets*\n\nInput `/transfer [target account] [fan ticket symbol] [amount]` to transfer the specific amount of corresponding fan ticket symbol to the target account, which could be Matataki Uid or @ next to Telegram account (for example, @someone, the owner of the Telegram account have to run /syncusername previously)"
+    otherQuestion:
+      title: '👉I have other questions'
+      content: "👉*I have other questions*\n\nWelcome to ask your questions in our [official Telegram group](https://t.me/smartsignature_io) if you have any questions"
+redEnvelope:
+  help: "send Red Packet:/fahongbao <FanTicket> <Amount> <Quantity> [<Description>]\nsend Red Packet with random amount:/sfahongbao <FanTicket> <Amount> <Quantity> [<Description>]"
+  errorFormat: Wrong command format.
+  nonPositiveQuantity: Quantity couldn't be negative or zero.
+  noUser: Telegram needs to bind with Matataki Account.
+  insuffMoney: Insufficent money.
+  tooLessAmount: Too less Amount.
+  cantGetUserInfo: Couldn't get Matataki user info.
+  success: '${userName} sends a red packet, click button to get it.'
+  instruction: If you register a account at www.matataki.io and then bind your Telegram to your account, you will have chances to grab our welfare.
+  resend: Resend
+  grab: Grab
+  finished: '${userName}''s red packet is now empty.'
+  grabbed: '[${grabber} grabbed ${sender}''s ${description} red packet，${amount} ${unit}](https://rinkeby.etherscan.io/tx/${txHash})'
+  trying: '${userName} is trying to grab the red packet'
+dice:
+  help: "开始一局游戏:/new_game <赌注> <赌注单位>\n注意:只有发送者能够开局或者流局"
+  errorFormat: 错误的指令格式。
+  noUser: 尚未绑定 瞬Matataki 账户
+  cantGetUserInfo: Matataki用户信息获取失败
+  positiveAmount: 金额必须为正数
+  insuffMoney: 您的账户余额不足以支付赌注
+  gameTitle: "${userName}的掷骰子游戏   赌注:${amount} ${unit}\n<i>注意：只有游戏的发起者可以选择开局或者流局</i>"
+  winner: 胜者是${userName},点数为${rollPoint}
+  waiting: '${n}名玩家已准备,等待更多的玩家加入......'
+  noWinner: 没有胜利者
+  draw: 流局
+  end: 已结束
+  resend: 重新发送
+  join: 加入
+  start: 开局
+  settlement: 结算记录
+  settleSuccess: 结算成功
+  settleFail: 结算失败
