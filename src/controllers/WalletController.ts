@@ -174,7 +174,7 @@ export class WalletController extends BaseController<WalletController> {
             amount, symbol,
         });
         const transactionMessage = await replyWithMarkdown(`${i18n.t("wallet.transfer.started")}\n\n${commonMessage}`, { disable_web_page_preview: true });
-
+        amount *= 10000;
         let finalMessage, replyMarkup;
         try {
             const tx_hash = await this.matatakiService.transfer(senderUserId, receiverUserId, symbol, amount);

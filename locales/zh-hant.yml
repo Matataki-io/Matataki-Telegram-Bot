@@ -1,156 +1,143 @@
 ---
 lang: 繁體中文
 error:
-  usernameNotSynced: 抱歉，對方還沒有同步用戶名到數據庫裡
-  usernameNotFound: Sorry, I can't find a user with this username.
-  requireMatatakiAccount: Sorry, please bind or login your telegram account with Matataki.
-  minetokenNotFound: Sorry, there is no such a minetoken.
-  notFandomGroup: Sorry, this is not a fandom group.
-  groupChatOnly: Sorry, it's only available in a group chat.
-  privateChatOnly: Sorry, it's only available in a private chat.
-  requireMintedMinetoken: Sorry, you should have minted a minetoken on Matataki.
+  usernameNotSynced: error.usernameNotSynced
+  usernameNotFound: error.usernameNotFound
+  requireMatatakiAccount: error.requireMatatakiAccount
+  minetokenNotFound: error.minetokenNotFound
+  notFandomGroup: error.notFandomGroup
+  groupChatOnly: error.groupChatOnly
+  privateChatOnly: error.privateChatOnly
+  requireMintedMinetoken: error.requireMintedMinetoken
 common:
   associatedMatatakiAccount:
-    no: No connection with Matataki
-    yes: "Matataki account: [${matatakiUsername}](${matatakiUserPageUrl})"
+    no: common.associatedMatatakiAccount.no
+    yes: common.associatedMatatakiAccount.yes
   mintedMinetoken:
-    no: No minetoken minted on Matataki
-    yes: "Minetoken: [${symbol} (${minetokenName})](${minetokenPageUrl})"
+    no: common.mintedMinetoken.no
+    yes: common.mintedMinetoken.yes
 wallet:
   query:
-    badFormat: Only `/query [Matataki UID] [Token Symbol]` or `/query @[Telegram username] [Token Symbol]` is acceptable.
+    badFormat: wallet.query.badFormat
     minetoken:
-      header: You have balance(s) of ${count} minetoken(s)
+      header: wallet.query.minetoken.header
   transfer:
-    badFormat: Only `/transfer [Matataki UID] [Token Symbol] [Amount]` or `/transfer @[Telegram username] [Token Symbol] [Amount]` is acceptable.
-    common: |-
-      From: [${senderUsername}](${senderUrl})
-      To: [${receiverUsername}](${receiverUrl})
-      Value: ${amount} ${symbol}
-    started: "Pending..."
-    successful: "*Success*"
-    failed: "*Failure*"
-    transactionDetail: Detail
+    badFormat: wallet.transfer.badFormat
+    common: wallet.transfer.common
+    started: wallet.transfer.started
+    successful: wallet.transfer.successful
+    failed: wallet.transfer.failed
+    transactionDetail: wallet.transfer.transactionDetail
 sync:
   username:
-    noUsername: Sorry, please set a username to your Telegram account in Telegram settings.
+    noUsername: sync.username.noUsername
 query:
   price:
-    badFormat: Only `/query [Token Symbol]` is acceptable.
-    response: "Current price: ${price} CNY"
+    badFormat: query.price.badFormat
+    response: query.price.response
   status:
     joinedGroup:
-      yes: You've joined ${count} fandom group(s)
-      no: You haven't joined any fandom group
+      yes: query.status.joinedGroup.yes
+      no: query.status.joinedGroup.no
     myGroup:
-      yes: You've created ${count} fandom group(s)
-      no: You haven't created any fandom group
-    groupNoRule: No Rule
-    tip: Send /join to show what fandom group you can join
+      yes: query.status.myGroup.yes
+      no: query.status.myGroup.no
+    groupNoRule: query.status.groupNoRule
+    tip: query.status.tip
 group:
   rule:
-    minetokenRequirement: This group requires ${symbol} ≥ ${amount}
-    noRequirement: This group doesn't have any requirement with ${symbol}
+    minetokenRequirement: group.rule.minetokenRequirement
+    noRequirement: group.rule.noRequirement
   setRequirement:
-    badFormat: Only `/set [Group ID] [Amount]` is acceptable.
-    groupNotFound: Sorry, I can't find such a group.
-    creatorLeft: The group creator has left the group.
-    botNotAdmin: The bot is not a administrator in the group.
-    notification: Current group has been set a new rule
+    badFormat: group.setRequirement.badFormat
+    groupNotFound: group.setRequirement.groupNotFound
+    creatorLeft: group.setRequirement.creatorLeft
+    botNotAdmin: group.setRequirement.botNotAdmin
+    notification: group.setRequirement.notification
   kickMember:
-    badFormat: Only `/kick @[Telegram username] [Time]` is acceptable.
-    started: Kicking...
-    success: Kicked
-    failure: Failed to kick
+    badFormat: group.kickMember.badFormat
+    started: group.kickMember.started
+    success: group.kickMember.success
+    failure: group.kickMember.failure
   banMember:
-    badFormat: Only `/ban @[Telegram username] [Time]` is acceptable.
-    started: Banning...
-    success: Banned
-    failure: Failed to ban
+    badFormat: group.banMember.badFormat
+    started: group.banMember.started
+    success: group.banMember.success
+    failure: group.banMember.failure
   mygroups:
-    noAnyGroup:
-    groupInfo: |-
-      Group ID：${id}
-      Name：${title}
-      Fan tickets：${symbol}
-      Minimum required：${amount}
-    noAnyRule: No Rule
-    tip: Promote Matataki bot as admin before listing your fandom group(s)
+    noAnyGroup: group.mygroups.noAnyGroup
+    groupInfo: group.mygroups.groupInfo
+    noAnyRule: group.mygroups.noAnyRule
+    tip: group.mygroups.tip
 bot:
-  start: Thank you for using Matataki bot, you can send /help for help 👉🏻[Introduction](https://www.matataki.io/p/1638)
-  defaultReply: I'm a Matataki bot, you can send /help for help
+  start: bot.start
+  defaultReply: bot.defaultReply
   help:
-    header: What do you want to know?
+    header: bot.help.header
     introduction:
-      title: '👉Who are you'
-      content: introduction
+      title: bot.help.introduction.title
+      content: bot.help.introduction.content
     fandomTicketIntroduction:
-      title: '👉What is the fan ticket group'
-      content: fandomTicketIntroduction
+      title: bot.help.fandomTicketIntroduction.title
+      content: bot.help.fandomTicketIntroduction.content
     command:
-      title: '👉Operation instructions'
-      content: command
+      title: bot.help.command.title
+      content: bot.help.command.content
     howToJoinFandomGroup:
-      title: '👉How to join fan ticket group'
-      content: howToJoinFandomGroup
+      title: bot.help.howToJoinFandomGroup.title
+      content: bot.help.howToJoinFandomGroup.content
     howToCreateFandomGroup:
-      title: '👉How to create a fan ticket group'
-      content: howToCreateFandomGroup
+      title: bot.help.howToCreateFandomGroup.title
+      content: bot.help.howToCreateFandomGroup.content
     howToRemoveFandomGroup:
-      title: '👉How to delete fan ticket group'
-      content: howToRemoveFandomGroup
+      title: bot.help.howToRemoveFandomGroup.title
+      content: bot.help.howToRemoveFandomGroup.content
     videoTutorial:
-      title: '👉Video tutorial (updating)'
-      content: videoTutorial
+      title: bot.help.videoTutorial.title
+      content: bot.help.videoTutorial.content
     redEnvelope:
-      title: '👉How to use the red envelope function'
-      content: redEnvelope
+      title: bot.help.redEnvelope.title
+      content: bot.help.redEnvelope.content
     dice:
-      title: '👉How to start Dice game'
-      content: dice
+      title: bot.help.dice.title
+      content: bot.help.dice.content
     transfer:
-      title: '👉How to use the transfer function'
-      content: transfer
+      title: bot.help.transfer.title
+      content: bot.help.transfer.content
     otherQuestion:
-      title: '👉I have other questions'
-      content: otherQuestion
+      title: bot.help.otherQuestion.title
+      content: bot.help.otherQuestion.content
 redEnvelope:
-  help: |-
-    send Red Packet:/fahongbao <FanTicket> <Amount> <Quantity> [<Description>]
-    send Red Packet with random amount:/sfahongbao <FanTicket> <Amount> <Quantity> [<Description>]
-  errorFormat: Wrong command format.
-  nonPositiveQuantity: Quantity couldn't be negative or zero.
-  noUser: Telegram needs to bind with Matataki Account.
-  insuffMoney: Insufficent money.
-  tooLessAmount: Too less Amount.
-  cantGetUserInfo: Couldn't get Matataki user info.
-  success: '${userName} sends a red packet, click button to get it.'
-  instruction: If you register a account at www.matataki.io and then bind your Telegram to your account, you will have chances to grab our welfare.
-  resend: Resend
-  grab: Grab
-  finished: '${userName}''s red packet is now empty.'
-  grabbed: "[${grabber} grabbed ${sender}'s ${description} red packet，${amount} ${unit}](https://rinkeby.etherscan.io/tx/${txHash})"
-  trying: '${userName} is trying to grab the red packet'
+  help: redEnvelope.help
+  errorFormat: redEnvelope.errorFormat
+  nonPositiveQuantity: redEnvelope.nonPositiveQuantity
+  noUser: redEnvelope.noUser
+  insuffMoney: redEnvelope.insuffMoney
+  tooLessAmount: redEnvelope.tooLessAmount
+  cantGetUserInfo: redEnvelope.cantGetUserInfo
+  success: redEnvelope.success
+  instruction: redEnvelope.instruction
+  resend: redEnvelope.resend
+  grab: redEnvelope.grab
+  finished: redEnvelope.finished
+  grabbed: redEnvelope.grabbed
+  trying: redEnvelope.trying
 dice:
-  help: |-
-    开始一局游戏:/new_game <赌注> <赌注单位>
-    注意:只有发送者能够开局或者流局
-  errorFormat: 错误的指令格式。
-  noUser: 尚未绑定 瞬Matataki 账户
-  cantGetUserInfo: Matataki用户信息获取失败
-  positiveAmount: 金额必须为正数
-  insuffMoney: 您的账户余额不足以支付赌注
-  gameTitle: |-
-    ${userName}的掷骰子游戏   赌注:${amount} ${unit}
-    <i>注意：只有游戏的发起者可以选择开局或者流局</i>
-  winner: 胜者是${userName},点数为${rollPoint}
-  waiting: '${n}名玩家已准备,等待更多的玩家加入......'
-  noWinner: 没有胜利者
-  draw: 流局
-  end: 已结束
-  resend: 重新发送
-  join: 加入
-  start: 开局
-  settlement: 结算记录
-  settleSuccess: 结算成功
-  settleFail: 结算失败
+  help: dice.help
+  errorFormat: dice.errorFormat
+  noUser: dice.noUser
+  cantGetUserInfo: dice.cantGetUserInfo
+  positiveAmount: dice.positiveAmount
+  insuffMoney: dice.insuffMoney
+  gameTitle: dice.gameTitle
+  winner: dice.winner
+  waiting: dice.waiting
+  noWinner: dice.noWinner
+  draw: dice.draw
+  end: dice.end
+  resend: dice.resend
+  join: dice.join
+  start: dice.start
+  settlement: dice.settlement
+  settleSuccess: dice.settleSuccess
+  settleFail: dice.settleFail
