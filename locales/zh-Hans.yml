@@ -12,10 +12,10 @@ error:
 common:
   associatedMatatakiAccount:
     no: 没有绑定 Matataki
-    yes: "瞬Matataki 昵称： [${matatakiUsername}](${matatakiUserPageUrl})"
+    yes: 瞬Matataki 昵称： [${matatakiUsername}](${matatakiUserPageUrl})
   mintedMinetoken:
     no: 没有发行 Fan 票
-    yes: "Fan票 名称：[${symbol} (${minetokenName})](${minetokenPageUrl})"
+    yes: Fan票 名称：[${symbol} (${minetokenName})](${minetokenPageUrl})
 wallet:
   query:
     badFormat: 格式不对，暂时只接受 `/query` 和 `/query [Matataki UID/@Telegram 用户名] [Fan票 符号]`
@@ -23,13 +23,10 @@ wallet:
       header: 您现在持有 ${count} 种 Fan 票
   transfer:
     badFormat: 格式不对，请输入 `/transfer [Matataki UID/@Telegram 用户名] [symbol] [amount]`
-    common: |-
-      转账方：[${senderUsername}](${senderUrl})
-      被转账方：[${receiverUsername}](${receiverUrl})
-      转账数目：${amount} ${symbol}
-    started: "转账交易进行中..."
-    successful: "*转账成功*"
-    failed: "*转账失败*"
+    common: "转账方：[${senderUsername}](${senderUrl})\n被转账方：[${receiverUsername}](${receiverUrl})\n转账数目：${amount} ${symbol}"
+    started: 转账交易进行中...
+    successful: '*转账成功*'
+    failed: '*转账失败*'
     transactionDetail: 交易详情
 sync:
   username:
@@ -37,7 +34,7 @@ sync:
 query:
   price:
     badFormat: 格式不对，请输入 `/query [Fan 票符号]`
-    response: "当前价格：${price} CNY"
+    response: 当前价格：${price} CNY
   status:
     joinedGroup:
       yes: 你已加入 ${count} 个 Fan 票群
@@ -68,12 +65,8 @@ group:
     success: 禁言成功
     failure: 禁言失败
   mygroups:
-    noAnyGroup:
-    groupInfo: |-
-      群组 ID：${id}
-      名字：${title}
-      Fan 票：${symbol}
-      最低要求：${amount}
+    noAnyGroup: 抱歉，您还没有创建 Fan票 群
+    groupInfo: "群组 ID：${id}\n名字：${title}\nFan 票：${symbol}\n最低要求：${amount}"
     noAnyRule: 没有规则
     tip: 查询前请将 Fan票 群中的粉丝群助手设置为管理员
 bot:
@@ -89,7 +82,7 @@ bot:
       content: "👉*Fan票 粉丝群是什么*\n\n是以持有特定 Fan票 数量为判断依据，并且自动审核入群+自动踢群的 Telegram 群组。\n想要了解更多信息请阅读[介绍文档](https://www.matataki.io/p/1638)"
     command:
       title: '👉操作指令说明'
-      content: "👉*操作指令说明*\n\n您在与 Matataki 粉丝群助手对话时可以使用以下指令\n您也可以点击输入框边的\"/\"按钮查看全部指令\n\n/start： 开始引导\n/help： 查看帮助\n/status： 查询您的所有状态信息（创建的 Fan票、创建的群组、已加入的群组）\n/join： 查询您还未加入的 Fan票 群信息\n/mygroups： 查询您建立的 Fan票 粉丝群组信息（群 ID、群名称、Fan票 名、群规则）\n/set： 设置群规则，输入 `/set [群组ID] [参数]` 即可设置群规则（参数代表至少持有您的Fan票数量），例如 `/set -1234565 100` 就是设置 123456 这个群的入群条件为 ≥100\n/rule： 查询当前群组的群规则\n/query： 不带参数的时候为查询个人持有的 Fan 票余额；而输入 `/query [目标帐号] [Fan票符号]` 可查询指定用户的指定 Fan票 余额，目标帐号可以为 Matataki UID 或者 @ 后接 Telegram 帐号用户名，例如 `/query 123 ABC` 就是查询 Matataki ID 123 帐号的 ABC Fan票 余额；而 `/query @someone ABC` 就是查询 Telegram 的 `@someone` 所绑定的 Matataki 帐号的 ABC Fan票 余额\n/price： 查询 Fan票 价格，格式为 `/price [Fan票符号]`\n/transfer： Fan票 转账，输入 `/transfer [目标帐号] [Fan票符号] [数量]` 可给指定用户转账指定数量的指定 Fan票，目标帐号可以为 Matataki UID 或者 @ 后接 Telegram 帐号用户名，例如 `/transfer 123 ABC 100` 就是给 Matataki ID 123 帐号转账 100 个 ABC；而 `/transfer @someone ABC 100` 就是给 Telegram 的 `@someone` 所绑定的 Matataki 帐号转账 100 个 ABC\n/fahongbao： 发红包，格式为 `/fahongbao [Fan票符号] [总红包金额] [红包数量] [描述（可选）]`\n/sfahongbao： 发随机红包，格式为 `/sfahongbao [Fan票符号] [总红包金额] [红包数量] [描述（可选）]`\n/new\\\\_game：开始一局Dice游戏,格式为 `/new\\\\_game [赌注金额] [赌注单位]`\n/syncusername： 同步 Telegram 帐号用户名，用作转账和查询时的目标\n\n[如何调戏 Fan票 粉丝群助手视频教程](https://www.bilibili.com/video/av82477411)"
+      content: "👉*操作指令说明*\n\n您在与 Matataki 粉丝群助手对话时可以使用以下指令\n您也可以点击输入框边的\"/\"按钮查看全部指令\n\n/start： 开始引导\n/help： 查看帮助\n/status： 查询您的所有状态信息（创建的 Fan票、创建的群组、已加入的群组）\n/join： 查询您还未加入的 Fan票 群信息\n/mygroups： 查询您建立的 Fan票 粉丝群组信息（群 ID、群名称、Fan票 名、群规则）\n/set： 设置群规则，输入 `/set [群组ID] [参数]` 即可设置群规则（参数代表至少持有您的Fan票数量），例如 `/set -1234565 100` 就是设置 123456 这个群的入群条件为 ≥100\n/rule： 查询当前群组的群规则\n/query： 不带参数的时候为查询个人持有的 Fan 票余额；而输入 `/query [目标帐号] [Fan票符号]` 可查询指定用户的指定 Fan票 余额，目标帐号可以为 Matataki UID 或者 @ 后接 Telegram 帐号用户名，例如 `/query 123 ABC` 就是查询 Matataki ID 123 帐号的 ABC Fan票 余额；而 `/query @someone ABC` 就是查询 Telegram 的 `@someone` 所绑定的 Matataki 帐号的 ABC Fan票 余额\n/price： 查询 Fan票 价格，格式为 `/price [Fan票符号]`\n/transfer： Fan票 转账，输入 `/transfer [目标帐号] [Fan票符号] [数量]` 可给指定用户转账指定数量的指定 Fan票，目标帐号可以为 Matataki UID 或者 @ 后接 Telegram 帐号用户名，例如 `/transfer 123 ABC 100` 就是给 Matataki ID 123 帐号转账 100 个 ABC；而 `/transfer @someone ABC 100` 就是给 Telegram 的 `@someone` 所绑定的 Matataki 帐号转账 100 个 ABC\n/fahongbao： 发红包，格式为 `/fahongbao [Fan票符号] [总红包金额] [红包数量] [描述（可选）]`\n/sfahongbao： 发随机红包，格式为 `/sfahongbao [Fan票符号] [总红包金额] [红包数量] [描述（可选）]`\n/new\\\\\\\\_game：开始一局Dice游戏,格式为 `/new\\\\\\\\_game [赌注金额] [赌注单位]`\n/syncusername： 同步 Telegram 帐号用户名，用作转账和查询时的目标\n\n[如何调戏 Fan票 粉丝群助手视频教程](https://www.bilibili.com/video/av82477411)"
     howToJoinFandomGroup:
       title: '👉如何加入 Fan票 群'
       content: "👉*如何加入 Fan票 群*\n\n您可以在 Fan票 的详情中查看到全部群组的加群入口。\n\n具体的操作方式为：\n1️⃣ 进入 Fan票 页面：https://www.matataki.io/token\n2️⃣ 进入其中一个 Fan票 的详情页\n3️⃣ 查看侧边栏中有没有显示群组信息。如果有群组请根据引导提示操作入群。\n\n你也可以与我对话输入 /join，即可看到全部可以加入的群组\n\n[视频教程](https://www.bilibili.com/video/av82487218)"
@@ -115,34 +108,28 @@ bot:
       title: '👉我有别的问题'
       content: "👉*我有别的问题*\n\n如有其他问题请在 瞬Matataki 的[官方 TG 群](https://t.me/smartsignature_io)询问"
 redEnvelope:
-  help: |-
-    发送红包：/fahongbao <Fan票> <金额> <数量> [<描述>]
-    发送随机数量的红包：/sfahongbao <Fan票> <金额> <数量> [<描述>]
-  errorFormat: 错误的命令格式。
-  nonPositiveQuantity: 数量不能为负或0.
-  noUser: 电报需要绑定Matataki帐户。
-  insuffMoney: 金额不足。
-  tooLessAmount: 余额不够。
-  cantGetUserInfo: 无法获取Matataki用户信息。
-  success: '${userName} 发送一个红包，请单击按钮获取它。'
-  instruction: 如果您在www.matataki.io上注册了一个帐户，然后将电报绑定到您的帐户，则您将有机会获得我们的福利。
-  resend: 重新发送
-  grab: 领取
-  finished: '${userName} 的红包目前为空。'
-  grabbed: "[${grabber} 抢了 ${sender} 的 ${description} 红包，${amount} ${unit}](https://rinkeby.etherscan.io/tx/${txHash})"
-  trying: '${userName} 正准备抢红包。'
+  help: "send Red Packet:/fahongbao <FanTicket> <Amount> <Quantity> [<Description>]\nsend Red Packet with random amount:/sfahongbao <FanTicket> <Amount> <Quantity> [<Description>]"
+  errorFormat: Wrong command format.
+  nonPositiveQuantity: Quantity couldn't be negative or zero.
+  noUser: Telegram needs to bind with Matataki Account.
+  insuffMoney: Insufficent money.
+  tooLessAmount: Too less Amount.
+  cantGetUserInfo: Couldn't get Matataki user info.
+  success: '${userName} sends a red packet, click button to get it.'
+  instruction: If you register a account at www.matataki.io and then bind your Telegram to your account, you will have chances to grab our welfare.
+  resend: Resend
+  grab: Grab
+  finished: '${userName}''s red packet is now empty.'
+  grabbed: '[${grabber} grabbed ${sender}''s ${description} red packet，${amount} ${unit}](https://rinkeby.etherscan.io/tx/${txHash})'
+  trying: '${userName} is trying to grab the red packet'
 dice:
-  help: |-
-    开始一局游戏:/new_game <赌注> <赌注单位>
-    注意:只有发送者能够开局或者流局
+  help: "开始一局游戏:/new_game <赌注> <赌注单位>\n注意:只有发送者能够开局或者流局"
   errorFormat: 错误的指令格式。
   noUser: 尚未绑定 瞬Matataki 账户
   cantGetUserInfo: Matataki用户信息获取失败
   positiveAmount: 金额必须为正数
   insuffMoney: 您的账户余额不足以支付赌注
-  gameTitle: |-
-    ${userName}的掷骰子游戏   赌注:${amount} ${unit}
-    <i>注意：只有游戏的发起者可以选择开局或者流局</i>
+  gameTitle: "${userName}的掷骰子游戏   赌注:${amount} ${unit}\n<i>注意：只有游戏的发起者可以选择开局或者流局</i>"
   winner: 胜者是${userName},点数为${rollPoint}
   waiting: '${n}名玩家已准备,等待更多的玩家加入......'
   noWinner: 没有胜利者
