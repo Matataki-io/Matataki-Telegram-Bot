@@ -115,8 +115,8 @@ bot:
       content: bot.help.otherQuestion.content
 
 poem:
-  badFormat:
-  generating:
+  badFormat: poem.badFormat
+  generating: poem.generating
 
 redEnvelope:
   help: redEnvelope.help
