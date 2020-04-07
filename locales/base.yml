@@ -115,6 +115,7 @@ bot:
       content: bot.help.otherQuestion.content
 
 poem:
+  badFormat:
   generating:
 
 redEnvelope:
