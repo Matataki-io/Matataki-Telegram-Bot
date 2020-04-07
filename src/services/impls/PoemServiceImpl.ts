@@ -3,13 +3,12 @@ import FormData from "form-data";
 import qs from "querystring";
 
 import { Injections } from "#/constants";
-import { Service, GlobalAlias } from "#/decorators";
+import { Service } from "#/decorators";
 
 import { IPoemService } from "../IPoemService";
 import { delay } from "#/utils";
 
 @Service(Injections.PoemService)
-@GlobalAlias("poem", "poem")
 export class PoemServiceImpl implements IPoemService {
     private axios: AxiosInstance;
 
