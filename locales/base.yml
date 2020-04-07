@@ -114,6 +114,9 @@ bot:
       title: bot.help.otherQuestion.title
       content: bot.help.otherQuestion.content
 
+poem:
+  generating:
+
 redEnvelope:
   help: redEnvelope.help
   errorFormat: redEnvelope.errorFormat
