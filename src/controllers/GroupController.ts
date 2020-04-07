@@ -121,7 +121,7 @@ export class GroupController extends BaseController<GroupController> {
         }
     }
 
-    @Command("set", /-?(\d+)\s+(\d+.?\d*)/, ({ t }) => t("group.setRequirement.badFormat"))
+    @Command("set", /-?(\d+)\s+(\d+.?\d*)/, i18n => i18n.t("group.setRequirement.badFormat"))
     @RequireMintedMinetoken()
     async setGroupRequirement({ message, reply, telegram, i18n }: MessageHandlerContext,
         @InjectSenderMatatakiInfo() user: UserInfo,
@@ -283,7 +283,7 @@ export class GroupController extends BaseController<GroupController> {
         return false;
     }
 
-    @Command("kick", /@([\w_]{5,32})\s+(\d+)/, ({ t }) => t("group.kickMember.badFormat"))
+    @Command("kick", /@([\w_]{5,32})\s+(\d+)/, i18n => i18n.t("group.kickMember.badFormat"))
     @GroupOnly()
     async kickMember({ message, replyWithMarkdown, telegram, i18n }: MessageHandlerContext,
         @InjectRegexMatchGroup(1) target: string,
@@ -321,7 +321,7 @@ export class GroupController extends BaseController<GroupController> {
         await telegram.editMessageText(chat.id, transactionMessage.message_id, undefined, finalMessage);
     }
 
-    @Command("ban", /@([\w_]{5,32})\s+(\d+)/, ({ t }) => t("group.banMember.badFormat"))
+    @Command("ban", /@([\w_]{5,32})\s+(\d+)/, i18n => i18n.t("group.banMember.badFormat"))
     @GroupOnly()
     async banMember({ message, replyWithMarkdown, telegram, i18n }: MessageHandlerContext,
         @InjectRegexMatchGroup(1) target: string,
