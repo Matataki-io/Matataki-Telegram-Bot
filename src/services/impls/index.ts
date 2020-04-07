@@ -9,6 +9,7 @@ import { I18nServiceImpl } from "./I18nServiceImpl";
 import { RPSServiceImpl } from "./RPSServiceImpl";
 import { MiddlewareServiceImpl } from "./MiddlewareServiceImpl";
 import { BackendApiServiceImpl } from "./BackendApiServiceImpl";
+import { PoemServiceImpl } from "./PoemServiceImpl";
 
 export const serviceImplementations = [
     BotServiceImpl,
@@ -22,4 +23,5 @@ export const serviceImplementations = [
     I18nServiceImpl,
     MiddlewareServiceImpl,
     BackendApiServiceImpl,
+    PoemServiceImpl,
 ];
