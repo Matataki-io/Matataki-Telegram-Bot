@@ -169,7 +169,7 @@ export class QueryController extends BaseController<QueryController> {
         });
     }
 
-    @Command("price", /(\w+)/, ({ t }) => t("query.price.badFormat"))
+    @Command("price", /(\w+)/, i18n => i18n.t("query.price.badFormat"))
     async queryPrice({ message, reply, replyWithMarkdown, i18n }: MessageHandlerContext,
         @InjectRegexMatchGroup(1, input => input.toUpperCase()) symbol: string
     ) {

@@ -9,6 +9,7 @@ import { RedEnvelopeController } from "./RedEnvelopeController";
 import { SyncController } from "./SyncController";
 import { I18nController } from "./I18nController";
 import { RPSController } from "./RPSController";
+import { PoemController } from "./PoemController";
 
 export const controllers: ControllerConstructor[] = [
     DebugController,
@@ -21,4 +22,5 @@ export const controllers: ControllerConstructor[] = [
     RedEnvelopeController,
     SyncController,
     I18nController,
+    PoemController,
 ];
