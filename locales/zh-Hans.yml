@@ -107,6 +107,9 @@ bot:
     otherQuestion:
       title: '👉我有别的问题'
       content: "👉*我有别的问题*\n\n如有其他问题请在 瞬Matataki 的[官方 TG 群](https://t.me/smartsignature_io)询问"
+poem:
+  badFormat: 格式不对，请输入 `/poem [中文关键词]`
+  generating: 作诗中……
 redEnvelope:
   help: "send Red Packet:/fahongbao <FanTicket> <Amount> <Quantity> [<Description>]\nsend Red Packet with random amount:/sfahongbao <FanTicket> <Amount> <Quantity> [<Description>]"
   errorFormat: Wrong command format.
