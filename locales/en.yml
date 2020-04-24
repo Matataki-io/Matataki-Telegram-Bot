@@ -108,8 +108,8 @@ bot:
       title: '👉I have other questions'
       content: "👉*I have other questions*\n\nWelcome to ask your questions in our [official Telegram group](https://t.me/smartsignature_io) if you have any questions"
 poem:
-  badFormat: poem.badFormat
-  generating: poem.generating
+  badFormat: Bad format, please enter `/ poem [Chinese keyword]` (CHINESE Feature Only)
+  generating: Generating Chinese Poem……
 redEnvelope:
   help: "send Red Packet:/fahongbao <FanTicket> <Amount> <Quantity> [<Description>]\nsend Red Packet with random amount:/sfahongbao <FanTicket> <Amount> <Quantity> [<Description>]"
   errorFormat: Wrong command format.
