@@ -1,117 +1,117 @@
 ---
 lang: 繁體中文
 error:
-  usernameNotSynced: error.usernameNotSynced
-  usernameNotFound: error.usernameNotFound
-  requireMatatakiAccount: error.requireMatatakiAccount
-  minetokenNotFound: error.minetokenNotFound
-  notFandomGroup: error.notFandomGroup
-  groupChatOnly: error.groupChatOnly
-  privateChatOnly: error.privateChatOnly
-  requireMintedMinetoken: error.requireMintedMinetoken
+  usernameNotSynced: 抱歉，對方還沒有同步用戶名到資料庫里
+  usernameNotFound: 抱歉，沒有找到這個用戶名的帳號
+  requireMatatakiAccount: 抱歉，您還沒有在 瞬Matataki 綁定 Telegram 帳號
+  minetokenNotFound: 抱歉，沒有這樣的 Fan 票
+  notFandomGroup: 抱歉，這不是一個 Fan 票群組
+  groupChatOnly: 抱歉，該功能僅在群聊里使用
+  privateChatOnly: 抱歉，該功能僅在私聊里使用
+  requireMintedMinetoken: 抱歉，您需要在瞬 Matataki 上發行 Fan 票
 common:
   associatedMatatakiAccount:
-    no: common.associatedMatatakiAccount.no
-    yes: common.associatedMatatakiAccount.yes
+    no: 沒有綁定 Matataki
+    yes: 瞬Matataki 暱稱： [${matatakiUsername}](${matatakiUserPageUrl})
   mintedMinetoken:
-    no: common.mintedMinetoken.no
-    yes: common.mintedMinetoken.yes
+    no: 沒有發行 Fan 票
+    yes: Fan票 名稱：[${symbol} (${minetokenName})](${minetokenPageUrl})
 wallet:
   query:
-    badFormat: wallet.query.badFormat
+    badFormat: 格式不對，暫時只接受 `/query` 和 `/query [Matataki UID/@Telegram 用戶名] [Fan票 符號]`
     minetoken:
-      header: wallet.query.minetoken.header
+      header: 您現在持有 ${count} 種 Fan 票
   transfer:
-    badFormat: wallet.transfer.badFormat
-    common: wallet.transfer.common
-    started: wallet.transfer.started
-    successful: wallet.transfer.successful
-    failed: wallet.transfer.failed
-    transactionDetail: wallet.transfer.transactionDetail
+    badFormat: 格式不對，請輸入 `/transfer [Matataki UID/@Telegram 用戶名] [symbol] [amount]`
+    common: 轉賬方：[${senderUsername}](${senderUrl})\n被轉賬方：[${receiverUsername}](${receiverUrl})\n轉賬數目：${amount} ${symbol}
+    started: 轉賬交易進行中...
+    successful: '*轉賬成功*'
+    failed: '*轉賬失敗*'
+    transactionDetail: 交易詳情
 sync:
   username:
-    noUsername: sync.username.noUsername
+    noUsername: 抱歉，請在 Telegram 設置里設置帳號的用戶名
 query:
   price:
-    badFormat: query.price.badFormat
-    response: query.price.response
+    badFormat: 格式不對，請輸入 `/query [Fan 票符號]`
+    response: 當前價格：${price} CNY
   status:
     joinedGroup:
-      yes: query.status.joinedGroup.yes
-      no: query.status.joinedGroup.no
+      yes: 你已加入 ${count} 個 Fan 票群
+      no: 您尚未加入 Fan票 群
     myGroup:
-      yes: query.status.myGroup.yes
-      no: query.status.myGroup.no
-    groupNoRule: query.status.groupNoRule
-    tip: query.status.tip
+      yes: 您已建立 ${count} 個 Fan票 群
+      no: 您尚未建立 Fan票 群
+    groupNoRule: 沒有規則
+    tip: 輸入 /join 查看更多可以加入的 Fan票 群
 group:
   rule:
-    minetokenRequirement: group.rule.minetokenRequirement
-    noRequirement: group.rule.noRequirement
+    minetokenRequirement: 該群目前要求 ${symbol} ≥ ${amount}
+    noRequirement: 該群目前沒有 ${symbol} 要求
   setRequirement:
-    badFormat: group.setRequirement.badFormat
-    groupNotFound: group.setRequirement.groupNotFound
-    creatorLeft: group.setRequirement.creatorLeft
-    botNotAdmin: group.setRequirement.botNotAdmin
-    notification: group.setRequirement.notification
+    badFormat: 格式錯誤，請輸入 `/set [群組 ID] [數量]`
+    groupNotFound: 抱歉，沒有找到該群組
+    creatorLeft: 該群群主不在群里
+    botNotAdmin: 機器人沒有被設置成該群管理員
+    notification: 當前群組已設置新的規則
   kickMember:
-    badFormat: group.kickMember.badFormat
-    started: group.kickMember.started
-    success: group.kickMember.success
-    failure: group.kickMember.failure
+    badFormat: 格式錯誤，請輸入 `/kick @[Telegram 用戶名] [時間]`
+    started: 放逐中...
+    success: 放逐成功
+    failure: 放逐失敗
   banMember:
-    badFormat: group.banMember.badFormat
-    started: group.banMember.started
-    success: group.banMember.success
-    failure: group.banMember.failure
+    badFormat: 格式錯誤，請輸入 `/ban@[Telegram 用戶名] [時間]`
+    started: 禁言中……
+    success: 禁言成功
+    failure: 禁言失敗
   mygroups:
-    noAnyGroup: group.mygroups.noAnyGroup
-    groupInfo: group.mygroups.groupInfo
-    noAnyRule: group.mygroups.noAnyRule
-    tip: group.mygroups.tip
+    noAnyGroup: 抱歉，您還沒有創建 Fan票 群
+    groupInfo: 群組 ID：${id}\n名字：${title}\nFan 票：${symbol}\n最低要求：${amount}
+    noAnyRule: 沒有規則
+    tip: 查詢前請將 Fan票 群中的粉絲群助手設置為管理員
 bot:
-  start: bot.start
-  defaultReply: bot.defaultReply
+  start: 感謝您使用 Matataki 粉絲群助手，輸入 /help 查看更多功能列表\n👉🏻[介紹文檔](https://www.matataki.io/p/1638)
+  defaultReply: 我是 Matataki 機器人，輸入 /help 可獲得幫助信息
   help:
-    header: bot.help.header
+    header: 您想瞭解什麼？
     introduction:
-      title: bot.help.introduction.title
-      content: bot.help.introduction.content
+      title: '👉你是誰'
+      content: '👉*你是誰*\n\n我是 Fan票 粉絲群助手，您也可以叫我 小Fan~\n我會幫助您創建或加入 Fan票 粉絲群\n有什麼不明白的問題就請輸入 /help 查看幫助吧\n如有其他問題請在 瞬Matataki 的[官方 TG 群](https://t.me/smartsignature_io)詢問'
     fandomTicketIntroduction:
-      title: bot.help.fandomTicketIntroduction.title
-      content: bot.help.fandomTicketIntroduction.content
+      title: '👉Fan票 粉絲群組是什麼'
+      content: '👉*Fan票 粉絲群是什麼*\n\n是以持有特定 Fan票 數量為判斷依據，並且自動審核入群+自動踢群的 Telegram 群組。\n想要瞭解更多信息請閱讀[介紹文檔](https://www.matataki.io/p/1638)'
     command:
-      title: bot.help.command.title
-      content: bot.help.command.content
+      title: '👉操作指令說明'
+      content: '👉*操作指令說明*\n\n您在與 Matataki 粉絲群助手對話時可以使用以下指令\n您也可以點擊輸入框邊的\"/\"按鈕查看全部指令\n\n/start： 開始引導\n/help： 查看幫助\n/status： 查詢您的所有狀態信息（創建的 Fan票、創建的群組、已加入的群組）\n/join： 查詢您還未加入的 Fan票 群信息\n/mygroups： 查詢您建立的 Fan票 粉絲群組信息（群 ID、群名稱、Fan票 名、群規則）\n/set： 設置群規則，輸入 `/set [群組ID] [參數]` 即可設置群規則（參數代表至少持有您的Fan票數量），例如 `/set -1234565 100` 就是設置 123456 這個群的入群條件為 ≥100\n/rule： 查詢當前群組的群規則\n/query： 不帶參數的時候為查詢個人持有的 Fan 票餘額；而輸入 `/query [目標帳號] [Fan票符號]` 可查詢指定用戶的指定 Fan票 餘額，目標帳號可以為 Matataki UID 或者 @ 後接 Telegram 帳號用戶名，例如 `/query 123 ABC` 就是查詢 Matataki ID 123 帳號的 ABC Fan票 餘額；而 `/query @someone ABC` 就是查詢 Telegram 的 `@someone` 所綁定的 Matataki 帳號的 ABC Fan票 餘額\n/price： 查詢 Fan票 價格，格式為 `/price [Fan票符號]`\n/transfer： Fan票 轉賬，輸入 `/transfer [目標帳號] [Fan票符號] [數量]` 可給指定用戶轉賬指定數量的指定 Fan票，目標帳號可以為 Matataki UID 或者 @ 後接 Telegram 帳號用戶名，例如 `/transfer 123 ABC 100` 就是給 Matataki ID 123 帳號轉賬 100 個 ABC；而 `/transfer @someone ABC 100` 就是給 Telegram 的 `@someone` 所綁定的 Matataki 帳號轉賬 100 個 ABC\n/fahongbao： 發紅包，格式為 `/fahongbao [Fan票符號] [總紅包金額] [紅包數量] [描述（可選）]`\n/sfahongbao： 發隨機紅包，格式為 `/sfahongbao [Fan票符號] [總紅包金額] [紅包數量] [描述（可選）]`\n/new\\\\\\\\_game：開始一局Dice遊戲,格式為 `/new\\\\\\\\_game [賭注金額] [賭注單位]`\n/syncusername： 同步 Telegram 帳號用戶名，用作轉賬和查詢時的目標\n\n[如何調戲 Fan票 粉絲群助手視頻教程](https://www.bilibili.com/video/av82477411)'
     howToJoinFandomGroup:
-      title: bot.help.howToJoinFandomGroup.title
-      content: bot.help.howToJoinFandomGroup.content
+      title: '👉如何加入 Fan票群組'
+      content: '👉*如何加入 Fan票群組*\n\n您可以在 Fan票 的詳情中查看到全部群組的加群入口。\n\n具體的操作方式為：\n1️⃣ 進入 Fan票 頁面：https://www.matataki.io/token\n2️⃣ 進入其中一個 Fan票 的詳情頁\n3️⃣ 查看側邊欄中有沒有顯示群組信息。如果有群組請根據引導提示操作入群。\n\n你也可以與我對話輸入 /join，即可看到全部可以加入的群組\n\n[視頻教程](https://www.bilibili.com/video/av82487218)'
     howToCreateFandomGroup:
-      title: bot.help.howToCreateFandomGroup.title
-      content: bot.help.howToCreateFandomGroup.content
+      title: '👉如何創建 Fan票群組'
+      content: '👉*如何創建 Fan票 群*\n\n❗此功能僅向已經發行過 Fan票 的用戶開放，其他用戶暫不支持建立 Fan票 群\n❗如果希望發行 Fan票，請先填寫並提交[表單](https://wj.qq.com/s2/5208015/8e5d/)\n\n操作步驟：\n1️⃣ 在 瞬Matataki 上登錄後[綁定 Telegram 賬號](${url_prefix}/setting/account)\n2️⃣ 在 TG 中搜索 @${username_escaped} 並添加為好友，或點擊此[鏈接](https://t.me/${username}?start)\n3️⃣ 在 TG 中新建一個 Group，並將 @${username_escaped} 邀請入群\n4️⃣ 在群組中將 @${username_escaped} 設置為群管理員\n5️⃣ 設置 @${username_escaped} 的管理員權限：先關閉邀請權限並保存，然後再打開邀請權限（操作此步驟之後群組將會自動升級為超級群）\n6️⃣ 與 @${username_escaped} 私聊，輸入 `/mygroups` 查詢自己創建的群組並記錄下剛才群組的 ID 信息\n7️⃣ 與 @${username_escaped} 私聊，輸入 `/set [群組ID] [參數]` 即可設置群規則（參數代表至少持有您的 Fan票 數量），例如 `/set 1234565 100` 就是設置 123456 這個群的入群條件為 ≥100\n\n👨‍👩‍👦‍👦完成以上 7 步操作即可完成 Fan票 群建立\n已經建立的 Fan票 群組將會顯示在 Fan票 詳情頁中\n如有其他問題請在 瞬Matataki 的[官方 TG 群](https://t.me/smartsignature_io)詢問\n\n[視頻教程](https://www.bilibili.com/video/av82492702)'
     howToRemoveFandomGroup:
-      title: bot.help.howToRemoveFandomGroup.title
-      content: bot.help.howToRemoveFandomGroup.content
+      title: '👉如何刪除 Fan 票群組'
+      content: '👉*如何刪除 Fan票 群*\n\n❗Fan票 群一旦刪除之後將不會在 Matataki 中繼續展示\n❗在任何情況下，群主都請勿直接退群\n\n操作步驟\n1️⃣ 進入需要刪除的 Fan票 群\n2️⃣ 取消 @${username_escaped} 的管理員權限\n\n完成上述的操作後此群會成為普通 TG 群組\n\n[視頻教程](https://www.bilibili.com/video/av82585384)'
     videoTutorial:
-      title: bot.help.videoTutorial.title
-      content: bot.help.videoTutorial.content
+      title: '👉視頻教程(更新中)'
+      content: '👉*視頻教程*\n\n教程會跟隨新功能發佈會不定期更新\n[如何加入 Fan票 粉絲群](https://www.bilibili.com/video/av82487218)\n[如何創建 Fan票 粉絲群](https://www.bilibili.com/video/av82492702)\n[如何刪除 Fan票 粉絲群](https://www.bilibili.com/video/av82585384)\n[如何調戲 Fan票 粉絲群助手](https://www.bilibili.com/video/av82477411)'
     redEnvelope:
-      title: bot.help.redEnvelope.title
-      content: bot.help.redEnvelope.content
+      title: '👉如何使用紅包功能'
+      content: '👉*如何使用紅包功能*\n\n*發紅包*\n可以輸入 /fahongbao 發普通紅包或者輸入 /sfahongbao 發隨機紅包\n後面接的命令參數均為 `[Fan票符號] [總紅包金額] [紅包數量] [描述（可選）]`，參數間用空格相連'
     dice:
-      title: bot.help.dice.title
-      content: bot.help.dice.content
+      title: '👉如何開啓Dice小遊戲'
+      content: 如何開啓一局Dice\n使用/new_game命令：/new_game [賭注金額] [賭注單位]\n例如：/new_game 0.1 DAO\n加入遊戲\n開啓遊戲後，其他人可以選擇加入遊戲，只有房主才能選擇開局或者流局\n\n開局\n所有房間內的人獲取一個從1到99的隨機數，最大的那個人是勝者，如果有兩個或以上人都是最大點數，\n那麼第一個加入房間的人是勝者，勝者將獲得該房間內的所有賭注\n\n流局\n放棄這局遊戲，所有賭注全部歸還
     transfer:
-      title: bot.help.transfer.title
-      content: bot.help.transfer.content
+      title: '👉如何使用轉賬功能'
+      content: '👉*如何使用轉賬功能*\n\n可以輸入 `/transfer [轉賬目標] [Fan票符號] [數量]` 給目標轉賬指定數量的 Fan票，轉賬目標可以為 Matataki UID 或者 @ 後接 Telegram 帳號用戶名（需要對方有執行 /syncusername）'
     otherQuestion:
-      title: bot.help.otherQuestion.title
-      content: bot.help.otherQuestion.content
+      title: '👉我有別的問題'
+      content: '👉*我有別的問題*\n\n如有其他問題請在 瞬Matataki 的[官方 TG 群](https://t.me/smartsignature_io)詢問'
 poem:
-  badFormat: poem.badFormat
-  generating: poem.generating
+  badFormat: 格式不對，請輸入 `/poem [中文關鍵詞]`
+  generating: 作詩中……
 redEnvelope:
-  help: redEnvelope.help
+  help: /fahongbao： 发红包，格式为 `/fahongbao [Fan票符号] [总红包金额] [红包数量] [描述（可选）]`\n/sfahongbao： 发随机红包，格式为 `/sfahongbao [Fan票符号] [总红包金额] [红包数量] [描述（可选）]`
   errorFormat: redEnvelope.errorFormat
   nonPositiveQuantity: redEnvelope.nonPositiveQuantity
   noUser: redEnvelope.noUser
@@ -126,21 +126,21 @@ redEnvelope:
   grabbed: redEnvelope.grabbed
   trying: redEnvelope.trying
 dice:
-  help: dice.help
-  errorFormat: dice.errorFormat
-  noUser: dice.noUser
-  cantGetUserInfo: dice.cantGetUserInfo
-  positiveAmount: dice.positiveAmount
-  insuffMoney: dice.insuffMoney
-  gameTitle: dice.gameTitle
-  winner: dice.winner
-  waiting: dice.waiting
-  noWinner: dice.noWinner
-  draw: dice.draw
-  end: dice.end
-  resend: dice.resend
-  join: dice.join
-  start: dice.start
-  settlement: dice.settlement
-  settleSuccess: dice.settleSuccess
-  settleFail: dice.settleFail
+  help: 開始一局遊戲:/new_game <賭注> <賭注單位>\n注意:只有發送者能夠開局或者流局
+  errorFormat: 錯誤的指令格式。
+  noUser: 尚未綁定 瞬Matataki 賬戶
+  cantGetUserInfo: Matataki 用戶資訊獲取失敗
+  positiveAmount: 金額必須為正數
+  insuffMoney: 您的賬戶餘額不足以支付賭注
+  gameTitle: '${userName}的擲骰子遊戲   賭注:${amount} ${unit}\n<i>注意：只有遊戲的發起者可以選擇開局或者流局</i>'
+  winner: 勝者是${userName},點數為${rollPoint}
+  waiting: '${n}名玩家已準備,等待更多的玩家加入......'
+  noWinner: 沒有勝利者
+  draw: 流局
+  end: 已結束
+  resend: 重新發送
+  join: 加入
+  start: 開局
+  settlement: 結算記錄
+  settleSuccess: 結算成功
+  settleFail: 結算失敗
