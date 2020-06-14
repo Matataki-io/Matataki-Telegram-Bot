@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project>
+
+  <PropertyGroup>
+    <BasePath>$(MSBuildThisFileDirectory)</BasePath>
+    <MinimumVisualStudioVersion>16.0</MinimumVisualStudioVersion>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <LangVersion>8.0</LangVersion>
+    <Nullable>enable</Nullable>
+    <BaseOutputPath>$(BasePath)artifacts\$(MSBuildProjectName)\</BaseOutputPath>
+    <BaseIntermediateOutputPath>$(BasePath)intermediate\$(MSBuildProjectName)\</BaseIntermediateOutputPath>
+  </PropertyGroup>
+
+</Project>
