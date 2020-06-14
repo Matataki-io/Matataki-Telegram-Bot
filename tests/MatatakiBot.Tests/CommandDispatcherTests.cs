@@ -1,4 +1,4 @@
-﻿using DryIoc;
+using DryIoc;
 using MatatakiBot.Core;
 using System;
 using Xunit;
@@ -14,12 +14,12 @@ namespace MatatakiBot.Tests
             {
                 var dispatcher = new CommandDispatcher(new Container());
 
-                dispatcher.Register("test", typeof(CommandWithoutHandlers));
+                dispatcher.Register("test", typeof(WithoutHandlers));
             });
 
-            Assert.Equal("There's no any command handlers in type 'CommandWithoutHandlers'", exception.Message);
+            Assert.Equal("There's no any command handlers in type 'WithoutHandlers'", exception.Message);
         }
 
-        class CommandWithoutHandlers { }
+        class WithoutHandlers { }
     }
 }
