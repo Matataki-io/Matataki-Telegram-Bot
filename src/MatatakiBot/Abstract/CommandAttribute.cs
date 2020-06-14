@@ -9,6 +9,9 @@ namespace MatatakiBot.Abstract
 
         public CommandAttribute(string name)
         {
+            if (string.IsNullOrWhiteSpace(name))
+                throw new ArgumentException("Command name must not be empty", nameof(name));
+
             Name = name;
         }
     }
