@@ -25,6 +25,30 @@ namespace MatatakiBot.Tests
 
         class WithoutHandlers : CommandBase { }
 
+        [Fact]
+        public void BanDuplicatedRegistrations()
+        {
+            var dispatcher = new CommandDispatcher(new Container());
+
+            Assert.Null(Record.Exception(() =>
+            {
+                dispatcher.Register("example", typeof(DuplicatedRegistrationsExample));
+            }));
+
+            var exception = Assert.Throws<InvalidOperationException>(() =>
+            {
+                dispatcher.Register("example", typeof(DuplicatedRegistrationsExample));
+            });
+
+            Assert.Equal("Command 'example' is registered", exception.Message);
+        }
+
+        class DuplicatedRegistrationsExample : CommandBase
+        {
+            [CommandHandler]
+            public string Fallback() => string.Empty;
+        }
+
         [Theory]
         [InlineData(typeof(DuplicatedHandlersTypeA))]
         [InlineData(typeof(DuplicatedHandlersTypeB))]
