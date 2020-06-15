@@ -46,8 +46,12 @@ namespace MatatakiBot.Core
                 if (!usedRegex.Add(handlerAttribute.ArgumentRegex))
                     throw new InvalidOperationException($"There're duplicated command handler attributes in type '{commandType.Name}'");
 
-                var currentNode = new DispatchNode(CompileHandler(commandType, method), null);
+                var parameters = method.GetParameters();
 
+                if (handlerAttribute.ArgumentRegex == null && parameters.Length > 1 || parameters.Length != 0 && parameters[0].ParameterType != typeof(Message))
+                    throw new InvalidOperationException("Fallback handler should have no arguments or only one parameter of type 'Message'");
+
+                var currentNode = new DispatchNode(CompileHandler(commandType, method, parameters), null);
 
                 if (node == null)
                 {
@@ -65,7 +69,7 @@ namespace MatatakiBot.Core
 
             RegisteredCommands[name] = rootNode;
         }
-        private Func<CommandBase, Message, string[], object> CompileHandler(Type commandType, MethodInfo method)
+        private Func<CommandBase, Message, string[], object> CompileHandler(Type commandType, MethodInfo method, ParameterInfo[] parameters)
         {
             var stringParameterTypeArray = new[] { typeof(string) };
 
@@ -74,7 +78,6 @@ namespace MatatakiBot.Core
             var messageParameter = Expression.Parameter(typeof(Message), "message");
             var argumentsParameter = Expression.Parameter(typeof(string[]), "arguments");
 
-            var parameters = method.GetParameters();
             Expression[] callingParameters;
 
             if (parameters.Length == 0)

@@ -15,6 +15,9 @@ namespace MatatakiBot.Abstract
         }
         public CommandHandlerAttribute(string argumentRegex, [CallerLineNumber] int order = 0)
         {
+            if (string.IsNullOrWhiteSpace(argumentRegex))
+                throw new ArgumentException(nameof(argumentRegex));
+
             ArgumentRegex = argumentRegex;
             Order = order;
         }

@@ -58,6 +58,44 @@ namespace MatatakiBot.Tests
         }
 
         [Fact]
+        public void FallbackHandlerArgumentsRestriction()
+        {
+            var dispatcher = new CommandDispatcher(new Container());
+
+            Assert.Null(Record.Exception(() =>
+            {
+                dispatcher.Register("example", typeof(FallbackHandlerWithoutAnyArguments));
+            }));
+            Assert.Null(Record.Exception(() =>
+            {
+                dispatcher.Register("example2", typeof(FallbackHandlerWithOnlyMessageArgument));
+            }));
+
+            var exception = Assert.Throws<InvalidOperationException>(() =>
+            {
+                dispatcher.Register("test", typeof(FallbackHandlerWithUnexpectedArguments));
+            });
+
+            Assert.Equal("Fallback handler should have no arguments or only one parameter of type 'Message'", exception.Message);
+        }
+
+        class FallbackHandlerWithoutAnyArguments : CommandBase
+        {
+            [CommandHandler]
+            public string Fallback() => "Pass";
+        }
+        class FallbackHandlerWithOnlyMessageArgument : CommandBase
+        {
+            [CommandHandler]
+            public string Fallback(Message message) => "Pass";
+        }
+        class FallbackHandlerWithUnexpectedArguments : CommandBase
+        {
+            [CommandHandler]
+            public string Fallback(Message message, string unexpected) => "Oops";
+        }
+
+        [Fact]
         public void HandlerCompilation()
         {
             var dispatcher = new CommandDispatcher(new Container());
@@ -112,10 +150,10 @@ namespace MatatakiBot.Tests
         {
             [CommandHandler("1")]
             public string HandlerA(Message message) => "First";
-            [CommandHandler("2")]
-            public string HandlerB(Message message, string arg) => "Arg: " + arg;
             [CommandHandler]
             public string HandlerC() => "fallback";
+            [CommandHandler("2")]
+            public string HandlerB(Message message, string arg) => "Arg: " + arg;
         }
     }
 }
