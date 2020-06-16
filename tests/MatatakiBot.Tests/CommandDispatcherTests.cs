@@ -179,5 +179,38 @@ namespace MatatakiBot.Tests
             [CommandHandler("2")]
             public string HandlerB(Message message, string arg) => "Arg: " + arg;
         }
+
+        [Fact]
+        public void SpecialHandlerArgumentTypes()
+        {
+            var dispatcher = new CommandDispatcher(new Container());
+
+            Assert.Null(Record.Exception(() => dispatcher.Register("example", typeof(HandlerWithSpecialArgumentTypes))));
+
+            var exception = Assert.Throws<InvalidOperationException>(() => dispatcher.Register("oops", typeof(HandlerWithUnsupportedArgumentTypes)));
+
+            Assert.Equal("Unsupported parameter type 'Single' in handler 'Unsupported'", exception.Message);
+        }
+
+        class HandlerWithSpecialArgumentTypes : CommandBase
+        {
+            [CommandHandler("int")]
+            public string HandlerA(Message message, int arg) => "Integer";
+            [CommandHandler("long")]
+            public string HandlerB(Message message, long arg) => "Long";
+            [CommandHandler("double")]
+            public string HandlerC(Message message, double arg) => "Double";
+            [CommandHandler("decimal")]
+            public string HandlerD(Message message, decimal arg) => "Decimal";
+            [CommandHandler]
+            public string HandlerE() => "fallback";
+        }
+        class HandlerWithUnsupportedArgumentTypes : CommandBase
+        {
+            [CommandHandler("unsupported")]
+            public string Unsupported(Message message, float arg) => "Unsupported";
+            [CommandHandler]
+            public string HandlerC() => "fallback";
+        }
     }
 }

@@ -125,10 +125,17 @@ namespace MatatakiBot.Core
                             parsedExpression = Expression.Call(parseMethod, parameter);
                             defaultExpression = Expression.ZeroConstant;
                         }
+                        else if (parameterType == typeof(decimal))
+                        {
+                            var parseMethod = typeof(decimal).GetMethod(nameof(decimal.Parse), stringParameterTypeArray);
+
+                            parsedExpression = Expression.Call(parseMethod, parameter);
+                            defaultExpression = Expression.ZeroConstant;
+                        }
                         else
                         {
                             if (parameterType != typeof(string))
-                                throw new InvalidOperationException("Unsupported parameter type: " + parameterType.Name);
+                                throw new InvalidOperationException($"Unsupported parameter type '{parameterType.Name}' in handler '{method.Name}'");
 
                             parsedExpression = parameter;
                             defaultExpression = Expression.Constant(string.Empty);
