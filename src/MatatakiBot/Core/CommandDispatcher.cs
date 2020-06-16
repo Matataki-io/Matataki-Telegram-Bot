@@ -51,7 +51,14 @@ namespace MatatakiBot.Core
                 if (handlerAttribute.ArgumentRegex == null && parameters.Length > 1 || parameters.Length != 0 && parameters[0].ParameterType != typeof(Message))
                     throw new InvalidOperationException("Fallback handler should have no arguments or only one parameter of type 'Message'");
 
-                var currentNode = new DispatchNode(CompileHandler(commandType, method, parameters), null);
+                var argumentMatcher = handlerAttribute.ArgumentRegex switch
+                {
+                    null => null,
+                    "$" => new Regex(@"\s*$", RegexOptions.Compiled),
+                    _ => new Regex(@"\s+" + handlerAttribute.ArgumentRegex, RegexOptions.Compiled),
+                };
+
+                var currentNode = new DispatchNode(CompileHandler(commandType, method, parameters), argumentMatcher);
 
                 if (node == null)
                 {
