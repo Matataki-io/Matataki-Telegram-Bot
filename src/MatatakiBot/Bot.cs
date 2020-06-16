@@ -1,4 +1,4 @@
-﻿using DryIoc;
+using DryIoc;
 using MatatakiBot.Abstract;
 using MatatakiBot.Core;
 using System;
@@ -34,7 +34,9 @@ namespace MatatakiBot
             if (commandAttribute == null)
                 throw new InvalidOperationException("Missing CommandAttribute from provided command type");
 
-            _container.Register<CommandBase, T>(serviceKey: commandAttribute.Name);
+            _container.Register(typeof(CommandBase), typeof(T),
+                made: PropertiesAndFields.Of.Name(nameof(CommandBase.Client)),
+                serviceKey: commandAttribute.Name);
 
             _commandDispatcher.Register(commandAttribute.Name, typeof(T));
         }
