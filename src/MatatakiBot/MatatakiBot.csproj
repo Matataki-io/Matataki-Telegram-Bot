@@ -13,6 +13,7 @@
     <PackageReference Include="Serilog.Sinks.File" Version="4.1.0" />
     <PackageReference Include="System.Reactive" Version="4.4.1" />
     <PackageReference Include="Telegram.Bot" Version="15.7.0" />
+    <PackageReference Include="Telegram.Bot.Extensions.Polling" Version="0.2.0" />
   </ItemGroup>
 
 </Project>
