@@ -83,6 +83,44 @@ namespace MatatakiBot.Tests
         }
 
         [Fact]
+        public void HandlerReturnTypeRestriction()
+        {
+            var dispatcher = new MessageDispatcher(new Container());
+
+            Assert.Null(Record.Exception(() =>
+            {
+                dispatcher.Register("example", typeof(HandlerReturnsMessageResponse));
+            }));
+            Assert.Null(Record.Exception(() =>
+            {
+                dispatcher.Register("example2", typeof(HandlerReturnsTaskOfMessageResponse));
+            }));
+
+            var exception = Assert.Throws<InvalidOperationException>(() =>
+            {
+                dispatcher.Register("oops", typeof(HandlerReturnsUnsupportedType));
+            });
+
+            Assert.Equal("The return type of handler should be of type 'MessageResponse' or 'Task<MessageResponse>'", exception.Message);
+        }
+
+        class HandlerReturnsMessageResponse
+        {
+            [CommandHandler]
+            public MessageResponse Handler() => "response";
+        }
+        class HandlerReturnsTaskOfMessageResponse
+        {
+            [CommandHandler]
+            public Task<MessageResponse> Handler() => Task.FromResult(new MessageResponse("response"));
+        }
+        class HandlerReturnsUnsupportedType
+        {
+            [CommandHandler]
+            public object Handler() => new object();
+        }
+
+        [Fact]
         public void FallbackHandlerArgumentsRestriction()
         {
             var dispatcher = new MessageDispatcher(new Container());
