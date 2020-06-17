@@ -256,7 +256,11 @@ namespace MatatakiBot.Tests
         [Fact]
         public void MessageFallback()
         {
-            var dispatcher = new MessageDispatcher(new Container());
+            var container = new Container();
+            var dispatcher = new MessageDispatcher(container) { Username = "example_bot" };
+
+            container.Register<CommandBase, DispatchingExample>(serviceKey: "example");
+            dispatcher.Register("example", typeof(DispatchingExample));
 
             Assert.Equal(MessageResponse.FallbackResponseTask, dispatcher.HandleMessageAsync(new Message()
             {
@@ -267,6 +271,12 @@ namespace MatatakiBot.Tests
             {
                 Text = "/fallback",
                 Entities = new[] { new MessageEntity() { Type = MessageEntityType.BotCommand, Length = 9 } },
+            }, null!));
+
+            Assert.Equal(MessageResponse.FallbackResponseTask, dispatcher.HandleMessageAsync(new Message()
+            {
+                Text = "/fallback@other_bot",
+                Entities = new[] { new MessageEntity() { Type = MessageEntityType.BotCommand, Length = 19 } },
             }, null!));
         }
 
@@ -301,6 +311,27 @@ namespace MatatakiBot.Tests
             public MessageResponse HandlerNoArgument(Message message) => "No argument";
             [CommandHandler]
             public MessageResponse Fallback(Message message) => "Fallback";
+        }
+
+        [Fact]
+        public async Task MessageDispatchingWithUsername()
+        {
+            var container = new Container();
+            var dispatcher = new MessageDispatcher(container) { Username = "example_bot" };
+
+            container.Register<CommandBase, DispatchingExample>(serviceKey: "example");
+            dispatcher.Register("example", typeof(DispatchingExample));
+
+            Assert.Equal("Number: 1234", (await dispatcher.HandleMessageAsync(CreateExampleCommandMessage("/example@example_bot 1234"), null!)).Content);
+            Assert.Equal("Letters: abcd", (await dispatcher.HandleMessageAsync(CreateExampleCommandMessage("/example@example_bot abcd"), null!)).Content);
+            Assert.Equal("No argument", (await dispatcher.HandleMessageAsync(CreateExampleCommandMessage("/example@example_bot"), null!)).Content);
+            Assert.Equal("Fallback", (await dispatcher.HandleMessageAsync(CreateExampleCommandMessage("/example@example_bot ???"), null!)).Content);
+
+            static Message CreateExampleCommandMessage(string text) => new Message()
+            {
+                Text = text,
+                Entities = new[] { new MessageEntity() { Type = MessageEntityType.BotCommand, Length = 20 } },
+            };
         }
     }
 }

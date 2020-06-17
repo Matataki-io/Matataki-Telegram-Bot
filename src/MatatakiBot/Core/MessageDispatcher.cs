@@ -19,6 +19,8 @@ namespace MatatakiBot.Core
 
         internal SortedList<string, DispatchNode> RegisteredCommands { get; } = new SortedList<string, DispatchNode>(StringComparer.Ordinal);
 
+        public string? Username { get; set; }
+
         public MessageDispatcher(Container container)
         {
             _container = container;
@@ -182,7 +184,11 @@ namespace MatatakiBot.Core
             if (commandEntity == null)
                 return MessageResponse.FallbackResponseTask;
 
-            var commandName = message.Text[1..commandEntity.Length];
+            var commandNameSpan = message.Text.AsSpan(1, commandEntity.Length - 1);
+            if (Username != null && commandEntity.Length > Username.Length && commandNameSpan[commandEntity.Length - Username.Length - 2] == '@' && commandNameSpan.EndsWith(Username))
+                commandNameSpan = commandNameSpan[..^(Username.Length + 1)];
+
+            var commandName = commandNameSpan.ToString();
 
             if (!RegisteredCommands.TryGetValue(commandName, out var node))
                 return MessageResponse.FallbackResponseTask;
