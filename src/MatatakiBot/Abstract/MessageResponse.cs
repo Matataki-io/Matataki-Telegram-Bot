@@ -5,7 +5,8 @@ namespace MatatakiBot.Abstract
 {
     public class MessageResponse
     {
-        internal static readonly Task<MessageResponse> FallbackResponseTask = Task.FromResult(new MessageResponse(new object()));
+        internal static readonly MessageResponse FallbackResponse = new MessageResponse(new object());
+        internal static readonly Task<MessageResponse> FallbackResponseTask = Task.FromResult(FallbackResponse);
 
         private object _content;
         public object Content
