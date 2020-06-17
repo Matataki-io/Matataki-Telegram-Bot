@@ -11,7 +11,7 @@ namespace MatatakiBot.Tests
         {
             var command = new PingCommand();
 
-            Assert.Equal("Pong", command.Hander(new Message()));
+            Assert.Equal("Pong", command.Hander(new Message()).Content);
         }
     }
 }

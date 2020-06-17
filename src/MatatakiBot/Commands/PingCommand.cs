@@ -7,6 +7,6 @@ namespace MatatakiBot.Commands
     public sealed class PingCommand : CommandBase
     {
         [CommandHandler]
-        public string Hander(Message message) => "Pong";
+        public MessageResponse Hander(Message message) => "Pong";
     }
 }

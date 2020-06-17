@@ -18,5 +18,7 @@ namespace MatatakiBot.Abstract
         {
             _content = content ?? throw new ArgumentNullException(nameof(content));
         }
+
+        public static implicit operator MessageResponse(string value) => new MessageResponse(value);
     }
 }

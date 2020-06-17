@@ -3,6 +3,7 @@ using MatatakiBot.Abstract;
 using MatatakiBot.Core;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Telegram.Bot.Types;
 using Xunit;
 
@@ -46,7 +47,7 @@ namespace MatatakiBot.Tests
         class DuplicatedRegistrationsExample : CommandBase
         {
             [CommandHandler]
-            public string Fallback() => string.Empty;
+            public MessageResponse Fallback() => string.Empty;
         }
 
         [Theory]
@@ -67,18 +68,18 @@ namespace MatatakiBot.Tests
         class DuplicatedHandlersTypeA : CommandBase
         {
             [CommandHandler]
-            public string A() => string.Empty;
+            public MessageResponse A() => string.Empty;
             [CommandHandler]
-            public string B() => string.Empty;
+            public MessageResponse B() => string.Empty;
         }
         class DuplicatedHandlersTypeB : CommandBase
         {
             [CommandHandler("args")]
-            public string A() => string.Empty;
+            public MessageResponse A() => string.Empty;
             [CommandHandler("args")]
-            public string B() => string.Empty;
+            public MessageResponse B() => string.Empty;
             [CommandHandler]
-            public string C() => string.Empty;
+            public MessageResponse C() => string.Empty;
         }
 
         [Fact]
@@ -106,21 +107,21 @@ namespace MatatakiBot.Tests
         class FallbackHandlerWithoutAnyArguments : CommandBase
         {
             [CommandHandler]
-            public string Fallback() => "Pass";
+            public MessageResponse Fallback() => "Pass";
         }
         class FallbackHandlerWithOnlyMessageArgument : CommandBase
         {
             [CommandHandler]
-            public string Fallback(Message message) => "Pass";
+            public MessageResponse Fallback(Message message) => "Pass";
         }
         class FallbackHandlerWithUnexpectedArguments : CommandBase
         {
             [CommandHandler]
-            public string Fallback(Message message, string unexpected) => "Oops";
+            public MessageResponse Fallback(Message message, string unexpected) => "Oops";
         }
 
         [Fact]
-        public void HandlerCompilation()
+        public async Task HandlerCompilation()
         {
             var dispatcher = new MessageDispatcher(new Container());
 
@@ -131,23 +132,23 @@ namespace MatatakiBot.Tests
 
             var node = dispatcher.RegisteredCommands["example"];
 
-            Assert.Equal("First", node.Handler(command, message, Array.Empty<string>()));
+            Assert.Equal("First", (await node.Handler(command, message, Array.Empty<string>())).Content);
 
             node = node.Next!;
 
             Assert.NotNull(node);
-            Assert.Equal("Arg: arg", node.Handler(command, message, new[] { "arg" }));
+            Assert.Equal("Arg: arg", (await node.Handler(command, message, new[] { "arg" })).Content);
 
             node = node.Next!;
 
             Assert.NotNull(node);
-            Assert.Equal("fallback", node.Handler(command, message, Array.Empty<string>()));
+            Assert.Equal("fallback", (await node.Handler(command, message, Array.Empty<string>())).Content);
 
             Assert.Null(node.Next);
         }
 
         [Fact]
-        public void ShouldCallHandlerWithMatchedArgumentCount()
+        public async Task ShouldCallHandlerWithMatchedArgumentCount()
         {
             const string ExceptionMessage = "The argument count doesn't match";
 
@@ -162,22 +163,22 @@ namespace MatatakiBot.Tests
 
             var node = dispatcher.RegisteredCommands["example"];
 
-            Assert.Equal(ExceptionMessage, Assert.Throws<ArgumentException>(() => node.Handler(command, message, new[] { "arg" })).Message);
+            Assert.Equal(ExceptionMessage, (await Assert.ThrowsAsync<ArgumentException>(() => node.Handler(command, message, new[] { "arg" }))).Message);
 
             node = node.Next!;
 
-            Assert.Equal(ExceptionMessage, Assert.Throws<ArgumentException>(() => node.Handler(command, message, Array.Empty<string>())).Message);
-            Assert.Equal(ExceptionMessage, Assert.Throws<ArgumentException>(() => node.Handler(command, message, new[] { "arg", "arg2" })).Message);
+            Assert.Equal(ExceptionMessage, (await Assert.ThrowsAsync<ArgumentException>(() => node.Handler(command, message, Array.Empty<string>()))).Message);
+            Assert.Equal(ExceptionMessage, (await Assert.ThrowsAsync<ArgumentException>(() => node.Handler(command, message, new[] { "arg", "arg2" }))).Message);
         }
 
         class ExampleCommand : CommandBase
         {
             [CommandHandler("1")]
-            public string HandlerA(Message message) => "First";
+            public MessageResponse HandlerA(Message message) => "First";
             [CommandHandler]
-            public string HandlerC() => "fallback";
+            public MessageResponse HandlerC() => "fallback";
             [CommandHandler("2")]
-            public string HandlerB(Message message, string arg) => "Arg: " + arg;
+            public MessageResponse HandlerB(Message message, string arg) => "Arg: " + arg;
         }
 
         [Fact]
@@ -195,22 +196,22 @@ namespace MatatakiBot.Tests
         class HandlerWithSpecialArgumentTypes : CommandBase
         {
             [CommandHandler("int")]
-            public string HandlerA(Message message, int arg) => "Integer";
+            public MessageResponse HandlerA(Message message, int arg) => "Integer";
             [CommandHandler("long")]
-            public string HandlerB(Message message, long arg) => "Long";
+            public MessageResponse HandlerB(Message message, long arg) => "Long";
             [CommandHandler("double")]
-            public string HandlerC(Message message, double arg) => "Double";
+            public MessageResponse HandlerC(Message message, double arg) => "Double";
             [CommandHandler("decimal")]
-            public string HandlerD(Message message, decimal arg) => "Decimal";
+            public MessageResponse HandlerD(Message message, decimal arg) => "Decimal";
             [CommandHandler]
-            public string HandlerE() => "fallback";
+            public MessageResponse HandlerE() => "fallback";
         }
         class HandlerWithUnsupportedArgumentTypes : CommandBase
         {
             [CommandHandler("unsupported")]
-            public string Unsupported(Message message, float arg) => "Unsupported";
+            public MessageResponse Unsupported(Message message, float arg) => "Unsupported";
             [CommandHandler]
-            public string HandlerC() => "fallback";
+            public MessageResponse HandlerC() => "fallback";
         }
     }
 }
