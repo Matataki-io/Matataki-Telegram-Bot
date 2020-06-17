@@ -19,7 +19,8 @@ namespace MatatakiBot
         private readonly ILogger _logger;
 
         private readonly List<Type> _middlewareTypes = new List<Type>();
-        private readonly CommandDispatcher _commandDispatcher;
+        private readonly List<IMessageMiddleware> _middlewares = new List<IMessageMiddleware>();
+        private readonly MessageDispatcher _messageDispatcher;
 
         public Bot(ITelegramBotClient client)
         {
@@ -37,7 +38,7 @@ namespace MatatakiBot
                 .CreateLogger();
             _container.RegisterInstance(_logger);
 
-            _commandDispatcher = new CommandDispatcher(_container);
+            _messageDispatcher = new MessageDispatcher(_container);
         }
 
         public void RegisterService<TService, TImpl>() where TImpl : TService =>
@@ -53,10 +54,10 @@ namespace MatatakiBot
                 made: PropertiesAndFields.Of.Name(nameof(CommandBase.Client)),
                 serviceKey: commandAttribute.Name);
 
-            _commandDispatcher.Register(commandAttribute.Name, typeof(T));
+            _messageDispatcher.Register(commandAttribute.Name, typeof(T));
         }
 
-        public void RegisterCommandMiddleware<T>() where T : ICommandMiddleware
+        public void RegisterMessageMiddleware<T>() where T : IMessageMiddleware
         {
             var type = typeof(T);
 

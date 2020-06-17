@@ -11,13 +11,13 @@ using Telegram.Bot.Types;
 
 namespace MatatakiBot.Core
 {
-    class CommandDispatcher
+    class MessageDispatcher
     {
         private readonly Container _container;
 
         internal SortedList<string, DispatchNode> RegisteredCommands { get; } = new SortedList<string, DispatchNode>(StringComparer.Ordinal);
 
-        public CommandDispatcher(Container container)
+        public MessageDispatcher(Container container)
         {
             _container = container;
         }

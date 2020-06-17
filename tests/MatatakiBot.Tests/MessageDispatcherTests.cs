@@ -8,14 +8,14 @@ using Xunit;
 
 namespace MatatakiBot.Tests
 {
-    public class CommandDispatcherTests
+    public class MessageDispatcherTests
     {
         [Fact]
         public void CommandTypeShouldHaveHandlers()
         {
             var exception = Assert.Throws<InvalidOperationException>(()=>
             {
-                var dispatcher = new CommandDispatcher(new Container());
+                var dispatcher = new MessageDispatcher(new Container());
 
                 dispatcher.Register("test", typeof(WithoutHandlers));
             });
@@ -28,7 +28,7 @@ namespace MatatakiBot.Tests
         [Fact]
         public void BanDuplicatedRegistrations()
         {
-            var dispatcher = new CommandDispatcher(new Container());
+            var dispatcher = new MessageDispatcher(new Container());
 
             Assert.Null(Record.Exception(() =>
             {
@@ -56,7 +56,7 @@ namespace MatatakiBot.Tests
         {
             var exception = Assert.Throws<InvalidOperationException>(() =>
             {
-                var dispatcher = new CommandDispatcher(new Container());
+                var dispatcher = new MessageDispatcher(new Container());
 
                 dispatcher.Register("test", commandType);
             });
@@ -84,7 +84,7 @@ namespace MatatakiBot.Tests
         [Fact]
         public void FallbackHandlerArgumentsRestriction()
         {
-            var dispatcher = new CommandDispatcher(new Container());
+            var dispatcher = new MessageDispatcher(new Container());
 
             Assert.Null(Record.Exception(() =>
             {
@@ -122,7 +122,7 @@ namespace MatatakiBot.Tests
         [Fact]
         public void HandlerCompilation()
         {
-            var dispatcher = new CommandDispatcher(new Container());
+            var dispatcher = new MessageDispatcher(new Container());
 
             dispatcher.Register("example", typeof(ExampleCommand));
 
@@ -151,7 +151,7 @@ namespace MatatakiBot.Tests
         {
             const string ExceptionMessage = "The argument count doesn't match";
 
-            var dispatcher = new CommandDispatcher(new Container());
+            var dispatcher = new MessageDispatcher(new Container());
 
             dispatcher.Register("example", typeof(ExampleCommand));
 
@@ -183,7 +183,7 @@ namespace MatatakiBot.Tests
         [Fact]
         public void SpecialHandlerArgumentTypes()
         {
-            var dispatcher = new CommandDispatcher(new Container());
+            var dispatcher = new MessageDispatcher(new Container());
 
             Assert.Null(Record.Exception(() => dispatcher.Register("example", typeof(HandlerWithSpecialArgumentTypes))));
 
