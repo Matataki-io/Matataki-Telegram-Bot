@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Telegram.Bot.Types;
+using Telegram.Bot.Types.Enums;
 using Xunit;
 
 namespace MatatakiBot.Tests
@@ -104,17 +105,17 @@ namespace MatatakiBot.Tests
             Assert.Equal("The return type of handler should be of type 'MessageResponse' or 'Task<MessageResponse>'", exception.Message);
         }
 
-        class HandlerReturnsMessageResponse
+        class HandlerReturnsMessageResponse : CommandBase
         {
             [CommandHandler]
             public MessageResponse Handler() => "response";
         }
-        class HandlerReturnsTaskOfMessageResponse
+        class HandlerReturnsTaskOfMessageResponse : CommandBase
         {
             [CommandHandler]
             public Task<MessageResponse> Handler() => Task.FromResult(new MessageResponse("response"));
         }
-        class HandlerReturnsUnsupportedType
+        class HandlerReturnsUnsupportedType : CommandBase
         {
             [CommandHandler]
             public object Handler() => new object();
@@ -250,6 +251,56 @@ namespace MatatakiBot.Tests
             public MessageResponse Unsupported(Message message, float arg) => "Unsupported";
             [CommandHandler]
             public MessageResponse HandlerC() => "fallback";
+        }
+
+        [Fact]
+        public void MessageFallback()
+        {
+            var dispatcher = new MessageDispatcher(new Container());
+
+            Assert.Equal(MessageResponse.FallbackResponseTask, dispatcher.HandleMessageAsync(new Message()
+            {
+                Text = "fallback",
+            }, null!));
+
+            Assert.Equal(MessageResponse.FallbackResponseTask, dispatcher.HandleMessageAsync(new Message()
+            {
+                Text = "/fallback",
+                Entities = new[] { new MessageEntity() { Type = MessageEntityType.BotCommand, Length = 9 } },
+            }, null!));
+        }
+
+        [Fact]
+        public async Task MessageDispatching()
+        {
+            var container = new Container();
+            var dispatcher = new MessageDispatcher(container);
+
+            container.Register<CommandBase, DispatchingExample>(serviceKey: "example");
+            dispatcher.Register("example", typeof(DispatchingExample));
+
+            Assert.Equal("Number: 1234", (await dispatcher.HandleMessageAsync(CreateExampleCommandMessage("/example 1234"), null!)).Content);
+            Assert.Equal("Letters: abcd", (await dispatcher.HandleMessageAsync(CreateExampleCommandMessage("/example abcd"), null!)).Content);
+            Assert.Equal("No argument", (await dispatcher.HandleMessageAsync(CreateExampleCommandMessage("/example"), null!)).Content);
+            Assert.Equal("Fallback", (await dispatcher.HandleMessageAsync(CreateExampleCommandMessage("/example ???"), null!)).Content);
+
+            static Message CreateExampleCommandMessage(string text) => new Message()
+            {
+                Text = text,
+                Entities = new[] { new MessageEntity() { Type = MessageEntityType.BotCommand, Length = 8 } },
+            };
+        }
+
+        class DispatchingExample : CommandBase
+        {
+            [CommandHandler(@"(\d+)")]
+            public MessageResponse HandlerWithNumberArg(Message message, int arg) => "Number: " + arg.ToString();
+            [CommandHandler(@"(\w+)")]
+            public MessageResponse HandlerWithLetterArg(Message message, string arg) => "Letters: " + arg.ToString();
+            [CommandHandler("$")]
+            public MessageResponse HandlerNoArgument(Message message) => "No argument";
+            [CommandHandler]
+            public MessageResponse Fallback(Message message) => "Fallback";
         }
     }
 }

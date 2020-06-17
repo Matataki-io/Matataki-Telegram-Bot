@@ -9,10 +9,11 @@ using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Telegram.Bot.Types;
+using Telegram.Bot.Types.Enums;
 
 namespace MatatakiBot.Core
 {
-    class MessageDispatcher
+    class MessageDispatcher : IMessageMiddleware
     {
         private readonly Container _container;
 
@@ -58,8 +59,8 @@ namespace MatatakiBot.Core
                 var argumentMatcher = handlerAttribute.ArgumentRegex switch
                 {
                     null => null,
-                    "$" => new Regex(@"\s*$", RegexOptions.Compiled),
-                    _ => new Regex(@"\s+" + handlerAttribute.ArgumentRegex, RegexOptions.Compiled),
+                    "$" => new Regex(@"^\s*$", RegexOptions.Compiled),
+                    _ => new Regex(@"^\s+" + handlerAttribute.ArgumentRegex, RegexOptions.Compiled),
                 };
 
                 var currentNode = new DispatchNode(CompileHandler(commandType, method, parameters), argumentMatcher);
@@ -173,6 +174,39 @@ namespace MatatakiBot.Core
 
             return Expression.Lambda<Func<CommandBase, Message, string[], Task<MessageResponse>>>(body, commandParameter, messageParameter, argumentsParameter).CompileFast();
         }
+
+        public Task<MessageResponse> HandleMessageAsync(Message message, NextHandler nextHandler)
+        {
+            var commandEntity = message.Entities?.SingleOrDefault(r => r.Type == MessageEntityType.BotCommand && r.Offset == 0);
+
+            if (commandEntity == null)
+                return MessageResponse.FallbackResponseTask;
+
+            var commandName = message.Text[1..commandEntity.Length];
+
+            if (!RegisteredCommands.TryGetValue(commandName, out var node))
+                return MessageResponse.FallbackResponseTask;
+
+            var command = _container.Resolve<CommandBase>(commandName);
+
+            while (node.ArgumentMatcher != null)
+            {
+                var match = node.ArgumentMatcher.Match(message.Text[commandEntity.Length..]);
+
+                if (!match.Success)
+                {
+                    node = node.Next;
+
+                    Debug.Assert(node != null);
+                    continue;
+                }
+
+                var arguments = match.Groups.Values.Skip(1).Select(r => r.Value).ToArray();
+
+                return node.Handler(command, message, arguments);
+            }
+
+            return node.Handler(command, message, Array.Empty<string>());
         }
 
         internal class DispatchNode
