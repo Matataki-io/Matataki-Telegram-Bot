@@ -25,14 +25,16 @@ namespace MatatakiBot.Core
 
                 if (respondedMessage == null)
                 {
-                    respondedMessage = await _client.SendTextMessageAsync(message.Chat, response.Content.ToString(),
+                    respondedMessage = await _client.SendTextMessageAsync(message.Chat, response.ToString(),
+                        parseMode: response.ParseMode,
                         replyToMessageId: message.Chat.Type != ChatType.Private ? message.MessageId : 0);
 
                     yield return null!;
                     continue;
                 }
 
-                await _client.EditMessageTextAsync(message.Chat, respondedMessage.MessageId, response.Content.ToString());
+                await _client.EditMessageTextAsync(message.Chat, respondedMessage.MessageId, response.ToString(),
+                    parseMode: response.ParseMode);
 
                 yield return null!;
             }

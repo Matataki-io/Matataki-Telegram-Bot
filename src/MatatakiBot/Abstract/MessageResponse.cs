@@ -1,10 +1,16 @@
 ﻿using System;
+using System.Collections.Generic;
+using Telegram.Bot.Types.Enums;
 
 namespace MatatakiBot.Abstract
 {
     public class MessageResponse
     {
         internal static readonly MessageResponse FallbackResponse = new MessageResponse(new object());
+
+        public ParseMode ParseMode { get; set; }
+
+        public string? Introduction { get; set; }
 
         private object _content;
         public object Content
@@ -13,11 +19,58 @@ namespace MatatakiBot.Abstract
             set => _content = value ?? throw new ArgumentException(nameof(value));
         }
 
+        public string? Footer { get; set; }
+
         public MessageResponse(object? content)
         {
             _content = content ?? throw new ArgumentNullException(nameof(content));
+
+            ParseMode = ParseMode.MarkdownV2;
+        }
+        public MessageResponse(string introduction, object content, string? footer = null, ParseMode parseMode = ParseMode.MarkdownV2)
+        {
+            Introduction = introduction;
+            _content = content ?? throw new ArgumentNullException(nameof(content));
+            Footer = footer;
+
+            ParseMode = parseMode;
         }
 
         public static implicit operator MessageResponse(string value) => new MessageResponse(value);
+
+        IEnumerable<string> EnumerateLines()
+        {
+            if (Introduction != null)
+            {
+                yield return ParseMode switch
+                {
+                    ParseMode.Markdown => "*" + Introduction + "*",
+                    ParseMode.MarkdownV2 => "*" + Introduction + "*",
+                    ParseMode.Html => "<b>" + Introduction + "</b>",
+                    _ => Introduction,
+                };
+                yield return string.Empty;
+            }
+
+            if (Content is IEnumerable<string> contentLines)
+                foreach (var line in contentLines)
+                    yield return line;
+            else
+                yield return _content.ToString()!;
+
+            if (Footer != null)
+            {
+                yield return string.Empty;
+                yield return Footer;
+            }
+        }
+
+        public override string ToString()
+        {
+            if (Introduction == null && Footer == null && !(Content is IEnumerable<string>))
+                return Content.ToString()!;
+
+            return string.Join(Environment.NewLine, EnumerateLines());
+        }
     }
 }
