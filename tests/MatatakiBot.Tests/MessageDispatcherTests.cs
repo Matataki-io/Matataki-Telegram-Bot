@@ -337,5 +337,30 @@ namespace MatatakiBot.Tests
             [CommandHandler]
             public Task<MessageResponse> Fallback(Message message) => Task.FromResult<MessageResponse>("Fallback");
         }
+
+        [Fact]
+        public async Task MultipleResponses()
+        {
+            var container = new Container();
+            var dispatcher = new MessageDispatcher(container);
+
+            container.Register<CommandBase, MultipleResponsesExample>(serviceKey: "example");
+            dispatcher.Register("example", typeof(MultipleResponsesExample));
+
+            var responses = await dispatcher.HandleMessageAsync(new Message()
+            {
+                Text = "/example",
+                Entities = new[] { new MessageEntity() { Type = MessageEntityType.BotCommand, Length = 8 } },
+            }, null!).Select(r => r.Content).ToArrayAsync();
+
+            Assert.Equal(Enumerable.Range(1, 10).Select(r => r.ToString()), responses);
+        }
+
+        class MultipleResponsesExample : CommandBase
+        {
+            [CommandHandler]
+            public IAsyncEnumerable<MessageResponse> Handler() =>
+                Enumerable.Range(1, 10).Select(r => new MessageResponse(r.ToString())).ToAsyncEnumerable();
+        }
     }
 }
