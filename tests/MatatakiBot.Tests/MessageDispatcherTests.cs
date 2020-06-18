@@ -3,6 +3,7 @@ using MatatakiBot.Abstract;
 using MatatakiBot.Core;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
@@ -102,7 +103,7 @@ namespace MatatakiBot.Tests
                 dispatcher.Register("oops", typeof(HandlerReturnsUnsupportedType));
             });
 
-            Assert.Equal("The return type of handler should be of type 'MessageResponse' or 'Task<MessageResponse>'", exception.Message);
+            Assert.Equal("The return type of handler should be of type 'MessageResponse', 'Task<MessageResponse>' or 'IAsyncEnumerable<MessageResponse>'", exception.Message);
         }
 
         class HandlerReturnsMessageResponse : CommandBase
@@ -113,7 +114,7 @@ namespace MatatakiBot.Tests
         class HandlerReturnsTaskOfMessageResponse : CommandBase
         {
             [CommandHandler]
-            public Task<MessageResponse> Handler() => Task.FromResult(new MessageResponse("response"));
+            public Task<MessageResponse> Handler() => Task.FromResult<MessageResponse>("response");
         }
         class HandlerReturnsUnsupportedType : CommandBase
         {
@@ -171,23 +172,26 @@ namespace MatatakiBot.Tests
 
             var node = dispatcher.RegisteredCommands["example"];
 
-            Assert.Equal("First", (await node.Handler(command, message, Array.Empty<string>())).Content);
+            var response = Assert.IsType<MessageResponse>(node.Handler(command, message, Array.Empty<string>()));
+            Assert.Equal("First", response.Content);
 
             node = node.Next!;
-
             Assert.NotNull(node);
-            Assert.Equal("Arg: arg", (await node.Handler(command, message, new[] { "arg" })).Content);
+
+            response = Assert.IsType<MessageResponse>(node.Handler(command, message, new[] { "arg" }));
+            Assert.Equal("Arg: arg", response.Content);
 
             node = node.Next!;
-
             Assert.NotNull(node);
-            Assert.Equal("fallback", (await node.Handler(command, message, Array.Empty<string>())).Content);
+
+            response = await Assert.IsType<Task<MessageResponse>>(node.Handler(command, message, Array.Empty<string>()));
+            Assert.Equal("fallback", response.Content);
 
             Assert.Null(node.Next);
         }
 
         [Fact]
-        public async Task ShouldCallHandlerWithMatchedArgumentCount()
+        public void ShouldCallHandlerWithMatchedArgumentCount()
         {
             const string ExceptionMessage = "The argument count doesn't match";
 
@@ -202,12 +206,12 @@ namespace MatatakiBot.Tests
 
             var node = dispatcher.RegisteredCommands["example"];
 
-            Assert.Equal(ExceptionMessage, (await Assert.ThrowsAsync<ArgumentException>(() => node.Handler(command, message, new[] { "arg" }))).Message);
+            Assert.Equal(ExceptionMessage, Assert.Throws<ArgumentException>(() => node.Handler(command, message, new[] { "arg" })).Message);
 
             node = node.Next!;
 
-            Assert.Equal(ExceptionMessage, (await Assert.ThrowsAsync<ArgumentException>(() => node.Handler(command, message, Array.Empty<string>()))).Message);
-            Assert.Equal(ExceptionMessage, (await Assert.ThrowsAsync<ArgumentException>(() => node.Handler(command, message, new[] { "arg", "arg2" }))).Message);
+            Assert.Equal(ExceptionMessage, Assert.Throws<ArgumentException>(() => node.Handler(command, message, Array.Empty<string>())).Message);
+            Assert.Equal(ExceptionMessage, Assert.Throws<ArgumentException>(() => node.Handler(command, message, new[] { "arg", "arg2" })).Message);
         }
 
         class ExampleCommand : CommandBase
@@ -215,7 +219,7 @@ namespace MatatakiBot.Tests
             [CommandHandler("1")]
             public MessageResponse HandlerA(Message message) => "First";
             [CommandHandler]
-            public MessageResponse HandlerC() => "fallback";
+            public Task<MessageResponse> HandlerC() => Task.FromResult<MessageResponse>("fallback");
             [CommandHandler("2")]
             public MessageResponse HandlerB(Message message, string arg) => "Arg: " + arg;
         }
@@ -254,7 +258,7 @@ namespace MatatakiBot.Tests
         }
 
         [Fact]
-        public void MessageFallback()
+        public async Task MessageFallback()
         {
             var container = new Container();
             var dispatcher = new MessageDispatcher(container) { Username = "example_bot" };
@@ -262,22 +266,22 @@ namespace MatatakiBot.Tests
             container.Register<CommandBase, DispatchingExample>(serviceKey: "example");
             dispatcher.Register("example", typeof(DispatchingExample));
 
-            Assert.Equal(MessageResponse.FallbackResponseTask, dispatcher.HandleMessageAsync(new Message()
+            Assert.Equal(MessageResponse.FallbackResponse, await dispatcher.HandleMessageAsync(new Message()
             {
                 Text = "fallback",
-            }, null!));
+            }, null!).SingleAsync());
 
-            Assert.Equal(MessageResponse.FallbackResponseTask, dispatcher.HandleMessageAsync(new Message()
+            Assert.Equal(MessageResponse.FallbackResponse, await dispatcher.HandleMessageAsync(new Message()
             {
                 Text = "/fallback",
                 Entities = new[] { new MessageEntity() { Type = MessageEntityType.BotCommand, Length = 9 } },
-            }, null!));
+            }, null!).SingleAsync());
 
-            Assert.Equal(MessageResponse.FallbackResponseTask, dispatcher.HandleMessageAsync(new Message()
+            Assert.Equal(MessageResponse.FallbackResponse, await dispatcher.HandleMessageAsync(new Message()
             {
                 Text = "/fallback@other_bot",
                 Entities = new[] { new MessageEntity() { Type = MessageEntityType.BotCommand, Length = 19 } },
-            }, null!));
+            }, null!).SingleAsync());
         }
 
         [Fact]
@@ -289,15 +293,36 @@ namespace MatatakiBot.Tests
             container.Register<CommandBase, DispatchingExample>(serviceKey: "example");
             dispatcher.Register("example", typeof(DispatchingExample));
 
-            Assert.Equal("Number: 1234", (await dispatcher.HandleMessageAsync(CreateExampleCommandMessage("/example 1234"), null!)).Content);
-            Assert.Equal("Letters: abcd", (await dispatcher.HandleMessageAsync(CreateExampleCommandMessage("/example abcd"), null!)).Content);
-            Assert.Equal("No argument", (await dispatcher.HandleMessageAsync(CreateExampleCommandMessage("/example"), null!)).Content);
-            Assert.Equal("Fallback", (await dispatcher.HandleMessageAsync(CreateExampleCommandMessage("/example ???"), null!)).Content);
+            Assert.Equal("Number: 1234", (await dispatcher.HandleMessageAsync(CreateExampleCommandMessage("/example 1234"), null!).SingleAsync()).Content);
+            Assert.Equal("Letters: abcd", (await dispatcher.HandleMessageAsync(CreateExampleCommandMessage("/example abcd"), null!).SingleAsync()).Content);
+            Assert.Equal("No argument", (await dispatcher.HandleMessageAsync(CreateExampleCommandMessage("/example"), null!).SingleAsync()).Content);
+            Assert.Equal("Fallback", (await dispatcher.HandleMessageAsync(CreateExampleCommandMessage("/example ???"), null!).SingleAsync()).Content);
 
             static Message CreateExampleCommandMessage(string text) => new Message()
             {
                 Text = text,
                 Entities = new[] { new MessageEntity() { Type = MessageEntityType.BotCommand, Length = 8 } },
+            };
+        }
+
+        [Fact]
+        public async Task MessageDispatchingWithUsername()
+        {
+            var container = new Container();
+            var dispatcher = new MessageDispatcher(container) { Username = "example_bot" };
+
+            container.Register<CommandBase, DispatchingExample>(serviceKey: "example");
+            dispatcher.Register("example", typeof(DispatchingExample));
+
+            Assert.Equal("Number: 1234", (await dispatcher.HandleMessageAsync(CreateExampleCommandMessage("/example@example_bot 1234"), null!).SingleAsync()).Content);
+            Assert.Equal("Letters: abcd", (await dispatcher.HandleMessageAsync(CreateExampleCommandMessage("/example@example_bot abcd"), null!).SingleAsync()).Content);
+            Assert.Equal("No argument", (await dispatcher.HandleMessageAsync(CreateExampleCommandMessage("/example@example_bot"), null!).SingleAsync()).Content);
+            Assert.Equal("Fallback", (await dispatcher.HandleMessageAsync(CreateExampleCommandMessage("/example@example_bot ???"), null!).SingleAsync()).Content);
+
+            static Message CreateExampleCommandMessage(string text) => new Message()
+            {
+                Text = text,
+                Entities = new[] { new MessageEntity() { Type = MessageEntityType.BotCommand, Length = 20 } },
             };
         }
 
@@ -310,28 +335,7 @@ namespace MatatakiBot.Tests
             [CommandHandler("$")]
             public MessageResponse HandlerNoArgument(Message message) => "No argument";
             [CommandHandler]
-            public MessageResponse Fallback(Message message) => "Fallback";
-        }
-
-        [Fact]
-        public async Task MessageDispatchingWithUsername()
-        {
-            var container = new Container();
-            var dispatcher = new MessageDispatcher(container) { Username = "example_bot" };
-
-            container.Register<CommandBase, DispatchingExample>(serviceKey: "example");
-            dispatcher.Register("example", typeof(DispatchingExample));
-
-            Assert.Equal("Number: 1234", (await dispatcher.HandleMessageAsync(CreateExampleCommandMessage("/example@example_bot 1234"), null!)).Content);
-            Assert.Equal("Letters: abcd", (await dispatcher.HandleMessageAsync(CreateExampleCommandMessage("/example@example_bot abcd"), null!)).Content);
-            Assert.Equal("No argument", (await dispatcher.HandleMessageAsync(CreateExampleCommandMessage("/example@example_bot"), null!)).Content);
-            Assert.Equal("Fallback", (await dispatcher.HandleMessageAsync(CreateExampleCommandMessage("/example@example_bot ???"), null!)).Content);
-
-            static Message CreateExampleCommandMessage(string text) => new Message()
-            {
-                Text = text,
-                Entities = new[] { new MessageEntity() { Type = MessageEntityType.BotCommand, Length = 20 } },
-            };
+            public Task<MessageResponse> Fallback(Message message) => Task.FromResult<MessageResponse>("Fallback");
         }
     }
 }
