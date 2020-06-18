@@ -10,7 +10,7 @@ namespace MatatakiBot.Abstract
 
         public ParseMode ParseMode { get; set; }
 
-        public string? Introduction { get; set; }
+        public object? Introduction { get; set; }
 
         private object _content;
         public object Content
@@ -19,7 +19,7 @@ namespace MatatakiBot.Abstract
             set => _content = value ?? throw new ArgumentException(nameof(value));
         }
 
-        public string? Footer { get; set; }
+        public object? Footer { get; set; }
 
         public MessageResponse(object? content)
         {
@@ -47,7 +47,7 @@ namespace MatatakiBot.Abstract
                     ParseMode.Markdown => "*" + Introduction + "*",
                     ParseMode.MarkdownV2 => "*" + Introduction + "*",
                     ParseMode.Html => "<b>" + Introduction + "</b>",
-                    _ => Introduction,
+                    _ => Introduction.ToString()!,
                 };
                 yield return string.Empty;
             }
@@ -61,7 +61,7 @@ namespace MatatakiBot.Abstract
             if (Footer != null)
             {
                 yield return string.Empty;
-                yield return Footer;
+                yield return Footer.ToString()!;
             }
         }
 
