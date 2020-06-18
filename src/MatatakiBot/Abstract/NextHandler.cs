@@ -1,7 +1,7 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using Telegram.Bot.Types;
 
 namespace MatatakiBot.Abstract
 {
-    public delegate Task<MessageResponse> NextHandler(Message? message = default);
+    public delegate IAsyncEnumerable<MessageResponse> NextHandler(Message? message = default);
 }

@@ -1,10 +1,10 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using Telegram.Bot.Types;
 
 namespace MatatakiBot.Abstract
 {
     public interface IMessageMiddleware
     {
-        Task<MessageResponse> HandleMessageAsync(Message message, NextHandler nextHandler);
+        IAsyncEnumerable<MessageResponse> HandleMessageAsync(Message message, NextHandler nextHandler);
     }
 }

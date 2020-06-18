@@ -50,8 +50,8 @@ namespace MatatakiBot.Core
                 if (!usedRegex.Add(handlerAttribute.ArgumentRegex))
                     throw new InvalidOperationException($"There're duplicated command handler attributes in type '{commandType.Name}'");
 
-                if (method.ReturnType != typeof(MessageResponse) && method.ReturnType != typeof(Task<MessageResponse>))
-                    throw new InvalidOperationException("The return type of handler should be of type 'MessageResponse' or 'Task<MessageResponse>'");
+                if (method.ReturnType != typeof(MessageResponse) && method.ReturnType != typeof(Task<MessageResponse>) && method.ReturnType != typeof(IAsyncEnumerable<MessageResponse>))
+                    throw new InvalidOperationException("The return type of handler should be of type 'MessageResponse', 'Task<MessageResponse>' or 'IAsyncEnumerable<MessageResponse>'");
 
                 var parameters = method.GetParameters();
 
@@ -83,7 +83,7 @@ namespace MatatakiBot.Core
 
             RegisteredCommands[name] = rootNode;
         }
-        private Func<CommandBase, Message, string[], Task<MessageResponse>> CompileHandler(Type commandType, MethodInfo method, ParameterInfo[] parameters)
+        private Func<CommandBase, Message, string[], object> CompileHandler(Type commandType, MethodInfo method, ParameterInfo[] parameters)
         {
             var stringParameterTypeArray = new[] { typeof(string) };
 
@@ -167,22 +167,15 @@ namespace MatatakiBot.Core
                 body = Expression.Condition(checkArgumentCount, throwArgumentException, callHandler);
             }
 
-            if (method.ReturnType == typeof(MessageResponse))
-            {
-                var fromResultMethod = typeof(Task).GetMethod(nameof(Task.FromResult))!.MakeGenericMethod(typeof(MessageResponse));
-
-                body = Expression.Call(fromResultMethod, body);
-            }
-
-            return Expression.Lambda<Func<CommandBase, Message, string[], Task<MessageResponse>>>(body, commandParameter, messageParameter, argumentsParameter).CompileFast();
+            return Expression.Lambda<Func<CommandBase, Message, string[], object>>(body, commandParameter, messageParameter, argumentsParameter).CompileFast();
         }
 
-        public Task<MessageResponse> HandleMessageAsync(Message message, NextHandler nextHandler)
+        public IAsyncEnumerable<MessageResponse> HandleMessageAsync(Message message, NextHandler nextHandler)
         {
             var commandEntity = message.Entities?.SingleOrDefault(r => r.Type == MessageEntityType.BotCommand && r.Offset == 0);
 
             if (commandEntity == null)
-                return MessageResponse.FallbackResponseTask;
+                return new MessageResponseAsyncEnumeratorWrapper();
 
             var commandNameSpan = message.Text.AsSpan(1, commandEntity.Length - 1);
             if (Username != null && commandEntity.Length > Username.Length && commandNameSpan[commandEntity.Length - Username.Length - 2] == '@' && commandNameSpan.EndsWith(Username))
@@ -191,17 +184,29 @@ namespace MatatakiBot.Core
             var commandName = commandNameSpan.ToString();
 
             if (!RegisteredCommands.TryGetValue(commandName, out var node))
-                return MessageResponse.FallbackResponseTask;
+                return new MessageResponseAsyncEnumeratorWrapper();
 
             var command = _container.Resolve<CommandBase>(commandName);
 
+            var result = GetHandlerResult(node, command, message, commandEntity.Length);
+
+            if (result is MessageResponse messageResponse)
+                return new MessageResponseAsyncEnumeratorWrapper(messageResponse);
+
+            if (result is Task<MessageResponse> messageResponseTask)
+                return messageResponseTask.ToAsyncEnumerable();
+
+            return (IAsyncEnumerable<MessageResponse>)result;
+        }
+        private object GetHandlerResult(DispatchNode node, CommandBase command, Message message, int messageArgumentOffset)
+        {
             while (node.ArgumentMatcher != null)
             {
-                var match = node.ArgumentMatcher.Match(message.Text[commandEntity.Length..]);
+                var match = node.ArgumentMatcher.Match(message.Text[messageArgumentOffset..]);
 
                 if (!match.Success)
                 {
-                    node = node.Next;
+                    node = node.Next!;
 
                     Debug.Assert(node != null);
                     continue;
@@ -217,12 +222,12 @@ namespace MatatakiBot.Core
 
         internal class DispatchNode
         {
-            public Func<CommandBase, Message, string[], Task<MessageResponse>> Handler { get; }
+            public Func<CommandBase, Message, string[], object> Handler { get; }
             public Regex? ArgumentMatcher { get; }
 
             public DispatchNode? Next { get; set; }
 
-            public DispatchNode(Func<CommandBase, Message, string[], Task<MessageResponse>> handler, Regex? argumentMatcher)
+            public DispatchNode(Func<CommandBase, Message, string[], object> handler, Regex? argumentMatcher)
             {
                 Handler = handler ?? throw new ArgumentNullException(nameof(handler));
                 ArgumentMatcher = argumentMatcher;
