@@ -1,4 +1,5 @@
-﻿using MatatakiBot.Abstract;
+﻿using DryIoc;
+using MatatakiBot.Abstract;
 using NSubstitute;
 using System;
 using Telegram.Bot;
@@ -23,7 +24,7 @@ namespace MatatakiBot.Tests
         {
             var exception = Assert.Throws<InvalidOperationException>(() =>
             {
-                var bot = new Bot(Substitute.For<ITelegramBotClient>());
+                var bot = new Bot(new Container(), Substitute.For<ITelegramBotClient>());
 
                 bot.RegisterCommand<CommandTypeWithoutAttribute>();
             });
