@@ -4,6 +4,8 @@
     {
         public string? Token { get; set; }
 
+        public string? Network { get; set; }
+
         public ProxySettings? Proxy { get; set; }
 
         public string? LogDirectory { get; set; }

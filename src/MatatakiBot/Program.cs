@@ -72,6 +72,8 @@ namespace MatatakiBot
             }, reuse: Reuse.Singleton, serviceKey: typeof(IMatatakiService));
             container.Register<IMatatakiService, MatatakiService>(Reuse.Singleton, Parameters.Of.Type<HttpClient>(serviceKey: typeof(IMatatakiService)));
 
+            container.Register<IWeb3Service, Web3Service>(Reuse.Singleton);
+
             using var cts = new CancellationTokenSource();
 
             Console.CancelKeyPress += delegate
