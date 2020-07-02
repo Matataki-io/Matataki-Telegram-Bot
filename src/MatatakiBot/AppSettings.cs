@@ -2,6 +2,8 @@
 {
     public class AppSettings
     {
+        public string? LogDirectory { get; set; }
+
         public BackendSettings Backend { get; set; } = default!;
         public MatatakiSettings Matataki { get; set; } = default!;
 
