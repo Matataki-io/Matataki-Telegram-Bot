@@ -2,7 +2,6 @@
 using MatatakiBot.Abstract;
 using MatatakiBot.Core;
 using Serilog;
-using Serilog.Events;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,10 +18,7 @@ namespace MatatakiBot
     public sealed class Bot
     {
         private readonly ITelegramBotClient _client;
-
-        private readonly Container _container = new Container();
-
-        private readonly ILogger _logger;
+        private readonly Container _container;
 
         private readonly ResponseSender _responseSender;
         private readonly MessageDispatcher _messageDispatcher;
@@ -32,28 +28,16 @@ namespace MatatakiBot
 
         private bool _isStarted;
 
-        public Bot(ITelegramBotClient client)
+        public Bot(Container container, ITelegramBotClient client)
         {
+            _container = container;
+
             _client = client ?? throw new ArgumentNullException(nameof(client));
             _container.RegisterInstance(typeof(ITelegramBotClient), _client);
-
-            _logger = new LoggerConfiguration()
-                .WriteTo.Console()
-                .WriteTo.Logger(sub =>
-                    sub.Filter.ByIncludingOnly(e => e.Level == LogEventLevel.Error)
-                    .WriteTo.File("logs\\error-.txt", rollingInterval: RollingInterval.Day))
-                .WriteTo.Logger(sub =>
-                    sub.Filter.ByIncludingOnly(e => e.Level == LogEventLevel.Information)
-                    .WriteTo.File("logs\\info-.txt", rollingInterval: RollingInterval.Day))
-                .CreateLogger();
-            _container.RegisterInstance(_logger);
 
             _responseSender = new ResponseSender(_client);
             _messageDispatcher = new MessageDispatcher(_container);
         }
-
-        public void RegisterService<TService, TImpl>() where TImpl : TService =>
-            _container.Register<TService, TImpl>(Reuse.Singleton);
 
         public void RegisterCommand<T>() where T : CommandBase
         {
@@ -121,7 +105,7 @@ namespace MatatakiBot
             }
             catch (Exception e)
             {
-                _logger.Error(e, "Something went wrong in message handling pipeline");
+                _container.Resolve<ILogger>().Error(e, "Something went wrong in message handling pipeline");
             }
 
             IAsyncEnumerable<MessageResponse> Execute(Message message, int index)
