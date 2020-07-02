@@ -1,4 +1,7 @@
-﻿using System.Net.Http;
+﻿using MatatakiBot.Services.Types;
+using System.Net.Http;
+using System.Net.Http.Json;
+using System.Threading.Tasks;
 
 namespace MatatakiBot.Services.Impls
 {
@@ -11,6 +14,15 @@ namespace MatatakiBot.Services.Impls
         {
             _httpClient = httpClient;
             _backendService = backendService;
+        }
+
+        public async ValueTask<double> GetPrice(string symbol)
+        {
+            var tokenInfo = await _backendService.GetToken(symbol);
+
+            var mainTokenInfo = await _httpClient.GetFromJsonAsync<ApiWrapper<MainTokenInfo>>("/minetoken/" + tokenInfo.Id);
+
+            return mainTokenInfo.Data.Exchange.Price;
         }
     }
 }
