@@ -20,7 +20,7 @@ namespace MatatakiBot.Commands
         {
             var price = await _matatakiService.GetPrice(symbol.ToUpperInvariant());
 
-            return price.ToString().Replace(".", @"\.") + " CNY";
+            return price + " CNY";
         }
 
         [CommandHandler]

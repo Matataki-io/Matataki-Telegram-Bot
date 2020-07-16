@@ -26,7 +26,7 @@ namespace MatatakiBot.Tests
 
             await client.Received(1).SendChatActionAsync(Arg.Is<ChatId>(r => r.Identifier == chat.Id), ChatAction.Typing);
             await client.Received(1).SendTextMessageAsync(Arg.Is<ChatId>(r => r.Identifier == chat.Id), ResponseText,
-                parseMode: ParseMode.MarkdownV2);
+                parseMode: ParseMode.Default);
         }
 
         [Fact]
@@ -38,7 +38,7 @@ namespace MatatakiBot.Tests
             var message = new Message() { Chat = chat };
 
 
-            client.SendTextMessageAsync(Arg.Is<ChatId>(r => r.Identifier == chat.Id), "1", parseMode: ParseMode.MarkdownV2)
+            client.SendTextMessageAsync(Arg.Is<ChatId>(r => r.Identifier == chat.Id), "1", parseMode: ParseMode.Default)
                 .Returns(Task.FromResult(new Message()
                 {
                     Chat = chat,
@@ -56,7 +56,7 @@ namespace MatatakiBot.Tests
 
             await client.Received(1).SendChatActionAsync(Arg.Is<ChatId>(r => r.Identifier == chat.Id), ChatAction.Typing);
             await client.Received(1).SendTextMessageAsync(Arg.Is<ChatId>(r => r.Identifier == chat.Id), "1",
-                parseMode: ParseMode.MarkdownV2);
+                parseMode: ParseMode.Default);
             await client.Received(0).EditMessageTextAsync(Arg.Any<ChatId>(), Arg.Any<int>(), Arg.Any<string>(),
                 parseMode: Arg.Any<ParseMode>());
 
@@ -68,7 +68,7 @@ namespace MatatakiBot.Tests
             await client.Received(0).SendTextMessageAsync(Arg.Any<ChatId>(), Arg.Any<string>(),
                 parseMode: Arg.Any<ParseMode>());
             await client.Received(0).EditMessageTextAsync(Arg.Is<ChatId>(r => r.Identifier == chat.Id), 1, "2",
-                parseMode: ParseMode.MarkdownV2);
+                parseMode: ParseMode.Default);
 
             client.ClearReceivedCalls();
 
@@ -78,7 +78,7 @@ namespace MatatakiBot.Tests
             await client.Received(0).SendTextMessageAsync(Arg.Any<ChatId>(), Arg.Any<string>(),
                 parseMode: Arg.Any<ParseMode>());
             await client.Received(0).EditMessageTextAsync(Arg.Is<ChatId>(r => r.Identifier == chat.Id), 1, "3",
-                parseMode: ParseMode.MarkdownV2);
+                parseMode: ParseMode.Default);
 
             Assert.False(await enumerator.MoveNextAsync());
         }
@@ -99,7 +99,7 @@ namespace MatatakiBot.Tests
 
             await client.Received(1).SendChatActionAsync(Arg.Is<ChatId>(r => r.Identifier == chat.Id), ChatAction.Typing);
             await client.Received(1).SendTextMessageAsync(Arg.Is<ChatId>(r => r.Identifier == chat.Id), ResponseText,
-                replyToMessageId: message.MessageId, parseMode: ParseMode.MarkdownV2);
+                replyToMessageId: message.MessageId, parseMode: ParseMode.Default);
         }
 
         [Theory]
@@ -113,7 +113,7 @@ namespace MatatakiBot.Tests
             var message = new Message() { MessageId = 1, Chat = chat };
 
 
-            client.SendTextMessageAsync(Arg.Is<ChatId>(r => r.Identifier == chat.Id), "1", replyToMessageId: message.MessageId, parseMode: ParseMode.MarkdownV2)
+            client.SendTextMessageAsync(Arg.Is<ChatId>(r => r.Identifier == chat.Id), "1", replyToMessageId: message.MessageId, parseMode: ParseMode.Default)
                 .Returns(Task.FromResult(new Message()
                 {
                     Chat = chat,
@@ -132,7 +132,7 @@ namespace MatatakiBot.Tests
 
             await client.Received(1).SendChatActionAsync(Arg.Is<ChatId>(r => r.Identifier == chat.Id), ChatAction.Typing);
             await client.Received(1).SendTextMessageAsync(Arg.Is<ChatId>(r => r.Identifier == chat.Id), "1",
-                replyToMessageId: message.MessageId, parseMode: ParseMode.MarkdownV2);
+                replyToMessageId: message.MessageId, parseMode: ParseMode.Default);
             await client.Received(0).EditMessageTextAsync(Arg.Any<ChatId>(), Arg.Any<int>(), Arg.Any<string>(),
                 parseMode: Arg.Any<ParseMode>());
 
@@ -142,7 +142,7 @@ namespace MatatakiBot.Tests
 
             await client.Received(1).SendChatActionAsync(Arg.Is<ChatId>(r => r.Identifier == chat.Id), ChatAction.Typing);
             await client.Received(0).SendTextMessageAsync(Arg.Any<ChatId>(), Arg.Any<string>(),
-                replyToMessageId: Arg.Any<int>(), parseMode: ParseMode.MarkdownV2);
+                replyToMessageId: Arg.Any<int>(), parseMode: ParseMode.Default);
             await client.Received(0).EditMessageTextAsync(Arg.Is<ChatId>(r => r.Identifier == chat.Id), 1, "2",
                 parseMode: Arg.Any<ParseMode>());
 
@@ -152,7 +152,7 @@ namespace MatatakiBot.Tests
 
             await client.Received(1).SendChatActionAsync(Arg.Is<ChatId>(r => r.Identifier == chat.Id), ChatAction.Typing);
             await client.Received(0).SendTextMessageAsync(Arg.Any<ChatId>(), Arg.Any<string>(),
-                replyToMessageId: Arg.Any<int>(), parseMode: ParseMode.MarkdownV2);
+                replyToMessageId: Arg.Any<int>(), parseMode: ParseMode.Default);
             await client.Received(0).EditMessageTextAsync(Arg.Is<ChatId>(r => r.Identifier == chat.Id), 1, "3",
                 parseMode: Arg.Any<ParseMode>());
 

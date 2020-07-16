@@ -51,7 +51,7 @@ namespace MatatakiBot.Tests
 
             var command = new PriceCommand(matatakiService);
 
-            Assert.Equal(@"1\.2345 CNY", (await command.Handler(new Message(), "SYMBOL")).Content);
+            Assert.Equal("1.2345 CNY", (await command.Handler(new Message(), "SYMBOL")).Content);
         }
     }
 }
