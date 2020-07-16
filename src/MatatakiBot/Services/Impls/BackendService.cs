@@ -1,4 +1,4 @@
-using MatatakiBot.Types;
+﻿using MatatakiBot.Types;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
@@ -12,6 +12,13 @@ namespace MatatakiBot.Services.Impls
         public BackendService(HttpClient httpClient)
         {
             _httpClient = httpClient;
+        }
+
+        public async ValueTask<UserInfo> GetUser(int id)
+        {
+            var wrapper = await _httpClient.GetFromJsonAsync<ApiWrapper<UserInfo>>("/user/" + id);
+
+            return wrapper.Data;
         }
 
         public async ValueTask<TokenInfo> GetToken(string symbol)
