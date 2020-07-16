@@ -7,7 +7,7 @@ namespace MatatakiBot.Services.Impls
 {
     class MinetokenService : IMinetokenService
     {
-        private IContractQueryHandler<BalanceOfFunction> _balanceHandler;
+        private readonly IContractQueryHandler<BalanceOfFunction> _balanceHandler;
 
         public MinetokenService(IWeb3 web3)
         {
