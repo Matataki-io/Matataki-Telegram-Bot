@@ -9,6 +9,7 @@ using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using Telegram.Bot;
+using Telegram.Bot.Args;
 using Telegram.Bot.Extensions.Polling;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
@@ -26,6 +27,8 @@ namespace MatatakiBot
         private readonly List<Type> _middlewareTypes = new List<Type>();
         private readonly List<IMessageMiddleware> _middlewares = new List<IMessageMiddleware>();
 
+        private readonly CallbackQueryEventSource _callbackQueryEventSource;
+
         private bool _isStarted;
 
         public Bot(Container container, ITelegramBotClient client)
@@ -37,6 +40,9 @@ namespace MatatakiBot
 
             _responseSender = new ResponseSender(_client);
             _messageDispatcher = new MessageDispatcher(_container);
+
+            _callbackQueryEventSource = new CallbackQueryEventSource();
+            _container.RegisterInstance<ICallbackQueryEventSource>(_callbackQueryEventSource);
         }
 
         public void RegisterCommand<T>() where T : CommandBase
@@ -84,13 +90,14 @@ namespace MatatakiBot
 
             cancellationToken.Register(() => _isStarted = false);
 
-            var updater = new BlockingUpdateReceiver(_client, new[] { UpdateType.Message }, cancellationToken: cancellationToken);
+            var updater = new BlockingUpdateReceiver(_client, new[] { UpdateType.Message, UpdateType.CallbackQuery }, cancellationToken: cancellationToken);
 
             await foreach (var update in updater.YieldUpdatesAsync())
             {
                 _ = update.Type switch
                 {
                     UpdateType.Message => HandleMessage(update.Message),
+                    UpdateType.CallbackQuery => HandleCallbackQuery(update.CallbackQuery),
 
                     _ => throw new InvalidOperationException("Unexpected update type"),
                 };
@@ -134,6 +141,19 @@ namespace MatatakiBot
                     return Task.FromException<MessageResponse>(e).ToAsyncEnumerable();
                 }
             }
+        }
+        internal Task HandleCallbackQuery(CallbackQuery callbackQuery)
+        {
+            _callbackQueryEventSource.Raise(callbackQuery);
+
+            return Task.CompletedTask;
+        }
+
+        class CallbackQueryEventSource : ICallbackQueryEventSource
+        {
+            public event Action<CallbackQuery>? Received;
+
+            public void Raise(CallbackQuery callbackQuery) => Received?.Invoke(callbackQuery);
         }
     }
 }
