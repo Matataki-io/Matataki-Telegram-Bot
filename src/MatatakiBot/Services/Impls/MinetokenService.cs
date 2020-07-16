@@ -14,7 +14,7 @@ namespace MatatakiBot.Services.Impls
             _balanceHandler = web3.Eth.GetContractQueryHandler<BalanceOfFunction>();
         }
 
-        public async ValueTask<decimal> GetBalance(string contractAddress, string walletAddress)
+        public async ValueTask<decimal> GetBalanceAsync(string contractAddress, string walletAddress)
         {
             var functionMessage = new BalanceOfFunction() { Owner = walletAddress };
 

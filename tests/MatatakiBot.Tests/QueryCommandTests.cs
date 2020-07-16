@@ -16,19 +16,19 @@ namespace MatatakiBot.Tests
             var backendService = Substitute.For<IBackendService>();
             var minetokenService = Substitute.For<IMinetokenService>();
 
-            backendService.GetUser(1).Returns(new UserInfo()
+            backendService.GetUserAsync(1).Returns(new UserInfo()
             {
                 Id = 1,
                 Name = "User",
                 WalletAddress = "0x1919",
             });
-            backendService.GetToken("INM").Returns(new TokenInfo()
+            backendService.GetTokenAsync("INM").Returns(new TokenInfo()
             {
                 Id = 1919,
                 Name = "银票",
                 ContractAddress = "0x114514",
             });
-            minetokenService.GetBalance("0x114514", "0x1919").Returns(11.4514m);
+            minetokenService.GetBalanceAsync("0x114514", "0x1919").Returns(11.4514m);
 
             var command = new QueryCommand(backendService, minetokenService);
 

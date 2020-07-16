@@ -16,9 +16,9 @@ namespace MatatakiBot.Services.Impls
             _backendService = backendService;
         }
 
-        public async ValueTask<double> GetPrice(string symbol)
+        public async ValueTask<double> GetPriceAsync(string symbol)
         {
-            var tokenInfo = await _backendService.GetToken(symbol);
+            var tokenInfo = await _backendService.GetTokenAsync(symbol);
 
             var mainTokenInfo = await _httpClient.GetFromJsonAsync<ApiWrapper<MainTokenInfo>>("/minetoken/" + tokenInfo.Id);
 

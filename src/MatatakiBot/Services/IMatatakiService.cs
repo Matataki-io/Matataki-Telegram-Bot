@@ -4,6 +4,6 @@ namespace MatatakiBot.Services
 {
     public interface IMatatakiService
     {
-        ValueTask<double> GetPrice(string symbol);
+        ValueTask<double> GetPriceAsync(string symbol);
     }
 }

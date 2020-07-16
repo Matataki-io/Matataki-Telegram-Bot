@@ -18,7 +18,7 @@ namespace MatatakiBot.Commands
         [CommandHandler(@"(\w+)")]
         public async Task<MessageResponse> Handler(Message message, string symbol)
         {
-            var price = await _matatakiService.GetPrice(symbol.ToUpperInvariant());
+            var price = await _matatakiService.GetPriceAsync(symbol.ToUpperInvariant());
 
             return price + " CNY";
         }

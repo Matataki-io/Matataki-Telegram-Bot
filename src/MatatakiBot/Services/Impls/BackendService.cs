@@ -14,14 +14,14 @@ namespace MatatakiBot.Services.Impls
             _httpClient = httpClient;
         }
 
-        public async ValueTask<UserInfo> GetUser(int id)
+        public async ValueTask<UserInfo> GetUserAsync(int id)
         {
             var wrapper = await _httpClient.GetFromJsonAsync<ApiWrapper<UserInfo>>("/user/" + id);
 
             return wrapper.Data;
         }
 
-        public async ValueTask<TokenInfo> GetToken(string symbol)
+        public async ValueTask<TokenInfo> GetTokenAsync(string symbol)
         {
             var wrapper = await _httpClient.GetFromJsonAsync<ApiWrapper<TokenInfo>>("/mapping/symbolToToken/" + symbol);
 

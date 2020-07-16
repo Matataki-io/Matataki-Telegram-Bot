@@ -22,10 +22,10 @@ namespace MatatakiBot.Commands
         {
             symbol = symbol.ToUpperInvariant();
 
-            var user = await _backendService.GetUser(userId);
-            var token = await _backendService.GetToken(symbol);
+            var user = await _backendService.GetUserAsync(userId);
+            var token = await _backendService.GetTokenAsync(symbol);
 
-            var balance = await _minetokenService.GetBalance(token.ContractAddress, user.WalletAddress);
+            var balance = await _minetokenService.GetBalanceAsync(token.ContractAddress, user.WalletAddress);
 
             return $"{balance} {symbol}";
         }

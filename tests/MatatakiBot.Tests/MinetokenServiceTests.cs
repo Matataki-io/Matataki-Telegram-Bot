@@ -21,7 +21,7 @@ namespace MatatakiBot.Tests
 
             var service = new MinetokenService(web3);
 
-            Assert.Equal(114.514m, await service.GetBalance("0x1", "0x2"));
+            Assert.Equal(114.514m, await service.GetBalanceAsync("0x1", "0x2"));
         }
     }
 }
