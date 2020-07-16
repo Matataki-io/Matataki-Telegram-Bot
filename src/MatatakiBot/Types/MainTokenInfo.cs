@@ -1,4 +1,4 @@
-﻿namespace MatatakiBot.Services.Types
+﻿namespace MatatakiBot.Types
 {
     class MainTokenInfo
     {

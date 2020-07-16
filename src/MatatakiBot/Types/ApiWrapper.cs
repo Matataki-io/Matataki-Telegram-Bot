@@ -1,4 +1,4 @@
-﻿namespace MatatakiBot.Services.Impls
+﻿namespace MatatakiBot.Types
 {
     class ApiWrapper<T>
     {

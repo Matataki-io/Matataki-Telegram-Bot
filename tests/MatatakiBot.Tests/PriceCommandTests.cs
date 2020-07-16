@@ -1,6 +1,6 @@
 ﻿using MatatakiBot.Commands;
 using MatatakiBot.Services.Impls;
-using MatatakiBot.Services.Types;
+using MatatakiBot.Types;
 using RichardSzalay.MockHttp;
 using System;
 using System.Net.Mime;

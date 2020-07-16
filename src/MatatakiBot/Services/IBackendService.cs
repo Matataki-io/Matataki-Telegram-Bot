@@ -1,4 +1,4 @@
-﻿using MatatakiBot.Services.Types;
+using MatatakiBot.Types;
 using System.Threading.Tasks;
 
 namespace MatatakiBot.Services
