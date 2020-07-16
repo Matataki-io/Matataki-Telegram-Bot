@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
+using Telegram.Bot.Types.ReplyMarkups;
 
 namespace MatatakiBot.Core
 {
@@ -27,17 +28,26 @@ namespace MatatakiBot.Core
                 {
                     respondedMessage = await _client.SendTextMessageAsync(message.Chat, response.ToString(),
                         parseMode: response.ParseMode,
-                        replyToMessageId: message.Chat.Type != ChatType.Private ? message.MessageId : 0);
+                        disableWebPagePreview: true,
+                        replyToMessageId: message.Chat.Type != ChatType.Private ? message.MessageId : 0,
+                        replyMarkup: GetReplyMarkup(response));
 
                     yield return null!;
                     continue;
                 }
 
                 await _client.EditMessageTextAsync(message.Chat, respondedMessage.MessageId, response.ToString(),
-                    parseMode: response.ParseMode);
+                    parseMode: response.ParseMode,
+                    disableWebPagePreview: true,
+                    replyMarkup: GetInlineKeyboardMarkup(response));
 
                 yield return null!;
             }
+        }
+
+        private IReplyMarkup? GetReplyMarkup(MessageResponse response)
+        {
+            return null;
         }
     }
 }
