@@ -4,6 +4,6 @@ namespace MatatakiBot.Services
 {
     public interface IMinetokenService
     {
-        ValueTask<double> GetBalance(string contractAddress, string walletAddress);
+        ValueTask<decimal> GetBalance(string contractAddress, string walletAddress);
     }
 }
