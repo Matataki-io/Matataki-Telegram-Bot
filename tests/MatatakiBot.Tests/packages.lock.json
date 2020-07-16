@@ -90,8 +90,8 @@
       },
       "DryIoc.dll": {
         "type": "Transitive",
-        "resolved": "4.2.2",
-        "contentHash": "91v6yTYTQmj8R0J4xIhmLvDKiOx+2OIwku/1S9dhyUdOrQ6r/xUoQX2W40Z8LcMdG1QiXPiHKMOwMfW1zP4uRg==",
+        "resolved": "4.2.4",
+        "contentHash": "cf2Aig3W47Pz6OsqfL0jyvakZ7J1+PuR57symCIAYBt1YlH5ciSZduV6BYRxcNLBodFhrV6ks0EDBGe9NKxL3w==",
         "dependencies": {
           "System.Reflection.Emit.Lightweight": "4.3.0"
         }
@@ -126,80 +126,80 @@
       },
       "Microsoft.Extensions.Configuration": {
         "type": "Transitive",
-        "resolved": "3.1.5",
-        "contentHash": "LZfdAP8flK4hkaniUv6TlstDX9FXLmJMX1A4mpLghAsZxTaJIgf+nzBNiPRdy/B5Vrs74gRONX3JrIUJQrebmA==",
+        "resolved": "3.1.6",
+        "contentHash": "gphCAywKC+ye1XdL+8Nv2Pd5b1Fn2yx7DekB4GQPCKaPyK94T9Tb+Sfk/iNdaDKtDl4vwidMI0w2AnoXtvofsw==",
         "dependencies": {
-          "Microsoft.Extensions.Configuration.Abstractions": "3.1.5"
+          "Microsoft.Extensions.Configuration.Abstractions": "3.1.6"
         }
       },
       "Microsoft.Extensions.Configuration.Abstractions": {
         "type": "Transitive",
-        "resolved": "3.1.5",
-        "contentHash": "VBcAk6s9izZr04WCzNqOh1Sxz2RbVSh0G79MfpHSDv16cUJtSEYEHody9ZnF71LBEktzdu6cvDFBOFMh43q0iA==",
+        "resolved": "3.1.6",
+        "contentHash": "Z7QAA7XFvYuGZCKsfzetdIq0Vj1ngiIzCBBqerlQMhewx1ZFLXHuvKx9xAIWeZqhuQv69VmFs3vO0Af9FDAa9Q==",
         "dependencies": {
-          "Microsoft.Extensions.Primitives": "3.1.5"
+          "Microsoft.Extensions.Primitives": "3.1.6"
         }
       },
       "Microsoft.Extensions.Configuration.Binder": {
         "type": "Transitive",
-        "resolved": "3.1.5",
-        "contentHash": "ZR/zjBxkvdnnWhRoBHDT95uz1ZgJFhv1QazmKCIcDqy/RXqi+6dJ/PfxDhEnzPvk9HbkcGfFsPEu1vSIyxDqBQ==",
+        "resolved": "3.1.6",
+        "contentHash": "ZEEuo0TEQE+a/+l4EB/KdsjVt9bIee37c74C7Q+lLiP6WiPuBytP4EmxPYwrTB/oQX8sm9W3KvVGE5WW6oaNPg==",
         "dependencies": {
-          "Microsoft.Extensions.Configuration": "3.1.5"
+          "Microsoft.Extensions.Configuration": "3.1.6"
         }
       },
       "Microsoft.Extensions.Configuration.EnvironmentVariables": {
         "type": "Transitive",
-        "resolved": "3.1.5",
-        "contentHash": "oIbBf9zATSJaZvrmsbrMkeenJc4+aQ0wnvTcOi/E9rDhw3LsjuT33+qiqchpeji7S7r4dfv2yFa29ZFdMJgEAQ==",
+        "resolved": "3.1.6",
+        "contentHash": "FQqYNZ+my/gWjazYt9gnI4PmhqroO+8qkcR0pxL4sGIjbNNzYAydxPjjsInqUhaaflIrRo0sYd8s3Wbc1sGpcQ==",
         "dependencies": {
-          "Microsoft.Extensions.Configuration": "3.1.5"
+          "Microsoft.Extensions.Configuration": "3.1.6"
         }
       },
       "Microsoft.Extensions.Configuration.FileExtensions": {
         "type": "Transitive",
-        "resolved": "3.1.5",
-        "contentHash": "zDXWDDaHMKX2ArwhrPprKgZfpCDuaqrcaGX5IG9EybQ6IGYZ7aMJftLan/bfxteI5bnga912y5nIYrTuXaxpug==",
+        "resolved": "3.1.6",
+        "contentHash": "XPxBt0rtj66Z5rcVzykgTw+PCXPCWXpOCookSvJXBG+v55zYa//nLayLbrDpGMEJH/nyOTdtRh6zlkmGeLk/7w==",
         "dependencies": {
-          "Microsoft.Extensions.Configuration": "3.1.5",
-          "Microsoft.Extensions.FileProviders.Physical": "3.1.5"
+          "Microsoft.Extensions.Configuration": "3.1.6",
+          "Microsoft.Extensions.FileProviders.Physical": "3.1.6"
         }
       },
       "Microsoft.Extensions.Configuration.Json": {
         "type": "Transitive",
-        "resolved": "3.1.5",
-        "contentHash": "Yk7+e+13JKN9rvoUrWCil3Jdbrbx5owGhl5z2u5kgpEIuAn+eqWq624/wvou0/zzPxC8QyID/cSi1oLf9ngNhQ==",
+        "resolved": "3.1.6",
+        "contentHash": "lvAoaNuiHDNo8dicd15JXle5pgp/N0RTTa7ozJD+s0NQONFAjS25g8kjjFe3XZaM8XiZyYVYCFaQE8Q+M20IXg==",
         "dependencies": {
-          "Microsoft.Extensions.Configuration": "3.1.5",
-          "Microsoft.Extensions.Configuration.FileExtensions": "3.1.5"
+          "Microsoft.Extensions.Configuration": "3.1.6",
+          "Microsoft.Extensions.Configuration.FileExtensions": "3.1.6"
         }
       },
       "Microsoft.Extensions.FileProviders.Abstractions": {
         "type": "Transitive",
-        "resolved": "3.1.5",
-        "contentHash": "LrEQ97jhSWw84Y1m+CJfvh9qTUUswt27au54QYn2x5PCMPPgR+yAv/4VTJKMGSSI9T4scSLBXZ/fVhT4fPTCtA==",
+        "resolved": "3.1.6",
+        "contentHash": "HjEWm0GNHeN8ykVGn2DCebBEdZYL9CVypVAysaDHfjwiRT1d8nRhYGH8ua0mheE1TIep5+86O2Ft0UcbuWyghg==",
         "dependencies": {
-          "Microsoft.Extensions.Primitives": "3.1.5"
+          "Microsoft.Extensions.Primitives": "3.1.6"
         }
       },
       "Microsoft.Extensions.FileProviders.Physical": {
         "type": "Transitive",
-        "resolved": "3.1.5",
-        "contentHash": "JemaaSSQosZ59flEfNzqvQRHDt1u4aEwV/pR4eFQEXpaX7lHI13gSbQbQ7TMGDdmY9F2t2+6RPp44Mmf9O1DsQ==",
+        "resolved": "3.1.6",
+        "contentHash": "rwngFMfwi2TBkAy/2SSIwR6ajl3cIEOkOlPlmG1j5cGGvJfNA1ujQNOr8rotI1z6keFi7zXRLLhm9gmaoMVDOA==",
         "dependencies": {
-          "Microsoft.Extensions.FileProviders.Abstractions": "3.1.5",
-          "Microsoft.Extensions.FileSystemGlobbing": "3.1.5"
+          "Microsoft.Extensions.FileProviders.Abstractions": "3.1.6",
+          "Microsoft.Extensions.FileSystemGlobbing": "3.1.6"
         }
       },
       "Microsoft.Extensions.FileSystemGlobbing": {
         "type": "Transitive",
-        "resolved": "3.1.5",
-        "contentHash": "ObdbZ/L3X89KOHI0K/zlwufnlHESYSp2L/Z1XgYp3Odekmzevl06iffrtIBP9Qgw2RxBVAyTEVNrIouCuik6yg=="
+        "resolved": "3.1.6",
+        "contentHash": "QMyvTl195jfGHEH7edeNsQWEVkwex3CoYs/hfzwy1rXIVTfnGLp6SIhL7JfokKa1xM4UamPEggmxFTH/VN4Jrg=="
       },
       "Microsoft.Extensions.Primitives": {
         "type": "Transitive",
-        "resolved": "3.1.5",
-        "contentHash": "6bLdjSAQix82oP2tsuX9MM2yjgUFFOkSZYyRSKoUULilw2cg0Y0H+dnugwYlfj8Jd7yjd/+QSdNBqEyYhTYv0w=="
+        "resolved": "3.1.6",
+        "contentHash": "X+h3tO383iMbtFxYp6Al4pgBzbfQKJY8/gd4U7+sZy90XeSfnw5SwHyCiRrAePG6kee4zCGsvQHPCqaTZ876hw=="
       },
       "Microsoft.NETCore.Platforms": {
         "type": "Transitive",
@@ -250,60 +250,60 @@
       },
       "Nethereum.ABI": {
         "type": "Transitive",
-        "resolved": "3.7.1",
-        "contentHash": "vh4CMMCJrhp4VAMr/1RBh4kol2AsA1w19rSVE76yxtK2D/EW+DY24Ueq8kIk+8Cw+ah4b/UIOA/FqVFX+WPu1w==",
+        "resolved": "3.8.0",
+        "contentHash": "g2L/+of97BpE97wtuZjb0pU+diwge0/aYZsou5dXDox3Hq9QBRood4LOYOwpyJrHphGTAt1MwjGKm7A9LtGwaQ==",
         "dependencies": {
-          "Nethereum.Hex": "3.7.1",
-          "Nethereum.Util": "3.7.1",
+          "Nethereum.Hex": "3.8.0",
+          "Nethereum.Util": "3.8.0",
           "Newtonsoft.Json": "[10.0.3, 13.0.0)",
           "Portable.BouncyCastle": "1.8.2"
         }
       },
       "Nethereum.Accounts": {
         "type": "Transitive",
-        "resolved": "3.7.1",
-        "contentHash": "bLHCXwsUxbJ7H3YnvgdnerYKLxjuAtXrAJ2Id7IDSbDtIeTXYfqrki3olFQhMzjAnd/o7ESnRlxiH1G9QyFzCg==",
+        "resolved": "3.8.0",
+        "contentHash": "WmkhKdNu+Uggxv3Z6GHnDC2CQs9T7UpOxqPLa5dabnqXFoYMbqzOnIhUwNvdoAmeRxaOw80FazTzkKtoJm113A==",
         "dependencies": {
-          "Nethereum.KeyStore": "3.7.1",
-          "Nethereum.RPC": "3.7.1",
-          "Nethereum.Signer": "3.7.1",
-          "Nethereum.Util": "3.7.1",
+          "Nethereum.KeyStore": "3.8.0",
+          "Nethereum.RPC": "3.8.0",
+          "Nethereum.Signer": "3.8.0",
+          "Nethereum.Util": "3.8.0",
           "Newtonsoft.Json": "[10.0.3, 13.0.0)",
           "Portable.BouncyCastle": "1.8.2"
         }
       },
       "Nethereum.BlockchainProcessing": {
         "type": "Transitive",
-        "resolved": "3.7.1",
-        "contentHash": "Wp4hMkHIMWttaabMhYKdX0rtXZugkAnvEyUgbPG8rxZEUWFyVBw11bmb/ZqIGdAbAmNN+ycJ+gCUiMq0dcnyTQ==",
+        "resolved": "3.8.0",
+        "contentHash": "Pq7ZNGrT2XaxkHEPDtE1wN6fm+XalKA3hCg3Co2kMutKgPrtR9MqCWac2YvAUV/IZMB/DloCgbS/tgkiISkDHg==",
         "dependencies": {
-          "Nethereum.Contracts": "3.7.1",
-          "Nethereum.Hex": "3.7.1",
-          "Nethereum.JsonRpc.RpcClient": "3.7.1",
-          "Nethereum.KeyStore": "3.7.1",
-          "Nethereum.RPC": "3.7.1",
-          "Nethereum.Signer": "3.7.1",
-          "Nethereum.Util": "3.7.1",
+          "Nethereum.Contracts": "3.8.0",
+          "Nethereum.Hex": "3.8.0",
+          "Nethereum.JsonRpc.RpcClient": "3.8.0",
+          "Nethereum.KeyStore": "3.8.0",
+          "Nethereum.RPC": "3.8.0",
+          "Nethereum.Signer": "3.8.0",
+          "Nethereum.Util": "3.8.0",
           "Newtonsoft.Json": "[10.0.3, 13.0.0)",
           "Portable.BouncyCastle": "1.8.2"
         }
       },
       "Nethereum.Contracts": {
         "type": "Transitive",
-        "resolved": "3.7.1",
-        "contentHash": "7OIEAh5TjvBL7QYUtnOgxfl8zHqmOCaWEilDA4BV+qitgS+UElAVlO0Z3IS36j+MYSa4G6vXJ1NUq3aA+mLamg==",
+        "resolved": "3.8.0",
+        "contentHash": "bhVgXy19Ou4wjPGeNHqTb5f+x++vIYTYR4CNNL6+2p6OTJhw789qTcvfHSkQJm+h1ji6dBbCfaXUznc+EoGW3w==",
         "dependencies": {
-          "Nethereum.ABI": "3.7.1",
-          "Nethereum.Hex": "3.7.1",
-          "Nethereum.RPC": "3.7.1",
+          "Nethereum.ABI": "3.8.0",
+          "Nethereum.Hex": "3.8.0",
+          "Nethereum.RPC": "3.8.0",
           "Newtonsoft.Json": "[10.0.3, 13.0.0)",
           "Portable.BouncyCastle": "1.8.2"
         }
       },
       "Nethereum.Hex": {
         "type": "Transitive",
-        "resolved": "3.7.1",
-        "contentHash": "kXsntQk2w8WbvhoWTQ5StXAmjV1iMR6MC6sfO6aBeq+u2LqwDgBDVg2tdB6QyxAUYbwWAQ9h5zetm9ctVRHqTQ==",
+        "resolved": "3.8.0",
+        "contentHash": "EFAqgkPe1ir68Ot1W2MP5QiW4w7I/oknf0oa1402b78LkC0lP360tEi7/9XgbiBRIO9YanbO/+I7C/+3VFcRvw==",
         "dependencies": {
           "Newtonsoft.Json": "[10.0.3, 13.0.0)",
           "Portable.BouncyCastle": "1.8.2"
@@ -311,8 +311,8 @@
       },
       "Nethereum.JsonRpc.Client": {
         "type": "Transitive",
-        "resolved": "3.7.1",
-        "contentHash": "r/BN2W9gvRrOj0SR82l38yxG62nSVPOS/j+SYQ8pp2BBCPkMo7Nih9TToZxn0V2PnztzgTG9t4DIm0TqYQzJ4Q==",
+        "resolved": "3.8.0",
+        "contentHash": "KlDlKa3bC3UdCI0NnrA+Ny2mZ8wqaHxSnkpnq19WZpchC0pekDSejbQA2svWj6ohAQeuXi3vOoxQhVDcZuNSyw==",
         "dependencies": {
           "Common.Logging.Core": "3.4.1",
           "Newtonsoft.Json": "[10.0.3, 13.0.0)",
@@ -321,97 +321,97 @@
       },
       "Nethereum.JsonRpc.RpcClient": {
         "type": "Transitive",
-        "resolved": "3.7.1",
-        "contentHash": "N5G3mn9st0EPDiSAcHn8ZqLnVstrNkdYBF2JqhJ0QG8pGQtirlwSIF8NA7hr0kXkmaKI+TM+DkwMIGoMd4K1yg==",
+        "resolved": "3.8.0",
+        "contentHash": "RwNZrJHi1Vz+Nwr49qgnwICXCYsu/Zzqg/d/GKz5u7U5HEBF8iyYQHISzxJv2ydRTqsbTilN9koPtIWVLTSMng==",
         "dependencies": {
-          "Nethereum.JsonRpc.Client": "3.7.1",
+          "Nethereum.JsonRpc.Client": "3.8.0",
           "Newtonsoft.Json": "[10.0.3, 13.0.0)",
           "Portable.BouncyCastle": "1.8.2"
         }
       },
       "Nethereum.KeyStore": {
         "type": "Transitive",
-        "resolved": "3.7.1",
-        "contentHash": "gn3kWpsfArdLmw9Z7ZNABWBQoDkvuvWYcG8lShYv65o+4V4JaNrYWZA4D0sxDTcZR4AwlbwNRERInl+6n/hIrw==",
+        "resolved": "3.8.0",
+        "contentHash": "BR92pwk0gcH+bPIFTXQtBIL80XyvGPbSHZ1zQtNOWfqPFgRDQg7q1Ne4sNA3bSRWpvdMWnUJP/OneRfTM1rOlA==",
         "dependencies": {
-          "Nethereum.Hex": "3.7.1",
+          "Nethereum.Hex": "3.8.0",
           "Newtonsoft.Json": "[10.0.3, 13.0.0)",
           "Portable.BouncyCastle": "1.8.2"
         }
       },
       "Nethereum.Model": {
         "type": "Transitive",
-        "resolved": "3.7.1",
-        "contentHash": "FVO3A+JHemTKPVzhdepbOnyVnUQ24IULFRs38lqPrANr8y5ev0CI/dzogLETBOgzkbr+VTJyJoTRn3X7qTkVvA==",
+        "resolved": "3.8.0",
+        "contentHash": "dLEk8KtMcfYjZXDnlBNWpcpgL+k+z1dy9Vm6b/cjSrT2JM5yZ3ncoSsU5ZI4CKj9Epd+xVj+HaVNyvDfKZ2J6A==",
         "dependencies": {
-          "Nethereum.RLP": "3.7.1",
-          "Nethereum.Util": "3.7.1",
+          "Nethereum.RLP": "3.8.0",
+          "Nethereum.Util": "3.8.0",
           "Newtonsoft.Json": "[10.0.3, 13.0.0)",
           "Portable.BouncyCastle": "1.8.2"
         }
       },
       "Nethereum.RLP": {
         "type": "Transitive",
-        "resolved": "3.7.1",
-        "contentHash": "4LhB74x7iCs53i0g8h8eXdDjlrad5rb0tzyfsrV2HBv3xQrX8HpPFZqNXhGNhZK376o0fVV6uTh7oydPEoeIFw==",
+        "resolved": "3.8.0",
+        "contentHash": "6AOibBV49+GUr/o+tFbPHNgArFGJ7fQPuz023vTUT2Kb22LPYsEqI2zXAazW7Ke2HzB24paS0f0BQeFx4uGIfA==",
         "dependencies": {
-          "Nethereum.Hex": "3.7.1",
+          "Nethereum.Hex": "3.8.0",
           "Newtonsoft.Json": "[10.0.3, 13.0.0)",
           "Portable.BouncyCastle": "1.8.2"
         }
       },
       "Nethereum.RPC": {
         "type": "Transitive",
-        "resolved": "3.7.1",
-        "contentHash": "H3FExprdr4j5NA86VZKBPnEUAWEkQGrBdHpMuwRIFCdH5QhAXJEXxRw3hRzmmixASww1zmCAeuf/1pG8RwpOsA==",
+        "resolved": "3.8.0",
+        "contentHash": "HDwF5Mzd1b8MBV+F4hpjYv/HaeLlPIJLyD/DQC/dEsHfnLFHNZTYM47a+2XeYOCNJzhCKV6NRGZA6YBLMYn8rw==",
         "dependencies": {
-          "Nethereum.Hex": "3.7.1",
-          "Nethereum.JsonRpc.Client": "3.7.1",
-          "Nethereum.Model": "3.7.1",
-          "Nethereum.Util": "3.7.1",
+          "Nethereum.Hex": "3.8.0",
+          "Nethereum.JsonRpc.Client": "3.8.0",
+          "Nethereum.Model": "3.8.0",
+          "Nethereum.Util": "3.8.0",
           "Newtonsoft.Json": "[10.0.3, 13.0.0)",
           "Portable.BouncyCastle": "1.8.2"
         }
       },
       "Nethereum.Signer": {
         "type": "Transitive",
-        "resolved": "3.7.1",
-        "contentHash": "LJEzrDYpKtE50wA3rEIDhXMBT8GVfKaOFx8LV8jJvfqRxc/snV4LfV2eOTKVjYKKdoykH3UZF1VB5lFbvjkyRg==",
+        "resolved": "3.8.0",
+        "contentHash": "9tqoMnrADmJvFQmn82xlqtJN04wNaXA/MKv+Fd6LGFiPXcNPm8IfWjIjsYlMaAowapKzlc5D7lD+oYRMme/oVA==",
         "dependencies": {
-          "Nethereum.Hex": "3.7.1",
-          "Nethereum.Model": "3.7.1",
-          "Nethereum.RLP": "3.7.1",
-          "Nethereum.Util": "3.7.1",
+          "Nethereum.Hex": "3.8.0",
+          "Nethereum.Model": "3.8.0",
+          "Nethereum.RLP": "3.8.0",
+          "Nethereum.Util": "3.8.0",
           "Newtonsoft.Json": "[10.0.3, 13.0.0)",
           "Portable.BouncyCastle": "1.8.2"
         }
       },
       "Nethereum.Util": {
         "type": "Transitive",
-        "resolved": "3.7.1",
-        "contentHash": "CecmYWGfWtB5Wb+rA8jDQASEV6OPAhpVaDYIV0vt4Bm2G51h3DW8G2cDO1NIuDCsyfb8qkIDI8ULFfjj+I1rgw==",
+        "resolved": "3.8.0",
+        "contentHash": "5xsuNYKhIUjbvevkgp77Ir5sGaRQGAHi9Yfw63tdphhJJfbu/bQv7f+vWyUt2fqZVAAVeyBDbx0Wxda8SqO2tw==",
         "dependencies": {
-          "Nethereum.Hex": "3.7.1",
-          "Nethereum.RLP": "3.7.1",
+          "Nethereum.Hex": "3.8.0",
+          "Nethereum.RLP": "3.8.0",
           "Newtonsoft.Json": "[10.0.3, 13.0.0)",
           "Portable.BouncyCastle": "1.8.2"
         }
       },
       "Nethereum.Web3": {
         "type": "Transitive",
-        "resolved": "3.7.1",
-        "contentHash": "tIh2jyqLH5/0sT95jrEgHht9+1RRVqpNei2Fo+tsWpwp5u2n/Oy/IopIGHPk5jWra0KiSDWeYIsHG+YLfTifnQ==",
+        "resolved": "3.8.0",
+        "contentHash": "OIkyb/U4gaC/E7SbNPJdsY3JKG8hPh+FzZZerxQlWdNm3AXMc/9Dgeyn8dppBkdJJZzYl2PR7xlyi5CqT7rdRg==",
         "dependencies": {
-          "Nethereum.ABI": "3.7.1",
-          "Nethereum.Accounts": "3.7.1",
-          "Nethereum.BlockchainProcessing": "3.7.1",
-          "Nethereum.Contracts": "3.7.1",
-          "Nethereum.Hex": "3.7.1",
-          "Nethereum.JsonRpc.RpcClient": "3.7.1",
-          "Nethereum.KeyStore": "3.7.1",
-          "Nethereum.RPC": "3.7.1",
-          "Nethereum.Signer": "3.7.1",
-          "Nethereum.Util": "3.7.1",
+          "Nethereum.ABI": "3.8.0",
+          "Nethereum.Accounts": "3.8.0",
+          "Nethereum.BlockchainProcessing": "3.8.0",
+          "Nethereum.Contracts": "3.8.0",
+          "Nethereum.Hex": "3.8.0",
+          "Nethereum.JsonRpc.RpcClient": "3.8.0",
+          "Nethereum.KeyStore": "3.8.0",
+          "Nethereum.RPC": "3.8.0",
+          "Nethereum.Signer": "3.8.0",
+          "Nethereum.Util": "3.8.0",
           "Newtonsoft.Json": "[10.0.3, 13.0.0)",
           "Portable.BouncyCastle": "1.8.2"
         }
@@ -1582,12 +1582,12 @@
       "matatakibot": {
         "type": "Project",
         "dependencies": {
-          "DryIoc.dll": "4.2.2",
-          "Microsoft.Extensions.Configuration.Binder": "3.1.5",
-          "Microsoft.Extensions.Configuration.EnvironmentVariables": "3.1.5",
-          "Microsoft.Extensions.Configuration.Json": "3.1.5",
+          "DryIoc.dll": "4.2.4",
+          "Microsoft.Extensions.Configuration.Binder": "3.1.6",
+          "Microsoft.Extensions.Configuration.EnvironmentVariables": "3.1.6",
+          "Microsoft.Extensions.Configuration.Json": "3.1.6",
           "NetEscapades.Configuration.Yaml": "2.0.1",
-          "Nethereum.Web3": "3.7.1",
+          "Nethereum.Web3": "3.8.0",
           "Serilog": "2.9.0",
           "Serilog.Sinks.Console": "3.1.1",
           "Serilog.Sinks.File": "4.1.0",
