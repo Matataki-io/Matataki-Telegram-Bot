@@ -21,6 +21,8 @@ namespace MatatakiBot.Abstract
 
         public object? Footer { get; set; }
 
+        public IMessageResponseMarkup? ExtraMarkup { get; set; }
+
         public MessageResponse(object? content)
         {
             _content = content ?? throw new ArgumentNullException(nameof(content));
@@ -61,6 +63,25 @@ namespace MatatakiBot.Abstract
                 yield return string.Empty;
                 yield return Footer.ToString()!;
             }
+        }
+
+        public MessageResponse WithInlineButtons(InlineButton inlineButton)
+        {
+            ExtraMarkup = new InlineButtonsResponseMarkup(inlineButton);
+
+            return this;
+        }
+        public MessageResponse WithInlineButtons(IEnumerable<InlineButton> inlineButtons)
+        {
+            ExtraMarkup = new InlineButtonsResponseMarkup(inlineButtons);
+
+            return this;
+        }
+        public MessageResponse WithInlineButtons(IEnumerable<IEnumerable<InlineButton>> inlineButtons)
+        {
+            ExtraMarkup = new InlineButtonsResponseMarkup(inlineButtons);
+
+            return this;
         }
 
         public override string ToString()

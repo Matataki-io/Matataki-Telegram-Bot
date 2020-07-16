@@ -1,5 +1,7 @@
 ﻿using MatatakiBot.Abstract;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
@@ -30,7 +32,7 @@ namespace MatatakiBot.Core
                         parseMode: response.ParseMode,
                         disableWebPagePreview: true,
                         replyToMessageId: message.Chat.Type != ChatType.Private ? message.MessageId : 0,
-                        replyMarkup: GetReplyMarkup(response));
+                        replyMarkup: GetReplyMarkup(response.ExtraMarkup));
 
                     yield return null!;
                     continue;
@@ -39,14 +41,30 @@ namespace MatatakiBot.Core
                 await _client.EditMessageTextAsync(message.Chat, respondedMessage.MessageId, response.ToString(),
                     parseMode: response.ParseMode,
                     disableWebPagePreview: true,
-                    replyMarkup: GetInlineKeyboardMarkup(response));
+                    replyMarkup: GetInlineKeyboardMarkup(response.ExtraMarkup));
 
                 yield return null!;
             }
         }
 
-        private IReplyMarkup? GetReplyMarkup(MessageResponse response)
+        private IReplyMarkup? GetReplyMarkup(IMessageResponseMarkup? markup)
         {
+            if (markup == null)
+                return null;
+
+            return GetInlineKeyboardMarkup(markup);
+        }
+        private InlineKeyboardMarkup? GetInlineKeyboardMarkup(IMessageResponseMarkup? markup)
+        {
+            if (markup is InlineButtonsResponseMarkup inlineButtonsMarkup)
+                return new InlineKeyboardMarkup(inlineButtonsMarkup.InlineButtons.Select(row => row.Select(button => button switch
+                {
+                    InlineCallbackButton callbackButton => InlineKeyboardButton.WithCallbackData(callbackButton.Text, callbackButton.CallbackData),
+                    InlineUrlButton urlButton => InlineKeyboardButton.WithUrl(urlButton.Text, urlButton.Url),
+
+                    _ => throw new InvalidOperationException(),
+                })));
+
             return null;
         }
     }
