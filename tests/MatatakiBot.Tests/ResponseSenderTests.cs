@@ -39,11 +39,11 @@ namespace MatatakiBot.Tests
 
 
             client.SendTextMessageAsync(Arg.Is<ChatId>(r => r.Identifier == chat.Id), "1", parseMode: ParseMode.Default)
-                .Returns(Task.FromResult(new Message()
+                .Returns(new Message()
                 {
                     Chat = chat,
                     Text = "1",
-                }));
+                });
 
             await using var enumerator = sender.HandleMessageAsync(message, _ => new MessageResponse[]
             {
@@ -114,12 +114,12 @@ namespace MatatakiBot.Tests
 
 
             client.SendTextMessageAsync(Arg.Is<ChatId>(r => r.Identifier == chat.Id), "1", replyToMessageId: message.MessageId, parseMode: ParseMode.Default)
-                .Returns(Task.FromResult(new Message()
+                .Returns(new Message()
                 {
                     Chat = chat,
                     Text = "1",
                     ForwardFromMessageId = 1,
-                }));
+                });
 
             await using var enumerator = sender.HandleMessageAsync(message, _ => new MessageResponse[]
             {
