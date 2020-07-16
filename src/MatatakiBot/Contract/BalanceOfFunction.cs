@@ -7,6 +7,6 @@ namespace MatatakiBot.Contract
     public class BalanceOfFunction : FunctionMessage
     {
         [Parameter("address", "_owner", 1)]
-        public string Owner { get; set; } = default!;
+        public string? Owner { get; set; }
     }
 }

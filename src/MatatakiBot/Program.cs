@@ -2,6 +2,7 @@ using DryIoc;
 using MatatakiBot.Services;
 using MatatakiBot.Services.Impls;
 using Microsoft.Extensions.Configuration;
+using Nethereum.Web3;
 using Serilog;
 using Serilog.Events;
 using System;
