@@ -2,7 +2,7 @@
 
 namespace MatatakiBot.Services
 {
-    public interface IWeb3Service
+    public interface IMinetokenService
     {
         ValueTask<double> GetBalance(string contractAddress, string walletAddress);
     }

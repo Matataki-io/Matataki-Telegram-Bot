@@ -72,7 +72,11 @@ namespace MatatakiBot
             }, reuse: Reuse.Singleton, serviceKey: typeof(IMatatakiService));
             container.Register<IMatatakiService, MatatakiService>(Reuse.Singleton, Parameters.Of.Type<HttpClient>(serviceKey: typeof(IMatatakiService)));
 
-            container.Register<IWeb3Service, Web3Service>(Reuse.Singleton);
+            container.Register<IMinetokenService, MinetokenService>(Reuse.Singleton);
+
+            container.RegisterDelegate<AppSettings, IWeb3>(appSettings =>
+                new Web3(appSettings.Network ?? throw new InvalidOperationException("Missing Network in app settings")),
+                reuse: Reuse.Singleton);
 
             using var cts = new CancellationTokenSource();
 
