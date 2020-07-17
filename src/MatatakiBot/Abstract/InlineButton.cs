@@ -4,42 +4,37 @@ namespace MatatakiBot.Abstract
 {
     public abstract class InlineButton
     {
-        public string Text { get; }
+        public object Text { get; }
 
-        private protected InlineButton(string text)
+        private protected InlineButton(object text)
         {
-            if (string.IsNullOrWhiteSpace(text))
-                throw new ArgumentException(nameof(text));
-
-            Text = text;
+            Text = text ?? throw new ArgumentNullException(nameof(text));
         }
 
-        public static InlineButton WithCallbackData(string text, string callbackData) => new InlineCallbackButton(text, callbackData);
-        public static InlineButton WithUrl(string text, string url) => new InlineUrlButton(text, url);
+        public static InlineButton WithCallbackData(object text) => new InlineCallbackButton(text);
+        public static InlineButton WithUrl(object text, string url) => new InlineUrlButton(text, url);
     }
 
     public class InlineCallbackButton : InlineButton
     {
-        public InlineCallbackButton(string text, string callbackData) : base(text)
-        {
-            if (string.IsNullOrWhiteSpace(callbackData))
-                throw new ArgumentException(nameof(callbackData));
+        internal Guid CallbackData { get; }
 
-            CallbackData = callbackData;
+        public InlineCallbackButton(object text) : base(text)
+        {
+            CallbackData = Guid.NewGuid();
         }
 
-        public string CallbackData { get; }
     }
     public class InlineUrlButton : InlineButton
     {
-        public InlineUrlButton(string text, string url) : base(text)
+        public string Url { get; }
+
+        public InlineUrlButton(object text, string url) : base(text)
         {
             if (string.IsNullOrWhiteSpace(url))
                 throw new ArgumentException(nameof(url));
 
             Url = url;
         }
-
-        public string Url { get; }
     }
 }
