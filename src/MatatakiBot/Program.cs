@@ -35,6 +35,39 @@ namespace MatatakiBot
 
             var bot = new Bot(container, botClient);
 
+            ConfigureServices(container);
+
+            using var cts = new CancellationTokenSource();
+
+            Console.CancelKeyPress += delegate
+            {
+                cts.Cancel();
+            };
+
+            Console.WriteLine("Press Ctrl+C to stop the bot");
+
+            container.Resolve<ILogger>().Information("Bot started");
+
+            try
+            {
+                await bot.StartReceiving(cts.Token);
+            }
+            catch (TaskCanceledException) { }
+        }
+
+        private static AppSettings LoadConfiguration()
+        {
+            var configurationBuilder = new ConfigurationBuilder()
+                .AddEnvironmentVariables()
+                .AddJsonFile("appsettings.json", true)
+                .AddYamlFile("appsettings.yaml", true);
+
+            var configuration = configurationBuilder.Build();
+
+            return configuration.Get<AppSettings>();
+        }
+        private static void ConfigureServices(Container container)
+        {
             container.RegisterDelegate<AppSettings, ILogger>(appSettings =>
             {
                 var logDirectory = Path.GetFullPath(appSettings.LogDirectory ?? "logs");
@@ -78,34 +111,6 @@ namespace MatatakiBot
             container.RegisterDelegate<AppSettings, IWeb3>(appSettings =>
                 new Web3(appSettings.Network ?? throw new InvalidOperationException("Missing Network in app settings")),
                 reuse: Reuse.Singleton);
-
-            using var cts = new CancellationTokenSource();
-
-            Console.CancelKeyPress += delegate
-            {
-                cts.Cancel();
-            };
-
-            Console.WriteLine("Press Ctrl+C to stop the bot");
-
-            container.Resolve<ILogger>().Information("Bot started");
-
-            try
-            {
-                await bot.StartReceiving(cts.Token);
-            }
-            catch (TaskCanceledException) { }
-        }
-        private static AppSettings LoadConfiguration()
-        {
-            var configurationBuilder = new ConfigurationBuilder()
-                .AddEnvironmentVariables()
-                .AddJsonFile("appsettings.json", true)
-                .AddYamlFile("appsettings.yaml", true);
-
-            var configuration = configurationBuilder.Build();
-
-            return configuration.Get<AppSettings>();
         }
     }
 }
