@@ -1,4 +1,5 @@
 using DryIoc;
+using MatatakiBot.Abstract;
 using MatatakiBot.Services;
 using MatatakiBot.Services.Impls;
 using Microsoft.Extensions.Configuration;
@@ -7,9 +8,11 @@ using Serilog;
 using Serilog.Events;
 using System;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using Telegram.Bot;
@@ -36,6 +39,8 @@ namespace MatatakiBot
             var bot = new Bot(container, botClient);
 
             ConfigureServices(container);
+
+            RegisterCommands(bot);
 
             using var cts = new CancellationTokenSource();
 
@@ -111,6 +116,14 @@ namespace MatatakiBot
             container.RegisterDelegate<AppSettings, IWeb3>(appSettings =>
                 new Web3(appSettings.Network ?? throw new InvalidOperationException("Missing Network in app settings")),
                 reuse: Reuse.Singleton);
+        }
+        private static void RegisterCommands(Bot bot)
+        {
+            var assembly = Assembly.GetExecutingAssembly();
+            var types = assembly.GetTypes().Where(type => !type.IsAbstract && type.IsSubclassOf(typeof(CommandBase)));
+
+            foreach (var type in types)
+                bot.RegisterCommand(type);
         }
     }
 }

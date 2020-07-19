@@ -9,7 +9,6 @@ using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using Telegram.Bot;
-using Telegram.Bot.Args;
 using Telegram.Bot.Extensions.Polling;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
@@ -45,17 +44,18 @@ namespace MatatakiBot
             _container.RegisterInstance<ICallbackQueryEventSource>(_callbackQueryEventSource);
         }
 
-        public void RegisterCommand<T>() where T : CommandBase
+        public void RegisterCommand<T>() where T : CommandBase => RegisterCommand(typeof(T));
+        public void RegisterCommand(Type type)
         {
-            var commandAttribute = typeof(T).GetCustomAttribute<CommandAttribute>();
+            var commandAttribute = type.GetCustomAttribute<CommandAttribute>();
             if (commandAttribute == null)
                 throw new InvalidOperationException("Missing CommandAttribute from provided command type");
 
-            _container.Register(typeof(CommandBase), typeof(T),
+            _container.Register(typeof(CommandBase), type,
                 made: PropertiesAndFields.Of.Name(nameof(CommandBase.Client)),
                 serviceKey: commandAttribute.Name);
 
-            _messageDispatcher.Register(commandAttribute.Name, typeof(T));
+            _messageDispatcher.Register(commandAttribute.Name, type);
         }
 
         public void RegisterMessageMiddleware<T>() where T : IMessageMiddleware
