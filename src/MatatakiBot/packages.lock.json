@@ -100,6 +100,24 @@
           "System.Threading.Timer": "4.0.1"
         }
       },
+      "SkiaSharp": {
+        "type": "Direct",
+        "requested": "[2.80.1, )",
+        "resolved": "2.80.1",
+        "contentHash": "CiQwnDzG+1JNGzjAN9G/9n/lJgUVA/NPOFgSlEtu6c7qQ0O7P1tMjrXp/+PtWfX0xyyY9ABsFAZK2kW34U7r/A==",
+        "dependencies": {
+          "System.Memory": "4.5.3"
+        }
+      },
+      "SkiaSharp.NativeAssets.Linux": {
+        "type": "Direct",
+        "requested": "[2.80.1, )",
+        "resolved": "2.80.1",
+        "contentHash": "Uy1pOie7URqvyXY+PaLDGcBFFwGiVQadntJx9eJRiK7MH43SGZ9coF1Flb9GDdpuQMC2Xil8BJ1X9B5B3315TA==",
+        "dependencies": {
+          "SkiaSharp": "2.80.1"
+        }
+      },
       "System.Linq.Async": {
         "type": "Direct",
         "requested": "[4.1.1, )",
@@ -826,6 +844,11 @@
           "System.Runtime.Extensions": "4.3.0",
           "System.Threading": "4.3.0"
         }
+      },
+      "System.Memory": {
+        "type": "Transitive",
+        "resolved": "4.5.3",
+        "contentHash": "3oDzvc/zzetpTKWMShs1AADwZjQ/36HnsufHRPcOjyRAAMLDlu2iD33MBI2opxnezcVUtXyqDXXjoFMOU9c7SA=="
       },
       "System.Net.Http": {
         "type": "Transitive",

@@ -616,6 +616,22 @@
           "System.Threading.Timer": "4.0.1"
         }
       },
+      "SkiaSharp": {
+        "type": "Transitive",
+        "resolved": "2.80.1",
+        "contentHash": "CiQwnDzG+1JNGzjAN9G/9n/lJgUVA/NPOFgSlEtu6c7qQ0O7P1tMjrXp/+PtWfX0xyyY9ABsFAZK2kW34U7r/A==",
+        "dependencies": {
+          "System.Memory": "4.5.3"
+        }
+      },
+      "SkiaSharp.NativeAssets.Linux": {
+        "type": "Transitive",
+        "resolved": "2.80.1",
+        "contentHash": "Uy1pOie7URqvyXY+PaLDGcBFFwGiVQadntJx9eJRiK7MH43SGZ9coF1Flb9GDdpuQMC2Xil8BJ1X9B5B3315TA==",
+        "dependencies": {
+          "SkiaSharp": "2.80.1"
+        }
+      },
       "System.AppContext": {
         "type": "Transitive",
         "resolved": "4.3.0",
@@ -968,6 +984,11 @@
           "System.Runtime.Extensions": "4.3.0",
           "System.Threading": "4.3.0"
         }
+      },
+      "System.Memory": {
+        "type": "Transitive",
+        "resolved": "4.5.3",
+        "contentHash": "3oDzvc/zzetpTKWMShs1AADwZjQ/36HnsufHRPcOjyRAAMLDlu2iD33MBI2opxnezcVUtXyqDXXjoFMOU9c7SA=="
       },
       "System.Net.Http": {
         "type": "Transitive",
@@ -1591,6 +1612,8 @@
           "Serilog": "2.9.0",
           "Serilog.Sinks.Console": "3.1.1",
           "Serilog.Sinks.File": "4.1.0",
+          "SkiaSharp": "2.80.1",
+          "SkiaSharp.NativeAssets.Linux": "2.80.1",
           "System.Linq.Async": "4.1.1",
           "System.Net.Http.Json": "3.2.1",
           "System.Reactive": "4.4.1",
