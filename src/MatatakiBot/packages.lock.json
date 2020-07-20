@@ -4,9 +4,9 @@
     ".NETCoreApp,Version=v3.1": {
       "DryIoc.dll": {
         "type": "Direct",
-        "requested": "[4.2.4, )",
-        "resolved": "4.2.4",
-        "contentHash": "cf2Aig3W47Pz6OsqfL0jyvakZ7J1+PuR57symCIAYBt1YlH5ciSZduV6BYRxcNLBodFhrV6ks0EDBGe9NKxL3w==",
+        "requested": "[4.2.5, )",
+        "resolved": "4.2.5",
+        "contentHash": "q2JMvJhWB2hj7qZd/SHf2Tb3vWRxHa8k0euKcgNNd9XC84C/zfBKAIcrraYOAxzP7pXr04O+Tfy+oBituJ/ruQ==",
         "dependencies": {
           "System.Reflection.Emit.Lightweight": "4.3.0"
         }
