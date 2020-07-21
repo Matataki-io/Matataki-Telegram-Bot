@@ -34,3 +34,8 @@ jobs:
         reports: tests/**/coverage.cobertura.xml
         targetdir: coveragereport
         reporttypes: Html
+    - name: Upload coverage report
+      uses: actions/upload-artifact@v2
+      with:	
+        name: Coverage Report
+        path: coveragereport
