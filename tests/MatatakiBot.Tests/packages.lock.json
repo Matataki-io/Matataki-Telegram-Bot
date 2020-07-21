@@ -96,6 +96,11 @@
           "System.Reflection.Emit.Lightweight": "4.3.0"
         }
       },
+      "MessageFormat": {
+        "type": "Transitive",
+        "resolved": "3.0.1",
+        "contentHash": "C8AdwEFW1NaI1xsQGUYzUViDkGHhyKiGtyI9wAO4eESg/hvUvuXi05p7lDAOA5tIDhM4+orn5+rOractxBrLFA=="
+      },
       "Microsoft.CodeCoverage": {
         "type": "Transitive",
         "resolved": "16.6.1",
@@ -1604,6 +1609,7 @@
         "type": "Project",
         "dependencies": {
           "DryIoc.dll": "4.2.5",
+          "MessageFormat": "3.0.1",
           "Microsoft.Extensions.Configuration.Binder": "3.1.6",
           "Microsoft.Extensions.Configuration.EnvironmentVariables": "3.1.6",
           "Microsoft.Extensions.Configuration.Json": "3.1.6",

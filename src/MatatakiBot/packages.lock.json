@@ -11,6 +11,12 @@
           "System.Reflection.Emit.Lightweight": "4.3.0"
         }
       },
+      "MessageFormat": {
+        "type": "Direct",
+        "requested": "[3.0.1, )",
+        "resolved": "3.0.1",
+        "contentHash": "C8AdwEFW1NaI1xsQGUYzUViDkGHhyKiGtyI9wAO4eESg/hvUvuXi05p7lDAOA5tIDhM4+orn5+rOractxBrLFA=="
+      },
       "Microsoft.Extensions.Configuration.Binder": {
         "type": "Direct",
         "requested": "[3.1.6, )",
