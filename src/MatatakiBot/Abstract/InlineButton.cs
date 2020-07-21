@@ -11,12 +11,14 @@ namespace MatatakiBot.Abstract
             set => _text = value ?? throw new ArgumentNullException(nameof(value));
         }
 
+        public object? Tag { get; set; }
+
         private protected InlineButton(object text)
         {
             _text = text ?? throw new ArgumentNullException(nameof(text));
         }
 
-        public static InlineButton WithCallbackData(object text) => new InlineCallbackButton(text);
+        public static InlineButton WithCallbackData(object text, object? tag = null) => new InlineCallbackButton(text) { Tag = tag };
         public static InlineButton WithUrl(object text, string url) => new InlineUrlButton(text, url);
     }
 
