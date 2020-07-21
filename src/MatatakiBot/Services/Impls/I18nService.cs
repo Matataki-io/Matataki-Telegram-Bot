@@ -5,7 +5,10 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
+using Telegram.Bot.Types;
 using YamlDotNet.RepresentationModel;
+using File = System.IO.File;
 
 namespace MatatakiBot.Services.Impls
 {
@@ -64,6 +67,11 @@ namespace MatatakiBot.Services.Impls
 
                 TraverseLocaleNode(patterns, patternKey, (YamlMappingNode)value);
             }
+        }
+
+        public ValueTask<string> GetLocaleForChatAsync(Chat chat, User user)
+        {
+            return new ValueTask<string>("en");
         }
 
         public string Format(I18n entry, string locale)

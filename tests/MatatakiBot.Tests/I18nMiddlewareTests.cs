@@ -17,6 +17,8 @@ namespace MatatakiBot.Tests
             var i18nService = Substitute.For<II18nService>();
             var middleware = new I18nMiddleware(i18nService);
 
+            i18nService.GetLocaleForChatAsync(default!, default!).ReturnsForAnyArgs("en");
+
             var response = new MessageResponse("Ignore");
 
             await foreach (var _ in middleware.HandleMessageAsync(new Message(), _ => new[] { response }.ToAsyncEnumerable())) ;
@@ -30,6 +32,7 @@ namespace MatatakiBot.Tests
             var i18nService = Substitute.For<II18nService>();
             var middleware = new I18nMiddleware(i18nService);
 
+            i18nService.GetLocaleForChatAsync(default!, default!).ReturnsForAnyArgs("en");
             i18nService.Format(Arg.Is<I18n>(i18n => i18n.Key == "introduction"), Arg.Any<string>()).Returns("I18N Introduction");
             i18nService.Format(Arg.Is<I18n>(i18n => i18n.Key == "content"), Arg.Any<string>()).Returns("I18N Content");
             i18nService.Format(Arg.Is<I18n>(i18n => i18n.Key == "footer"), Arg.Any<string>()).Returns("I18N Footer");
