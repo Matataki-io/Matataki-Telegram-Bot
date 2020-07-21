@@ -33,4 +33,4 @@ jobs:
       with:
         reports: tests/**/coverage.cobertura.xml
         targetdir: coveragereport
-        reporttypes: Cobertura
+        reporttypes: Html
