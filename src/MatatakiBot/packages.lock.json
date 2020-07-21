@@ -165,6 +165,12 @@
           "Telegram.Bot": "15.6.0"
         }
       },
+      "YamlDotNet": {
+        "type": "Direct",
+        "requested": "[8.1.2, )",
+        "resolved": "8.1.2",
+        "contentHash": "GlPKbb4l+91dyYVKV7UnJlr2CWooNNM1ayZWC90QAmlFPgbwSkfhgId7dGjTAHqkB84BZqjMSy5PlAYf1iejVA=="
+      },
       "Common.Logging.Core": {
         "type": "Transitive",
         "resolved": "3.4.1",
@@ -1367,11 +1373,6 @@
           "System.Threading": "4.3.0",
           "System.Xml.ReaderWriter": "4.3.0"
         }
-      },
-      "YamlDotNet": {
-        "type": "Transitive",
-        "resolved": "6.1.2",
-        "contentHash": "ADQQokM9Zq0Ad+GOFeOzeR2rW+DrZNGQEVLrf10hI+xoxjYhPK01j/KgNZ/APngalhiroVzsohuZGfWiewRvaQ=="
       }
     }
   }

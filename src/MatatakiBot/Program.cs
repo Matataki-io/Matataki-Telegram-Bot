@@ -42,6 +42,8 @@ namespace MatatakiBot
 
             RegisterCommands(bot);
 
+            container.Resolve<II18nService>().Initialize();
+
             using var cts = new CancellationTokenSource();
 
             Console.CancelKeyPress += delegate
