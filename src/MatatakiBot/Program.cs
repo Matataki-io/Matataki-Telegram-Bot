@@ -116,6 +116,8 @@ namespace MatatakiBot
             container.RegisterDelegate<AppSettings, IWeb3>(appSettings =>
                 new Web3(appSettings.Network ?? throw new InvalidOperationException("Missing Network in app settings")),
                 reuse: Reuse.Singleton);
+
+            container.Register<II18nService, I18nService>(Reuse.Singleton);
         }
         private static void RegisterCommands(Bot bot)
         {

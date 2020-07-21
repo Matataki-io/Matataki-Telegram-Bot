@@ -27,7 +27,7 @@ namespace MatatakiBot.Abstract
         {
             _content = content ?? throw new ArgumentNullException(nameof(content));
         }
-        public MessageResponse(string introduction, object content, string? footer = null, ParseMode parseMode = ParseMode.Default)
+        public MessageResponse(object introduction, object content, object? footer = null, ParseMode parseMode = ParseMode.Default)
         {
             Introduction = introduction;
             _content = content ?? throw new ArgumentNullException(nameof(content));

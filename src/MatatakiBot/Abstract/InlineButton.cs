@@ -4,11 +4,16 @@ namespace MatatakiBot.Abstract
 {
     public abstract class InlineButton
     {
-        public object Text { get; }
+        private object _text;
+        public object Text
+        {
+            get => _text;
+            set => _text = value ?? throw new ArgumentNullException(nameof(value));
+        }
 
         private protected InlineButton(object text)
         {
-            Text = text ?? throw new ArgumentNullException(nameof(text));
+            _text = text ?? throw new ArgumentNullException(nameof(text));
         }
 
         public static InlineButton WithCallbackData(object text) => new InlineCallbackButton(text);
