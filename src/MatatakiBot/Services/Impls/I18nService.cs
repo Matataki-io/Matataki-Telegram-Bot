@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Telegram.Bot.Types;
+using Telegram.Bot.Types.Enums;
 using YamlDotNet.RepresentationModel;
 using File = System.IO.File;
 
@@ -17,10 +18,14 @@ namespace MatatakiBot.Services.Impls
         private readonly SortedList<string, IMessageFormatter> _formatters;
         private readonly SortedList<string, SortedList<string, string>> _patterns;
 
+        private readonly SortedList<int, string> _userLocales;
+
         public I18nService()
         {
             _formatters = new SortedList<string, IMessageFormatter>(StringComparer.OrdinalIgnoreCase);
             _patterns = new SortedList<string, SortedList<string, string>>(StringComparer.OrdinalIgnoreCase);
+
+            _userLocales = new SortedList<int, string>();
         }
 
         public void Initialize()
@@ -71,6 +76,12 @@ namespace MatatakiBot.Services.Impls
 
         public ValueTask<string> GetLocaleForChatAsync(Chat chat, User user)
         {
+            if (chat.Type == ChatType.Private)
+            {
+                if (_userLocales.TryGetValue(user.Id, out var result))
+                    return new ValueTask<string>(result);
+            }
+
             return new ValueTask<string>("en");
         }
 
@@ -86,5 +97,7 @@ namespace MatatakiBot.Services.Impls
 
             return formatter.FormatMessage(pattern, entry.Arguments);
         }
+
+        public void CacheUserLocale(int userId, string locale) => _userLocales[userId] = locale;
     }
 }

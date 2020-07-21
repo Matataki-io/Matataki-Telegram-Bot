@@ -11,5 +11,7 @@ namespace MatatakiBot.Services
         ValueTask<string> GetLocaleForChatAsync(Chat chat, User user);
 
         string Format(I18n entry, string locale);
+
+        void CacheUserLocale(int userId, string locale);
     }
 }
