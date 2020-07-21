@@ -28,3 +28,9 @@ jobs:
       run: dotnet build --configuration Release --no-restore
     - name: Test
       run: dotnet test --configuration Release --no-restore /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura
+    - name: Generate coverage report
+      uses: danielpalme/ReportGenerator-GitHub-Action@4.6.1
+      with:
+        reports: tests/**/coverage.cobertura.xml
+        targetdir: coveragereport
+        reporttypes: Cobertura
