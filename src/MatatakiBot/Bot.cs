@@ -83,29 +83,40 @@ namespace MatatakiBot
             _middlewares.Add(_messageDispatcher);
 
             var allowedUpdates = new[] { UpdateType.Message, UpdateType.CallbackQuery };
-
-            var webhookSettings = _container.Resolve<AppSettings>().Webhook;
-            if (webhookSettings == null)
-                await _client.DeleteWebhookAsync(cancellationToken);
-            else
-            {
-                // TODO: Start a http server as webhook receiver
-
-                await _client.SetWebhookAsync(webhookSettings.Url, allowedUpdates: allowedUpdates, cancellationToken: cancellationToken);
-                return;
-            }
-
             var botInfo = await _client.GetMeAsync(cancellationToken);
 
             _messageDispatcher.Username = botInfo.Username;
 
             _isStarted = true;
 
-            cancellationToken.Register(() => _isStarted = false);
+            IAsyncEnumerable<Update> updateSource;
 
-            var updater = new BlockingUpdateReceiver(_client, allowedUpdates, cancellationToken: cancellationToken);
+            var webhookSettings = _container.Resolve<AppSettings>().Webhook;
+            if (webhookSettings == null)
+            {
+                await _client.DeleteWebhookAsync(cancellationToken);
 
-            await foreach (var update in updater.YieldUpdatesAsync())
+                cancellationToken.Register(() => _isStarted = false);
+
+                var updater = new BlockingUpdateReceiver(_client, allowedUpdates, cancellationToken: cancellationToken);
+
+                updateSource = updater.YieldUpdatesAsync();
+
+                _container.Resolve<ILogger>().Information("Bot started with polling mode");
+            }
+            else
+            {
+                var port = webhookSettings.Port ?? throw new InvalidOperationException("Missing Webhook.Port in app settings");
+                var receiver = new WebhookReceiver(port);
+
+                await _client.SetWebhookAsync(webhookSettings.Url, allowedUpdates: allowedUpdates, cancellationToken: cancellationToken);
+
+                updateSource = receiver.ReceiveUpdatesAsync();
+
+                _container.Resolve<ILogger>().Information($"Bot started with webhook mode at port {port}");
+            }
+
+            await foreach (var update in updateSource.WithCancellation(cancellationToken))
             {
                 _ = update.Type switch
                 {

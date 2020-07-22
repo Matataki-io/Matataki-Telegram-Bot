@@ -53,8 +53,6 @@ namespace MatatakiBot
 
             Console.WriteLine("Press Ctrl+C to stop the bot");
 
-            container.Resolve<ILogger>().Information("Bot started");
-
             try
             {
                 await bot.StartReceiving(cts.Token);
