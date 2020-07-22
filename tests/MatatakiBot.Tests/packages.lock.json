@@ -477,6 +477,14 @@
         "resolved": "11.0.2",
         "contentHash": "IvJe1pj7JHEsP8B8J8DwlMEx8UInrs/x+9oVY+oCD13jpLu4JbJU2WCIsMRn5C4yW9+DgkaO8uiVE5VHKjpmdQ=="
       },
+      "Npgsql": {
+        "type": "Transitive",
+        "resolved": "4.1.4",
+        "contentHash": "qLwnSF7GAAxxrNFH3EprG352CJbhTCIDkk9PJ3/6aBeMOZBq+QMI1Yxsi9aUrBJwE51PaMLIYw0eq/bv9CGQTw==",
+        "dependencies": {
+          "System.Runtime.CompilerServices.Unsafe": "4.6.0"
+        }
+      },
       "NuGet.Frameworks": {
         "type": "Transitive",
         "resolved": "5.0.0",
@@ -1204,6 +1212,11 @@
           "Microsoft.NETCore.Targets": "1.1.0"
         }
       },
+      "System.Runtime.CompilerServices.Unsafe": {
+        "type": "Transitive",
+        "resolved": "4.6.0",
+        "contentHash": "HxozeSlipUK7dAroTYwIcGwKDeOVpQnJlpVaOkBz7CM4TsE5b/tKlQBZecTjh6FzcSbxndYaxxpsBMz+wMJeyw=="
+      },
       "System.Runtime.Extensions": {
         "type": "Transitive",
         "resolved": "4.3.0",
@@ -1615,6 +1628,7 @@
           "Microsoft.Extensions.Configuration.Json": "3.1.6",
           "NetEscapades.Configuration.Yaml": "2.0.1",
           "Nethereum.Web3": "3.8.0",
+          "Npgsql": "4.1.4",
           "Serilog": "2.9.0",
           "Serilog.Sinks.Console": "3.1.1",
           "Serilog.Sinks.File": "4.1.0",

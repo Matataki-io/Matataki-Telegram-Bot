@@ -76,6 +76,15 @@
           "Portable.BouncyCastle": "1.8.2"
         }
       },
+      "Npgsql": {
+        "type": "Direct",
+        "requested": "[4.1.4, )",
+        "resolved": "4.1.4",
+        "contentHash": "qLwnSF7GAAxxrNFH3EprG352CJbhTCIDkk9PJ3/6aBeMOZBq+QMI1Yxsi9aUrBJwE51PaMLIYw0eq/bv9CGQTw==",
+        "dependencies": {
+          "System.Runtime.CompilerServices.Unsafe": "4.6.0"
+        }
+      },
       "Serilog": {
         "type": "Direct",
         "requested": "[2.9.0, )",
@@ -1057,6 +1066,11 @@
           "Microsoft.NETCore.Platforms": "1.1.0",
           "Microsoft.NETCore.Targets": "1.1.0"
         }
+      },
+      "System.Runtime.CompilerServices.Unsafe": {
+        "type": "Transitive",
+        "resolved": "4.6.0",
+        "contentHash": "HxozeSlipUK7dAroTYwIcGwKDeOVpQnJlpVaOkBz7CM4TsE5b/tKlQBZecTjh6FzcSbxndYaxxpsBMz+wMJeyw=="
       },
       "System.Runtime.Extensions": {
         "type": "Transitive",
