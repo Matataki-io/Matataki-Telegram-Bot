@@ -10,7 +10,7 @@ namespace MatatakiBot
 {
     sealed class WebhookReceiver
     {
-        static ReadOnlyMemory<byte> WebhookResponse => new byte[]
+        private static ReadOnlyMemory<byte> WebhookResponse => new byte[]
         {
             (byte)'H', (byte)'T', (byte)'T', (byte)'P', (byte)'/', (byte)'1', (byte)'.', (byte)'1', (byte)' ',
             (byte)'2', (byte)'0', (byte)'0', (byte)' ', (byte)'O', (byte)'K', (byte)'\r', (byte)'\n', (byte)'\r', (byte)'\n',
