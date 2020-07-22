@@ -13,6 +13,8 @@
         public BackendSettings Backend { get; set; } = default!;
         public MatatakiSettings Matataki { get; set; } = default!;
 
+        public DatabaseSettings? Database { get; set; }
+
         public class ProxySettings
         {
             public string? Host { get; set; }
@@ -28,6 +30,16 @@
         {
             public string? UrlPrefix { get; set; }
             public string? AccessToken { get; set; }
+        }
+        public class DatabaseSettings
+        {
+            public string? Host { get; set; }
+            public int? Port { get; set; }
+            public string? Database { get; set; }
+            public string? Username { get; set; }
+            public string? Password { get; set; }
+            public bool? NoSsl { get; set; }
+            public string? CertificateFile { get; set; }
         }
     }
 }

@@ -120,6 +120,7 @@ namespace MatatakiBot
                 reuse: Reuse.Singleton);
 
             container.Register<II18nService, I18nService>(Reuse.Singleton);
+            container.Register<IDatabaseService, DatabaseService>(Reuse.Singleton);
         }
         private static void RegisterCommands(Bot bot)
         {
