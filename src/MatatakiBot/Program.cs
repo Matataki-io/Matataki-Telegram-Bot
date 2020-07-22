@@ -65,7 +65,8 @@ namespace MatatakiBot
             var configurationBuilder = new ConfigurationBuilder()
                 .AddEnvironmentVariables()
                 .AddJsonFile("appsettings.json", true)
-                .AddYamlFile("appsettings.yaml", true);
+                .AddYamlFile("appsettings.yaml", true)
+                .AddYamlFile("appsettings.yml", true);
 
             var configuration = configurationBuilder.Build();
 
