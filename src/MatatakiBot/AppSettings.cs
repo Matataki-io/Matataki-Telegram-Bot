@@ -15,6 +15,8 @@
 
         public DatabaseSettings? Database { get; set; }
 
+        public WebhookSettings? Webhook { get; set; }
+
         public class ProxySettings
         {
             public string? Host { get; set; }
@@ -40,6 +42,11 @@
             public string? Password { get; set; }
             public bool? NoSsl { get; set; }
             public string? CertificateFile { get; set; }
+        }
+        public class WebhookSettings
+        {
+            public string? Url { get; set; }
+            public int? Port { get; set; }
         }
     }
 }

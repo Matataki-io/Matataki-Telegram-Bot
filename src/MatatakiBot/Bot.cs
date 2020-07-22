@@ -82,6 +82,19 @@ namespace MatatakiBot
                 _middlewares.Add(_container.Resolve<IMessageMiddleware>(type));
             _middlewares.Add(_messageDispatcher);
 
+            var allowedUpdates = new[] { UpdateType.Message, UpdateType.CallbackQuery };
+
+            var webhookSettings = _container.Resolve<AppSettings>().Webhook;
+            if (webhookSettings == null)
+                await _client.DeleteWebhookAsync(cancellationToken);
+            else
+            {
+                // TODO: Start a http server as webhook receiver
+
+                await _client.SetWebhookAsync(webhookSettings.Url, allowedUpdates: allowedUpdates, cancellationToken: cancellationToken);
+                return;
+            }
+
             var botInfo = await _client.GetMeAsync(cancellationToken);
 
             _messageDispatcher.Username = botInfo.Username;
@@ -90,7 +103,7 @@ namespace MatatakiBot
 
             cancellationToken.Register(() => _isStarted = false);
 
-            var updater = new BlockingUpdateReceiver(_client, new[] { UpdateType.Message, UpdateType.CallbackQuery }, cancellationToken: cancellationToken);
+            var updater = new BlockingUpdateReceiver(_client, allowedUpdates, cancellationToken: cancellationToken);
 
             await foreach (var update in updater.YieldUpdatesAsync())
             {
