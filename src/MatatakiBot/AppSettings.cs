@@ -31,7 +31,9 @@
         public class MatatakiSettings
         {
             public string? UrlPrefix { get; set; }
+            public string? ApiUrlPrefix { get; set; }
             public string? AccessToken { get; set; }
+            public string? TransferApiAccessToken { get; set; }
         }
         public class DatabaseSettings
         {

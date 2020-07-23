@@ -103,14 +103,25 @@ namespace MatatakiBot
 
             container.RegisterDelegate<AppSettings, HttpClient>(appSettings => new HttpClient()
             {
-                BaseAddress = new Uri(appSettings.Matataki.UrlPrefix ?? throw new InvalidOperationException("Missing Matataki.UrlPrefix in app settings")),
+                BaseAddress = new Uri(appSettings.Matataki.ApiUrlPrefix ?? throw new InvalidOperationException("Missing Matataki.UrlPrefix in app settings")),
                 DefaultRequestHeaders =
                 {
                     Authorization = new AuthenticationHeaderValue("Bearer",
-                        appSettings.Backend.AccessToken ?? throw new InvalidOperationException("Missing Matataki.AccessToken in app settings"))
+                        appSettings.Matataki.AccessToken ?? throw new InvalidOperationException("Missing Matataki.AccessToken in app settings"))
                 },
-            }, reuse: Reuse.Singleton, serviceKey: typeof(IMatatakiService));
-            container.Register<IMatatakiService, MatatakiService>(Reuse.Singleton, Parameters.Of.Type<HttpClient>(serviceKey: typeof(IMatatakiService)));
+            }, reuse: Reuse.Singleton, serviceKey: "MatatakiServiceHttpClient");
+            container.RegisterDelegate<AppSettings, HttpClient>(appSettings => new HttpClient()
+            {
+                BaseAddress = new Uri(appSettings.Matataki.ApiUrlPrefix ?? throw new InvalidOperationException("Missing Matataki.UrlPrefix in app settings")),
+                DefaultRequestHeaders =
+                {
+                    Authorization = new AuthenticationHeaderValue("Bearer",
+                        appSettings.Matataki.TransferApiAccessToken ?? throw new InvalidOperationException("Missing Matataki.TransferApiAccessToken in app settings"))
+                },
+            }, reuse: Reuse.Singleton, serviceKey: "MatatakiServiceTransferHttpClient");
+            container.Register<IMatatakiService, MatatakiService>(Reuse.Singleton, Parameters.Of
+                .Name("httpClient", requiredServiceType: typeof(HttpClient), serviceKey: "MatatakiServiceHttpClient")
+                .Name("transferHttpClient", requiredServiceType: typeof(HttpClient), serviceKey: "MatatakiServiceTransferHttpClient"));
 
             container.Register<IMinetokenService, MinetokenService>(Reuse.Singleton);
 

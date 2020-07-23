@@ -20,6 +20,12 @@ namespace MatatakiBot.Services.Impls
 
             return wrapper.Data;
         }
+        public async ValueTask<UserInfo> GetUserByTelegramIdAsync(int id)
+        {
+            var wrapper = await _httpClient.GetFromJsonAsync<ApiWrapper<UserInfo>>("/mapping/telegramUidToUser/" + id);
+
+            return wrapper.Data;
+        }
 
         public async ValueTask<TokenInfo> GetTokenAsync(string symbol)
         {
