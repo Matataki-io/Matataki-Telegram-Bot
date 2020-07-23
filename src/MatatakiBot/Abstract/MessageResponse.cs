@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MatatakiBot.Core;
+using System;
 using System.Collections.Generic;
 using Telegram.Bot.Types.Enums;
 
@@ -37,6 +38,7 @@ namespace MatatakiBot.Abstract
         }
 
         public static implicit operator MessageResponse(string value) => new MessageResponse(value);
+        public static implicit operator MessageResponse(I18n value) => new MessageResponse(value);
 
         IEnumerable<string> EnumerateLines()
         {

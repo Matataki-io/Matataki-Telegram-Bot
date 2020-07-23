@@ -301,6 +301,7 @@ namespace MatatakiBot.Tests
             static Message CreateExampleCommandMessage(string text) => new Message()
             {
                 Text = text,
+                Chat = new Chat() { Type = ChatType.Private },
                 Entities = new[] { new MessageEntity() { Type = MessageEntityType.BotCommand, Length = 8 } },
             };
         }
@@ -322,6 +323,7 @@ namespace MatatakiBot.Tests
             static Message CreateExampleCommandMessage(string text) => new Message()
             {
                 Text = text,
+                Chat = new Chat() { Type = ChatType.Private },
                 Entities = new[] { new MessageEntity() { Type = MessageEntityType.BotCommand, Length = 20 } },
             };
         }
@@ -350,6 +352,7 @@ namespace MatatakiBot.Tests
             var responses = await dispatcher.HandleMessageAsync(new Message()
             {
                 Text = "/example",
+                Chat = new Chat() { Type = ChatType.Private },
                 Entities = new[] { new MessageEntity() { Type = MessageEntityType.BotCommand, Length = 8 } },
             }, null!).Select(r => r.Content).ToArrayAsync();
 
@@ -361,6 +364,76 @@ namespace MatatakiBot.Tests
             [CommandHandler]
             public IAsyncEnumerable<MessageResponse> Handler() =>
                 Enumerable.Range(1, 10).Select(r => new MessageResponse(r.ToString())).ToAsyncEnumerable();
+        }
+
+        [Fact]
+        public async Task PrivateChatOnly()
+        {
+            var container = new Container();
+            var dispatcher = new MessageDispatcher(container);
+
+            container.Register<CommandBase, PrivateChatOnlyExample>(serviceKey: "example");
+            dispatcher.Register("example", typeof(PrivateChatOnlyExample));
+
+            Assert.Equal("This is a private chat", (await dispatcher.HandleMessageAsync(CreateExampleCommandMessage("/example", ChatType.Private), null!).SingleAsync()).Content);
+
+            var i18n = Assert.IsType<I18n>((await dispatcher.HandleMessageAsync(CreateExampleCommandMessage("/example", ChatType.Group), null!).SingleAsync()).Content);
+            Assert.Equal("error.privateChatOnly", i18n.Key);
+
+            i18n = Assert.IsType<I18n>((await dispatcher.HandleMessageAsync(CreateExampleCommandMessage("/example", ChatType.Supergroup), null!).SingleAsync()).Content);
+            Assert.Equal("error.privateChatOnly", i18n.Key);
+
+            static Message CreateExampleCommandMessage(string text, ChatType chatType) => new Message()
+            {
+                Text = text,
+                Chat = new Chat()
+                {
+                    Id = 1,
+                    Type = chatType,
+                },
+                Entities = new[] { new MessageEntity() { Type = MessageEntityType.BotCommand, Length = 8 } },
+            };
+        }
+
+        class PrivateChatOnlyExample : CommandBase
+        {
+            [CommandHandler]
+            [PrivateChatOnly]
+            public MessageResponse Handler() => "This is a private chat";
+        }
+
+        [Fact]
+        public async Task GroupChatOnly()
+        {
+            var container = new Container();
+            var dispatcher = new MessageDispatcher(container);
+
+            container.Register<CommandBase, GroupChatOnlyExample>(serviceKey: "example");
+            dispatcher.Register("example", typeof(GroupChatOnlyExample));
+
+            Assert.Equal("This is a group chat", (await dispatcher.HandleMessageAsync(CreateExampleCommandMessage("/example", ChatType.Group), null!).SingleAsync()).Content);
+            Assert.Equal("This is a group chat", (await dispatcher.HandleMessageAsync(CreateExampleCommandMessage("/example", ChatType.Supergroup), null!).SingleAsync()).Content);
+
+            var i18n = Assert.IsType<I18n>((await dispatcher.HandleMessageAsync(CreateExampleCommandMessage("/example", ChatType.Private), null!).SingleAsync()).Content);
+            Assert.Equal("error.groupChatOnly", i18n.Key);
+
+            static Message CreateExampleCommandMessage(string text, ChatType chatType) => new Message()
+            {
+                Text = text,
+                Chat = new Chat()
+                {
+                    Id = 1,
+                    Type = chatType,
+                },
+                Entities = new[] { new MessageEntity() { Type = MessageEntityType.BotCommand, Length = 8 } },
+            };
+        }
+
+        class GroupChatOnlyExample : CommandBase
+        {
+            [CommandHandler]
+            [GroupChatOnly]
+            public MessageResponse Handler() => "This is a group chat";
         }
     }
 }

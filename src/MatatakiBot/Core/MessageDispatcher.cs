@@ -45,6 +45,9 @@ namespace MatatakiBot.Core
             DispatchNode? rootNode = null;
             DispatchNode? node = null;
 
+            var forbidPrivateChat = commandType.IsDefined(typeof(GroupChatOnlyAttribute), false);
+            var forbidGroupChat = commandType.IsDefined(typeof(PrivateChatOnlyAttribute), false);
+
             foreach (var (method, handlerAttribute) in methods)
             {
                 if (!usedRegex.Add(handlerAttribute.ArgumentRegex))
@@ -65,7 +68,11 @@ namespace MatatakiBot.Core
                     _ => new Regex(@"^\s+" + handlerAttribute.ArgumentRegex, RegexOptions.Compiled),
                 };
 
-                var currentNode = new DispatchNode(CompileHandler(commandType, method, parameters), argumentMatcher);
+                var currentNode = new DispatchNode(CompileHandler(commandType, method, parameters), argumentMatcher)
+                {
+                    ForbidPrivateChat = forbidPrivateChat || method.IsDefined(typeof(GroupChatOnlyAttribute), false),
+                    ForbidGroupChat = forbidGroupChat || method.IsDefined(typeof(PrivateChatOnlyAttribute), false),
+                };
 
                 if (node == null)
                 {
@@ -200,6 +207,8 @@ namespace MatatakiBot.Core
         }
         private object GetHandlerResult(DispatchNode node, CommandBase command, Message message, int messageArgumentOffset)
         {
+            var arguments = Array.Empty<string>();
+
             while (node.ArgumentMatcher != null)
             {
                 var match = node.ArgumentMatcher.Match(message.Text[messageArgumentOffset..]);
@@ -212,18 +221,27 @@ namespace MatatakiBot.Core
                     continue;
                 }
 
-                var arguments = match.Groups.Values.Skip(1).Select(r => r.Value).ToArray();
-
-                return node.Handler(command, message, arguments);
+                arguments = match.Groups.Values.Skip(1).Select(r => r.Value).ToArray();
+                break;
             }
 
-            return node.Handler(command, message, Array.Empty<string>());
+            return message.Chat.Type switch
+            {
+                ChatType.Private when node.ForbidPrivateChat => new MessageResponseAsyncEnumeratorWrapper(new I18n("error.groupChatOnly")),
+                ChatType.Group when node.ForbidGroupChat => new MessageResponseAsyncEnumeratorWrapper(new I18n("error.privateChatOnly")),
+                ChatType.Supergroup when node.ForbidGroupChat => new MessageResponseAsyncEnumeratorWrapper(new I18n("error.privateChatOnly")),
+
+                _ => node.Handler(command, message, arguments),
+            };
         }
 
         internal class DispatchNode
         {
             public Func<CommandBase, Message, string[], object> Handler { get; }
             public Regex? ArgumentMatcher { get; }
+
+            public bool ForbidPrivateChat { get; set; }
+            public bool ForbidGroupChat { get; set; }
 
             public DispatchNode? Next { get; set; }
 
