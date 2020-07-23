@@ -32,8 +32,9 @@ namespace MatatakiBot.Services.Impls
         {
             var cultureInfos = new HashSet<string>(CultureInfo.GetCultures(CultureTypes.AllCultures).Select(r => r.IetfLanguageTag),
                 StringComparer.OrdinalIgnoreCase);
+            var localeDirectory = Path.Join(Path.GetDirectoryName(GetType().Assembly.Location), "locales");
 
-            foreach (var localeFilename in Directory.EnumerateFiles("locales", "*.yml"))
+            foreach (var localeFilename in Directory.EnumerateFiles(localeDirectory, "*.yml"))
             {
                 var locale = Path.GetFileNameWithoutExtension(localeFilename);
                 if (!cultureInfos.Contains(locale))
