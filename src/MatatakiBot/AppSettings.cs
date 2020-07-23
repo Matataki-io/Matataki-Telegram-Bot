@@ -1,5 +1,8 @@
-﻿namespace MatatakiBot
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace MatatakiBot
 {
+    [ExcludeFromCodeCoverage]
     public class AppSettings
     {
         public string? Token { get; set; }

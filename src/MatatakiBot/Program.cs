@@ -1,4 +1,4 @@
-using DryIoc;
+﻿using DryIoc;
 using MatatakiBot.Abstract;
 using MatatakiBot.Services;
 using MatatakiBot.Services.Impls;
@@ -7,6 +7,7 @@ using Nethereum.Web3;
 using Serilog;
 using Serilog.Events;
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -19,6 +20,7 @@ using Telegram.Bot;
 
 namespace MatatakiBot
 {
+    [ExcludeFromCodeCoverage]
     class Program
     {
         static async Task Main(string[] args)

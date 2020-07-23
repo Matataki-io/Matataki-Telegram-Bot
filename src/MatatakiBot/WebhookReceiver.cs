@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Net;
 using System.Net.Sockets;
@@ -8,6 +9,7 @@ using Telegram.Bot.Types;
 
 namespace MatatakiBot
 {
+    [ExcludeFromCodeCoverage]
     sealed class WebhookReceiver
     {
         private static ReadOnlyMemory<byte> WebhookResponse => new byte[]
