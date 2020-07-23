@@ -1,4 +1,4 @@
-﻿using DryIoc;
+using DryIoc;
 using FastExpressionCompiler.LightExpression;
 using MatatakiBot.Abstract;
 using System;
@@ -144,7 +144,7 @@ namespace MatatakiBot.Core
                             var parseMethod = typeof(decimal).GetMethod(nameof(decimal.Parse), stringParameterTypeArray);
 
                             parsedExpression = Expression.Call(parseMethod, parameter);
-                            defaultExpression = Expression.ZeroConstant;
+                            defaultExpression = Expression.Constant(0m);
                         }
                         else
                         {
