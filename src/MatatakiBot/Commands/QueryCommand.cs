@@ -32,6 +32,6 @@ namespace MatatakiBot.Commands
 
         [CommandHandler]
         public MessageResponse FormatErrorFallback() =>
-            "Please type '/price [Symbol]'";
+            "Please type '/query [Symbol]'";
     }
 }
