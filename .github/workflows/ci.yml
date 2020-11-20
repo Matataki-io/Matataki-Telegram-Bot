@@ -12,7 +12,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Setup .NET Core
-      uses: actions/setup-dotnet@v1
+      uses: actions/setup-dotnet@v1.7.2
       with:
         dotnet-version: 5.0.x
     - name: Use NuGet cache
@@ -29,7 +29,7 @@ jobs:
     - name: Test
       run: dotnet test --configuration Release --no-restore /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura
     - name: Generate coverage report
-      uses: danielpalme/ReportGenerator-GitHub-Action@4
+      uses: danielpalme/ReportGenerator-GitHub-Action@4.8.0
       with:
         reports: tests/**/coverage.cobertura.xml
         targetdir: coveragereport
