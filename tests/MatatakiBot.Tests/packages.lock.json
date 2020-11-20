@@ -1605,8 +1605,8 @@
       },
       "YamlDotNet": {
         "type": "Transitive",
-        "resolved": "9.1.0",
-        "contentHash": "fuvGXU4Ec5HrsmEc+BiFTNPCRf1cGBI2kh/3RzMWgddM2M4ALhbSPoI3X3mhXZUD1qqQd9oSkFAtWjpz8z9eRg=="
+        "resolved": "6.1.2",
+        "contentHash": "ADQQokM9Zq0Ad+GOFeOzeR2rW+DrZNGQEVLrf10hI+xoxjYhPK01j/KgNZ/APngalhiroVzsohuZGfWiewRvaQ=="
       },
       "matatakibot": {
         "type": "Project",
@@ -1629,8 +1629,7 @@
           "System.Linq.Async": "5.0.0",
           "System.Reactive": "5.0.0",
           "Telegram.Bot": "15.7.1",
-          "Telegram.Bot.Extensions.Polling": "0.2.0",
-          "YamlDotNet": "9.1.0"
+          "Telegram.Bot.Extensions.Polling": "0.2.0"
         }
       }
     }
