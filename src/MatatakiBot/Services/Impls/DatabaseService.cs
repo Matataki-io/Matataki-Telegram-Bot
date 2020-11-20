@@ -29,7 +29,7 @@ namespace MatatakiBot.Services.Impls
 
                 _clientCertCallback = certs =>
                 {
-                    certs.Add(new X509Certificate2(database.CertificateFile));
+                    certs.Add(new X509Certificate2(database.CertificateFile ?? throw new InvalidOperationException("Missing Database.CertificateFile in app settings")));
                 };
             }
 
