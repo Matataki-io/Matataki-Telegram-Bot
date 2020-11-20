@@ -88,6 +88,14 @@
           "Microsoft.CSharp": "4.0.1"
         }
       },
+      "CompareNETObjects": {
+        "type": "Transitive",
+        "resolved": "4.67.0",
+        "contentHash": "VgxIWuGr/E3eqamZPr3wYTq0RZ2zh3qYsIsHrCCgGW4NigRr3cvGh68uDG2ToBXXgnXWE9ezS0PVLzO3YcIYow==",
+        "dependencies": {
+          "Microsoft.CSharp": "4.5.0"
+        }
+      },
       "Dapper": {
         "type": "Transitive",
         "resolved": "2.0.78",
@@ -113,26 +121,8 @@
       },
       "Microsoft.CSharp": {
         "type": "Transitive",
-        "resolved": "4.0.1",
-        "contentHash": "17h8b5mXa87XYKrrVqdgZ38JefSUqLChUQpXgSnpzsM0nDOhE40FTeNWOJ/YmySGV6tG6T8+hjz6vxbknHJr6A==",
-        "dependencies": {
-          "System.Collections": "4.0.11",
-          "System.Diagnostics.Debug": "4.0.11",
-          "System.Dynamic.Runtime": "4.0.11",
-          "System.Globalization": "4.0.11",
-          "System.Linq": "4.1.0",
-          "System.Linq.Expressions": "4.1.0",
-          "System.ObjectModel": "4.0.12",
-          "System.Reflection": "4.1.0",
-          "System.Reflection.Extensions": "4.0.1",
-          "System.Reflection.Primitives": "4.0.1",
-          "System.Reflection.TypeExtensions": "4.1.0",
-          "System.Resources.ResourceManager": "4.0.1",
-          "System.Runtime": "4.1.0",
-          "System.Runtime.Extensions": "4.1.0",
-          "System.Runtime.InteropServices": "4.1.0",
-          "System.Threading": "4.0.11"
-        }
+        "resolved": "4.5.0",
+        "contentHash": "kaj6Wb4qoMuH3HySFJhxwQfe8R/sJsNJnANrvv8WdFPMoNbKY5htfNscv+LHCu5ipz+49m2e+WQXpLXr9XYemQ=="
       },
       "Microsoft.Extensions.Configuration": {
         "type": "Transitive",
@@ -617,8 +607,8 @@
       },
       "Serilog": {
         "type": "Transitive",
-        "resolved": "2.9.0",
-        "contentHash": "QzcrD33A3+CsVvwi1I5CSei67ikQnkGrw7SscgL+vZTghaC2aNYg8fiUcedXHzKJFNjgje9rBjzwYGQTKEaXaA=="
+        "resolved": "2.10.0",
+        "contentHash": "+QX0hmf37a0/OZLxM3wL7V6/ADvC1XihXN4Kq/p6d8lCPfgkRdiuhbWlMaFjR9Av0dy5F0+MBeDmDdRZN/YwQA=="
       },
       "Serilog.Sinks.Console": {
         "type": "Transitive",
@@ -1615,12 +1605,13 @@
       },
       "YamlDotNet": {
         "type": "Transitive",
-        "resolved": "8.1.2",
-        "contentHash": "GlPKbb4l+91dyYVKV7UnJlr2CWooNNM1ayZWC90QAmlFPgbwSkfhgId7dGjTAHqkB84BZqjMSy5PlAYf1iejVA=="
+        "resolved": "9.1.0",
+        "contentHash": "fuvGXU4Ec5HrsmEc+BiFTNPCRf1cGBI2kh/3RzMWgddM2M4ALhbSPoI3X3mhXZUD1qqQd9oSkFAtWjpz8z9eRg=="
       },
       "matatakibot": {
         "type": "Project",
         "dependencies": {
+          "CompareNETObjects": "4.67.0",
           "Dapper": "2.0.78",
           "DryIoc.dll": "4.5.1",
           "MessageFormat": "3.0.1",
@@ -1630,7 +1621,7 @@
           "NetEscapades.Configuration.Yaml": "2.0.1",
           "Nethereum.Web3": "3.8.0",
           "Npgsql": "5.0.0",
-          "Serilog": "2.9.0",
+          "Serilog": "2.10.0",
           "Serilog.Sinks.Console": "3.1.1",
           "Serilog.Sinks.File": "4.1.0",
           "SkiaSharp": "2.80.2",
@@ -1639,7 +1630,7 @@
           "System.Reactive": "5.0.0",
           "Telegram.Bot": "15.7.1",
           "Telegram.Bot.Extensions.Polling": "0.2.0",
-          "YamlDotNet": "8.1.2"
+          "YamlDotNet": "9.1.0"
         }
       }
     }
