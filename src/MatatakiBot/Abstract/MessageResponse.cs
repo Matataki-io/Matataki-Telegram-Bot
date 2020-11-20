@@ -24,11 +24,11 @@ namespace MatatakiBot.Abstract
 
         public IMessageResponseMarkup? ExtraMarkup { get; set; }
 
-        public MessageResponse(object? content)
+        public MessageResponse(object content)
         {
             _content = content ?? throw new ArgumentNullException(nameof(content));
         }
-        public MessageResponse(object introduction, object content, object? footer = null, ParseMode parseMode = ParseMode.Default)
+        public MessageResponse(object? introduction, object content, object? footer = null, ParseMode parseMode = ParseMode.Default)
         {
             Introduction = introduction;
             _content = content ?? throw new ArgumentNullException(nameof(content));
