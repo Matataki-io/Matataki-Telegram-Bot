@@ -14,13 +14,13 @@ namespace MatatakiBot.Services.Impls
 
         private readonly string _urlPrefix;
 
-        public MatatakiService(HttpClient httpClient, HttpClient transferHttpClient, IBackendService backendService, AppSettings appSettings)
+        public MatatakiService(HttpClient httpClient, HttpClient transferHttpClient, IBackendService backendService, AppConfiguration appConfiguration)
         {
             _httpClient = httpClient;
             _transferHttpClient = transferHttpClient;
             _backendService = backendService;
 
-            _urlPrefix = appSettings.Matataki.UrlPrefix ?? throw new InvalidOperationException("Missing Matataki.UrlPrefix in app settings");
+            _urlPrefix = appConfiguration.Matataki.UrlPrefix ?? throw new InvalidOperationException("Missing Matataki.UrlPrefix in app settings");
         }
 
         public string GetUserPageUrl(int id) => _urlPrefix + "/user/" + id.ToString();

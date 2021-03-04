@@ -47,9 +47,9 @@ namespace MatatakiBot.Tests
             matatakiHttpClient.BaseAddress = new Uri("http://matataki");
 
             var backendService = new BackendService(backendHttpClient);
-            var matatakiService = new MatatakiService(matatakiHttpClient, null!, backendService, new AppSettings()
+            var matatakiService = new MatatakiService(matatakiHttpClient, null!, backendService, new AppConfiguration()
             {
-                Matataki = new AppSettings.MatatakiSettings() {  UrlPrefix="http://matataki/" },
+                Matataki = new AppConfiguration.MatatakiConfiguration() {  UrlPrefix="http://matataki/" },
             });
 
             var command = new PriceCommand(matatakiService);

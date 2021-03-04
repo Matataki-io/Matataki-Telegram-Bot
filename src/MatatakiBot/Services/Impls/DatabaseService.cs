@@ -10,9 +10,9 @@ namespace MatatakiBot.Services.Impls
         private readonly string _connectionString;
         private readonly ProvideClientCertificatesCallback? _clientCertCallback;
 
-        public DatabaseService(AppSettings appSettings)
+        public DatabaseService(AppConfiguration appConfiguration)
         {
-            var database = appSettings.Database ?? throw new InvalidOperationException("Missing Database in app settings");
+            var database = appConfiguration.Database ?? throw new InvalidOperationException("Missing Database in app settings");
             var connectionBuilder = new NpgsqlConnectionStringBuilder
             {
                 Host = database.Host ?? throw new InvalidOperationException("Missing Database.Host in app settings"),

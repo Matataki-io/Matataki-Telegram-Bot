@@ -1,5 +1,4 @@
-﻿using MatatakiBot.Abstract;
-using MatatakiBot.Core;
+﻿using MatatakiBot.Attributes;
 using MatatakiBot.Services;
 using MatatakiBot.Types;
 using System.Collections.Generic;

@@ -1,4 +1,4 @@
-﻿using MatatakiBot.Abstract;
+﻿using MatatakiBot.Attributes;
 using Telegram.Bot.Types;
 
 namespace MatatakiBot.Commands

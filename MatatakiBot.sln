@@ -10,7 +10,14 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{BE957D9F-082A-4E57-8A5A-D5A2BB1DBED5}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
+		Directory.Build.props = Directory.Build.props
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MatatakiBot.Core", "src\MatatakiBot.Core\MatatakiBot.Core.csproj", "{188B4426-D091-4891-9E81-71A54482196A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{32CC1BC5-515F-4980-BC19-F3BB58D84A2C}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MatatakiBot.Core.Tests", "tests\MatatakiBot.Core.Tests\MatatakiBot.Core.Tests.csproj", "{EE565BA8-26DB-4D4B-84C1-0DB667F39FBE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -46,9 +53,37 @@ Global
 		{9A2FF145-2027-4DB8-8DF1-60768676E0CE}.Release|x64.Build.0 = Release|Any CPU
 		{9A2FF145-2027-4DB8-8DF1-60768676E0CE}.Release|x86.ActiveCfg = Release|Any CPU
 		{9A2FF145-2027-4DB8-8DF1-60768676E0CE}.Release|x86.Build.0 = Release|Any CPU
+		{188B4426-D091-4891-9E81-71A54482196A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{188B4426-D091-4891-9E81-71A54482196A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{188B4426-D091-4891-9E81-71A54482196A}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{188B4426-D091-4891-9E81-71A54482196A}.Debug|x64.Build.0 = Debug|Any CPU
+		{188B4426-D091-4891-9E81-71A54482196A}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{188B4426-D091-4891-9E81-71A54482196A}.Debug|x86.Build.0 = Debug|Any CPU
+		{188B4426-D091-4891-9E81-71A54482196A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{188B4426-D091-4891-9E81-71A54482196A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{188B4426-D091-4891-9E81-71A54482196A}.Release|x64.ActiveCfg = Release|Any CPU
+		{188B4426-D091-4891-9E81-71A54482196A}.Release|x64.Build.0 = Release|Any CPU
+		{188B4426-D091-4891-9E81-71A54482196A}.Release|x86.ActiveCfg = Release|Any CPU
+		{188B4426-D091-4891-9E81-71A54482196A}.Release|x86.Build.0 = Release|Any CPU
+		{EE565BA8-26DB-4D4B-84C1-0DB667F39FBE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EE565BA8-26DB-4D4B-84C1-0DB667F39FBE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EE565BA8-26DB-4D4B-84C1-0DB667F39FBE}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{EE565BA8-26DB-4D4B-84C1-0DB667F39FBE}.Debug|x64.Build.0 = Debug|Any CPU
+		{EE565BA8-26DB-4D4B-84C1-0DB667F39FBE}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{EE565BA8-26DB-4D4B-84C1-0DB667F39FBE}.Debug|x86.Build.0 = Debug|Any CPU
+		{EE565BA8-26DB-4D4B-84C1-0DB667F39FBE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EE565BA8-26DB-4D4B-84C1-0DB667F39FBE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EE565BA8-26DB-4D4B-84C1-0DB667F39FBE}.Release|x64.ActiveCfg = Release|Any CPU
+		{EE565BA8-26DB-4D4B-84C1-0DB667F39FBE}.Release|x64.Build.0 = Release|Any CPU
+		{EE565BA8-26DB-4D4B-84C1-0DB667F39FBE}.Release|x86.ActiveCfg = Release|Any CPU
+		{EE565BA8-26DB-4D4B-84C1-0DB667F39FBE}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{9A2FF145-2027-4DB8-8DF1-60768676E0CE} = {32CC1BC5-515F-4980-BC19-F3BB58D84A2C}
+		{EE565BA8-26DB-4D4B-84C1-0DB667F39FBE} = {32CC1BC5-515F-4980-BC19-F3BB58D84A2C}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {B529B871-675E-4FAE-9DEB-A6955E8F60A5}
