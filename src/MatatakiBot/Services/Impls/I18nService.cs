@@ -1,5 +1,6 @@
 ﻿using Jeffijoe.MessageFormat;
 using MatatakiBot.Core;
+using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -15,13 +16,17 @@ namespace MatatakiBot.Services.Impls
 {
     class I18nService : II18nService
     {
+        private ILogger _logger;
+
         private readonly SortedList<string, IMessageFormatter> _formatters;
         private readonly SortedList<string, SortedList<string, string>> _patterns;
 
         private readonly SortedList<int, string> _userLocales;
 
-        public I18nService()
+        public I18nService(ILogger logger)
         {
+            _logger = logger;
+
             _formatters = new SortedList<string, IMessageFormatter>(StringComparer.OrdinalIgnoreCase);
             _patterns = new SortedList<string, SortedList<string, string>>(StringComparer.OrdinalIgnoreCase);
 
@@ -33,6 +38,12 @@ namespace MatatakiBot.Services.Impls
             var cultureInfos = new HashSet<string>(CultureInfo.GetCultures(CultureTypes.AllCultures).Select(r => r.IetfLanguageTag),
                 StringComparer.OrdinalIgnoreCase);
             var localeDirectory = Path.Join(Path.GetDirectoryName(GetType().Assembly.Location), "locales");
+
+            if (!Directory.Exists(localeDirectory))
+            {
+                _logger.Warning("Locales directory not found");
+                return;
+            }
 
             foreach (var localeFilename in Directory.EnumerateFiles(localeDirectory, "*.yml"))
             {
