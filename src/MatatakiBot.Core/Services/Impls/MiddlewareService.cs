@@ -31,7 +31,7 @@ namespace MatatakiBot.Services.Impls
         public IEnumerable<IMessageMiddleware> GetMiddlewares()
         {
             yield return _container.Resolve<ResponseSender>();
-            yield return _container.Resolve<I18nMiddleware>();
+            //yield return _container.Resolve<I18nMiddleware>();
 
             foreach (var type in _middlewareTypes)
                 yield return _container.Resolve<IMessageMiddleware>(type);
