@@ -18,12 +18,12 @@ namespace MatatakiBot.Commands
         [CommandHandler]
         public async Task<MessageResponse> Handler(Message message)
         {
-            var chat = message.Chat;
+            var from = message.From;
 
-            if (chat.Username is null)
+            if (from.Username is null)
                 return "您的帐号缺少用户名。请进入个人页面设置用户名。";
 
-            await _userService.SetUsernameAsync(chat.Id, chat.Username);
+            await _userService.SetUsernameAsync(from.Id, from.Username);
 
             return "Ok";
         }
