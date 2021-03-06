@@ -48,6 +48,9 @@ namespace MatatakiBot.Commands
 
             var results = await Task.WhenAll(tokens.Select(async token =>
             {
+                if (token.ContractAddress is "NULL")
+                    return (token, 0);
+
                 var balance = await _minetokenService.GetBalanceAsync(token.ContractAddress, user.WalletAddress);
 
                 return (token, balance);
