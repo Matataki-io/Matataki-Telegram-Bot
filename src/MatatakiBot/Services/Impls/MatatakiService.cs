@@ -34,9 +34,20 @@ namespace MatatakiBot.Services.Impls
             return mainTokenInfo.Data.Exchange.Price;
         }
 
-        public ValueTask<string> TransferAsync(int senderId, int receiverId, decimal amount, string symbol)
+        public async ValueTask<string> TransferAsync(int senderId, int receiverId, decimal amount, string symbol)
         {
-            throw new System.NotImplementedException();
+            var tokenInfo = await _backendService.GetTokenAsync(symbol);
+
+            var response = await _transferHttpClient.PostAsJsonAsync($"/_internal_bot/minetoken/{tokenInfo.Id}/transferFrom", new
+            {
+                from = senderId, to = receiverId, value = amount * 10000m,
+            });
+
+            response.EnsureSuccessStatusCode();
+
+            var transactionResult = await response.Content.ReadFromJsonAsync<ApiWrapper<TransferResultDto>>();
+
+            return transactionResult.Data.TransactionHash;
         }
     }
 }

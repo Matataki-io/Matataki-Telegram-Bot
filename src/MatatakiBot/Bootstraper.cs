@@ -66,9 +66,9 @@ namespace MatatakiBot
         }
         private static void ConfigureServices()
         {
-            _container.RegisterDelegate<AppConfiguration, ILogger>(AppConfiguration =>
+            _container.RegisterDelegate<AppConfiguration, ILogger>(appConfiguration =>
             {
-                var logDirectory = Path.GetFullPath(AppConfiguration.LogDirectory ?? "logs");
+                var logDirectory = Path.GetFullPath(appConfiguration.LogDirectory ?? "logs");
 
                 return new LoggerConfiguration()
                     .WriteTo.Console()
@@ -81,35 +81,39 @@ namespace MatatakiBot
                     .CreateLogger();
             }, Reuse.Singleton);
 
-            _container.RegisterDelegate<AppConfiguration, HttpClient>(AppConfiguration => new HttpClient()
+            _container.RegisterDelegate<AppConfiguration, HttpClient>(appConfiguration => new HttpClient()
             {
-                BaseAddress = new Uri(AppConfiguration.Backend.UrlPrefix ?? throw new InvalidOperationException("Missing Backend.UrlPrefix in app settings")),
+                BaseAddress = new Uri(appConfiguration.Backend.UrlPrefix ?? throw new InvalidOperationException("Missing Backend.UrlPrefix in app settings")),
                 DefaultRequestHeaders =
                 {
                     Authorization = new AuthenticationHeaderValue("Bearer",
-                        AppConfiguration.Backend.AccessToken ?? throw new InvalidOperationException("Missing Backend.AccessToken in app settings"))
+                        appConfiguration.Backend.AccessToken ?? throw new InvalidOperationException("Missing Backend.AccessToken in app settings"))
                 },
             }, reuse: Reuse.Singleton, serviceKey: typeof(IBackendService));
 
             _container.Register<IBackendService, BackendService>(Reuse.Singleton, Parameters.Of.Type<HttpClient>(serviceKey: typeof(IBackendService)));
 
-            _container.RegisterDelegate<AppConfiguration, HttpClient>(AppConfiguration => new HttpClient()
+            _container.RegisterDelegate<AppConfiguration, HttpClient>(appConfiguration =>
             {
-                BaseAddress = new Uri(AppConfiguration.Matataki.ApiUrlPrefix ?? throw new InvalidOperationException("Missing Matataki.UrlPrefix in app settings")),
-                DefaultRequestHeaders =
+                var result = new HttpClient()
                 {
-                    Authorization = new AuthenticationHeaderValue("Bearer",
-                        AppConfiguration.Matataki.AccessToken ?? throw new InvalidOperationException("Missing Matataki.AccessToken in app settings"))
-                },
+                    BaseAddress = new Uri(appConfiguration.Matataki.ApiUrlPrefix ?? throw new InvalidOperationException("Missing Matataki.UrlPrefix in app settings")),
+                };
+
+                result.DefaultRequestHeaders.TryAddWithoutValidation("X-Access-Token", appConfiguration.Matataki.AccessToken ?? throw new InvalidOperationException("Missing Matataki.AccessToken in app settings"));
+
+                return result;
             }, reuse: Reuse.Singleton, serviceKey: "MatatakiServiceHttpClient");
-            _container.RegisterDelegate<AppConfiguration, HttpClient>(AppConfiguration => new HttpClient()
+            _container.RegisterDelegate<AppConfiguration, HttpClient>(appConfiguration =>
             {
-                BaseAddress = new Uri(AppConfiguration.Matataki.ApiUrlPrefix ?? throw new InvalidOperationException("Missing Matataki.UrlPrefix in app settings")),
-                DefaultRequestHeaders =
+                var result = new HttpClient()
                 {
-                    Authorization = new AuthenticationHeaderValue("Bearer",
-                        AppConfiguration.Matataki.TransferApiAccessToken ?? throw new InvalidOperationException("Missing Matataki.TransferApiAccessToken in app settings"))
-                },
+                    BaseAddress = new Uri(appConfiguration.Matataki.ApiUrlPrefix ?? throw new InvalidOperationException("Missing Matataki.UrlPrefix in app settings")),
+                };
+
+                result.DefaultRequestHeaders.TryAddWithoutValidation("X-Access-Token", appConfiguration.Matataki.TransferApiAccessToken ?? throw new InvalidOperationException("Missing Matataki.AccessToken in app settings"));
+
+                return result;
             }, reuse: Reuse.Singleton, serviceKey: "MatatakiServiceTransferHttpClient");
             _container.Register<IMatatakiService, MatatakiService>(Reuse.Singleton, Parameters.Of
                 .Name("httpClient", requiredServiceType: typeof(HttpClient), serviceKey: "MatatakiServiceHttpClient")
