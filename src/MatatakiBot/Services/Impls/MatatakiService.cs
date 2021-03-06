@@ -24,6 +24,7 @@ namespace MatatakiBot.Services.Impls
         }
 
         public string GetUserPageUrl(int id) => _urlPrefix + "/user/" + id.ToString();
+        public string GetTokenPageUrl(int id) => _urlPrefix + "/token/" + id.ToString();
 
         public async ValueTask<double> GetPriceAsync(string symbol)
         {

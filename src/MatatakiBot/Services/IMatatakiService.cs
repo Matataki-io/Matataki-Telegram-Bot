@@ -5,6 +5,7 @@ namespace MatatakiBot.Services
     public interface IMatatakiService
     {
         string GetUserPageUrl(int id);
+        string GetTokenPageUrl(int id);
 
         ValueTask<double> GetPriceAsync(string symbol);
 

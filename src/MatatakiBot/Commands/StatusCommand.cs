@@ -10,13 +10,11 @@ namespace MatatakiBot.Commands
     [Command("status")]
     class StatusCommand : CommandBase
     {
-        private readonly AppConfiguration _appConfiguration;
         private readonly IBackendService _backendService;
         private readonly IMatatakiService _matatakiService;
 
         public StatusCommand(AppConfiguration appConfiguration, IBackendService backendService, IMatatakiService matatakiService)
         {
-            _appConfiguration = appConfiguration;
             _backendService = backendService;
             _matatakiService = matatakiService;
         }
@@ -32,7 +30,7 @@ namespace MatatakiBot.Commands
             {
                 user = await _backendService.GetUserByTelegramIdAsync(message.From.Id);
 
-                builder.AppendLine($"瞬Matataki 昵称： [{user.Name}]({_appConfiguration.Matataki.UrlPrefix}/user/{user.Id})");
+                builder.AppendLine($"瞬Matataki 昵称： [{user.Name}]({_matatakiService.GetUserPageUrl(user.Id)})");
             }
             catch
             {
@@ -43,7 +41,7 @@ namespace MatatakiBot.Commands
             {
                 var token = user.IssuedTokens[0];
 
-                builder.AppendLine($"Fan票 名称：[{token.Symbol} ({token.Name})]({_appConfiguration.Matataki.UrlPrefix}/token/{user.IssuedTokens[0].Id})");
+                builder.AppendLine($"Fan票 名称：[{token.Symbol} ({token.Name})]({_matatakiService.GetTokenPageUrl(user.IssuedTokens[0].Id)})");
             } else
                 builder.AppendLine("没有发行 Fan 票");
 
