@@ -24,7 +24,8 @@ namespace MatatakiBot.Services.Impls
             await using var connection = await _databaseService.GetConnectionAsync();
 
             await connection.ExecuteAsync(@"INSERT INTO ""user""
-VALUES(@id, @username, @language ON CONFLICT (id)
+VALUES(@id, @username)
+ON CONFLICT (id)
 DO UPDATE SET username = excluded.username;", new { id, username });
         }
     }
