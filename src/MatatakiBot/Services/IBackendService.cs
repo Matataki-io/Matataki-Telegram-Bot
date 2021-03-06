@@ -8,5 +8,6 @@ namespace MatatakiBot.Services
         ValueTask<UserInfo> GetUserAsync(int id);
         ValueTask<UserInfo> GetUserByTelegramIdAsync(long id);
         ValueTask<TokenInfo> GetTokenAsync(string symbol);
+        ValueTask<TokenInfo[]> GetTokensAsync();
     }
 }

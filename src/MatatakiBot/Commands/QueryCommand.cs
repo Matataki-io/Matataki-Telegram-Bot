@@ -1,6 +1,8 @@
 ﻿using MatatakiBot.Attributes;
 using MatatakiBot.Services;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using Telegram.Bot.Types;
 
@@ -12,12 +14,14 @@ namespace MatatakiBot.Commands
         private readonly IBackendService _backendService;
         private readonly IMinetokenService _minetokenService;
         private readonly IUserService _userService;
+        private readonly IMatatakiService _matatakiService;
 
-        public QueryCommand(IBackendService backendService, IMinetokenService minetokenService, IUserService userService)
+        public QueryCommand(IBackendService backendService, IMinetokenService minetokenService, IUserService userService, IMatatakiService matatakiService)
         {
             _backendService = backendService;
             _minetokenService = minetokenService;
             _userService = userService;
+            _matatakiService = matatakiService;
         }
 
         [CommandHandler(@"(\w+)")]
@@ -31,7 +35,35 @@ namespace MatatakiBot.Commands
 
             var balance = await _minetokenService.GetBalanceAsync(token.ContractAddress, user.WalletAddress);
 
-            yield return $"{balance} {symbol}";
+            yield return Markdown($"{balance} [{symbol}]({_matatakiService.GetTokenPageUrl(token.Id)})");
+        }
+
+        [CommandHandler("$")]
+        public async IAsyncEnumerable<MessageResponse> QueryAllBalance(Message message)
+        {
+            yield return "查询中...";
+
+            var user = await _backendService.GetUserByTelegramIdAsync(message.From.Id);
+            var tokens = await _backendService.GetTokensAsync();
+
+            var results = await Task.WhenAll(tokens.Select(async token =>
+            {
+                var balance = await _minetokenService.GetBalanceAsync(token.ContractAddress, user.WalletAddress);
+
+                return (token, balance);
+            }));
+
+            var builder = new StringBuilder();
+
+            foreach (var (token, balance) in results)
+            {
+                if (balance == 0)
+                    continue;
+
+                builder.AppendLine($"{balance} [{token.Symbol}]({_matatakiService.GetTokenPageUrl(token.Id)})");
+            }
+
+            yield return Markdown(builder.ToString());
         }
 
         [CommandHandler(@"(\d+)\s+(\w+)")]
@@ -45,7 +77,7 @@ namespace MatatakiBot.Commands
 
             var balance = await _minetokenService.GetBalanceAsync(token.ContractAddress, user.WalletAddress);
 
-            yield return $"{balance} {symbol}";
+            yield return Markdown($"{balance} [{symbol}]({_matatakiService.GetTokenPageUrl(token.Id)})");
         }
 
         [CommandHandler(@"@([\w_]{5,32})\s+(\w+)")]
@@ -66,7 +98,7 @@ namespace MatatakiBot.Commands
 
             var balance = await _minetokenService.GetBalanceAsync(token.ContractAddress, user.WalletAddress);
 
-            yield return $"{balance} {symbol}";
+            yield return Markdown($"{balance} [{symbol}]({_matatakiService.GetTokenPageUrl(token.Id)})");
         }
 
         [CommandHandler]

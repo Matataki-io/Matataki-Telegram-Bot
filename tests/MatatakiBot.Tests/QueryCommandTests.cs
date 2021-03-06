@@ -15,6 +15,7 @@ namespace MatatakiBot.Tests
         {
             var backendService = Substitute.For<IBackendService>();
             var minetokenService = Substitute.For<IMinetokenService>();
+            var matatakiService = Substitute.For<IMatatakiService>();
 
             backendService.GetUserByTelegramIdAsync(1).Returns(new UserInfo()
             {
@@ -29,8 +30,9 @@ namespace MatatakiBot.Tests
                 ContractAddress = "0x114514",
             });
             minetokenService.GetBalanceAsync("0x114514", "0x1919").Returns(11.4514m);
+            matatakiService.GetTokenPageUrl(Arg.Any<int>()).Returns(info => "https://matataki/token/" + info[0]);
 
-            var command = new QueryCommand(backendService, minetokenService, Substitute.For<IUserService>());
+            var command = new QueryCommand(backendService, minetokenService, Substitute.For<IUserService>(), matatakiService);
 
             var response = command.QueryBalance(new Message() { From = new User() { Id = 1 } }, "INM").GetAsyncEnumerator();
 
@@ -38,7 +40,7 @@ namespace MatatakiBot.Tests
             Assert.Equal("查询中...", response.Current.Content);
 
             Assert.True(await response.MoveNextAsync());
-            Assert.Equal("11.4514 INM", response.Current.Content);
+            Assert.Equal("11.4514 [INM](https://matataki/token/1919)", response.Current.Content);
 
             Assert.False(await response.MoveNextAsync());
         }
@@ -47,6 +49,7 @@ namespace MatatakiBot.Tests
         {
             var backendService = Substitute.For<IBackendService>();
             var minetokenService = Substitute.For<IMinetokenService>();
+            var matatakiService = Substitute.For<IMatatakiService>();
 
             backendService.GetUserAsync(1).Returns(new UserInfo()
             {
@@ -61,8 +64,9 @@ namespace MatatakiBot.Tests
                 ContractAddress = "0x114514",
             });
             minetokenService.GetBalanceAsync("0x114514", "0x1919").Returns(11.4514m);
+            matatakiService.GetTokenPageUrl(Arg.Any<int>()).Returns(info => "https://matataki/token/" + info[0]);
 
-            var command = new QueryCommand(backendService, minetokenService, Substitute.For<IUserService>());
+            var command = new QueryCommand(backendService, minetokenService, Substitute.For<IUserService>(), matatakiService);
 
             var response = command.QueryByMatatakiId(new Message(), 1, "INM").GetAsyncEnumerator();
 
@@ -70,7 +74,7 @@ namespace MatatakiBot.Tests
             Assert.Equal("查询中...", response.Current.Content);
 
             Assert.True(await response.MoveNextAsync());
-            Assert.Equal("11.4514 INM", response.Current.Content);
+            Assert.Equal("11.4514 [INM](https://matataki/token/1919)", response.Current.Content);
 
             Assert.False(await response.MoveNextAsync());
         }
@@ -80,6 +84,7 @@ namespace MatatakiBot.Tests
             var backendService = Substitute.For<IBackendService>();
             var minetokenService = Substitute.For<IMinetokenService>();
             var userService = Substitute.For<IUserService>();
+            var matatakiService = Substitute.For<IMatatakiService>();
 
             userService.GetIdByUsernameAsync("inm").Returns(1);
             backendService.GetUserByTelegramIdAsync(1).Returns(new UserInfo()
@@ -95,8 +100,9 @@ namespace MatatakiBot.Tests
                 ContractAddress = "0x114514",
             });
             minetokenService.GetBalanceAsync("0x114514", "0x1919").Returns(11.4514m);
+            matatakiService.GetTokenPageUrl(Arg.Any<int>()).Returns(info => "https://matataki/token/" + info[0]);
 
-            var command = new QueryCommand(backendService, minetokenService, userService);
+            var command = new QueryCommand(backendService, minetokenService, userService, matatakiService);
 
             var response = command.QueryByTelegramUsername(new Message(), "inm", "INM").GetAsyncEnumerator();
 
@@ -104,7 +110,7 @@ namespace MatatakiBot.Tests
             Assert.Equal("查询中...", response.Current.Content);
 
             Assert.True(await response.MoveNextAsync());
-            Assert.Equal("11.4514 INM", response.Current.Content);
+            Assert.Equal("11.4514 [INM](https://matataki/token/1919)", response.Current.Content);
 
             Assert.False(await response.MoveNextAsync());
         }

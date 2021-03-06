@@ -33,5 +33,12 @@ namespace MatatakiBot.Services.Impls
 
             return wrapper.Data;
         }
+
+        public async ValueTask<TokenInfo[]> GetTokensAsync()
+        {
+            var wrapper = await _httpClient.GetFromJsonAsync<ApiWrapper<TokenInfo[]>>("/token");
+
+            return wrapper.Data;
+        }
     }
 }
