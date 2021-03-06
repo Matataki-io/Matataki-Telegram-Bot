@@ -30,6 +30,7 @@ namespace MatatakiBot.Services.Impls
 
         public IEnumerable<IMessageMiddleware> GetMiddlewares()
         {
+            yield return _container.Resolve<NonCommandFilter>();
             yield return _container.Resolve<ResponseSender>();
             //yield return _container.Resolve<I18nMiddleware>();
 

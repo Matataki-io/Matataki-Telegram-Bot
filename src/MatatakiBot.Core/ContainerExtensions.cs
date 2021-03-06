@@ -17,6 +17,7 @@ namespace MatatakiBot
             container.Register<MessageDispatcher>(Reuse.Singleton);
             container.Register<I18nMiddleware>(Reuse.Singleton);
             container.Register<ResponseSender>(Reuse.Singleton);
+            container.Register<NonCommandFilter>(Reuse.Singleton);
         }
     }
 }
