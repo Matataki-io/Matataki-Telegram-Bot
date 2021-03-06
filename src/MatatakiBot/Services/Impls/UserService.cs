@@ -12,11 +12,18 @@ namespace MatatakiBot.Services.Impls
             _databaseService = databaseService;
         }
 
+        public async ValueTask<long?> GetIdByUsernameAsync(string username)
+        {
+            await using var connection = await _databaseService.GetConnectionAsync();
+
+            return await connection.QuerySingleOrDefaultAsync<long>("SELECT id FROM \"user\" WHERE username = @username;", new { username });
+        }
+
         public async ValueTask SetUsernameAsync(long id, string username)
         {
             await using var connection = await _databaseService.GetConnectionAsync();
 
-            await connection.ExecuteAsync(@"INSERT INTO user
+            await connection.ExecuteAsync(@"INSERT INTO ""user""
 VALUES(@id, @username, @language ON CONFLICT (id)
 DO UPDATE SET username = excluded.username;", new { id, username });
         }
