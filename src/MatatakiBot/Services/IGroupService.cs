@@ -1,10 +1,13 @@
 ﻿using System.Threading.Tasks;
+using Telegram.Bot.Types;
 
 namespace MatatakiBot.Services
 {
     public interface IGroupService
     {
-        ValueTask EnsureMemberAsync(long groupId, long userId);
-        ValueTask RemoveMemberAsync(long groupId, long userId);
+        ValueTask<bool> IsGroupExistsAsync(Chat group);
+        ValueTask EnsureGroupAsync(Chat group, ChatMember creator);
+        ValueTask EnsureMemberAsync(Chat group, User user);
+        ValueTask RemoveMemberAsync(Chat group, User user);
     }
 }
