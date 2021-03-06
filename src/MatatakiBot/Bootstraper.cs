@@ -132,12 +132,23 @@ namespace MatatakiBot
                 commandService.RegisterCommand(type);
         }
 
-        public static async ValueTask Startup(Action<Container>? action = null)
+        public static async ValueTask StartupAsync(Action<Container>? action = null)
+        {
+            await StartupCore();
+
+            action?.Invoke(_container);
+        }
+        public static async ValueTask StartupAsync(Func<Container, Task>? func = null)
+        {
+            await StartupCore();
+
+            if (func is not null)
+                await func(_container);
+        }
+        static async ValueTask StartupCore()
         {
             _container.Resolve<II18nService>().Initialize();
             await _container.Resolve<IBotService>().InitializeAsync();
-
-            action?.Invoke(_container);
         }
     }
 }

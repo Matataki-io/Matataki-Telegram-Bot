@@ -27,7 +27,7 @@ namespace MatatakiBot.Controllers
         {
             if (!_isInitialized)
             {
-                await Bootstraper.Startup();
+                await Bootstraper.StartupAsync();
                 _isInitialized = true;
             }
 

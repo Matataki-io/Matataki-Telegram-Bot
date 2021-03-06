@@ -21,6 +21,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MatatakiBot.Core.Tests", "t
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MatatakiBot.Serverless", "src\MatatakiBot.Serverless\MatatakiBot.Serverless.csproj", "{448F8FBC-9B1A-4AAB-82F9-7833E7537E5A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MatatakiBot.Local", "src\MatatakiBot.Local\MatatakiBot.Local.csproj", "{437632C0-CFCB-403C-AEB2-804D5B3B9208}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -91,6 +93,18 @@ Global
 		{448F8FBC-9B1A-4AAB-82F9-7833E7537E5A}.Release|x64.Build.0 = Release|Any CPU
 		{448F8FBC-9B1A-4AAB-82F9-7833E7537E5A}.Release|x86.ActiveCfg = Release|Any CPU
 		{448F8FBC-9B1A-4AAB-82F9-7833E7537E5A}.Release|x86.Build.0 = Release|Any CPU
+		{437632C0-CFCB-403C-AEB2-804D5B3B9208}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{437632C0-CFCB-403C-AEB2-804D5B3B9208}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{437632C0-CFCB-403C-AEB2-804D5B3B9208}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{437632C0-CFCB-403C-AEB2-804D5B3B9208}.Debug|x64.Build.0 = Debug|Any CPU
+		{437632C0-CFCB-403C-AEB2-804D5B3B9208}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{437632C0-CFCB-403C-AEB2-804D5B3B9208}.Debug|x86.Build.0 = Debug|Any CPU
+		{437632C0-CFCB-403C-AEB2-804D5B3B9208}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{437632C0-CFCB-403C-AEB2-804D5B3B9208}.Release|Any CPU.Build.0 = Release|Any CPU
+		{437632C0-CFCB-403C-AEB2-804D5B3B9208}.Release|x64.ActiveCfg = Release|Any CPU
+		{437632C0-CFCB-403C-AEB2-804D5B3B9208}.Release|x64.Build.0 = Release|Any CPU
+		{437632C0-CFCB-403C-AEB2-804D5B3B9208}.Release|x86.ActiveCfg = Release|Any CPU
+		{437632C0-CFCB-403C-AEB2-804D5B3B9208}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
