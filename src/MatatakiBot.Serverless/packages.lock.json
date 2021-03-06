@@ -1448,14 +1448,6 @@
           "System.Net.Requests": "4.3.0"
         }
       },
-      "Telegram.Bot.Extensions.Polling": {
-        "type": "Transitive",
-        "resolved": "0.2.0",
-        "contentHash": "dMQLswqe/Ke/W0EGAMrGGdo5ho/m/MXRok6OsUcj1XGVrbX7PPMv1vOIT7P8VVF8b7ykqNGQAUeknsjf+GX3iQ==",
-        "dependencies": {
-          "Telegram.Bot": "15.6.0"
-        }
-      },
       "YamlDotNet": {
         "type": "Transitive",
         "resolved": "9.1.0",
@@ -1478,8 +1470,7 @@
           "SkiaSharp": "2.80.2",
           "SkiaSharp.NativeAssets.Linux": "2.80.2",
           "System.Reactive": "5.0.0",
-          "Telegram.Bot": "15.7.1",
-          "Telegram.Bot.Extensions.Polling": "0.2.0"
+          "Telegram.Bot": "15.7.1"
         }
       },
       "matatakibot.core": {

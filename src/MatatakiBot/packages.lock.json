@@ -142,15 +142,6 @@
           "System.Net.Requests": "4.3.0"
         }
       },
-      "Telegram.Bot.Extensions.Polling": {
-        "type": "Direct",
-        "requested": "[0.2.0, )",
-        "resolved": "0.2.0",
-        "contentHash": "dMQLswqe/Ke/W0EGAMrGGdo5ho/m/MXRok6OsUcj1XGVrbX7PPMv1vOIT7P8VVF8b7ykqNGQAUeknsjf+GX3iQ==",
-        "dependencies": {
-          "Telegram.Bot": "15.6.0"
-        }
-      },
       "Common.Logging.Core": {
         "type": "Transitive",
         "resolved": "3.4.1",
