@@ -21,7 +21,7 @@ namespace MatatakiBot
 
         public MessageResponseAsyncEnumeratorWrapper(MessageResponse? messageResponse = default)
         {
-            _messageResponse = messageResponse ?? MessageResponse.FallbackResponse;
+            _messageResponse = messageResponse ?? "目前没有实现该命令";
         }
 
         public IAsyncEnumerator<MessageResponse> GetAsyncEnumerator(CancellationToken cancellationToken = default) => this;

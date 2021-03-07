@@ -93,16 +93,9 @@ namespace MatatakiBot
 
             _container.Register<IBackendService, BackendService>(Reuse.Singleton, Parameters.Of.Type<HttpClient>(serviceKey: typeof(IBackendService)));
 
-            _container.RegisterDelegate<AppConfiguration, HttpClient>(appConfiguration =>
+            _container.RegisterDelegate<AppConfiguration, HttpClient>(appConfiguration => new HttpClient()
             {
-                var result = new HttpClient()
-                {
-                    BaseAddress = new Uri(appConfiguration.Matataki.ApiUrlPrefix ?? throw new InvalidOperationException("Missing Matataki.UrlPrefix in app settings")),
-                };
-
-                result.DefaultRequestHeaders.TryAddWithoutValidation("X-Access-Token", appConfiguration.Matataki.AccessToken ?? throw new InvalidOperationException("Missing Matataki.AccessToken in app settings"));
-
-                return result;
+                BaseAddress = new Uri(appConfiguration.Matataki.ApiUrlPrefix ?? throw new InvalidOperationException("Missing Matataki.UrlPrefix in app settings")),
             }, reuse: Reuse.Singleton, serviceKey: "MatatakiServiceHttpClient");
             _container.RegisterDelegate<AppConfiguration, HttpClient>(appConfiguration =>
             {
