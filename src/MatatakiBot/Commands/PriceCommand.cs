@@ -1,6 +1,6 @@
 ﻿using MatatakiBot.Attributes;
 using MatatakiBot.Services;
-using System.Threading.Tasks;
+using System.Collections.Generic;
 using Telegram.Bot.Types;
 
 namespace MatatakiBot.Commands
@@ -16,11 +16,13 @@ namespace MatatakiBot.Commands
         }
 
         [CommandHandler(@"(\w+)")]
-        public async Task<MessageResponse> Handler(Message message, string symbol)
+        public async IAsyncEnumerable<MessageResponse> Handler(Message message, string symbol)
         {
+            yield return "查询中……";
+
             var price = await _matatakiService.GetPriceAsync(symbol.ToUpperInvariant());
 
-            return Text(price + " CNY");
+            yield return Text(price + " CNY");
         }
 
         [CommandHandler]
