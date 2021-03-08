@@ -28,7 +28,7 @@ namespace MatatakiBot.Commands
         public async IAsyncEnumerable<MessageResponse> QueryBalance(Message message, string symbol)
         {
             symbol = symbol.ToUpperInvariant();
-            yield return "查询中...";
+            yield return "查询中……";
 
             var user = await _backendService.GetUserByTelegramIdAsync(message.From.Id);
             var token = await _backendService.GetTokenAsync(symbol);
@@ -41,7 +41,7 @@ namespace MatatakiBot.Commands
         [CommandHandler("$")]
         public async IAsyncEnumerable<MessageResponse> QueryAllBalance(Message message)
         {
-            yield return "查询中...";
+            yield return "查询中……";
 
             var user = await _backendService.GetUserByTelegramIdAsync(message.From.Id);
             var tokens = await _backendService.GetTokensAsync();
@@ -73,7 +73,7 @@ namespace MatatakiBot.Commands
         public async IAsyncEnumerable<MessageResponse> QueryByMatatakiId(Message message, int userId, string symbol)
         {
             symbol = symbol.ToUpperInvariant();
-            yield return "查询中...";
+            yield return "查询中……";
 
             var user = await _backendService.GetUserAsync(userId);
             var token = await _backendService.GetTokenAsync(symbol);
@@ -87,7 +87,7 @@ namespace MatatakiBot.Commands
         public async IAsyncEnumerable<MessageResponse> QueryByTelegramUsername(Message message, string username, string symbol)
         {
             symbol = symbol.ToUpperInvariant();
-            yield return "查询中...";
+            yield return "查询中……";
 
             var telegramIdOrDefault = await _userService.GetIdByUsernameAsync(username);
             if (telegramIdOrDefault is not long telegramId)

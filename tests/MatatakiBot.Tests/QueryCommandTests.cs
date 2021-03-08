@@ -37,7 +37,7 @@ namespace MatatakiBot.Tests
             var response = command.QueryBalance(new Message() { From = new User() { Id = 1 } }, "INM").GetAsyncEnumerator();
 
             Assert.True(await response.MoveNextAsync());
-            Assert.Equal("查询中...", response.Current.Content);
+            Assert.Equal("查询中……", response.Current.Content);
 
             Assert.True(await response.MoveNextAsync());
             Assert.Equal("11.4514 [INM](https://matataki/token/1919)", response.Current.Content);
@@ -71,7 +71,7 @@ namespace MatatakiBot.Tests
             var response = command.QueryByMatatakiId(new Message(), 1, "INM").GetAsyncEnumerator();
 
             Assert.True(await response.MoveNextAsync());
-            Assert.Equal("查询中...", response.Current.Content);
+            Assert.Equal("查询中……", response.Current.Content);
 
             Assert.True(await response.MoveNextAsync());
             Assert.Equal("11.4514 [INM](https://matataki/token/1919)", response.Current.Content);
@@ -107,7 +107,7 @@ namespace MatatakiBot.Tests
             var response = command.QueryByTelegramUsername(new Message(), "inm", "INM").GetAsyncEnumerator();
 
             Assert.True(await response.MoveNextAsync());
-            Assert.Equal("查询中...", response.Current.Content);
+            Assert.Equal("查询中……", response.Current.Content);
 
             Assert.True(await response.MoveNextAsync());
             Assert.Equal("11.4514 [INM](https://matataki/token/1919)", response.Current.Content);
