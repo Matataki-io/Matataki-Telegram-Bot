@@ -6,7 +6,7 @@ namespace MatatakiBot
 {
     public class MessageResponse
     {
-        internal static readonly MessageResponse FallbackResponse = new MessageResponse(new object());
+        internal static readonly MessageResponse FallbackResponse = new MessageResponse("目前没有实现该命令");
 
         public ParseMode ParseMode { get; set; }
 
