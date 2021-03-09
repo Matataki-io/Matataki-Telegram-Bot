@@ -1,4 +1,4 @@
-﻿using Dapper;
+using Dapper;
 using System.Threading.Tasks;
 using Telegram.Bot.Types;
 
@@ -40,6 +40,13 @@ namespace MatatakiBot.Services.Impls
             await using var connection = await _databaseService.GetConnectionAsync();
 
             await connection.ExecuteAsync("DELETE FROM group_member WHERE group = @groupId AND user = @userId;", new { groupId = group.Id, userId = user.Id });
+        }
+
+        public async ValueTask UpdateTitleAsync(long groupId, string title)
+        {
+            await using var connection = await _databaseService.GetConnectionAsync();
+
+            await connection.ExecuteAsync("UPDATE \"group\" SET title = @title WHERE id = @groupId;", new { groupId, title });
         }
     }
 }

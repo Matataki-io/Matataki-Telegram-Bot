@@ -1,4 +1,4 @@
-﻿using MatatakiBot.Services;
+using MatatakiBot.Services;
 using System.Collections.Generic;
 using System.Linq;
 using Telegram.Bot;
@@ -32,6 +32,13 @@ namespace MatatakiBot.Middlewares
                 if (message.LeftChatMember is User removedMember)
                 {
                     await _groupService.RemoveMemberAsync(message.Chat, removedMember);
+
+                    yield break;
+                }
+
+                if (message.NewChatTitle is string title)
+                {
+                    await _groupService.UpdateTitleAsync(message.Chat.Id, title);
 
                     yield break;
                 }
