@@ -23,7 +23,7 @@ namespace MatatakiBot.Services.Impls
         {
             await using var connection = await _databaseService.GetConnectionAsync();
 
-            await connection.ExecuteAsync("INSERT INTO \"group\" VALUES(@groupId, @title, @creatorId);", new { groupId, title, creatorId });
+            await connection.ExecuteAsync("INSERT INTO \"group\" VALUES(@groupId, @title, @creatorId) ON CONFLICT DO NOTHING;", new { groupId, title, creatorId });
         }
 
         public async ValueTask EnsureMemberAsync(long groupId, long userId)
@@ -37,7 +37,7 @@ namespace MatatakiBot.Services.Impls
         {
             await using var connection = await _databaseService.GetConnectionAsync();
 
-            await connection.ExecuteAsync("DELETE FROM group_member WHERE group = @groupId AND user = @userId;", new { groupId, userId });
+            await connection.ExecuteAsync("DELETE FROM group_member WHERE groupId = @groupId AND userId = @userId;", new { groupId, userId });
         }
 
         public async ValueTask UpdateTitleAsync(long groupId, string title)

@@ -24,9 +24,9 @@ namespace MatatakiBot.Middlewares
 
             if (chat.Type != ChatType.Private)
             {
-                if (message.MigrateToChatId is long newGroupId)
+                if (message.MigrateToChatId != 0)
                 {
-                    await _groupService.MigrateGroupAsync(chat.Id, newGroupId);
+                    await _groupService.MigrateGroupAsync(chat.Id, message.MigrateToChatId);
 
                     yield break;
                 }
@@ -38,9 +38,9 @@ namespace MatatakiBot.Middlewares
                     await _groupService.EnsureGroupAsync(chat.Id, chat.Title, creator.User.Id);
                 }
 
-                if (message.MigrateFromChatId is long oldGroupId)
+                if (message.MigrateFromChatId != 0)
                 {
-                    await _groupService.RemoveGroupAsync(oldGroupId);
+                    await _groupService.RemoveGroupAsync(message.MigrateFromChatId);
 
                     yield break;
                 }
