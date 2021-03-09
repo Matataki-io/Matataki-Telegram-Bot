@@ -24,11 +24,25 @@ namespace MatatakiBot.Middlewares
 
             if (chat.Type != ChatType.Private)
             {
+                if (message.MigrateToChatId is long newGroupId)
+                {
+                    await _groupService.MigrateGroupAsync(chat.Id, newGroupId);
+
+                    yield break;
+                }
+
                 if (!await _groupService.IsGroupExistsAsync(chat.Id))
                 {
                     var creator = (await _botClient.GetChatAdministratorsAsync(chat)).Single(r => r.Status == ChatMemberStatus.Creator);
 
                     await _groupService.EnsureGroupAsync(chat.Id, chat.Title, creator.User.Id);
+                }
+
+                if (message.MigrateFromChatId is long oldGroupId)
+                {
+                    await _groupService.RemoveGroupAsync(oldGroupId);
+
+                    yield break;
                 }
 
                 if (message.LeftChatMember is User removedMember)

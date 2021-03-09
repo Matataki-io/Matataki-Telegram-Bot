@@ -46,5 +46,19 @@ namespace MatatakiBot.Services.Impls
 
             await connection.ExecuteAsync("UPDATE \"group\" SET title = @title WHERE id = @groupId;", new { groupId, title });
         }
+
+        public async ValueTask MigrateGroupAsync(long oldId, long newId)
+        {
+            await using var connection = await _databaseService.GetConnectionAsync();
+
+            await connection.ExecuteAsync("UPDATE group_member SET groupId = @newId WHERE groupId = @oldId;", new { oldId, newId });
+        }
+
+        public async ValueTask RemoveGroupAsync(long groupId)
+        {
+            await using var connection = await _databaseService.GetConnectionAsync();
+
+            await connection.ExecuteAsync("DELETE FROM \"group\" WHERE id = @groupId;", new { groupId });
+        }
     }
 }

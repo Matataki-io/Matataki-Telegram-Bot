@@ -11,5 +11,8 @@ namespace MatatakiBot.Services
         ValueTask RemoveMemberAsync(long groupId, long userId);
 
         ValueTask UpdateTitleAsync(long groupId, string title);
+
+        ValueTask MigrateGroupAsync(long oldId, long newId);
+        ValueTask RemoveGroupAsync(long groupId);
     }
 }
