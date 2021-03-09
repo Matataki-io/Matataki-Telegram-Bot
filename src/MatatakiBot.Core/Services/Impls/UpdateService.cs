@@ -1,4 +1,5 @@
-﻿using Serilog;
+﻿using Newtonsoft.Json;
+using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,13 +20,19 @@ namespace MatatakiBot.Services.Impls
             _logger = logger;
         }
 
-        public Task HandleUpdateAsync(Update update) => update.Type switch
+        public Task HandleUpdateAsync(Update update)
         {
-            UpdateType.Message => HandleMessage(update.Message),
-            UpdateType.CallbackQuery => HandleCallbackQuery(update.CallbackQuery),
+            _logger.Information("Handling update: {Update}", JsonConvert.SerializeObject(update));
 
-            _ => throw new InvalidOperationException("Unexpected update type"),
-        };
+            return update.Type switch
+            {
+                UpdateType.Message => HandleMessage(update.Message),
+                UpdateType.CallbackQuery => HandleCallbackQuery(update.CallbackQuery),
+
+                _ => throw new InvalidOperationException("Unexpected update type"),
+            };
+        }
+
         internal async Task HandleMessage(Message message)
         {
             try

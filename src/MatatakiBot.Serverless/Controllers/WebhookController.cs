@@ -31,8 +31,6 @@ namespace MatatakiBot.Controllers
                 _isInitialized = true;
             }
 
-            _logger.Information("New update: {Update}", JsonConvert.SerializeObject(update));
-
             try
             {
                 await _updateService.HandleUpdateAsync(update);
