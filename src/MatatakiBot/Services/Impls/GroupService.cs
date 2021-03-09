@@ -1,6 +1,5 @@
-using Dapper;
+﻿using Dapper;
 using System.Threading.Tasks;
-using Telegram.Bot.Types;
 
 namespace MatatakiBot.Services.Impls
 {
@@ -13,33 +12,32 @@ namespace MatatakiBot.Services.Impls
             _databaseService = databaseService;
         }
 
-        public async ValueTask<bool> IsGroupExistsAsync(Chat group)
+        public async ValueTask<bool> IsGroupExistsAsync(long groupId)
         {
             await using var connection = await _databaseService.GetConnectionAsync();
 
-            return await connection.ExecuteScalarAsync<bool>("SELECT EXISTS (SELECT 1 FROM \"group\" WHERE id = @groupId);", new { groupId = group.Id });
+            return await connection.ExecuteScalarAsync<bool>("SELECT EXISTS (SELECT 1 FROM \"group\" WHERE id = @groupId);", new { groupId });
         }
 
-        public async ValueTask EnsureGroupAsync(Chat group, ChatMember creator)
+        public async ValueTask EnsureGroupAsync(long groupId, string title, long creatorId)
         {
             await using var connection = await _databaseService.GetConnectionAsync();
 
-            await connection.ExecuteAsync("INSERT INTO \"group\" VALUES(@groupId, @title, @creatorId);",
-                new { groupId = group.Id, title = group.Title, creatorId = creator.User.Id });
+            await connection.ExecuteAsync("INSERT INTO \"group\" VALUES(@groupId, @title, @creatorId);", new { groupId, title, creatorId });
         }
 
-        public async ValueTask EnsureMemberAsync(Chat group, User user)
+        public async ValueTask EnsureMemberAsync(long groupId, long userId)
         {
             await using var connection = await _databaseService.GetConnectionAsync();
 
-            await connection.ExecuteAsync("INSERT INTO group_member VALUES(@groupId, @userId) ON CONFLICT DO NOTHING;", new { groupId = group.Id, userId = user.Id });
+            await connection.ExecuteAsync("INSERT INTO group_member VALUES(@groupId, @userId) ON CONFLICT DO NOTHING;", new { groupId, userId });
         }
 
-        public async ValueTask RemoveMemberAsync(Chat group, User user)
+        public async ValueTask RemoveMemberAsync(long groupId, long userId)
         {
             await using var connection = await _databaseService.GetConnectionAsync();
 
-            await connection.ExecuteAsync("DELETE FROM group_member WHERE group = @groupId AND user = @userId;", new { groupId = group.Id, userId = user.Id });
+            await connection.ExecuteAsync("DELETE FROM group_member WHERE group = @groupId AND user = @userId;", new { groupId, userId });
         }
 
         public async ValueTask UpdateTitleAsync(long groupId, string title)

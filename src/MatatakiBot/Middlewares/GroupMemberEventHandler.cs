@@ -1,4 +1,4 @@
-using MatatakiBot.Services;
+﻿using MatatakiBot.Services;
 using System.Collections.Generic;
 using System.Linq;
 using Telegram.Bot;
@@ -20,25 +20,27 @@ namespace MatatakiBot.Middlewares
 
         public async IAsyncEnumerable<MessageResponse> HandleMessageAsync(Message message, NextHandler nextHandler)
         {
-            if (message.Chat.Type != ChatType.Private)
-            {
-                if (!await _groupService.IsGroupExistsAsync(message.Chat))
-                {
-                    var creator = (await _botClient.GetChatAdministratorsAsync(message.Chat)).Single(r => r.Status == ChatMemberStatus.Creator);
+            var chat = message.Chat;
 
-                    await _groupService.EnsureGroupAsync(message.Chat, creator);
+            if (chat.Type != ChatType.Private)
+            {
+                if (!await _groupService.IsGroupExistsAsync(chat.Id))
+                {
+                    var creator = (await _botClient.GetChatAdministratorsAsync(chat)).Single(r => r.Status == ChatMemberStatus.Creator);
+
+                    await _groupService.EnsureGroupAsync(chat.Id, chat.Title, creator.User.Id);
                 }
 
                 if (message.LeftChatMember is User removedMember)
                 {
-                    await _groupService.RemoveMemberAsync(message.Chat, removedMember);
+                    await _groupService.RemoveMemberAsync(chat.Id, removedMember.Id);
 
                     yield break;
                 }
 
                 if (message.NewChatTitle is string title)
                 {
-                    await _groupService.UpdateTitleAsync(message.Chat.Id, title);
+                    await _groupService.UpdateTitleAsync(chat.Id, title);
 
                     yield break;
                 }
@@ -46,7 +48,7 @@ namespace MatatakiBot.Middlewares
                 if (message.From.IsBot)
                     yield break;
 
-                await _groupService.EnsureMemberAsync(message.Chat, message.From);
+                await _groupService.EnsureMemberAsync(chat.Id, message.From.Id);
             }
 
             await foreach (var _ in nextHandler(message)) ;
