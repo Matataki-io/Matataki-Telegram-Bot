@@ -7,12 +7,12 @@ using Telegram.Bot.Types.Enums;
 
 namespace MatatakiBot.Middlewares
 {
-    class GroupMemberEventHandler : IMessageMiddleware
+    class GroupEventHandler : IMessageMiddleware
     {
         private readonly IGroupService _groupService;
         private readonly ITelegramBotClient _botClient;
 
-        public GroupMemberEventHandler(IGroupService groupService, ITelegramBotClient botClient)
+        public GroupEventHandler(IGroupService groupService, ITelegramBotClient botClient)
         {
             _groupService = groupService;
             _botClient = botClient;

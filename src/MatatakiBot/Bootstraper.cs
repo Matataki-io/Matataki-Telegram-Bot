@@ -44,7 +44,7 @@ namespace MatatakiBot
                 return new TelegramBotClient(token, new WebProxy(appConfiguration.Proxy.Host ?? "127.0.0.1", appConfiguration.Proxy.Port));
             }, Reuse.Singleton);
 
-            _container.Resolve<IMiddlewareService>().RegisterPreFilterMessageMiddleware<GroupMemberEventHandler>();
+            _container.Resolve<IMiddlewareService>().RegisterPreFilterMessageMiddleware<GroupEventHandler>();
 
             RegisterCommands();
 
