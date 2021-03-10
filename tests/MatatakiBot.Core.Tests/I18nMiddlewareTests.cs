@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Telegram.Bot.Types;
 using Xunit;
 
-namespace MatatakiBot.Tests
+namespace MatatakiBot.Core.Tests
 {
     public class I18nMiddlewareTests
     {

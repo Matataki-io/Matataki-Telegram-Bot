@@ -6,7 +6,7 @@ using NSubstitute;
 using System;
 using Xunit;
 
-namespace MatatakiBot.Tests
+namespace MatatakiBot.Core.Tests
 {
     public class CommandRegistrationTests
     {

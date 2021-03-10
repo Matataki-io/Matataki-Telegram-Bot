@@ -7,7 +7,7 @@ using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 using Xunit;
 
-namespace MatatakiBot.Tests
+namespace MatatakiBot.Core.Tests
 {
     public class ResponseSenderTests
     {
