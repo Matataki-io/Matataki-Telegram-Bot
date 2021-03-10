@@ -15,8 +15,7 @@ namespace MatatakiBot
             container.Register<ICommandService, CommandService>(Reuse.Singleton);
             container.Register<IMiddlewareService, MiddlewareService>(Reuse.Singleton);
             container.Register<IUpdateService, UpdateService>(Reuse.Singleton);
-            container.Register<PrivateChatService>(Reuse.Singleton);
-            container.Register<IPrivateChatService, PrivateChatService>(Reuse.Singleton);
+            container.RegisterMany<PrivateChatService>(Reuse.Singleton, nonPublicServiceTypes: true);
 
             container.Register<MessageDispatcher>(Reuse.Singleton);
             container.Register<I18nMiddleware>(Reuse.Singleton);

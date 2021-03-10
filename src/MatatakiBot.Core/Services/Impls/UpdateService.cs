@@ -11,8 +11,8 @@ namespace MatatakiBot.Services.Impls
 {
     sealed class UpdateService : IUpdateService
     {
-        private IMessageMiddleware[] _middlewares;
-        private ILogger _logger;
+        private readonly IMessageMiddleware[] _middlewares;
+        private readonly ILogger _logger;
 
         public UpdateService(IMiddlewareService middlewareService, ILogger logger)
         {
