@@ -45,6 +45,7 @@ namespace MatatakiBot.Services.Impls
             foreach (var type in _preFilterMiddlewareTypes)
                 yield return _container.Resolve<IMessageMiddleware>(type);
 
+            yield return _container.Resolve<PrivateChatMiddleware>();
             yield return _container.Resolve<NonCommandFilter>();
             yield return _container.Resolve<ResponseSender>();
             //yield return _container.Resolve<I18nMiddleware>();
