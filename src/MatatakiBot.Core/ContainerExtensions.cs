@@ -13,11 +13,14 @@ namespace MatatakiBot
             container.Register<ICommandService, CommandService>(Reuse.Singleton);
             container.Register<IMiddlewareService, MiddlewareService>(Reuse.Singleton);
             container.Register<IUpdateService, UpdateService>(Reuse.Singleton);
+            container.Register<PrivateChatService>(Reuse.Singleton);
+            container.Register<IPrivateChatService, PrivateChatService>(Reuse.Singleton);
 
             container.Register<MessageDispatcher>(Reuse.Singleton);
             container.Register<I18nMiddleware>(Reuse.Singleton);
             container.Register<ResponseSender>(Reuse.Singleton);
             container.Register<NonCommandFilter>(Reuse.Singleton);
+            container.Register<PrivateChatMiddleware>(Reuse.Singleton);
         }
     }
 }
