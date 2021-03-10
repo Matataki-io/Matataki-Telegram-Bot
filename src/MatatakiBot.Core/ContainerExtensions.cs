@@ -9,6 +9,8 @@ namespace MatatakiBot
     {
         public static void InitializeBotCore(this Container container)
         {
+            container.RegisterInstance<Container>(container);
+
             container.Register<IBotService, BotService>(Reuse.Singleton);
             container.Register<ICommandService, CommandService>(Reuse.Singleton);
             container.Register<IMiddlewareService, MiddlewareService>(Reuse.Singleton);

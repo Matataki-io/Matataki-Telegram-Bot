@@ -25,7 +25,6 @@ namespace MatatakiBot
         static Bootstraper()
         {
             _container = new Container();
-            _container.RegisterInstance<Container>(_container);
         }
 
         public static void Initialize(Action<Container>? action = null)
