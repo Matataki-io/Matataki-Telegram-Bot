@@ -7,13 +7,13 @@ namespace MatatakiBot.Middlewares
 {
     class NonCommandFilter : IMessageMiddleware
     {
-        public async IAsyncEnumerable<MessageResponse> HandleMessageAsync(Message message, NextHandler nextHandler)
+        public IAsyncEnumerable<MessageResponse> HandleMessageAsync(Message message, NextHandler nextHandler)
         {
             var commandEntity = message.Entities?.SingleOrDefault(r => r is { Type: MessageEntityType.BotCommand, Offset: 0 });
             if (message.Chat.Type != ChatType.Private && commandEntity is null)
-                yield break;
+                return AsyncEnumerable.Empty<MessageResponse>();
 
-            await foreach (var _ in nextHandler(message)) ;
+            return nextHandler(message);
         }
     }
 }
