@@ -158,5 +158,68 @@ namespace MatatakiBot.Core.Tests
 
             Assert.False(await enumerator.MoveNextAsync());
         }
+
+        [Fact]
+        public async Task ForceNewMessage()
+        {
+            var client = Substitute.For<ITelegramBotClient>();
+            var sender = new ResponseSender(client);
+            var chat = new Chat() { Id = 1, Type = ChatType.Private };
+            var message = new Message() { Chat = chat };
+
+            client.SendTextMessageAsync(Arg.Is<ChatId>(r => r.Identifier == chat.Id), "1",
+                parseMode: ParseMode.Default,
+                disableWebPagePreview: Arg.Any<bool>())
+                .Returns(new Message()
+                {
+                    MessageId = 1,
+                    Chat = chat,
+                    Text = "1",
+                }, new Message()
+                {
+                    MessageId = 2,
+                    Chat = chat,
+                    Text = "2",
+                }, new Message()
+                {
+                    MessageId = 3,
+                    Chat = chat,
+                    Text = "3",
+                });
+
+            await using var enumerator = sender.HandleMessageAsync(message, _ => new MessageResponse[]
+            {
+                "1",
+                new MessageResponse("2").WithForceNewMessage(),
+                new MessageResponse("3").WithForceNewMessage(),
+            }.ToAsyncEnumerable()).GetAsyncEnumerator();
+
+            Assert.True(await enumerator.MoveNextAsync());
+
+            await client.Received(1).SendChatActionAsync(Arg.Is<ChatId>(r => r.Identifier == chat.Id), ChatAction.Typing);
+            await client.Received(1).SendTextMessageAsync(Arg.Is<ChatId>(r => r.Identifier == chat.Id), "1",
+                disableWebPagePreview: Arg.Any<bool>());
+            await client.DidNotReceiveWithAnyArgs().EditMessageTextAsync(default!, default!);
+
+            client.ClearReceivedCalls();
+
+            Assert.True(await enumerator.MoveNextAsync());
+
+            await client.Received(1).SendChatActionAsync(Arg.Is<ChatId>(r => r.Identifier == chat.Id), ChatAction.Typing);
+            await client.Received(1).SendTextMessageAsync(Arg.Is<ChatId>(r => r.Identifier == chat.Id), "2",
+                disableWebPagePreview: Arg.Any<bool>());
+            await client.DidNotReceiveWithAnyArgs().EditMessageTextAsync(default!, default!);
+
+            client.ClearReceivedCalls();
+
+            Assert.True(await enumerator.MoveNextAsync());
+
+            await client.Received(1).SendChatActionAsync(Arg.Is<ChatId>(r => r.Identifier == chat.Id), ChatAction.Typing);
+            await client.Received(1).SendTextMessageAsync(Arg.Is<ChatId>(r => r.Identifier == chat.Id), "3",
+                disableWebPagePreview: Arg.Any<bool>());
+            await client.DidNotReceiveWithAnyArgs().EditMessageTextAsync(default!, default!);
+
+            Assert.False(await enumerator.MoveNextAsync());
+        }
     }
 }

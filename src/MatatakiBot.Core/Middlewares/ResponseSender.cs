@@ -25,7 +25,7 @@ namespace MatatakiBot.Middlewares
             {
                 await _client.SendChatActionAsync(message.Chat, ChatAction.Typing);
 
-                if (respondedMessage == null)
+                if (respondedMessage is null || response.ForceNewMessage)
                 {
                     respondedMessage = await _client.SendTextMessageAsync(message.Chat, response.ToString(),
                         parseMode: response.ParseMode,

@@ -23,6 +23,8 @@ namespace MatatakiBot
 
         public IMessageResponseMarkup? ExtraMarkup { get; set; }
 
+        public bool ForceNewMessage { get; set; }
+
         public MessageResponse(object content)
         {
             _content = content ?? throw new ArgumentNullException(nameof(content));
@@ -81,6 +83,13 @@ namespace MatatakiBot
         public MessageResponse WithInlineButtons(IEnumerable<IEnumerable<InlineButton>> inlineButtons)
         {
             ExtraMarkup = new InlineButtonsResponseMarkup(inlineButtons);
+
+            return this;
+        }
+
+        public MessageResponse WithForceNewMessage()
+        {
+            ForceNewMessage = true;
 
             return this;
         }
