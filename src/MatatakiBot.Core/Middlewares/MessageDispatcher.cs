@@ -188,8 +188,17 @@ namespace MatatakiBot.Middlewares
 
             var commandNameSpan = message.Text.AsSpan(1, commandEntity.Length - 1);
             var username = _botService.Username;
-            if (commandEntity.Length > username.Length && commandNameSpan[commandEntity.Length - username.Length - 2] == '@' && commandNameSpan.EndsWith(username))
-                commandNameSpan = commandNameSpan[..^(username.Length + 1)];
+            if (commandEntity.Length > username.Length)
+            {
+                var atMarkPosition = commandNameSpan.IndexOf('@');
+                if (atMarkPosition != -1)
+                {
+                    if (!commandNameSpan.EndsWith(username))
+                        return AsyncEnumerable.Empty<MessageResponse>();
+
+                    commandNameSpan = commandNameSpan[..^(username.Length + 1)];
+                }
+            }
 
             var commandName = commandNameSpan.ToString();
 
