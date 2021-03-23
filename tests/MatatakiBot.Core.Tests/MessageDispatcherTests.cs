@@ -281,11 +281,11 @@ namespace MatatakiBot.Core.Tests
                 Entities = new[] { new MessageEntity() { Type = MessageEntityType.BotCommand, Length = 9 } },
             }, null!).SingleAsync());
 
-            Assert.Equal(MessageResponse.FallbackResponse, await dispatcher.HandleMessageAsync(new Message()
+            Assert.False(await dispatcher.HandleMessageAsync(new Message()
             {
                 Text = "/fallback@other_bot",
                 Entities = new[] { new MessageEntity() { Type = MessageEntityType.BotCommand, Length = 19 } },
-            }, null!).SingleAsync());
+            }, null!).AnyAsync());
         }
 
         [Fact]
