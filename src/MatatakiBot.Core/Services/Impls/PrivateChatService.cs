@@ -1,3 +1,4 @@
+﻿using MatatakiBot.Middlewares;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -22,7 +23,11 @@ namespace MatatakiBot.Services.Impls
 
         public Task<string> ReadUserInputAsync(long userId)
         {
-            throw new NotImplementedException();
+            var middleware = new UserInputMiddleware(this);
+
+            Push(userId, middleware);
+
+            return middleware.Result;
         }
     }
 }
