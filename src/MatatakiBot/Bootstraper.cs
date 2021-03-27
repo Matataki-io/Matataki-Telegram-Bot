@@ -117,6 +117,8 @@ namespace MatatakiBot
                 new Web3(AppConfiguration.Network ?? throw new InvalidOperationException("Missing Network in app settings")),
                 reuse: Reuse.Singleton);
 
+            _container.Register<IContextService, ContextService>(Reuse.Singleton);
+
             _container.Register<II18nService, I18nService>(Reuse.Singleton);
             _container.Register<IDatabaseService, DatabaseService>(Reuse.Singleton);
             _container.Register<IGroupService, GroupService>(Reuse.Singleton);
