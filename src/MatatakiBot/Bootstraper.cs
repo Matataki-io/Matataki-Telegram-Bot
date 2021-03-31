@@ -123,6 +123,12 @@ namespace MatatakiBot
             _container.Register<IDatabaseService, DatabaseService>(Reuse.Singleton);
             _container.Register<IGroupService, GroupService>(Reuse.Singleton);
             _container.Register<IUserService, UserService>(Reuse.Singleton);
+
+            _container.RegisterDelegate<AppConfiguration, HttpClient>(appConfiguration => new()
+            {
+                BaseAddress = new Uri(appConfiguration.Hongbao.UrlPrefix ?? throw new InvalidOperationException("Missing Hongbao.UrlPrefix in app settings")),
+            }, reuse: Reuse.Singleton, serviceKey: "HongbaoHttpClient");
+            _container.Register<IHongbaoService, HongbaoService>(Reuse.Singleton, Parameters.Of.Type<HttpClient>(serviceKey: "HongbaoHttpClient"));
         }
         private static void RegisterCommands()
         {

@@ -15,6 +15,7 @@ namespace MatatakiBot
 
         public BackendConfiguration Backend { get; set; } = default!;
         public MatatakiConfiguration Matataki { get; set; } = default!;
+        public HongbaoConfiguration Hongbao { get; set; } = default!;
 
         public string? Database { get; set; }
 
@@ -35,6 +36,10 @@ namespace MatatakiBot
             public string? ApiUrlPrefix { get; set; }
             public string? AccessToken { get; set; }
             public string? TransferApiAccessToken { get; set; }
+        }
+        public class HongbaoConfiguration
+        {
+            public string? UrlPrefix { get; set; }
         }
     }
 }
