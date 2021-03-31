@@ -11,24 +11,22 @@ namespace MatatakiBot
             set => _text = value ?? throw new ArgumentNullException(nameof(value));
         }
 
-        public object? Tag { get; set; }
-
         private protected InlineButton(object text)
         {
             _text = text ?? throw new ArgumentNullException(nameof(text));
         }
 
-        public static InlineButton WithCallbackData(object text, object? tag = null) => new InlineCallbackButton(text) { Tag = tag };
+        public static InlineButton WithCallbackData(object text, string callbackData) => new InlineCallbackButton(text, callbackData);
         public static InlineButton WithUrl(object text, string url) => new InlineUrlButton(text, url);
     }
 
     public class InlineCallbackButton : InlineButton
     {
-        internal Guid CallbackData { get; }
+        internal string CallbackData { get; }
 
-        public InlineCallbackButton(object text) : base(text)
+        public InlineCallbackButton(object text, string callbackData) : base(text)
         {
-            CallbackData = Guid.NewGuid();
+            CallbackData = callbackData;
         }
 
     }

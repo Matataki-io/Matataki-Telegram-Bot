@@ -13,11 +13,13 @@ namespace MatatakiBot.Services.Impls
     {
         private readonly IMessageMiddleware[] _middlewares;
         private readonly ILogger _logger;
+        private readonly CallbackQueryService _callbackQueryService;
 
-        public UpdateService(IMiddlewareService middlewareService, ILogger logger)
+        public UpdateService(IMiddlewareService middlewareService, ILogger logger, CallbackQueryService callbackQueryService)
         {
             _middlewares = middlewareService.GetMiddlewares().ToArray();
             _logger = logger;
+            _callbackQueryService = callbackQueryService;
         }
 
         public Task HandleUpdateAsync(Update update)
@@ -71,9 +73,7 @@ namespace MatatakiBot.Services.Impls
                 }
             }
         }
-        internal Task HandleCallbackQuery(CallbackQuery callbackQuery)
-        {
-            return Task.CompletedTask;
-        }
+        internal Task HandleCallbackQuery(CallbackQuery callbackQuery) =>
+            _callbackQueryService.HandleCallbackQueryAsync(callbackQuery);
     }
 }

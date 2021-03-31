@@ -1,5 +1,4 @@
 ﻿using Jeffijoe.MessageFormat;
-using MatatakiBot.Core;
 using Serilog;
 using System;
 using System.Collections.Generic;

@@ -1,6 +1,7 @@
 ﻿using MatatakiBot.Middlewares;
 using MatatakiBot.Services;
 using NSubstitute;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Telegram.Bot.Types;
@@ -37,7 +38,7 @@ namespace MatatakiBot.Core.Tests
             i18nService.Format(Arg.Is<I18n>(i18n => i18n.Key == "footer"), Arg.Any<string>()).Returns("I18N Footer");
             i18nService.Format(Arg.Is<I18n>(i18n => i18n.Key == "inlinebtn"), Arg.Any<string>()).Returns("I18N Inline Button");
 
-            var inlineButton = InlineButton.WithCallbackData(new I18n("inlinebtn"));
+            var inlineButton = InlineButton.WithCallbackData(new I18n("inlinebtn"), Guid.NewGuid().ToString());
             var response = new MessageResponse(new I18n("introduction"), new I18n("content"), new I18n("footer"))
                 .WithInlineButtons(inlineButton);
 

@@ -1,5 +1,4 @@
 ﻿using MatatakiBot.Commands;
-using MatatakiBot.Core;
 using MatatakiBot.Services;
 using MatatakiBot.Types;
 using NSubstitute;

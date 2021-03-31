@@ -58,7 +58,7 @@ namespace MatatakiBot.Middlewares
             if (markup is InlineButtonsResponseMarkup inlineButtonsMarkup)
                 return new InlineKeyboardMarkup(inlineButtonsMarkup.InlineButtons.Select(row => row.Select(button => button switch
                 {
-                    InlineCallbackButton callbackButton => InlineKeyboardButton.WithCallbackData(callbackButton.Text.ToString(), callbackButton.CallbackData.ToString()),
+                    InlineCallbackButton callbackButton => InlineKeyboardButton.WithCallbackData(callbackButton.Text.ToString(), callbackButton.CallbackData),
                     InlineUrlButton urlButton => InlineKeyboardButton.WithUrl(urlButton.Text.ToString(), urlButton.Url),
 
                     _ => throw new InvalidOperationException(),
