@@ -46,6 +46,7 @@ namespace MatatakiBot
             _container.Resolve<IMiddlewareService>().RegisterPreFilterMessageMiddleware<GroupEventHandler>();
 
             RegisterCommands();
+            RegisterActions();
 
             ConfigureServices();
 
@@ -139,6 +140,16 @@ namespace MatatakiBot
 
             foreach (var type in types)
                 commandService.RegisterCommand(type);
+        }
+        private static void RegisterActions()
+        {
+            var actionService = _container.Resolve<IActionService>();
+
+            var assembly = Assembly.GetExecutingAssembly();
+            var types = assembly.GetTypes().Where(type => !type.IsAbstract && type.IsSubclassOf(typeof(ActionBase)));
+
+            foreach (var type in types)
+                actionService.RegisterAction(type);
         }
 
         public static async ValueTask StartupAsync(Action<Container>? action = null)
