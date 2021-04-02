@@ -1,6 +1,5 @@
 ﻿using MatatakiBot.Services;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
 using Serilog;
 using System;
 using System.Threading.Tasks;
@@ -14,8 +13,6 @@ namespace MatatakiBot.Controllers
         private readonly IUpdateService _updateService;
         private readonly ILogger _logger;
 
-        private static bool _isInitialized;
-
         public WebhookController(IUpdateService updateService, ILogger logger)
         {
             _updateService = updateService;
@@ -25,12 +22,6 @@ namespace MatatakiBot.Controllers
         [HttpPost]
         public async Task<IActionResult> Handle([FromBody] Update update)
         {
-            if (!_isInitialized)
-            {
-                await Bootstraper.StartupAsync(null!);
-                _isInitialized = true;
-            }
-
             try
             {
                 await _updateService.HandleUpdateAsync(update);
