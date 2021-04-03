@@ -13,7 +13,7 @@ namespace MatatakiBot.Commands
         private readonly IBackendService _backendService;
         private readonly IMatatakiService _matatakiService;
 
-        public StatusCommand(AppConfiguration appConfiguration, IBackendService backendService, IMatatakiService matatakiService)
+        public StatusCommand(IBackendService backendService, IMatatakiService matatakiService)
         {
             _backendService = backendService;
             _matatakiService = matatakiService;
