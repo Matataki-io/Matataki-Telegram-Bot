@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 
@@ -14,12 +15,14 @@ namespace MatatakiBot.Services.Impls
         private readonly IMessageMiddleware[] _middlewares;
         private readonly ILogger _logger;
         private readonly CallbackQueryService _callbackQueryService;
+        private readonly ITelegramBotClient _botClient;
 
-        public UpdateService(IMiddlewareService middlewareService, ILogger logger, CallbackQueryService callbackQueryService)
+        public UpdateService(IMiddlewareService middlewareService, ILogger logger, CallbackQueryService callbackQueryService, ITelegramBotClient botClient)
         {
             _middlewares = middlewareService.GetMiddlewares().ToArray();
             _logger = logger;
             _callbackQueryService = callbackQueryService;
+            _botClient = botClient;
         }
 
         public Task HandleUpdateAsync(Update update)
@@ -40,6 +43,11 @@ namespace MatatakiBot.Services.Impls
             try
             {
                 await foreach (var _ in Execute(message, 0)) ;
+            }
+            catch (HandlerException e)
+            {
+                await _botClient.SendTextMessageAsync(message.Chat.Id, e.Message,
+                    replyToMessageId: message.Chat.Type != ChatType.Private ? message.MessageId : 0);
             }
             catch (Exception e)
             {
