@@ -4,9 +4,9 @@
     ".NETCoreApp,Version=v5.0": {
       "CompareNETObjects": {
         "type": "Direct",
-        "requested": "[4.72.0, )",
-        "resolved": "4.72.0",
-        "contentHash": "faqa/rpOgApbXl1rY8/46Ie5mVNda4xP0aJTBnyGWYcaUsXyX9vnUbE2pqUWAfPcXd3eCnlv/1B/BvQNP2vdgA==",
+        "requested": "[4.73.0, )",
+        "resolved": "4.73.0",
+        "contentHash": "29WqrExNPfuAQnngHm1AI4Lbb+qfU1s6eMe8S4vHVF4nGJOtN2PiJZ2fjh3GtOwFPoVUi1gmNQR3LBu4M9LxnA==",
         "dependencies": {
           "Microsoft.CSharp": "4.7.0"
         }

@@ -14,11 +14,11 @@
       },
       "Microsoft.AspNetCore.Mvc.NewtonsoftJson": {
         "type": "Direct",
-        "requested": "[5.0.3, )",
-        "resolved": "5.0.3",
-        "contentHash": "apCGk1uaiQRBf+FAz5tgje4N/VlpCgl1kyOCoi6rpzlgFym/WCH7omd2chOEKNqu7L9Tmo7tmUpLc1EyPyDJfg==",
+        "requested": "[5.0.4, )",
+        "resolved": "5.0.4",
+        "contentHash": "vCknZ6lfq2/UrX4KGmqsM5aDlO5gV0S2YS6ZkhMfr+OG/9lyF2SBRM5skRCiSyTPdyH96Zliu5DU8DPstAAW7Q==",
         "dependencies": {
-          "Microsoft.AspNetCore.JsonPatch": "5.0.3",
+          "Microsoft.AspNetCore.JsonPatch": "5.0.4",
           "Newtonsoft.Json": "12.0.2",
           "Newtonsoft.Json.Bson": "1.0.2"
         }
@@ -33,8 +33,8 @@
       },
       "CompareNETObjects": {
         "type": "Transitive",
-        "resolved": "4.72.0",
-        "contentHash": "faqa/rpOgApbXl1rY8/46Ie5mVNda4xP0aJTBnyGWYcaUsXyX9vnUbE2pqUWAfPcXd3eCnlv/1B/BvQNP2vdgA==",
+        "resolved": "4.73.0",
+        "contentHash": "29WqrExNPfuAQnngHm1AI4Lbb+qfU1s6eMe8S4vHVF4nGJOtN2PiJZ2fjh3GtOwFPoVUi1gmNQR3LBu4M9LxnA==",
         "dependencies": {
           "Microsoft.CSharp": "4.7.0"
         }
@@ -62,8 +62,8 @@
       },
       "Microsoft.AspNetCore.JsonPatch": {
         "type": "Transitive",
-        "resolved": "5.0.3",
-        "contentHash": "trnJsR/teqqOgXFFFSn5YbL6ZCXca421Jv5hDRPuV2K+resek6u0+jf1aAwXZgikDmt2lylEKg6nkS3v5szhRQ==",
+        "resolved": "5.0.4",
+        "contentHash": "Nd/QZhdEX9tvuoz7BmeL6PWmimkpTjZ3MsUtmhP9xEjfGezthI4g3K/ggW/HO53Ow0LnjBx9hZKAcENVPzF2LA==",
         "dependencies": {
           "Microsoft.CSharp": "4.7.0",
           "Newtonsoft.Json": "12.0.2"
@@ -428,8 +428,8 @@
       },
       "Npgsql": {
         "type": "Transitive",
-        "resolved": "5.0.3",
-        "contentHash": "IDx2tijhyXGz7tVXQH0iGnCnW0ReSUy3UC99ytSklJKscob5WV8eLZWuT/jqYBq0l07RmZOSrdjUEDEetsgDIA==",
+        "resolved": "5.0.4",
+        "contentHash": "wuJUsrhOKaR41ZB9Ecw9ZEpQzMQ5bRahl7w+pt4noVMDkDPbw4cMHV8UfNKeZSPLXaN4yWXPR2QgJ+2vG/85VQ==",
         "dependencies": {
           "System.Runtime.CompilerServices.Unsafe": "4.6.0"
         }
@@ -1385,7 +1385,7 @@
           "Microsoft.Extensions.Configuration.EnvironmentVariables": "5.0.0",
           "Microsoft.Extensions.Configuration.Json": "5.0.0",
           "Nethereum.Web3": "3.8.0",
-          "Npgsql": "5.0.3",
+          "Npgsql": "5.0.4",
           "Serilog": "2.10.0",
           "Serilog.Sinks.Console": "3.1.1",
           "Serilog.Sinks.File": "4.1.0",
@@ -1398,7 +1398,7 @@
       "matatakibot.core": {
         "type": "Project",
         "dependencies": {
-          "CompareNETObjects": "4.72.0",
+          "CompareNETObjects": "4.73.0",
           "DryIoc.dll": "4.7.4",
           "MessageFormat": "4.0.0",
           "NetEscapades.Configuration.Yaml": "2.1.0",
