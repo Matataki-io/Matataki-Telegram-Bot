@@ -21,7 +21,7 @@ namespace MatatakiBot.Middlewares
         {
             Message? respondedMessage = null;
 
-            var enumerator = nextHandler().GetAsyncEnumerator();
+            await using var enumerator = nextHandler().GetAsyncEnumerator();
 
             while (true)
             {

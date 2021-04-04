@@ -1,5 +1,6 @@
 ﻿using MatatakiBot.Middlewares;
 using NSubstitute;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Telegram.Bot;
@@ -220,6 +221,41 @@ namespace MatatakiBot.Core.Tests
             await client.DidNotReceiveWithAnyArgs().EditMessageTextAsync(default!, default!);
 
             Assert.False(await enumerator.MoveNextAsync());
+        }
+
+        [Fact]
+        public async Task HandlerExceptionHandling()
+        {
+            var client = Substitute.For<ITelegramBotClient>();
+            var sender = new ResponseSender(client);
+            var chat = new Chat() { Id = 1, Type = ChatType.Private };
+            var message = new Message() { Chat = chat };
+
+            await using var enumerator = sender.HandleMessageAsync(message, _ => Handler()).GetAsyncEnumerator();
+
+            Assert.True(await enumerator.MoveNextAsync());
+
+            await client.Received(1).SendChatActionAsync(Arg.Is<ChatId>(r => r.Identifier == chat.Id), ChatAction.Typing);
+            await client.Received(1).SendTextMessageAsync(Arg.Is<ChatId>(r => r.Identifier == chat.Id), "1",
+                disableWebPagePreview: Arg.Any<bool>());
+            await client.DidNotReceiveWithAnyArgs().EditMessageTextAsync(default!, default!);
+
+            client.ClearReceivedCalls();
+
+            Assert.False(await enumerator.MoveNextAsync());
+
+            async IAsyncEnumerable<MessageResponse> Handler()
+            {
+                await Task.CompletedTask;
+
+                yield return "1";
+
+                throw new HandlerException("Pause");
+
+#pragma warning disable CS0162
+                yield return "2";
+#pragma warning restore CS0162
+            }
         }
     }
 }
