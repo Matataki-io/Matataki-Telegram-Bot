@@ -21,26 +21,37 @@ namespace MatatakiBot.Middlewares
         {
             Message? respondedMessage = null;
 
-            await foreach (var response in nextHandler())
+            var enumerator = nextHandler().GetAsyncEnumerator();
+
+            while (true)
             {
+                MessageResponse response;
+
+                try
+                {
+                    if (!await enumerator.MoveNextAsync())
+                        break;
+
+                    response = enumerator.Current;
+                }
+                catch (HandlerException e)
+                {
+                    response = e.Message.ToString();
+                }
+
                 await _client.SendChatActionAsync(message.Chat, ChatAction.Typing);
 
                 if (respondedMessage is null || response.ForceNewMessage)
-                {
                     respondedMessage = await _client.SendTextMessageAsync(message.Chat, response.ToString(),
                         parseMode: response.ParseMode,
                         disableWebPagePreview: true,
                         replyToMessageId: message.Chat.Type != ChatType.Private ? message.MessageId : 0,
                         replyMarkup: GetReplyMarkup(response.ExtraMarkup));
-
-                    yield return null!;
-                    continue;
-                }
-
-                await _client.EditMessageTextAsync(message.Chat, respondedMessage.MessageId, response.ToString(),
-                    parseMode: response.ParseMode,
-                    disableWebPagePreview: true,
-                    replyMarkup: GetInlineKeyboardMarkup(response.ExtraMarkup));
+                else
+                    await _client.EditMessageTextAsync(message.Chat, respondedMessage.MessageId, response.ToString(),
+                        parseMode: response.ParseMode,
+                        disableWebPagePreview: true,
+                        replyMarkup: GetInlineKeyboardMarkup(response.ExtraMarkup));
 
                 yield return null!;
             }

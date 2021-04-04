@@ -44,11 +44,6 @@ namespace MatatakiBot.Services.Impls
             {
                 await foreach (var _ in Execute(message, 0)) ;
             }
-            catch (HandlerException e)
-            {
-                await _botClient.SendTextMessageAsync(message.Chat.Id, e.Message,
-                    replyToMessageId: message.Chat.Type != ChatType.Private ? message.MessageId : 0);
-            }
             catch (Exception e)
             {
                 _logger.Error(e, "Something went wrong in message handling pipeline");
