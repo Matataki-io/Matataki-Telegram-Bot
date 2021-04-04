@@ -1,4 +1,5 @@
 ﻿using Dapper;
+using MatatakiBot.Types;
 using System.Threading.Tasks;
 
 namespace MatatakiBot.Services.Impls
@@ -12,11 +13,14 @@ namespace MatatakiBot.Services.Impls
             _databaseService = databaseService;
         }
 
-        public async ValueTask<long?> GetIdByUsernameAsync(string username)
+        public async ValueTask<int> GetIdByUsernameAsync(string username)
         {
             await using var connection = await _databaseService.GetConnectionAsync();
 
-            return await connection.QuerySingleOrDefaultAsync<long>("SELECT id FROM \"user\" WHERE username = @username;", new { username });
+            if (await connection.QuerySingleOrDefaultAsync<int?>("SELECT id FROM \"user\" WHERE username = @username;", new { username }) is not int result)
+                throw new MatatakiUserNotFoundException();
+
+            return result;
         }
 
         public async ValueTask SetUsernameAsync(long id, string username)

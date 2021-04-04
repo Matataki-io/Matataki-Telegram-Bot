@@ -4,7 +4,7 @@ namespace MatatakiBot.Services
 {
     public interface IUserService
     {
-        ValueTask<long?> GetIdByUsernameAsync(string username);
+        ValueTask<int> GetIdByUsernameAsync(string username);
         ValueTask SetUsernameAsync(long id, string username);
     }
 }

@@ -21,7 +21,7 @@ namespace MatatakiBot.Services.Impls
             {
                 var wrapper = await _httpClient.GetFromJsonAsync<ApiWrapper<UserInfo>>("/user/" + id);
 
-                return wrapper.Data;
+                return wrapper!.Data;
             }
             catch (HttpRequestException e) when (e.StatusCode is HttpStatusCode.NotFound)
             {
@@ -32,7 +32,7 @@ namespace MatatakiBot.Services.Impls
         {
             var wrapper = await _httpClient.GetFromJsonAsync<ApiWrapper<TokenInfo>>("/token/" + id);
 
-            return wrapper.Data;
+            return wrapper!.Data;
         }
         public async ValueTask<UserInfo> GetUserByTelegramIdAsync(long id)
         {
@@ -40,7 +40,7 @@ namespace MatatakiBot.Services.Impls
             {
                 var wrapper = await _httpClient.GetFromJsonAsync<ApiWrapper<UserInfo>>("/mapping/telegramUidToUser/" + id);
 
-                return wrapper.Data;
+                return wrapper!.Data;
             }
             catch (HttpRequestException e) when (e.StatusCode is HttpStatusCode.NotFound)
             {
@@ -50,16 +50,23 @@ namespace MatatakiBot.Services.Impls
 
         public async ValueTask<TokenInfo> GetTokenAsync(string symbol)
         {
-            var wrapper = await _httpClient.GetFromJsonAsync<ApiWrapper<TokenInfo>>("/mapping/symbolToToken/" + symbol);
+            try
+            {
+                var wrapper = await _httpClient.GetFromJsonAsync<ApiWrapper<TokenInfo>>("/mapping/symbolToToken/" + symbol);
 
-            return wrapper.Data;
+                return wrapper!.Data;
+            }
+            catch (HttpRequestException e) when (e.StatusCode is HttpStatusCode.NotFound)
+            {
+                throw new TokenNotFoundException();
+            }
         }
 
         public async ValueTask<TokenInfo[]> GetTokensAsync()
         {
             var wrapper = await _httpClient.GetFromJsonAsync<ApiWrapper<TokenInfo[]>>("/token");
 
-            return wrapper.Data;
+            return wrapper!.Data;
         }
     }
 }

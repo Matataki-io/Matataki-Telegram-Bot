@@ -1,5 +1,6 @@
 ﻿using MatatakiBot.Attributes;
 using MatatakiBot.Services;
+using MatatakiBot.Types;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -30,8 +31,25 @@ namespace MatatakiBot.Commands
             symbol = symbol.ToUpperInvariant();
             yield return "查询中……";
 
-            var user = await _backendService.GetUserByTelegramIdAsync(message.From.Id);
-            var token = await _backendService.GetTokenAsync(symbol);
+            UserInfo user;
+            try
+            {
+                user = await _backendService.GetUserByTelegramIdAsync(message.From.Id);
+            }
+            catch (MatatakiUserNotFoundException)
+            {
+                throw new HandlerException("抱歉，您还没有绑定 Matataki 帐号");
+            }
+
+            TokenInfo token;
+            try
+            {
+                token = await _backendService.GetTokenAsync(symbol);
+            }
+            catch (TokenNotFoundException)
+            {
+                throw new HandlerException("抱歉，没有这样的 Fan 票");
+            }
 
             var balance = await _minetokenService.GetBalanceAsync(token.ContractAddress, user.WalletAddress);
 
@@ -43,7 +61,16 @@ namespace MatatakiBot.Commands
         {
             yield return "查询中……";
 
-            var user = await _backendService.GetUserByTelegramIdAsync(message.From.Id);
+            UserInfo user;
+            try
+            {
+                user = await _backendService.GetUserByTelegramIdAsync(message.From.Id);
+            }
+            catch (MatatakiUserNotFoundException)
+            {
+                throw new HandlerException("抱歉，您还没有绑定 Matataki 帐号");
+            }
+
             var tokens = await _backendService.GetTokensAsync();
 
             var results = await Task.WhenAll(tokens.Select(async token =>
@@ -75,8 +102,25 @@ namespace MatatakiBot.Commands
             symbol = symbol.ToUpperInvariant();
             yield return "查询中……";
 
-            var user = await _backendService.GetUserAsync(userId);
-            var token = await _backendService.GetTokenAsync(symbol);
+            UserInfo user;
+            try
+            {
+                user = await _backendService.GetUserAsync(userId);
+            }
+            catch (MatatakiUserNotFoundException)
+            {
+                throw new HandlerException("抱歉，不存在目标 id 的 Matataki 帐号");
+            }
+
+            TokenInfo token;
+            try
+            {
+                token = await _backendService.GetTokenAsync(symbol);
+            }
+            catch (TokenNotFoundException)
+            {
+                throw new HandlerException("抱歉，没有这样的 Fan 票");
+            }
 
             var balance = await _minetokenService.GetBalanceAsync(token.ContractAddress, user.WalletAddress);
 
@@ -89,15 +133,27 @@ namespace MatatakiBot.Commands
             symbol = symbol.ToUpperInvariant();
             yield return "查询中……";
 
-            var telegramIdOrDefault = await _userService.GetIdByUsernameAsync(username);
-            if (telegramIdOrDefault is not long telegramId)
+            UserInfo user;
+            try
             {
-                yield return "用户名未同步";
-                yield break;
+                var targetId = await _userService.GetIdByUsernameAsync(username);
+
+                user = await _backendService.GetUserByTelegramIdAsync(targetId);
+            }
+            catch (MatatakiUserNotFoundException)
+            {
+                throw new HandlerException("抱歉，目标没有绑定 Matataki 帐号或者仍未同步用户名");
             }
 
-            var user = await _backendService.GetUserByTelegramIdAsync(telegramId);
-            var token = await _backendService.GetTokenAsync(symbol);
+            TokenInfo token;
+            try
+            {
+                token = await _backendService.GetTokenAsync(symbol);
+            }
+            catch (TokenNotFoundException)
+            {
+                throw new HandlerException("抱歉，没有这样的 Fan 票");
+            }
 
             var balance = await _minetokenService.GetBalanceAsync(token.ContractAddress, user.WalletAddress);
 
