@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace MatatakiBot.Services
 {
@@ -14,5 +15,7 @@ namespace MatatakiBot.Services
 
         ValueTask MigrateGroupAsync(long oldId, long newId);
         ValueTask RemoveGroupAsync(long groupId);
+
+        ValueTask<IEnumerable<long>> GetParticipatedGroupsAsync(long userId);
     }
 }

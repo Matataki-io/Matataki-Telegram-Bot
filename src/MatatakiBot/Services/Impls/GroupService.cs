@@ -1,4 +1,5 @@
 ﻿using Dapper;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace MatatakiBot.Services.Impls
@@ -59,6 +60,13 @@ namespace MatatakiBot.Services.Impls
             await using var connection = await _databaseService.GetConnectionAsync();
 
             await connection.ExecuteAsync("DELETE FROM \"group\" WHERE id = @groupId;", new { groupId });
+        }
+
+        public async ValueTask<IEnumerable<long>> GetParticipatedGroupsAsync(long userId)
+        {
+            await using var connection = await _databaseService.GetConnectionAsync();
+
+            return await connection.QueryAsync<long>("SELECT groupId FROM group_member WHERE userId = @userId;", new { userId });
         }
     }
 }
