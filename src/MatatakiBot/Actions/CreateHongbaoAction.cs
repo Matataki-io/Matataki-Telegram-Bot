@@ -93,7 +93,7 @@ namespace MatatakiBot.Actions
             await _botClient.SendTextMessageAsync(targetGroupId, $"@{callbackQuery.From.Username} 发了个 {symbol} 红包",
                 replyMarkup: new InlineKeyboardMarkup(InlineKeyboardButton.WithCallbackData("获取", $"grabHongbao {id}")));
 
-            await _botClient.SendTextMessageAsync(callbackQuery.Message.Chat.Id, "Ok");
+            await _botClient.EditMessageTextAsync(callbackQuery.Message.Chat.Id, callbackQuery.Message.MessageId, "Ok");
         }
     }
 }
