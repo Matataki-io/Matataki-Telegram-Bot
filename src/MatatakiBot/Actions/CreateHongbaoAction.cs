@@ -32,7 +32,7 @@ namespace MatatakiBot.Actions
         [ActionHandler(@"(\d+) (-\d+)")]
         public async Task Handler(CallbackQuery callbackQuery, long senderId, long targetGroupId)
         {
-            await _botClient.EditMessageTextAsync(callbackQuery.Message.MessageId, @"请输入红包的内容
+            await _botClient.EditMessageTextAsync(callbackQuery.Message.Chat.Id, callbackQuery.Message.MessageId, @"请输入红包的内容
 
 格式：`[数额] [Fan 票符号]`", ParseMode.Markdown);
 
