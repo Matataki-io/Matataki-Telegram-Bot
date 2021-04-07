@@ -242,6 +242,15 @@ namespace MatatakiBot.Core.Tests
 
             client.ClearReceivedCalls();
 
+            Assert.True(await enumerator.MoveNextAsync());
+
+            await client.Received(1).SendChatActionAsync(Arg.Is<ChatId>(r => r.Identifier == chat.Id), ChatAction.Typing);
+            await client.Received(1).SendTextMessageAsync(Arg.Is<ChatId>(r => r.Identifier == chat.Id), "Pause",
+                disableWebPagePreview: Arg.Any<bool>());
+            await client.DidNotReceiveWithAnyArgs().EditMessageTextAsync(default!, default!);
+
+            client.ClearReceivedCalls();
+
             Assert.False(await enumerator.MoveNextAsync());
 
             async IAsyncEnumerable<MessageResponse> Handler()
